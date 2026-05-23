@@ -1,0 +1,18 @@
+{
+  "area": "juegos",
+  "titulo": "Trivia de historia local",
+  "descripcion": "Responde preguntas sobre la historia de Belisario",
+  "tipo": "preguntas",
+  "preguntas": [
+    {
+      "pregunta": "¿En qué año se fundó Belisario?",
+      "opciones": ["1900", "1920", "1950"],
+      "respuesta": "1920"
+    },
+    {
+      "pregunta": "¿Qué fiesta tradicional se celebra en junio?",
+      "opciones": ["San Pedro", "Carnaval", "Navidad"],
+      "respuesta": "San Pedro"
+    }
+  ]
+}
