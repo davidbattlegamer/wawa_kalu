@@ -6,7 +6,7 @@ class T {
 
     final textos = {
       'es': {
-        // GENERAL
+        
         'appName': 'Wawa Kalú',
         'settingsTitle': 'Ajustes de la app',
         'sounds': 'Sonidos de la app',
