@@ -15,8 +15,7 @@ class T {
         'language': 'Idioma',
         'spanish': 'Español',
         'english': 'Inglés',
-        'settingsNote':
-            'Estos ajustes se aplican a toda la app y a futuras funciones.',
+        'settingsNote': 'Estos ajustes se aplican a toda la app y a futuras funciones.',
         'vibration': 'Vibración',
         'vibrationOn': 'Activada',
         'vibrationOff': 'Desactivada',
