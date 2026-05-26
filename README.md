@@ -379,13 +379,10 @@ Proyecto desarrollado como propuesta educativa y tecnológica basada en sistemas
 
 ## 📄 Licencia
 
-Este proyecto puede ser usado con fines educativos y académicos.
+Este proyecto está bajo la licencia MIT.  
+Puedes usarlo, modificarlo y compartirlo con fines educativos, académicos o de desarrollo, respetando los términos de la licencia.
 
-Puedes modificar esta sección si deseas usar una licencia específica, por ejemplo:
-
-- MIT License.
-- Apache License 2.0.
-- GNU GPL.
+Consulta el archivo [LICENSE](LICENSE) para más información.
 
 ---
 
