@@ -78,3 +78,352 @@ assets/
     ├── cat.mp3
     ├── chick.mp3
     └── cow.mp3
+```
+
+---
+
+## 🚀 Instalación del proyecto
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/davidbattlegamer/wawa_kalu.git
+```
+
+### 2. Entrar a la carpeta del proyecto
+
+```bash
+cd wawa_kalu
+```
+
+### 3. Instalar dependencias
+
+```bash
+flutter pub get
+```
+
+### 4. Ejecutar la aplicación
+
+```bash
+flutter run
+```
+
+---
+
+## 📦 Dependencias principales
+
+El proyecto puede incluir dependencias como:
+
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+
+  google_fonts: ^6.2.1
+  shared_preferences: ^2.3.2
+  vibration: ^2.0.1
+  flutter_blue_plus: ^1.32.12
+  audioplayers: ^6.1.0
+```
+
+> Las versiones pueden variar según el archivo `pubspec.yaml` del proyecto.
+
+---
+
+## ⚙️ Configuración de la app
+
+La aplicación cuenta con una pantalla de configuración donde el usuario puede modificar:
+
+- 🔊 Sonidos.
+- 📳 Vibración.
+- 🌐 Idioma.
+- 🌙 Apariencia.
+
+Las configuraciones se guardan localmente usando `SharedPreferences`.
+
+---
+
+## 🌐 Idiomas disponibles
+
+Los textos de la app están centralizados en:
+
+```text
+lib/pages/app_texts.dart
+```
+
+Actualmente la app soporta:
+
+- Español.
+- Inglés.
+- Detección automática según el idioma del celular.
+
+---
+
+## 🎮 Sección de juegos
+
+La app cuenta con una zona de juegos donde se integran varias actividades educativas.
+
+### 🧩 Juego de Paty
+
+Juego de figuras donde el niño puede tocar formas básicas como:
+
+- Círculo.
+- Cuadrado.
+- Triángulo.
+- Estrella.
+
+El juego registra aciertos y entrega recompensas visuales.
+
+### ❓ Juego de Andrés
+
+Juego tipo trivia diseñado para reforzar el aprendizaje mediante preguntas, respuestas y retos sencillos.
+
+### 🐾 Juego David
+
+Juego de animales donde el niño puede tocar diferentes animales, escuchar sonidos y ganar estrellas o medallas.
+
+Animales incluidos:
+
+- Perro.
+- Gato.
+- Pollito.
+- Vaca.
+
+---
+
+## 🤖 Sección CPS con ESP32
+
+La sección CPS permite conectar la aplicación con un **ESP32** mediante Bluetooth BLE.
+
+Su objetivo es detectar figuras físicas colocadas por el niño y reflejar los resultados en pantalla.
+
+Funciones principales:
+
+- Conexión Bluetooth BLE.
+- Detección de figuras.
+- Historial offline.
+- Recompensas por detecciones.
+- Estrellas y medallas según el avance.
+
+---
+
+## 🥗 Nutrición infantil
+
+La sección de nutrición ofrece recomendaciones para padres y cuidadores de niños de 0 a 3 años.
+
+Incluye consejos sobre:
+
+- Alimentos adecuados.
+- Rutinas de comida.
+- Hidratación.
+- Señales de hambre y saciedad.
+- Seguridad al comer.
+- Acompañamiento familiar.
+
+---
+
+## 🍲 Recetas
+
+La aplicación incluye recetas sencillas y seguras para niños pequeños, como:
+
+- Cremita de zapallo y pollo.
+- Avena cremosa con banano.
+- Tortillita suave de huevo y espinaca.
+- Bolitas blandas de arroz y lenteja.
+- Yogur natural con fruta.
+
+---
+
+## 🗣️ Lenguaje y comunicación
+
+Esta sección contiene actividades para estimular el lenguaje infantil mediante acciones simples en casa.
+
+Ejemplos de actividades:
+
+- Nombrar objetos.
+- Leer imágenes.
+- Cantar y moverse.
+- Conversar.
+- Imitar sonidos.
+
+---
+
+## 🏡 Entornos protectores
+
+La sección de entornos protectores brinda recomendaciones sobre seguridad, cuidado y bienestar infantil.
+
+Incluye temas como:
+
+- Espacios seguros.
+- Supervisión activa.
+- Rutinas protectoras.
+- Afecto y buen trato.
+- Salud y señales de alerta.
+
+---
+
+## 📲 Compatibilidad
+
+El proyecto está pensado para funcionar en:
+
+- Android.
+- iOS, con configuración adicional desde macOS.
+- Emuladores Android.
+- Dispositivos físicos Android.
+
+> Para compilar en iOS se requiere macOS, Xcode o una plataforma de compilación en la nube como Codemagic.
+
+---
+
+## 🧪 Comandos útiles
+
+### Verificar Flutter
+
+```bash
+flutter doctor
+```
+
+### Limpiar el proyecto
+
+```bash
+flutter clean
+```
+
+### Obtener dependencias
+
+```bash
+flutter pub get
+```
+
+### Ejecutar la app
+
+```bash
+flutter run
+```
+
+### Formatear código
+
+```bash
+dart format lib
+```
+
+### Generar APK
+
+```bash
+flutter build apk --release
+```
+
+---
+
+## 📁 Archivos importantes
+
+### `main.dart`
+
+Archivo principal de la aplicación. Carga la configuración inicial y decide si mostrar la bienvenida o el menú principal.
+
+### `app_config.dart`
+
+Controla las configuraciones globales de la app:
+
+- Idioma.
+- Idioma automático.
+- Sonidos.
+- Vibración.
+- Tema claro, oscuro o automático.
+- Estado de bienvenida.
+
+### `app_texts.dart`
+
+Contiene los textos de la aplicación en español e inglés.
+
+### `config_sheet.dart`
+
+Contiene la ventana de configuración de la app.
+
+### `juego_page.dart`
+
+Contiene la pantalla principal de la zona de juegos.
+
+### `cps_page.dart`
+
+Contiene la lógica de conexión con ESP32 y detección de figuras.
+
+---
+
+## 🧑‍💻 Cómo contribuir
+
+### 1. Hacer un fork del repositorio
+
+Desde GitHub, presiona el botón **Fork**.
+
+### 2. Crear una nueva rama
+
+```bash
+git checkout -b nueva-funcion
+```
+
+### 3. Realizar cambios
+
+Edita los archivos necesarios dentro del proyecto.
+
+### 4. Guardar cambios
+
+```bash
+git add .
+git commit -m "Agrega nueva función"
+```
+
+### 5. Subir la rama
+
+```bash
+git push origin nueva-funcion
+```
+
+### 6. Crear un Pull Request
+
+Desde GitHub, crea un Pull Request para proponer los cambios.
+
+---
+
+## 📌 Estado del proyecto
+
+Actualmente el proyecto se encuentra en desarrollo y mejora continua.
+
+Funciones implementadas:
+
+- Diseño principal de la app.
+- Pantalla de bienvenida.
+- Configuración global.
+- Modo claro, oscuro y automático.
+- Idioma español, inglés y automático.
+- Juegos educativos.
+- Conexión CPS con ESP32.
+- Recomendaciones para padres.
+- Secciones de nutrición, recetas, lenguaje y entornos protectores.
+
+---
+
+## 👨‍🎓 Autor
+
+Proyecto desarrollado como propuesta educativa y tecnológica basada en sistemas interactivos para niños.
+
+**Autor:** David Santana  
+**GitHub:** [davidbattlegamer](https://github.com/davidbattlegamer)
+
+---
+
+## 📄 Licencia
+
+Este proyecto puede ser usado con fines educativos y académicos.
+
+Puedes modificar esta sección si deseas usar una licencia específica, por ejemplo:
+
+- MIT License.
+- Apache License 2.0.
+- GNU GPL.
+
+---
+
+## 💙 Agradecimiento
+
+Wawa Kalú nace como una propuesta para unir tecnología, educación y cuidado infantil, demostrando cómo una aplicación móvil puede apoyar el aprendizaje temprano y la participación familiar.
