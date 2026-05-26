@@ -3,15 +3,12 @@ import 'app_config.dart';
 class T {
   static String txt(String key) {
     final lang = AppConfig.idioma.value;
-
-    final Map<String, String> selected =
-        lang == 'en' ? _english : _spanish;
-
+    final Map<String, String> selected = lang == 'en' ? _english : _spanish;
     return selected[key] ?? _spanish[key] ?? key;
   }
 
   static final Map<String, String> _spanish = {
-    // General
+    // GENERAL
     'appName': 'Wawa Kalú',
     'welcome': 'Bienvenido a Wawa Kalú',
     'subtitle': 'Aprende jugando, explorando y creciendo en familia',
@@ -24,8 +21,11 @@ class T {
     'continue': 'Continuar',
     'startApp': 'Comenzar',
     'startingApp': 'Entrando...',
+    'close': 'Cerrar',
+    'next': 'Siguiente',
+    'previous': 'Anterior',
 
-    // Configuración
+    // CONFIGURACIÓN
     'sounds': 'Sonidos',
     'soundsOn': 'Sonidos activos',
     'soundsOff': 'Sonidos desactivados',
@@ -42,8 +42,8 @@ class T {
     'settingsNote':
         'Puedes cambiar estas opciones cuando lo necesites desde el engrane.',
 
-    // Bienvenida
-    'welcomeScreenTitle': 'Bienvenido a',
+    // BIENVENIDA
+    'welcomeScreenTitle': 'Bienvenido a Wawa Kalú',
     'welcomeScreenSubtitle':
         'Aprende jugando con actividades, figuras inteligentes y consejos para padres.',
     'welcomeSettingsNote':
@@ -68,7 +68,7 @@ class T {
     'welcomeParentsSubtitle':
         'Ideas para lenguaje, cuidado y entornos protectores.',
 
-    // Home
+    // HOME
     'cps': 'CPS',
     'cpsSubtitle': 'Figuras inteligentes con ESP32',
     'games': 'Juegos',
@@ -79,6 +79,92 @@ class T {
     'languageSubtitle': 'Comunicación y estimulación',
     'environment': 'Entornos',
     'environmentSubtitle': 'Cuidado y protección infantil',
+
+    // PÁGINA DE JUEGOS
+    'gamesPageTitle': 'Zona de Juegos',
+    'gamesPageSubtitle': 'Aprender jugando',
+    'gamesPageDescription':
+        'Explora actividades creadas para que los niños aprendan con juegos, colores, animales, preguntas y retos sencillos.',
+    'selectGame': 'Selecciona un juego',
+    'playNow': 'Jugar ahora',
+    'availableGames': 'Juegos disponibles',
+    'recommendedForKids': 'Recomendado para niños pequeños',
+    'gameBenefits': 'Beneficios del juego',
+    'gameBenefit1': 'Estimula la atención y la observación.',
+    'gameBenefit2': 'Favorece el reconocimiento de sonidos, colores y figuras.',
+    'gameBenefit3': 'Promueve el aprendizaje mediante interacción.',
+    'gameBenefit4': 'Permite aprender de forma sencilla y entretenida.',
+
+    'patyGameCardTitle': 'Juego de Paty',
+    'patyGameCardSubtitle': 'Juego personalizado creado por Paty',
+    'patyGameCardDescription':
+        'Actividad visual e interactiva para reforzar la atención, la observación y el aprendizaje mediante estímulos sencillos.',
+
+    'andresGameCardTitle': 'Juego de Andrés',
+    'andresGameCardSubtitle': 'Trivia creada por Andrés',
+    'andresGameCardDescription':
+        'Juego tipo trivia para responder preguntas, reconocer elementos y aprender mediante retos interactivos.',
+
+    'davidGameCardTitle': 'Juego David',
+    'davidGameCardSubtitle':
+        'Juego de colores y animales para niños pequeños',
+    'davidGameCardDescription':
+        'Juego interactivo donde el niño toca animales, escucha sus sonidos y gana estrellas o medallas según sus aciertos.',
+
+    // JUEGO GENERAL
+    'game': 'Juego',
+    'gameTitle': 'Juego de figuras',
+    'gameSubtitle': 'Toca, observa y aprende',
+    'gameDescription':
+        'Toca cada figura para reconocer su nombre, color y forma de manera visual e interactiva.',
+    'touchFigure': 'Toca una figura para comenzar',
+    'correctFigure': 'Seleccionaste:',
+    'hits': 'Aciertos',
+    'resetGame': 'Reiniciar juego',
+    'figureRewardDefault': 'Sigue tocando figuras para ganar premios',
+    'figureRewardStar': '¡Ganaste una estrella por tus aciertos!',
+    'figureRewardMedal': '¡Excelente! Ganaste una medalla de figuras',
+    'figureInstructions':
+        'Observa las figuras, toca una y escucha o mira la respuesta en pantalla.',
+
+    // JUEGO DAVID
+    'gameDavid': 'Juego David',
+    'davidTitle': 'Juego de animales',
+    'davidSubtitleSound': 'Toca un animal y escucha su sonido',
+    'davidSubtitleNoSound': 'Toca un animal y aprende sin sonido',
+    'davidDescription':
+        'En este juego el niño puede tocar animales, reconocerlos por su imagen, escuchar sus sonidos y ganar premios por sus aciertos.',
+    'davidInstructions':
+        'Selecciona un animal para escuchar su sonido y sumar aciertos. Cada 3 animales ganas una estrella y cada 5 una medalla.',
+    'davidBenefits':
+        'Este juego ayuda a reconocer animales, asociar sonidos, mejorar la atención y motivar el aprendizaje con recompensas.',
+    'touchAnimal': 'Toca un animal para jugar',
+    'correctAnimal': 'Seleccionaste:',
+    'animalSelected': 'Animal seleccionado',
+    'animalsAvailable': 'Animales disponibles',
+    'listenAnimal': 'Escucha el sonido del animal',
+    'keepTouchingAnimals': 'Sigue tocando animales para ganar premios',
+    'dog': 'Perro',
+    'cat': 'Gato',
+    'chick': 'Pollito',
+    'cow': 'Vaca',
+
+    // PREMIOS JUEGO DAVID
+    'zooRewardsTitle': 'Premios del zoológico',
+    'zooRewardDefault': 'Juega con los animales para ganar premios',
+    'zooRewardStar': '¡Muy bien! Ganaste una estrella animal',
+    'zooRewardMedal': '¡Excelente! Ganaste una medalla animal',
+    'zooRewardBoth': '¡Increíble! Ganaste una estrella y una medalla',
+    'zooStars': 'Estrellas',
+    'zooMedals': 'Medallas',
+    'zooNextStar': 'Próxima estrella',
+    'zooNextMedal': 'Próxima medalla',
+    'zooMissingForStar': 'Faltan',
+    'zooAnimalsForStar': 'animales para ganar una estrella',
+    'zooMissingForMedal': 'Faltan',
+    'zooAnimalsForMedal': 'animales para ganar una medalla',
+    'zooStarUnlocked': '¡Estrella desbloqueada!',
+    'zooMedalUnlocked': '¡Medalla desbloqueada!',
 
     // CPS
     'cpsTitle': 'Figuras inteligentes',
@@ -128,44 +214,7 @@ class T {
     'triangle': 'Triángulo',
     'star': 'Estrella',
 
-    // Juego general
-    'game': 'Juego',
-    'gameTitle': 'Juego de figuras',
-    'gameSubtitle': 'Toca, observa y aprende',
-    'touchFigure': 'Toca una figura para comenzar',
-    'correctFigure': 'Seleccionaste:',
-    'hits': 'Aciertos',
-
-    // Juego David
-    'gameDavid': 'Juego David',
-    'davidTitle': 'Juego de animales',
-    'davidSubtitleSound': 'Toca un animal y escucha su sonido',
-    'davidSubtitleNoSound': 'Toca un animal y aprende sin sonido',
-    'touchAnimal': 'Toca un animal para jugar',
-    'correctAnimal': 'Seleccionaste:',
-    'dog': 'Perro',
-    'cat': 'Gato',
-    'chick': 'Pollito',
-    'cow': 'Vaca',
-
-    // Premios Juego David
-    'zooRewardsTitle': 'Premios del zoológico',
-    'zooRewardDefault': 'Juega con los animales para ganar premios',
-    'zooRewardStar': '¡Muy bien! Ganaste una estrella animal',
-    'zooRewardMedal': '¡Excelente! Ganaste una medalla animal',
-    'zooRewardBoth': '¡Increíble! Ganaste una estrella y una medalla',
-    'zooStars': 'Estrellas',
-    'zooMedals': 'Medallas',
-    'zooNextStar': 'Próxima estrella',
-    'zooNextMedal': 'Próxima medalla',
-    'zooMissingForStar': 'Faltan',
-    'zooAnimalsForStar': 'animales para ganar una estrella',
-    'zooMissingForMedal': 'Faltan',
-    'zooAnimalsForMedal': 'animales para ganar una medalla',
-    'zooStarUnlocked': '¡Estrella desbloqueada!',
-    'zooMedalUnlocked': '¡Medalla desbloqueada!',
-
-    // Nutrición
+    // NUTRICIÓN
     'nutritionChildTitle': 'Nutrición infantil',
     'nutritionChildSubtitle': 'Consejos para niños de 0 a 3 años',
     'touchSectionRecommendations':
@@ -186,14 +235,11 @@ class T {
     'nutritionRoutineSubtitle': 'Horarios y hábitos',
     'nutritionRoutineTip1':
         'Mantén horarios similares para desayuno, almuerzo, merienda y cena.',
-    'nutritionRoutineTip2':
-        'Crea un ambiente tranquilo durante la comida.',
-    'nutritionRoutineTip3':
-        'Evita pantallas mientras el niño se alimenta.',
+    'nutritionRoutineTip2': 'Crea un ambiente tranquilo durante la comida.',
+    'nutritionRoutineTip3': 'Evita pantallas mientras el niño se alimenta.',
     'nutritionRoutineTip4':
         'Permite que el niño explore texturas con supervisión.',
-    'nutritionRoutineTip5':
-        'Respeta señales de hambre y saciedad.',
+    'nutritionRoutineTip5': 'Respeta señales de hambre y saciedad.',
     'nutritionHydrationTitle': 'Hidratación',
     'nutritionHydrationSubtitle': 'Agua y bebidas adecuadas',
     'nutritionHydrationTip1':
@@ -212,32 +258,24 @@ class T {
         'Si gira la cabeza o cierra la boca, puede estar satisfecho.',
     'nutritionSignalsTip2':
         'Si mira la comida o abre la boca, puede tener interés.',
-    'nutritionSignalsTip3':
-        'No obligues a terminar el plato.',
+    'nutritionSignalsTip3': 'No obligues a terminar el plato.',
     'nutritionSignalsTip4':
         'Observa cambios de apetito durante enfermedad o dentición.',
-    'nutritionSignalsTip5':
-        'El apetito puede variar de un día a otro.',
+    'nutritionSignalsTip5': 'El apetito puede variar de un día a otro.',
     'nutritionSafetyTitle': 'Seguridad',
     'nutritionSafetySubtitle': 'Evitar riesgos al comer',
-    'nutritionSafetyTip1':
-        'Supervisa siempre al niño mientras come.',
+    'nutritionSafetyTip1': 'Supervisa siempre al niño mientras come.',
     'nutritionSafetyTip2':
         'Evita alimentos duros, redondos o pequeños que puedan causar atragantamiento.',
-    'nutritionSafetyTip3':
-        'Corta los alimentos en tamaños seguros.',
-    'nutritionSafetyTip4':
-        'Sienta al niño correctamente durante la comida.',
-    'nutritionSafetyTip5':
-        'Ante alergias o dudas, consulta al pediatra.',
+    'nutritionSafetyTip3': 'Corta los alimentos en tamaños seguros.',
+    'nutritionSafetyTip4': 'Sienta al niño correctamente durante la comida.',
+    'nutritionSafetyTip5': 'Ante alergias o dudas, consulta al pediatra.',
     'nutritionParentsTitle': 'Para padres',
     'nutritionParentsSubtitle': 'Acompañamiento positivo',
     'nutritionParentsTip1':
         'El ejemplo de la familia influye en los hábitos del niño.',
-    'nutritionParentsTip2':
-        'Evita usar dulces como premio o castigo.',
-    'nutritionParentsTip3':
-        'Celebra pequeños avances sin presionar.',
+    'nutritionParentsTip2': 'Evita usar dulces como premio o castigo.',
+    'nutritionParentsTip3': 'Celebra pequeños avances sin presionar.',
     'nutritionParentsTip4':
         'Planifica comidas sencillas con ingredientes disponibles.',
     'nutritionParentsTip5':
@@ -245,7 +283,7 @@ class T {
     'nutritionFinalNote':
         'Estas recomendaciones son generales y no reemplazan la orientación del pediatra. La alimentación debe ajustarse a la edad, salud, desarrollo, alergias y necesidades de cada niño.',
 
-    // Recetas
+    // RECETAS
     'recipesForChildren': 'Recetas para niños',
     'recipesShortDesc':
         'Encuentra ideas nutritivas y fáciles para diferentes momentos del día.',
@@ -253,8 +291,7 @@ class T {
     'recipesAppBar': 'Recetas',
     'recipesHeaderTitle': 'Recetas infantiles',
     'recipesHeaderSubtitle': 'Ideas suaves, nutritivas y fáciles',
-    'recipesHeaderNote':
-        'Pensadas como apoyo general para niños pequeños',
+    'recipesHeaderNote': 'Pensadas como apoyo general para niños pequeños',
     'ingredients': 'Ingredientes',
     'preparation': 'Preparación',
     'recipeFinalNote':
@@ -271,7 +308,8 @@ class T {
     'recipe1Ing4': 'Agua tibia o caldo natural sin sal',
     'recipe1Step1': 'Cocina todos los ingredientes hasta que estén suaves.',
     'recipe1Step2': 'Tritura o licúa según la textura que tolere el niño.',
-    'recipe1Step3': 'Agrega líquido poco a poco hasta lograr una textura cremosa.',
+    'recipe1Step3':
+        'Agrega líquido poco a poco hasta lograr una textura cremosa.',
     'recipe1Step4': 'Sirve tibio y en porciones pequeñas.',
     'recipe1Rec':
         'Es recomendable al almuerzo, cuando el niño está más activo y receptivo.',
@@ -279,8 +317,7 @@ class T {
     'recipe2Title': 'Avena cremosa con banana',
     'recipe2Age': 'Desde 7 meses',
     'recipe2Moment': 'Desayuno',
-    'recipe2Desc':
-        'Una opción suave y energética para iniciar el día.',
+    'recipe2Desc': 'Una opción suave y energética para iniciar el día.',
     'recipe2Ing1': 'Avena cocida',
     'recipe2Ing2': 'Banana madura aplastada',
     'recipe2Ing3': 'Leche materna, fórmula o agua',
@@ -289,8 +326,7 @@ class T {
     'recipe2Step2': 'Agrega la banana aplastada.',
     'recipe2Step3': 'Mezcla hasta obtener una textura cremosa.',
     'recipe2Step4': 'Deja enfriar antes de servir.',
-    'recipe2Rec':
-        'Ideal para desayuno o media mañana, sin añadir azúcar.',
+    'recipe2Rec': 'Ideal para desayuno o media mañana, sin añadir azúcar.',
 
     'recipe3Title': 'Tortillita suave de huevo y verduras',
     'recipe3Age': 'Desde 12 meses',
@@ -302,17 +338,16 @@ class T {
     'recipe3Ing3': 'Espinaca picada cocida',
     'recipe3Ing4': 'Aceite vegetal en pequeña cantidad',
     'recipe3Step1': 'Bate el huevo y mezcla las verduras cocidas.',
-    'recipe3Step2': 'Cocina a fuego bajo hasta que el huevo esté completamente cocido.',
+    'recipe3Step2':
+        'Cocina a fuego bajo hasta que el huevo esté completamente cocido.',
     'recipe3Step3': 'Corta en trozos pequeños y blandos.',
     'recipe3Step4': 'Sirve tibio y supervisa mientras come.',
-    'recipe3Rec':
-        'Úsala solo si el niño ya tolera huevo y verduras.',
+    'recipe3Rec': 'Úsala solo si el niño ya tolera huevo y verduras.',
 
     'recipe4Title': 'Arroz suave con lenteja',
     'recipe4Age': 'Desde 10 meses',
     'recipe4Moment': 'Almuerzo',
-    'recipe4Desc':
-        'Combina cereal y legumbre para una comida nutritiva.',
+    'recipe4Desc': 'Combina cereal y legumbre para una comida nutritiva.',
     'recipe4Ing1': 'Arroz bien cocido',
     'recipe4Ing2': 'Lentejas cocidas y suaves',
     'recipe4Ing3': 'Zanahoria cocida',
@@ -321,14 +356,12 @@ class T {
     'recipe4Step2': 'Mezcla con arroz y zanahoria cocida.',
     'recipe4Step3': 'Aplasta ligeramente si el niño aún no mastica bien.',
     'recipe4Step4': 'Sirve en porciones pequeñas.',
-    'recipe4Rec':
-        'Puede darse al almuerzo, observando tolerancia digestiva.',
+    'recipe4Rec': 'Puede darse al almuerzo, observando tolerancia digestiva.',
 
     'recipe5Title': 'Yogur natural con fruta',
     'recipe5Age': 'Desde 12 meses',
     'recipe5Moment': 'Merienda',
-    'recipe5Desc':
-        'Una merienda fresca y sencilla sin azúcar añadida.',
+    'recipe5Desc': 'Una merienda fresca y sencilla sin azúcar añadida.',
     'recipe5Ing1': 'Yogur natural sin azúcar',
     'recipe5Ing2': 'Fruta madura picada o aplastada',
     'recipe5Ing3': 'Avena suave opcional',
@@ -336,10 +369,9 @@ class T {
     'recipe5Step2': 'Mezcla con yogur natural.',
     'recipe5Step3': 'Aplasta si se requiere una textura más suave.',
     'recipe5Step4': 'Sirve frío, pero no helado.',
-    'recipe5Rec':
-        'Ideal para merienda, siempre que el niño tolere lácteos.',
+    'recipe5Rec': 'Ideal para merienda, siempre que el niño tolere lácteos.',
 
-    // Lenguaje
+    // LENGUAJE
     'languageTitle': 'Lenguaje y comunicación',
     'languageHeaderSubtitle': 'Actividades sencillas para estimular el habla',
     'touchActivityRecommendation':
@@ -363,8 +395,7 @@ class T {
         'Señala un objeto, di su nombre y espera una reacción del niño.',
     'nameObjectsHome':
         'Durante el juego, nombra colores, formas, personas o acciones.',
-    'nameObjectsParent':
-        'Repite las palabras sin corregir de forma brusca.',
+    'nameObjectsParent': 'Repite las palabras sin corregir de forma brusca.',
 
     'readImagesTitle': 'Leer imágenes',
     'readImagesDesc': 'Usa cuentos, fotos o láminas.',
@@ -372,17 +403,14 @@ class T {
         'Describe lo que ves: colores, personas, objetos o acciones.',
     'readImagesHome':
         'Use cualquier cuento, lámina, foto o imagen. No es necesario que tenga cosas específicas; puede describir colores, personas, objetos o acciones.',
-    'readImagesParent':
-        'Hacer preguntas simples ayuda a que el niño participe.',
+    'readImagesParent': 'Hacer preguntas simples ayuda a que el niño participe.',
 
     'singMoveTitle': 'Cantar y moverse',
     'singMoveDesc': 'Une música, gestos y palabras.',
     'singMoveRec':
         'Canta canciones cortas y acompáñalas con movimientos de manos.',
-    'singMoveHome':
-        'Usa canciones conocidas y repite frases fáciles.',
-    'singMoveParent':
-        'La repetición favorece memoria, ritmo y lenguaje.',
+    'singMoveHome': 'Usa canciones conocidas y repite frases fáciles.',
+    'singMoveParent': 'La repetición favorece memoria, ritmo y lenguaje.',
 
     'talkTitle': 'Conversar',
     'talkDesc': 'Habla durante actividades diarias.',
@@ -399,10 +427,9 @@ class T {
         'Haz un sonido simple y espera que el niño intente repetirlo.',
     'imitateSoundsHome':
         'Pueden imitar sonidos de carros, agua, animales o juguetes.',
-    'imitateSoundsParent':
-        'Celebra cualquier intento de comunicación.',
+    'imitateSoundsParent': 'Celebra cualquier intento de comunicación.',
 
-    // Entornos
+    // ENTORNOS
     'environmentTitle': 'Entornos protectores',
     'environmentHeaderSubtitle':
         'Ideas para cuidar, acompañar y prevenir riesgos',
@@ -468,7 +495,7 @@ class T {
   };
 
   static final Map<String, String> _english = {
-    // General
+    // GENERAL
     'appName': 'Wawa Kalú',
     'welcome': 'Welcome to Wawa Kalú',
     'subtitle': 'Learn by playing, exploring, and growing as a family',
@@ -481,8 +508,11 @@ class T {
     'continue': 'Continue',
     'startApp': 'Start',
     'startingApp': 'Starting...',
+    'close': 'Close',
+    'next': 'Next',
+    'previous': 'Previous',
 
-    // Settings
+    // SETTINGS
     'sounds': 'Sounds',
     'soundsOn': 'Sounds on',
     'soundsOff': 'Sounds off',
@@ -499,8 +529,8 @@ class T {
     'settingsNote':
         'You can change these options whenever you need from the gear icon.',
 
-    // Welcome
-    'welcomeScreenTitle': 'Welcome to ',
+    // WELCOME
+    'welcomeScreenTitle': 'Welcome to Wawa Kalú',
     'welcomeScreenSubtitle':
         'Learn through games, smart shapes, and helpful tips for parents.',
     'welcomeSettingsNote':
@@ -513,19 +543,16 @@ class T {
     'welcomeMiniFood': 'Nutrition',
     'welcomeMiniCare': 'Care',
     'welcomeGamesTitle': 'Educational games',
-    'welcomeGamesSubtitle':
-        'Simple activities to learn in a fun way.',
+    'welcomeGamesSubtitle': 'Simple activities to learn in a fun way.',
     'welcomeCpsTitle': 'Smart shapes',
-    'welcomeCpsSubtitle':
-        'Connect the ESP32 and detect shapes using sensors.',
+    'welcomeCpsSubtitle': 'Connect the ESP32 and detect shapes using sensors.',
     'welcomeNutritionTitle': 'Child nutrition',
-    'welcomeNutritionSubtitle':
-        'Tips and recipes designed for young children.',
+    'welcomeNutritionSubtitle': 'Tips and recipes designed for young children.',
     'welcomeParentsTitle': 'Support for parents',
     'welcomeParentsSubtitle':
         'Ideas for language, care, and protective environments.',
 
-    // Home
+    // HOME
     'cps': 'CPS',
     'cpsSubtitle': 'Smart shapes with ESP32',
     'games': 'Games',
@@ -536,6 +563,92 @@ class T {
     'languageSubtitle': 'Communication and stimulation',
     'environment': 'Environments',
     'environmentSubtitle': 'Child care and protection',
+
+    // GAMES PAGE
+    'gamesPageTitle': 'Game Zone',
+    'gamesPageSubtitle': 'Learning through play',
+    'gamesPageDescription':
+        'Explore activities created so children can learn with games, colors, animals, questions, and simple challenges.',
+    'selectGame': 'Select a game',
+    'playNow': 'Play now',
+    'availableGames': 'Available games',
+    'recommendedForKids': 'Recommended for young children',
+    'gameBenefits': 'Game benefits',
+    'gameBenefit1': 'Stimulates attention and observation.',
+    'gameBenefit2': 'Supports recognition of sounds, colors, and shapes.',
+    'gameBenefit3': 'Promotes learning through interaction.',
+    'gameBenefit4': 'Allows learning in a simple and entertaining way.',
+
+    'patyGameCardTitle': 'Paty Game',
+    'patyGameCardSubtitle': 'Custom game created by Paty',
+    'patyGameCardDescription':
+        'Visual and interactive activity to strengthen attention, observation, and learning through simple stimuli.',
+
+    'andresGameCardTitle': 'Andrés Game',
+    'andresGameCardSubtitle': 'Trivia created by Andrés',
+    'andresGameCardDescription':
+        'Trivia-style game to answer questions, recognize elements, and learn through interactive challenges.',
+
+    'davidGameCardTitle': 'David Game',
+    'davidGameCardSubtitle':
+        'Color and animal game for young children',
+    'davidGameCardDescription':
+        'Interactive game where the child taps animals, listens to their sounds, and earns stars or medals based on correct touches.',
+
+    // GENERAL GAME
+    'game': 'Game',
+    'gameTitle': 'Shape game',
+    'gameSubtitle': 'Tap, observe, and learn',
+    'gameDescription':
+        'Tap each shape to recognize its name, color, and form in a visual and interactive way.',
+    'touchFigure': 'Tap a shape to start',
+    'correctFigure': 'You selected:',
+    'hits': 'Hits',
+    'resetGame': 'Reset game',
+    'figureRewardDefault': 'Keep tapping shapes to win rewards',
+    'figureRewardStar': 'You won a star for your hits!',
+    'figureRewardMedal': 'Excellent! You won a shape medal',
+    'figureInstructions':
+        'Look at the shapes, tap one, and listen or watch the response on screen.',
+
+    // DAVID GAME
+    'gameDavid': 'David Game',
+    'davidTitle': 'Animal game',
+    'davidSubtitleSound': 'Tap an animal and listen to its sound',
+    'davidSubtitleNoSound': 'Tap an animal and learn without sound',
+    'davidDescription':
+        'In this game, children can tap animals, recognize them by image, listen to their sounds, and earn rewards for their hits.',
+    'davidInstructions':
+        'Select an animal to hear its sound and add hits. Every 3 animals earns a star and every 5 earns a medal.',
+    'davidBenefits':
+        'This game helps recognize animals, associate sounds, improve attention, and encourage learning with rewards.',
+    'touchAnimal': 'Tap an animal to play',
+    'correctAnimal': 'You selected:',
+    'animalSelected': 'Selected animal',
+    'animalsAvailable': 'Available animals',
+    'listenAnimal': 'Listen to the animal sound',
+    'keepTouchingAnimals': 'Keep tapping animals to win rewards',
+    'dog': 'Dog',
+    'cat': 'Cat',
+    'chick': 'Chick',
+    'cow': 'Cow',
+
+    // DAVID GAME REWARDS
+    'zooRewardsTitle': 'Zoo rewards',
+    'zooRewardDefault': 'Play with the animals to win rewards',
+    'zooRewardStar': 'Great job! You won an animal star',
+    'zooRewardMedal': 'Excellent! You won an animal medal',
+    'zooRewardBoth': 'Amazing! You won a star and a medal',
+    'zooStars': 'Stars',
+    'zooMedals': 'Medals',
+    'zooNextStar': 'Next star',
+    'zooNextMedal': 'Next medal',
+    'zooMissingForStar': 'Missing',
+    'zooAnimalsForStar': 'animals to win a star',
+    'zooMissingForMedal': 'Missing',
+    'zooAnimalsForMedal': 'animals to win a medal',
+    'zooStarUnlocked': 'Star unlocked!',
+    'zooMedalUnlocked': 'Medal unlocked!',
 
     // CPS
     'cpsTitle': 'Smart shapes',
@@ -585,48 +698,10 @@ class T {
     'triangle': 'Triangle',
     'star': 'Star',
 
-    // General game
-    'game': 'Game',
-    'gameTitle': 'Shape game',
-    'gameSubtitle': 'Tap, observe, and learn',
-    'touchFigure': 'Tap a shape to start',
-    'correctFigure': 'You selected:',
-    'hits': 'Hits',
-
-    // David game
-    'gameDavid': 'David Game',
-    'davidTitle': 'Animal game',
-    'davidSubtitleSound': 'Tap an animal and listen to its sound',
-    'davidSubtitleNoSound': 'Tap an animal and learn without sound',
-    'touchAnimal': 'Tap an animal to play',
-    'correctAnimal': 'You selected:',
-    'dog': 'Dog',
-    'cat': 'Cat',
-    'chick': 'Chick',
-    'cow': 'Cow',
-
-    // David game rewards
-    'zooRewardsTitle': 'Zoo rewards',
-    'zooRewardDefault': 'Play with the animals to win rewards',
-    'zooRewardStar': 'Great job! You won an animal star',
-    'zooRewardMedal': 'Excellent! You won an animal medal',
-    'zooRewardBoth': 'Amazing! You won a star and a medal',
-    'zooStars': 'Stars',
-    'zooMedals': 'Medals',
-    'zooNextStar': 'Next star',
-    'zooNextMedal': 'Next medal',
-    'zooMissingForStar': 'Missing',
-    'zooAnimalsForStar': 'animals to win a star',
-    'zooMissingForMedal': 'Missing',
-    'zooAnimalsForMedal': 'animals to win a medal',
-    'zooStarUnlocked': 'Star unlocked!',
-    'zooMedalUnlocked': 'Medal unlocked!',
-
-    // Nutrition
+    // NUTRITION
     'nutritionChildTitle': 'Child nutrition',
     'nutritionChildSubtitle': 'Tips for children from 0 to 3 years old',
-    'touchSectionRecommendations':
-        'Tap a section to see recommendations',
+    'touchSectionRecommendations': 'Tap a section to see recommendations',
     'nutritionFoodsTitle': 'Foods',
     'nutritionFoodsSubtitle': 'Healthy and simple ideas',
     'nutritionFoodsTip1':
@@ -643,14 +718,11 @@ class T {
     'nutritionRoutineSubtitle': 'Schedules and habits',
     'nutritionRoutineTip1':
         'Keep similar times for breakfast, lunch, snack, and dinner.',
-    'nutritionRoutineTip2':
-        'Create a calm environment during meals.',
-    'nutritionRoutineTip3':
-        'Avoid screens while the child is eating.',
+    'nutritionRoutineTip2': 'Create a calm environment during meals.',
+    'nutritionRoutineTip3': 'Avoid screens while the child is eating.',
     'nutritionRoutineTip4':
         'Allow the child to explore textures with supervision.',
-    'nutritionRoutineTip5':
-        'Respect hunger and fullness cues.',
+    'nutritionRoutineTip5': 'Respect hunger and fullness cues.',
     'nutritionHydrationTitle': 'Hydration',
     'nutritionHydrationSubtitle': 'Water and suitable drinks',
     'nutritionHydrationTip1':
@@ -669,32 +741,24 @@ class T {
         'Turning the head or closing the mouth may mean the child is full.',
     'nutritionSignalsTip2':
         'Looking at food or opening the mouth may show interest.',
-    'nutritionSignalsTip3':
-        'Do not force the child to finish the plate.',
+    'nutritionSignalsTip3': 'Do not force the child to finish the plate.',
     'nutritionSignalsTip4':
         'Watch appetite changes during illness or teething.',
-    'nutritionSignalsTip5':
-        'Appetite may vary from day to day.',
+    'nutritionSignalsTip5': 'Appetite may vary from day to day.',
     'nutritionSafetyTitle': 'Safety',
     'nutritionSafetySubtitle': 'Avoid risks while eating',
-    'nutritionSafetyTip1':
-        'Always supervise the child while eating.',
+    'nutritionSafetyTip1': 'Always supervise the child while eating.',
     'nutritionSafetyTip2':
         'Avoid hard, round, or small foods that may cause choking.',
-    'nutritionSafetyTip3':
-        'Cut food into safe sizes.',
-    'nutritionSafetyTip4':
-        'Seat the child correctly during meals.',
+    'nutritionSafetyTip3': 'Cut food into safe sizes.',
+    'nutritionSafetyTip4': 'Seat the child correctly during meals.',
     'nutritionSafetyTip5':
         'For allergies or concerns, consult the pediatrician.',
     'nutritionParentsTitle': 'For parents',
     'nutritionParentsSubtitle': 'Positive support',
-    'nutritionParentsTip1':
-        'Family example influences the child’s habits.',
-    'nutritionParentsTip2':
-        'Avoid using sweets as rewards or punishment.',
-    'nutritionParentsTip3':
-        'Celebrate small progress without pressure.',
+    'nutritionParentsTip1': 'Family example influences the child’s habits.',
+    'nutritionParentsTip2': 'Avoid using sweets as rewards or punishment.',
+    'nutritionParentsTip3': 'Celebrate small progress without pressure.',
     'nutritionParentsTip4':
         'Plan simple meals with available ingredients.',
     'nutritionParentsTip5':
@@ -702,7 +766,7 @@ class T {
     'nutritionFinalNote':
         'These recommendations are general and do not replace pediatric guidance. Feeding should be adapted to each child’s age, health, development, allergies, and needs.',
 
-    // Recipes
+    // RECIPES
     'recipesForChildren': 'Recipes for children',
     'recipesShortDesc':
         'Find nutritious and easy ideas for different moments of the day.',
@@ -710,8 +774,7 @@ class T {
     'recipesAppBar': 'Recipes',
     'recipesHeaderTitle': 'Child recipes',
     'recipesHeaderSubtitle': 'Soft, nutritious, and easy ideas',
-    'recipesHeaderNote':
-        'Designed as general support for young children',
+    'recipesHeaderNote': 'Designed as general support for young children',
     'ingredients': 'Ingredients',
     'preparation': 'Preparation',
     'recipeFinalNote':
@@ -736,8 +799,7 @@ class T {
     'recipe2Title': 'Creamy oatmeal with banana',
     'recipe2Age': 'From 7 months',
     'recipe2Moment': 'Breakfast',
-    'recipe2Desc':
-        'A soft and energetic option to start the day.',
+    'recipe2Desc': 'A soft and energetic option to start the day.',
     'recipe2Ing1': 'Cooked oatmeal',
     'recipe2Ing2': 'Mashed ripe banana',
     'recipe2Ing3': 'Breast milk, formula, or water',
@@ -746,8 +808,7 @@ class T {
     'recipe2Step2': 'Add mashed banana.',
     'recipe2Step3': 'Mix until creamy.',
     'recipe2Step4': 'Let it cool before serving.',
-    'recipe2Rec':
-        'Ideal for breakfast or mid-morning, without added sugar.',
+    'recipe2Rec': 'Ideal for breakfast or mid-morning, without added sugar.',
 
     'recipe3Title': 'Soft egg and vegetable omelet',
     'recipe3Age': 'From 12 months',
@@ -762,14 +823,12 @@ class T {
     'recipe3Step2': 'Cook on low heat until the egg is fully cooked.',
     'recipe3Step3': 'Cut into small soft pieces.',
     'recipe3Step4': 'Serve warm and supervise while eating.',
-    'recipe3Rec':
-        'Use only if the child already tolerates egg and vegetables.',
+    'recipe3Rec': 'Use only if the child already tolerates egg and vegetables.',
 
     'recipe4Title': 'Soft rice with lentils',
     'recipe4Age': 'From 10 months',
     'recipe4Moment': 'Lunch',
-    'recipe4Desc':
-        'Combines grain and legume for a nutritious meal.',
+    'recipe4Desc': 'Combines grain and legume for a nutritious meal.',
     'recipe4Ing1': 'Well-cooked rice',
     'recipe4Ing2': 'Cooked soft lentils',
     'recipe4Ing3': 'Cooked carrot',
@@ -778,14 +837,12 @@ class T {
     'recipe4Step2': 'Mix with rice and cooked carrot.',
     'recipe4Step3': 'Mash slightly if the child does not chew well yet.',
     'recipe4Step4': 'Serve in small portions.',
-    'recipe4Rec':
-        'Can be given at lunch while observing digestive tolerance.',
+    'recipe4Rec': 'Can be given at lunch while observing digestive tolerance.',
 
     'recipe5Title': 'Natural yogurt with fruit',
     'recipe5Age': 'From 12 months',
     'recipe5Moment': 'Snack',
-    'recipe5Desc':
-        'A fresh and simple snack without added sugar.',
+    'recipe5Desc': 'A fresh and simple snack without added sugar.',
     'recipe5Ing1': 'Natural unsweetened yogurt',
     'recipe5Ing2': 'Ripe fruit, chopped or mashed',
     'recipe5Ing3': 'Soft oatmeal, optional',
@@ -793,10 +850,9 @@ class T {
     'recipe5Step2': 'Mix with natural yogurt.',
     'recipe5Step3': 'Mash if a softer texture is needed.',
     'recipe5Step4': 'Serve cold, but not frozen.',
-    'recipe5Rec':
-        'Ideal as a snack if the child tolerates dairy.',
+    'recipe5Rec': 'Ideal as a snack if the child tolerates dairy.',
 
-    // Language
+    // LANGUAGE
     'languageTitle': 'Language and communication',
     'languageHeaderSubtitle': 'Simple activities to stimulate speech',
     'touchActivityRecommendation':
@@ -818,10 +874,8 @@ class T {
     'nameObjectsDesc': 'Use nearby things and name them clearly.',
     'nameObjectsRec':
         'Point to an object, say its name, and wait for the child’s reaction.',
-    'nameObjectsHome':
-        'During play, name colors, shapes, people, or actions.',
-    'nameObjectsParent':
-        'Repeat words without correcting harshly.',
+    'nameObjectsHome': 'During play, name colors, shapes, people, or actions.',
+    'nameObjectsParent': 'Repeat words without correcting harshly.',
 
     'readImagesTitle': 'Read images',
     'readImagesDesc': 'Use stories, photos, or pictures.',
@@ -829,17 +883,13 @@ class T {
         'Describe what you see: colors, people, objects, or actions.',
     'readImagesHome':
         'Use any story, picture, photo, or image. It does not need to contain specific things; you can describe colors, people, objects, or actions.',
-    'readImagesParent':
-        'Simple questions help the child participate.',
+    'readImagesParent': 'Simple questions help the child participate.',
 
     'singMoveTitle': 'Sing and move',
     'singMoveDesc': 'Combine music, gestures, and words.',
-    'singMoveRec':
-        'Sing short songs and accompany them with hand movements.',
-    'singMoveHome':
-        'Use familiar songs and repeat easy phrases.',
-    'singMoveParent':
-        'Repetition supports memory, rhythm, and language.',
+    'singMoveRec': 'Sing short songs and accompany them with hand movements.',
+    'singMoveHome': 'Use familiar songs and repeat easy phrases.',
+    'singMoveParent': 'Repetition supports memory, rhythm, and language.',
 
     'talkTitle': 'Talk',
     'talkDesc': 'Talk during daily activities.',
@@ -856,15 +906,12 @@ class T {
         'Make a simple sound and wait for the child to try repeating it.',
     'imitateSoundsHome':
         'You can imitate sounds of cars, water, animals, or toys.',
-    'imitateSoundsParent':
-        'Celebrate any attempt to communicate.',
+    'imitateSoundsParent': 'Celebrate any attempt to communicate.',
 
-    // Environment
+    // ENVIRONMENT
     'environmentTitle': 'Protective environments',
-    'environmentHeaderSubtitle':
-        'Ideas to care, support, and prevent risks',
-    'touchEnvironmentActions':
-        'Tap a section to see recommended actions',
+    'environmentHeaderSubtitle': 'Ideas to care, support, and prevent risks',
+    'touchEnvironmentActions': 'Tap a section to see recommended actions',
     'environmentFinalNote':
         'A protective environment combines physical safety, affection, routines, and constant supervision.',
 

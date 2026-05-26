@@ -41,7 +41,7 @@ IconData iconoTema(ThemeMode tema) {
 }
 
 Color colorTema(ThemeMode tema) {
-  if (tema == ThemeMode.system) return Colors.deepPurple;
+  if (tema == ThemeMode.system) return Colors.teal;
   if (tema == ThemeMode.dark) return Colors.indigo;
   return Colors.amber;
 }
@@ -470,8 +470,19 @@ class ThemeSelector extends StatelessWidget {
     final Color fondo =
         modoOscuro ? const Color(0xFF15131A) : const Color(0xFFF2ECFF);
 
-    final Color seleccionado =
-        modoOscuro ? Colors.deepPurple.shade400 : Colors.deepPurple;
+    Color colorSeleccionado() {
+  if (temaActual == ThemeMode.system) {
+    return const Color(0xFF00A896); // Automático turquesa
+  }
+
+  if (temaActual == ThemeMode.dark) {
+    return modoOscuro ? Colors.indigo.shade400 : Colors.indigo;
+  }
+
+  return Colors.amber; // Claro
+}
+
+final Color seleccionado = colorSeleccionado();
 
     return Container(
       padding: const EdgeInsets.all(4),

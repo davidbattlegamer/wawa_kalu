@@ -11,119 +11,16 @@ import 'alumnos/juego_david.dart';
 class JuegoPage extends StatelessWidget {
   const JuegoPage({super.key});
 
-  List<JuegoItem> _juegos() {
-    return [
-      JuegoItem(
-        titulo: T.txt('gamePaty'),
-        descripcion: T.txt('gamePatyDesc'),
-        icono: Icons.extension_rounded,
-        color: const Color(0xFFFF006E),
-        pagina: const JuegoPatyPage(),
-      ),
-      JuegoItem(
-        titulo: T.txt('gameAndres'),
-        descripcion: T.txt('gameAndresDesc'),
-        icono: Icons.quiz_rounded,
-        color: const Color(0xFF4361EE),
-        pagina: const JuegoAndresPage(),
-      ),
-      JuegoItem(
-        titulo: T.txt('gameDavid'),
-        descripcion: T.txt('gameDavidDesc'),
-        icono: Icons.pets_rounded,
-        color: const Color(0xFFFF8C42),
-        pagina: const JuegoDavidPage(),
-      ),
-    ];
-  }
-
-  Widget _encabezado(bool modoOscuro) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 26),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-            const Color(0xFF7B2CBF).withValues(alpha: modoOscuro ? 0.22 : 0.10),
-            const Color(0xFFFF6B6B).withValues(alpha: modoOscuro ? 0.18 : 0.08),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(
-          color: const Color(0xFF7B2CBF).withValues(alpha: modoOscuro ? 0.32 : 0.18),
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF7B2CBF).withValues(alpha: modoOscuro ? 0.18 : 0.10),
-            blurRadius: 16,
-            offset: const Offset(0, 7),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Container(
-            width: 92,
-            height: 92,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  const Color(0xFF7B2CBF).withValues(alpha: 0.28),
-                  const Color(0xFFFF6B6B).withValues(alpha: 0.16),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              shape: BoxShape.circle,
-            ),
-            child: const Center(
-              child: Text(
-                '🎮',
-                style: TextStyle(fontSize: 48),
-              ),
-            ),
-          ),
-          const SizedBox(height: 14),
-          Text(
-            T.txt('studentGames'),
-            textAlign: TextAlign.center,
-            style: GoogleFonts.fredoka(
-              fontSize: 34,
-              fontWeight: FontWeight.w700,
-              color: modoOscuro ? Colors.white : const Color(0xFF7B2CBF),
-              height: 1.05,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            T.txt('gamesSubtitle'),
-            textAlign: TextAlign.center,
-            style: GoogleFonts.baloo2(
-              fontSize: 19,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFFFF6B6B),
-              height: 1.15,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<String>(
       valueListenable: AppConfig.idioma,
-      builder: (context, idioma, _) {
+      builder: (context, idiomaActual, _) {
         return ValueListenableBuilder<ThemeMode>(
           valueListenable: AppConfig.temaApp,
           builder: (context, temaActual, _) {
-            final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
-            final listaJuegos = _juegos();
+            final bool modoOscuro =
+                Theme.of(context).brightness == Brightness.dark;
 
             return Scaffold(
               backgroundColor: modoOscuro
@@ -146,20 +43,73 @@ class JuegoPage extends StatelessWidget {
                 elevation: 0,
               ),
               body: SafeArea(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(18),
-                  child: Column(
-                    children: [
-                      _encabezado(modoOscuro),
-                      const SizedBox(height: 22),
-                      ...listaJuegos.map(
-                        (juego) => JuegoCard(
-                          juego: juego,
-                          modoOscuro: modoOscuro,
-                        ),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final bool pantallaPequena =
+                        constraints.maxHeight < 720 ||
+                            constraints.maxWidth < 380;
+
+                    return SingleChildScrollView(
+                      padding: EdgeInsets.all(pantallaPequena ? 16 : 20),
+                      child: Column(
+                        children: [
+                          _headerJuegos(
+                            modoOscuro: modoOscuro,
+                            pantallaPequena: pantallaPequena,
+                          ),
+                          const SizedBox(height: 18),
+                          _beneficiosCard(modoOscuro),
+                          const SizedBox(height: 18),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              T.txt('availableGames'),
+                              style: GoogleFonts.fredoka(
+                                fontSize: 23,
+                                fontWeight: FontWeight.w700,
+                                color: modoOscuro
+                                    ? Colors.white
+                                    : const Color(0xFF4A2C82),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          _juegoCard(
+                            context: context,
+                            modoOscuro: modoOscuro,
+                            color: Colors.pink,
+                            icon: Icons.extension_rounded,
+                            title: T.txt('patyGameCardTitle'),
+                            subtitle: T.txt('patyGameCardSubtitle'),
+                            description: T.txt('patyGameCardDescription'),
+                            page: const JuegoPatyPage(),
+                          ),
+                          const SizedBox(height: 14),
+                          _juegoCard(
+                            context: context,
+                            modoOscuro: modoOscuro,
+                            color: Colors.blueAccent,
+                            icon: Icons.quiz_rounded,
+                            title: T.txt('andresGameCardTitle'),
+                            subtitle: T.txt('andresGameCardSubtitle'),
+                            description: T.txt('andresGameCardDescription'),
+                            page: const JuegoAndresPage(),
+                          ),
+                          const SizedBox(height: 14),
+                          _juegoCard(
+                            context: context,
+                            modoOscuro: modoOscuro,
+                            color: Colors.orange,
+                            icon: Icons.pets_rounded,
+                            title: T.txt('davidGameCardTitle'),
+                            subtitle: T.txt('davidGameCardSubtitle'),
+                            description: T.txt('davidGameCardDescription'),
+                            page: const JuegoDavidPage(),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               ),
             );
@@ -168,92 +118,264 @@ class JuegoPage extends StatelessWidget {
       },
     );
   }
-}
 
-class JuegoCard extends StatelessWidget {
-  final JuegoItem juego;
-  final bool modoOscuro;
-
-  const JuegoCard({
-    super.key,
-    required this.juego,
-    required this.modoOscuro,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _headerJuegos({
+    required bool modoOscuro,
+    required bool pantallaPequena,
+  }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 14),
+      width: double.infinity,
+      padding: EdgeInsets.all(pantallaPequena ? 20 : 24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            modoOscuro ? const Color(0xFF211B2E) : Colors.white,
+            Colors.deepPurple.withValues(alpha: modoOscuro ? 0.22 : 0.12),
+            Colors.pinkAccent.withValues(alpha: modoOscuro ? 0.14 : 0.07),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(
+          color: Colors.deepPurple.withValues(
+            alpha: modoOscuro ? 0.30 : 0.16,
+          ),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.deepPurple.withValues(alpha: 0.10),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: pantallaPequena ? 78 : 92,
+            height: pantallaPequena ? 78 : 92,
+            decoration: BoxDecoration(
+              color: Colors.pink.withValues(alpha: 0.14),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Text(
+                '🎮',
+                style: TextStyle(fontSize: pantallaPequena ? 44 : 54),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            T.txt('gamesPageTitle'),
+            textAlign: TextAlign.center,
+            style: GoogleFonts.fredoka(
+              fontSize: pantallaPequena ? 30 : 36,
+              fontWeight: FontWeight.w800,
+              color: modoOscuro ? Colors.white : const Color(0xFF4A2C82),
+              height: 1.05,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            T.txt('gamesPageSubtitle'),
+            textAlign: TextAlign.center,
+            style: GoogleFonts.baloo2(
+              fontSize: pantallaPequena ? 17 : 20,
+              fontWeight: FontWeight.w700,
+              color: const Color(0xFFEF476F),
+              height: 1.15,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            T.txt('gamesPageDescription'),
+            textAlign: TextAlign.center,
+            style: GoogleFonts.baloo2(
+              fontSize: pantallaPequena ? 14.5 : 16,
+              fontWeight: FontWeight.w500,
+              color: modoOscuro ? Colors.white70 : Colors.black54,
+              height: 1.2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _beneficiosCard(bool modoOscuro) {
+    final beneficios = [
+      T.txt('gameBenefit1'),
+      T.txt('gameBenefit2'),
+      T.txt('gameBenefit3'),
+      T.txt('gameBenefit4'),
+    ];
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            modoOscuro ? const Color(0xFF211B2E) : Colors.white,
+            Colors.pink.withValues(alpha: modoOscuro ? 0.18 : 0.08),
+          ],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        borderRadius: BorderRadius.circular(26),
+        border: Border.all(
+          color: Colors.pink.withValues(alpha: modoOscuro ? 0.28 : 0.15),
+          width: 1.4,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.pink.withValues(alpha: 0.08),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.auto_awesome_rounded,
+                color: Colors.pink,
+                size: 30,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  T.txt('gameBenefits'),
+                  style: GoogleFonts.fredoka(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...beneficios.map(
+            (beneficio) => Padding(
+              padding: const EdgeInsets.only(bottom: 7),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.check_circle_rounded,
+                    color: Colors.green,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      beneficio,
+                      style: GoogleFonts.baloo2(
+                        fontSize: 15.5,
+                        fontWeight: FontWeight.w500,
+                        color: modoOscuro ? Colors.white70 : Colors.black87,
+                        height: 1.15,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _juegoCard({
+    required BuildContext context,
+    required bool modoOscuro,
+    required Color color,
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required String description,
+    required Widget page,
+  }) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            modoOscuro ? const Color(0xFF211B2E) : Colors.white,
+            color.withValues(alpha: modoOscuro ? 0.20 : 0.09),
+          ],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(
+          color: color.withValues(alpha: modoOscuro ? 0.32 : 0.18),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.10),
+            blurRadius: 15,
+            offset: const Offset(0, 7),
+          ),
+        ],
+      ),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(28),
         child: InkWell(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(28),
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => juego.pagina,
+                builder: (_) => page,
               ),
             );
           },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-                  juego.color.withValues(alpha: modoOscuro ? 0.18 : 0.09),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: juego.color.withValues(alpha: modoOscuro ? 0.30 : 0.18),
-                width: 1.5,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: juego.color.withValues(alpha: modoOscuro ? 0.13 : 0.08),
-                  blurRadius: 12,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
+          child: Padding(
+            padding: const EdgeInsets.all(18),
             child: Row(
               children: [
                 Container(
-                  width: 58,
-                  height: 58,
+                  width: 64,
+                  height: 64,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        juego.color.withValues(alpha: 0.24),
-                        juego.color.withValues(alpha: 0.08),
+                        color.withValues(alpha: 0.26),
+                        color.withValues(alpha: 0.09),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(22),
                   ),
                   child: Icon(
-                    juego.icono,
-                    size: 32,
-                    color: juego.color,
+                    icon,
+                    color: color,
+                    size: 36,
                   ),
                 ),
-                const SizedBox(width: 14),
+                const SizedBox(width: 15),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        juego.titulo,
+                        title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.fredoka(
-                          fontSize: 20,
+                          fontSize: 21,
                           fontWeight: FontWeight.w700,
                           color: modoOscuro
                               ? Colors.white
@@ -262,13 +384,50 @@ class JuegoCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 3),
                       Text(
-                        juego.descripcion,
+                        subtitle,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.baloo2(
-                          fontSize: 15,
+                          fontSize: 15.5,
+                          fontWeight: FontWeight.w700,
+                          color: color,
+                          height: 1.1,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        description,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.baloo2(
+                          fontSize: 14.5,
                           fontWeight: FontWeight.w500,
                           color: modoOscuro ? Colors.white70 : Colors.black54,
+                          height: 1.15,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 7,
+                          ),
+                          decoration: BoxDecoration(
+                            color: color.withValues(
+                              alpha: modoOscuro ? 0.22 : 0.12,
+                            ),
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: Text(
+                            T.txt('playNow'),
+                            style: GoogleFonts.fredoka(
+                              fontSize: 14.5,
+                              fontWeight: FontWeight.w700,
+                              color: color,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -276,8 +435,8 @@ class JuegoCard extends StatelessWidget {
                 ),
                 Icon(
                   Icons.chevron_right_rounded,
-                  color: juego.color,
-                  size: 30,
+                  color: color,
+                  size: 31,
                 ),
               ],
             ),
@@ -286,20 +445,4 @@ class JuegoCard extends StatelessWidget {
       ),
     );
   }
-}
-
-class JuegoItem {
-  final String titulo;
-  final String descripcion;
-  final IconData icono;
-  final Color color;
-  final Widget pagina;
-
-  const JuegoItem({
-    required this.titulo,
-    required this.descripcion,
-    required this.icono,
-    required this.color,
-    required this.pagina,
-  });
 }

@@ -170,20 +170,43 @@ class WelcomePageState extends State<WelcomePage>
 
   Widget botonConfiguracion(bool modoOscuro) {
     return Positioned(
-      top: 8,
-      right: 8,
-      child: Material(
-        color: Colors.transparent,
-        child: IconButton(
-          tooltip: T.txt('settingsTitle'),
-          icon: Icon(
-            Icons.settings_rounded,
-            size: 30,
-            color: modoOscuro ? Colors.white : const Color(0xFF4A2C82),
+      top: 10,
+      right: 10,
+      child: SafeArea(
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(22),
+            onTap: () {
+              showConfigSheet(context);
+            },
+            child: Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: modoOscuro
+                    ? const Color(0xFF211B2E).withValues(alpha: 0.92)
+                    : Colors.white.withValues(alpha: 0.92),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.deepPurple.withValues(alpha: 0.22),
+                  width: 1.3,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.10),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Icon(
+                Icons.settings_rounded,
+                size: 27,
+                color: modoOscuro ? Colors.white : const Color(0xFF4A2C82),
+              ),
+            ),
           ),
-          onPressed: () {
-            showConfigSheet(context);
-          },
         ),
       ),
     );
@@ -303,7 +326,7 @@ class WelcomePageState extends State<WelcomePage>
                   },
                 ),
 
-                // Debe ir al final para quedar encima y poder pulsarse
+                // Siempre encima para poder pulsarse
                 botonConfiguracion(modoOscuro),
               ],
             ),
@@ -539,89 +562,92 @@ class WelcomePageState extends State<WelcomePage>
       body: SafeArea(
         child: Stack(
           children: [
-            FadeTransition(
-              opacity: fadeContenido,
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final bool pantallaPequena =
-                      constraints.maxHeight < 720 || constraints.maxWidth < 380;
+            Positioned.fill(
+              child: FadeTransition(
+                opacity: fadeContenido,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final bool pantallaPequena = constraints.maxHeight < 720 ||
+                        constraints.maxWidth < 380;
 
-                  return SingleChildScrollView(
-                    padding: EdgeInsets.fromLTRB(
-                      22,
-                      pantallaPequena ? 56 : 70,
-                      22,
-                      24,
-                    ),
-                    child: Column(
-                      children: [
-                        seccionCard(
-                          icon: Icons.videogame_asset_rounded,
-                          title: T.txt('games'),
-                          subtitle: T.txt('gamesSubtitle'),
-                          color: Colors.orange,
-                          modoOscuro: modoOscuro,
-                          index: 0,
-                        ),
-                        const SizedBox(height: 12),
-                        seccionCard(
-                          icon: Icons.smart_toy_rounded,
-                          title: T.txt('cps'),
-                          subtitle: T.txt('cpsSubtitle'),
-                          color: Colors.deepPurple,
-                          modoOscuro: modoOscuro,
-                          index: 1,
-                        ),
-                        const SizedBox(height: 12),
-                        seccionCard(
-                          icon: Icons.restaurant_menu_rounded,
-                          title: T.txt('nutrition'),
-                          subtitle: T.txt('nutritionSubtitle'),
-                          color: Colors.green,
-                          modoOscuro: modoOscuro,
-                          index: 2,
-                        ),
-                        const SizedBox(height: 12),
-                        seccionCard(
-                          icon: Icons.record_voice_over_rounded,
-                          title: T.txt('languageMenu'),
-                          subtitle: T.txt('languageSubtitle'),
-                          color: Colors.pink,
-                          modoOscuro: modoOscuro,
-                          index: 3,
-                        ),
-                        const SizedBox(height: 12),
-                        seccionCard(
-                          icon: Icons.volunteer_activism_rounded,
-                          title: T.txt('environment'),
-                          subtitle: T.txt('environmentSubtitle'),
-                          color: Colors.teal,
-                          modoOscuro: modoOscuro,
-                          index: 4,
-                        ),
-                        SizedBox(height: pantallaPequena ? 22 : 34),
-                        if (mostrarBoton) botonComenzar(),
-                        const SizedBox(height: 14),
-                        if (mostrarBoton)
-                          Text(
-                            T.txt('welcomeSettingsNote'),
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.baloo2(
-                              fontSize: 14.5,
-                              fontWeight: FontWeight.w500,
-                              color:
-                                  modoOscuro ? Colors.white60 : Colors.black45,
-                              height: 1.2,
-                            ),
+                    return SingleChildScrollView(
+                      padding: EdgeInsets.fromLTRB(
+                        22,
+                        pantallaPequena ? 72 : 82,
+                        22,
+                        24,
+                      ),
+                      child: Column(
+                        children: [
+                          seccionCard(
+                            icon: Icons.videogame_asset_rounded,
+                            title: T.txt('games'),
+                            subtitle: T.txt('gamesSubtitle'),
+                            color: Colors.orange,
+                            modoOscuro: modoOscuro,
+                            index: 0,
                           ),
-                      ],
-                    ),
-                  );
-                },
+                          const SizedBox(height: 12),
+                          seccionCard(
+                            icon: Icons.smart_toy_rounded,
+                            title: T.txt('cps'),
+                            subtitle: T.txt('cpsSubtitle'),
+                            color: Colors.deepPurple,
+                            modoOscuro: modoOscuro,
+                            index: 1,
+                          ),
+                          const SizedBox(height: 12),
+                          seccionCard(
+                            icon: Icons.restaurant_menu_rounded,
+                            title: T.txt('nutrition'),
+                            subtitle: T.txt('nutritionSubtitle'),
+                            color: Colors.green,
+                            modoOscuro: modoOscuro,
+                            index: 2,
+                          ),
+                          const SizedBox(height: 12),
+                          seccionCard(
+                            icon: Icons.record_voice_over_rounded,
+                            title: T.txt('languageMenu'),
+                            subtitle: T.txt('languageSubtitle'),
+                            color: Colors.pink,
+                            modoOscuro: modoOscuro,
+                            index: 3,
+                          ),
+                          const SizedBox(height: 12),
+                          seccionCard(
+                            icon: Icons.volunteer_activism_rounded,
+                            title: T.txt('environment'),
+                            subtitle: T.txt('environmentSubtitle'),
+                            color: Colors.teal,
+                            modoOscuro: modoOscuro,
+                            index: 4,
+                          ),
+                          SizedBox(height: pantallaPequena ? 22 : 34),
+                          if (mostrarBoton) botonComenzar(),
+                          const SizedBox(height: 14),
+                          if (mostrarBoton)
+                            Text(
+                              T.txt('welcomeSettingsNote'),
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.baloo2(
+                                fontSize: 14.5,
+                                fontWeight: FontWeight.w500,
+                                color: modoOscuro
+                                    ? Colors.white60
+                                    : Colors.black45,
+                                height: 1.2,
+                              ),
+                            ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
 
-            // Debe ir al final del Stack para poder pulsarse
+            // Este va último y por encima del scroll
             botonConfiguracion(modoOscuro),
           ],
         ),
