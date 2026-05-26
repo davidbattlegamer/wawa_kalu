@@ -41,9 +41,18 @@ IconData iconoTema(ThemeMode tema) {
 }
 
 Color colorTema(ThemeMode tema) {
-  if (tema == ThemeMode.system) return Colors.teal;
+  if (tema == ThemeMode.system) return const Color(0xFF00A896);
   if (tema == ThemeMode.dark) return Colors.indigo;
   return Colors.amber;
+}
+
+String textoIdiomaActual({
+  required bool idiomaAuto,
+  required String idiomaActual,
+}) {
+  if (idiomaAuto) return T.txt('languageAutomatic');
+  if (idiomaActual == 'en') return T.txt('english');
+  return T.txt('spanish');
 }
 
 void showConfigSheet(BuildContext context) {
@@ -70,9 +79,6 @@ void showConfigSheet(BuildContext context) {
           final Color fondoModal =
               modoOscuro ? const Color(0xFF15131A) : const Color(0xFFFAF7F2);
 
-          final Color textoPrincipal =
-              modoOscuro ? Colors.white : const Color(0xFF2D2D2D);
-
           final Color textoSecundario =
               modoOscuro ? Colors.white70 : Colors.black54;
 
@@ -88,12 +94,12 @@ void showConfigSheet(BuildContext context) {
             child: SafeArea(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxHeight: altoPantalla * 0.88,
+                  maxHeight: altoPantalla * 0.90,
                 ),
                 child: SingleChildScrollView(
                   padding: EdgeInsets.only(
-                    left: 20,
-                    right: 20,
+                    left: 18,
+                    right: 18,
                     top: 18,
                     bottom: MediaQuery.of(context).viewInsets.bottom + 20,
                   ),
@@ -101,170 +107,179 @@ void showConfigSheet(BuildContext context) {
                     valueListenable: AppConfig.idioma,
                     builder: (context, idiomaActual, _) {
                       return ValueListenableBuilder<bool>(
-                        valueListenable: AppConfig.sonidosActivos,
-                        builder: (context, sonidosActivos, _) {
+                        valueListenable: AppConfig.idiomaAuto,
+                        builder: (context, idiomaAuto, _) {
                           return ValueListenableBuilder<bool>(
-                            valueListenable: AppConfig.vibracionActiva,
-                            builder: (context, vibracionActiva, _) {
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    width: 48,
-                                    height: 5,
-                                    decoration: BoxDecoration(
-                                      color: modoOscuro
-                                          ? Colors.white24
-                                          : Colors.black26,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 18),
-                                  Container(
-                                    width: 74,
-                                    height: 74,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Colors.deepPurple.withValues(
-                                            alpha: modoOscuro ? 0.38 : 0.22,
-                                          ),
-                                          Colors.deepPurple.withValues(
-                                            alpha: modoOscuro ? 0.16 : 0.08,
-                                          ),
-                                        ],
-                                      ),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Icon(
-                                      Icons.settings,
-                                      size: 42,
-                                      color: Colors.deepPurple,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 14),
-                                  Text(
-                                    T.txt('settingsTitle'),
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.fredoka(
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.w700,
-                                      color: modoOscuro
-                                          ? Colors.white
-                                          : const Color(0xFF4A2C82),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 18),
-                                  SettingCard(
-                                    color: sonidosActivos
-                                        ? Colors.green
-                                        : Colors.redAccent,
-                                    icon: sonidosActivos
-                                        ? Icons.volume_up_rounded
-                                        : Icons.volume_off_rounded,
-                                    title: T.txt('sounds'),
-                                    subtitle: sonidosActivos
-                                        ? T.txt('enabled')
-                                        : T.txt('disabled'),
-                                    modoOscuro: modoOscuro,
-                                    trailing: Switch(
-                                      value: sonidosActivos,
-                                      activeThumbColor: Colors.green,
-                                      inactiveThumbColor: Colors.redAccent,
-                                      onChanged: (valor) async {
-                                        await AppConfig.cambiarSonidos(valor);
-                                      },
-                                    ),
-                                  ),
-                                  const SizedBox(height: 14),
-                                  SettingCard(
-                                    color: Colors.deepPurple,
-                                    icon: Icons.language_rounded,
-                                    title: T.txt('language'),
-                                    subtitle: idiomaActual == 'es'
-                                        ? T.txt('spanish')
-                                        : T.txt('english'),
-                                    modoOscuro: modoOscuro,
-                                    trailing: DropdownButton<String>(
-                                      value: idiomaActual,
-                                      dropdownColor: modoOscuro
-                                          ? const Color(0xFF211B2E)
-                                          : Colors.white,
-                                      underline: const SizedBox(),
-                                      borderRadius: BorderRadius.circular(18),
-                                      style: GoogleFonts.baloo2(
-                                        fontWeight: FontWeight.w600,
-                                        color: textoPrincipal,
-                                      ),
-                                      items: [
-                                        DropdownMenuItem(
-                                          value: 'es',
-                                          child: Text(T.txt('spanish')),
+                            valueListenable: AppConfig.sonidosActivos,
+                            builder: (context, sonidosActivos, _) {
+                              return ValueListenableBuilder<bool>(
+                                valueListenable: AppConfig.vibracionActiva,
+                                builder: (context, vibracionActiva, _) {
+                                  return Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        width: 48,
+                                        height: 5,
+                                        decoration: BoxDecoration(
+                                          color: modoOscuro
+                                              ? Colors.white24
+                                              : Colors.black26,
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                         ),
-                                        DropdownMenuItem(
-                                          value: 'en',
-                                          child: Text(T.txt('english')),
+                                      ),
+                                      const SizedBox(height: 18),
+                                      Container(
+                                        width: 74,
+                                        height: 74,
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.deepPurple.withValues(
+                                                alpha:
+                                                    modoOscuro ? 0.38 : 0.22,
+                                              ),
+                                              Colors.deepPurple.withValues(
+                                                alpha:
+                                                    modoOscuro ? 0.16 : 0.08,
+                                              ),
+                                            ],
+                                          ),
+                                          shape: BoxShape.circle,
                                         ),
-                                      ],
-                                      onChanged: (valor) async {
-                                        if (valor != null) {
-                                          await AppConfig.cambiarIdioma(valor);
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                  const SizedBox(height: 14),
-                                  SettingCard(
-                                    color: vibracionActiva
-                                        ? Colors.orange
-                                        : Colors.blueGrey,
-                                    icon: vibracionActiva
-                                        ? Icons.vibration_rounded
-                                        : Icons.phone_android_rounded,
-                                    title: T.txt('vibration'),
-                                    subtitle: vibracionActiva
-                                        ? T.txt('vibrationOn')
-                                        : T.txt('vibrationOff'),
-                                    modoOscuro: modoOscuro,
-                                    trailing: Switch(
-                                      value: vibracionActiva,
-                                      activeThumbColor: Colors.orange,
-                                      inactiveThumbColor: Colors.blueGrey,
-                                      onChanged: (valor) async {
-                                        await AppConfig.cambiarVibracion(valor);
+                                        child: const Icon(
+                                          Icons.settings,
+                                          size: 42,
+                                          color: Colors.deepPurple,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 14),
+                                      Text(
+                                        T.txt('settingsTitle'),
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.fredoka(
+                                          fontSize: 28,
+                                          fontWeight: FontWeight.w700,
+                                          color: modoOscuro
+                                              ? Colors.white
+                                              : const Color(0xFF4A2C82),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 18),
 
-                                        if (!valor) return;
+                                      SettingCard(
+                                        color: sonidosActivos
+                                            ? Colors.green
+                                            : Colors.redAccent,
+                                        icon: sonidosActivos
+                                            ? Icons.volume_up_rounded
+                                            : Icons.volume_off_rounded,
+                                        title: T.txt('sounds'),
+                                        subtitle: sonidosActivos
+                                            ? T.txt('enabled')
+                                            : T.txt('disabled'),
+                                        modoOscuro: modoOscuro,
+                                        trailing: AdaptiveSwitch(
+                                          value: sonidosActivos,
+                                          activeColor: Colors.green,
+                                          inactiveColor: Colors.redAccent,
+                                          onChanged: (valor) async {
+                                            await AppConfig.cambiarSonidos(
+                                              valor,
+                                            );
+                                          },
+                                        ),
+                                      ),
 
-                                        await vibrarActivacionFuerte();
-                                      },
-                                    ),
-                                  ),
-                                  const SizedBox(height: 14),
-                                  SettingCard(
-                                    color: colorApariencia,
-                                    icon: iconoTema(temaActual),
-                                    title: T.txt('appearance'),
-                                    subtitle: textoTema(temaActual),
-                                    modoOscuro: modoOscuro,
-                                    trailing: ThemeSelector(
-                                      temaActual: temaActual,
-                                      modoOscuro: modoOscuro,
-                                      onChanged: (nuevoTema) async {
-                                        await AppConfig.cambiarTema(nuevoTema);
-                                      },
-                                    ),
-                                  ),
-                                  const SizedBox(height: 14),
-                                  Text(
-                                    T.txt('settingsNote'),
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.baloo2(
-                                      fontSize: 15.5,
-                                      color: textoSecundario,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                ],
+                                      const SizedBox(height: 14),
+
+                                      SettingCard(
+                                        color: idiomaAuto
+                                            ? const Color(0xFF00A896)
+                                            : Colors.deepPurple,
+                                        icon: idiomaAuto
+                                            ? Icons.translate_rounded
+                                            : Icons.language_rounded,
+                                        title: T.txt('language'),
+                                        subtitle: idiomaAuto
+                                            ? T.txt('languageAutoSubtitle')
+                                            : textoIdiomaActual(
+                                                idiomaAuto: idiomaAuto,
+                                                idiomaActual: idiomaActual,
+                                              ),
+                                        modoOscuro: modoOscuro,
+                                        trailing: LanguageSelector(
+                                          idiomaActual: idiomaActual,
+                                          idiomaAuto: idiomaAuto,
+                                          modoOscuro: modoOscuro,
+                                        ),
+                                      ),
+
+                                      const SizedBox(height: 14),
+
+                                      SettingCard(
+                                        color: vibracionActiva
+                                            ? Colors.orange
+                                            : Colors.blueGrey,
+                                        icon: vibracionActiva
+                                            ? Icons.vibration_rounded
+                                            : Icons.phone_android_rounded,
+                                        title: T.txt('vibration'),
+                                        subtitle: vibracionActiva
+                                            ? T.txt('vibrationOn')
+                                            : T.txt('vibrationOff'),
+                                        modoOscuro: modoOscuro,
+                                        trailing: AdaptiveSwitch(
+                                          value: vibracionActiva,
+                                          activeColor: Colors.orange,
+                                          inactiveColor: Colors.blueGrey,
+                                          onChanged: (valor) async {
+                                            await AppConfig.cambiarVibracion(
+                                              valor,
+                                            );
+
+                                            if (!valor) return;
+
+                                            await vibrarActivacionFuerte();
+                                          },
+                                        ),
+                                      ),
+
+                                      const SizedBox(height: 14),
+
+                                      SettingCard(
+                                        color: colorApariencia,
+                                        icon: iconoTema(temaActual),
+                                        title: T.txt('appearance'),
+                                        subtitle: textoTema(temaActual),
+                                        modoOscuro: modoOscuro,
+                                        trailing: ThemeSelector(
+                                          temaActual: temaActual,
+                                          modoOscuro: modoOscuro,
+                                          onChanged: (nuevoTema) async {
+                                            await AppConfig.cambiarTema(
+                                              nuevoTema,
+                                            );
+                                          },
+                                        ),
+                                      ),
+
+                                      const SizedBox(height: 14),
+
+                                      Text(
+                                        T.txt('settingsNote'),
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.baloo2(
+                                          fontSize: 15.5,
+                                          color: textoSecundario,
+                                        ),
+                                      ),
+
+                                      const SizedBox(height: 8),
+                                    ],
+                                  );
+                                },
                               );
                             },
                           );
@@ -304,17 +319,19 @@ class SettingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final bool estrecho = constraints.maxWidth < 360;
+        final bool estrecho = constraints.maxWidth < 390;
 
         return Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(estrecho ? 14 : 16),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
                 modoOscuro ? const Color(0xFF211B2E) : Colors.white,
                 color.withValues(alpha: modoOscuro ? 0.18 : 0.09),
               ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
             ),
             borderRadius: BorderRadius.circular(22),
             border: Border.all(
@@ -335,7 +352,7 @@ class SettingCard extends StatelessWidget {
                     Row(
                       children: [
                         SettingIcon(color: color, icon: icon),
-                        const SizedBox(width: 14),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: SettingText(
                             title: title,
@@ -345,10 +362,13 @@ class SettingCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 12),
                     Align(
                       alignment: Alignment.centerRight,
-                      child: trailing,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: trailing,
+                      ),
                     ),
                   ],
                 )
@@ -363,10 +383,14 @@ class SettingCard extends StatelessWidget {
                         modoOscuro: modoOscuro,
                       ),
                     ),
+                    const SizedBox(width: 8),
                     Flexible(
                       child: Align(
                         alignment: Alignment.centerRight,
-                        child: trailing,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: trailing,
+                        ),
                       ),
                     ),
                   ],
@@ -441,7 +465,7 @@ class SettingText extends StatelessWidget {
         Text(
           subtitle,
           overflow: TextOverflow.ellipsis,
-          maxLines: 1,
+          maxLines: 2,
           style: GoogleFonts.baloo2(
             fontSize: 15,
             fontWeight: FontWeight.w500,
@@ -449,6 +473,176 @@ class SettingText extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class AdaptiveSwitch extends StatelessWidget {
+  final bool value;
+  final Color activeColor;
+  final Color inactiveColor;
+  final Future<void> Function(bool valor) onChanged;
+
+  const AdaptiveSwitch({
+    super.key,
+    required this.value,
+    required this.activeColor,
+    required this.inactiveColor,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Switch(
+      value: value,
+      activeThumbColor: activeColor,
+      inactiveThumbColor: inactiveColor,
+      onChanged: (valor) async {
+        await onChanged(valor);
+      },
+    );
+  }
+}
+
+class LanguageSelector extends StatelessWidget {
+  final String idiomaActual;
+  final bool idiomaAuto;
+  final bool modoOscuro;
+
+  const LanguageSelector({
+    super.key,
+    required this.idiomaActual,
+    required this.idiomaAuto,
+    required this.modoOscuro,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final Color seleccionado = idiomaAuto
+        ? const Color(0xFF00A896)
+        : idiomaActual == 'en'
+            ? Colors.deepPurple
+            : Colors.orange;
+
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: modoOscuro ? const Color(0xFF15131A) : const Color(0xFFF2ECFF),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color: seleccionado.withValues(alpha: 0.22),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          LanguageOptionButton(
+            text: 'A',
+            icon: Icons.settings_suggest_rounded,
+            selected: idiomaAuto,
+            selectedColor: seleccionado,
+            modoOscuro: modoOscuro,
+            tooltip: T.txt('languageAutomatic'),
+            onTap: () async {
+              await AppConfig.cambiarIdiomaAutomatico();
+            },
+          ),
+          LanguageOptionButton(
+            text: 'ES',
+            selected: !idiomaAuto && idiomaActual == 'es',
+            selectedColor: seleccionado,
+            modoOscuro: modoOscuro,
+            tooltip: T.txt('spanish'),
+            onTap: () async {
+              await AppConfig.cambiarIdioma('es');
+            },
+          ),
+          LanguageOptionButton(
+            text: 'EN',
+            selected: !idiomaAuto && idiomaActual == 'en',
+            selectedColor: seleccionado,
+            modoOscuro: modoOscuro,
+            tooltip: T.txt('english'),
+            onTap: () async {
+              await AppConfig.cambiarIdioma('en');
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class LanguageOptionButton extends StatelessWidget {
+  final String text;
+  final IconData? icon;
+  final bool selected;
+  final Color selectedColor;
+  final bool modoOscuro;
+  final String tooltip;
+  final VoidCallback onTap;
+
+  const LanguageOptionButton({
+    super.key,
+    required this.text,
+    this.icon,
+    required this.selected,
+    required this.selectedColor,
+    required this.modoOscuro,
+    required this.tooltip,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        margin: const EdgeInsets.symmetric(horizontal: 2),
+        decoration: BoxDecoration(
+          color: selected ? selectedColor : Colors.transparent,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: selected
+              ? [
+                  BoxShadow(
+                    color: selectedColor.withValues(alpha: 0.26),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ]
+              : [],
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 9),
+            child: icon != null
+                ? Icon(
+                    icon,
+                    size: 20,
+                    color: selected
+                        ? Colors.white
+                        : modoOscuro
+                            ? Colors.white70
+                            : const Color(0xFF4A2C82),
+                  )
+                : Text(
+                    text,
+                    style: GoogleFonts.fredoka(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: selected
+                          ? Colors.white
+                          : modoOscuro
+                              ? Colors.white70
+                              : const Color(0xFF4A2C82),
+                    ),
+                  ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -471,18 +665,18 @@ class ThemeSelector extends StatelessWidget {
         modoOscuro ? const Color(0xFF15131A) : const Color(0xFFF2ECFF);
 
     Color colorSeleccionado() {
-  if (temaActual == ThemeMode.system) {
-    return const Color(0xFF00A896); // Automático turquesa
-  }
+      if (temaActual == ThemeMode.system) {
+        return const Color(0xFF00A896);
+      }
 
-  if (temaActual == ThemeMode.dark) {
-    return modoOscuro ? Colors.indigo.shade400 : Colors.indigo;
-  }
+      if (temaActual == ThemeMode.dark) {
+        return modoOscuro ? Colors.indigo.shade400 : Colors.indigo;
+      }
 
-  return Colors.amber; // Claro
-}
+      return Colors.amber;
+    }
 
-final Color seleccionado = colorSeleccionado();
+    final Color seleccionado = colorSeleccionado();
 
     return Container(
       padding: const EdgeInsets.all(4),
@@ -490,7 +684,7 @@ final Color seleccionado = colorSeleccionado();
         color: fondo,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: Colors.deepPurple.withValues(alpha: 0.22),
+          color: seleccionado.withValues(alpha: 0.22),
         ),
       ),
       child: Row(
@@ -547,6 +741,15 @@ class ThemeOptionButton extends StatelessWidget {
       decoration: BoxDecoration(
         color: selected ? selectedColor : Colors.transparent,
         borderRadius: BorderRadius.circular(14),
+        boxShadow: selected
+            ? [
+                BoxShadow(
+                  color: selectedColor.withValues(alpha: 0.28),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ]
+            : [],
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
@@ -560,7 +763,7 @@ class ThemeOptionButton extends StatelessWidget {
                 ? Colors.white
                 : modoOscuro
                     ? Colors.white70
-                    : Colors.deepPurple,
+                    : const Color(0xFF4A2C82),
           ),
         ),
       ),
