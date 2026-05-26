@@ -350,41 +350,6 @@ Contiene la lógica de conexión con ESP32 y detección de figuras.
 
 ---
 
-## 🧑‍💻 Cómo contribuir
-
-### 1. Hacer un fork del repositorio
-
-Desde GitHub, presiona el botón **Fork**.
-
-### 2. Crear una nueva rama
-
-```bash
-git checkout -b nueva-funcion
-```
-
-### 3. Realizar cambios
-
-Edita los archivos necesarios dentro del proyecto.
-
-### 4. Guardar cambios
-
-```bash
-git add .
-git commit -m "Agrega nueva función"
-```
-
-### 5. Subir la rama
-
-```bash
-git push origin nueva-funcion
-```
-
-### 6. Crear un Pull Request
-
-Desde GitHub, crea un Pull Request para proponer los cambios.
-
----
-
 ## 📌 Estado del proyecto
 
 Actualmente el proyecto se encuentra en desarrollo y mejora continua.
