@@ -450,7 +450,7 @@ class _NutricionPageState extends State<NutricionPage> {
         return ValueListenableBuilder<ThemeMode>(
           valueListenable: AppConfig.temaApp,
           builder: (context, temaActual, _) {
-            final bool modoOscuro = temaActual == ThemeMode.dark;
+            final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
             final listaItems = _items();
 
             return Scaffold(

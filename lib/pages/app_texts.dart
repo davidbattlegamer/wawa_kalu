@@ -2,863 +2,925 @@ import 'app_config.dart';
 
 class T {
   static String txt(String key) {
-    final idioma = AppConfig.idioma.value;
+    final lang = AppConfig.idioma.value;
 
-    final textos = {
-      'es': {
-        // GENERAL
-        'appName': 'Wawa Kalú',
-        'settingsTitle': 'Ajustes de la app',
-        'sounds': 'Sonidos de la app',
-        'enabled': 'Activados',
-        'disabled': 'Desactivados',
-        'language': 'Idioma',
-        'spanish': 'Español',
-        'english': 'Inglés',
-        'settingsNote': 'Estos ajustes se aplican a toda la app y a futuras funciones.',
-        'vibration': 'Vibración',
-        'vibrationOn': 'Activada',
-        'vibrationOff': 'Desactivada',
-        'appearance': 'Apariencia',
-        'lightMode': 'Modo claro',
-        'darkMode': 'Modo oscuro',
-        // HOME
-        'welcome': 'Bienvenido a\nWawa Kalú',
-        'subtitle': 'Aprende, juega y cuida en familia',
-        'cps': 'CPS',
-        'cpsSubtitle': 'Sistema interactivo',
-        'games': 'Juegos',
-        'gamesSubtitle': 'Aprender jugando',
-        'nutrition': 'Nutrición',
-        'nutritionSubtitle': 'Alimentación familiar',
-        'languageMenu': 'Lenguaje',
-        'languageSubtitle': 'Comunicación en casa',
-        'environment': 'Entornos protectores',
-        'environmentSubtitle': 'Cuidado y salud',
+    final Map<String, String> selected =
+        lang == 'en' ? _english : _spanish;
 
-        // CPS
-        'cpsTitle': 'Aprende con figuras',
-        'cpsSubTitle': 'Coloca cada figura en su lugar correcto',
-        'espConnected': 'ESP32 conectado',
-        'connectEsp': 'Conecta tu ESP32 para iniciar',
-        'searching': 'Buscando...',
-        'disconnect': 'Desconectar',
-        'connectEspButton': 'Conectar ESP32',
-        'offlineHistory': 'Historial offline',
-        'viewGuide': 'Ver guía',
-        'selectEsp': 'Selecciona tu ESP32',
-        'signal': 'Señal',
-        'noBleDevices': 'No se encontraron dispositivos Bluetooth BLE.',
-        'turnOnBluetooth': 'Activa el Bluetooth para conectarte al ESP32.',
-        'noBleService': 'No se encontró el servicio BLE del ESP32.',
-        'connectFirst': 'Primero conecta el ESP32 para ver el historial.',
-        'quickGuide': 'Guía rápida',
-        'guide1': 'Enciende el ESP32.',
-        'guide2': 'Activa Bluetooth en el celular.',
-        'guide3': 'Presiona Conectar ESP32.',
-        'guide4': 'Coloca una figura en su lugar.',
-        'hideGuide': 'Ocultar guía',
-        'prizeGuide':
-            'Premios: cada 5 detecciones ganas una estrella ⭐ y cada 10 detecciones ganas una medalla 🏆.',
-        'sessionProgress': 'Avances de la sesión',
-        'defaultPrize':
-            'Cada 5 detecciones ganas una estrella y cada 10 una medalla',
-        'starPrize': '¡Muy bien! Ganaste una estrella ⭐',
-        'medalPrize': '¡Excelente! Ganaste una medalla 🏆',
-        'detections': 'detecciones',
-        'activeNow': 'activas ahora',
-        'stars': 'estrellas',
-        'medals': 'medallas',
-        'keepPlaying': 'Sigue colocando figuras para ganar premios',
-        'starsWon': '¡Ya tienes estrellas ganadas!',
-        'medalsWon': '¡Ya tienes medallas ganadas!',
-        'circle': 'Círculo',
-        'square': 'Cuadrado',
-        'triangle': 'Triángulo',
-        'star': 'Estrella',
-        'savedRecords': 'Registros guardados',
-        'offlineData': 'Datos almacenados en el ESP32 sin conexión',
-        'updateHistory': 'Actualizar historial',
-        'updating': 'Actualizando...',
-        'noRecords':
-            'No hay registros cargados.\nPresiona "Actualizar historial".',
-        'syncingHistory': 'Sincronizando historial...',
-        'noOfflineLogs': 'No existen registros offline guardados.',
-        'logError': 'Error al leer el log del ESP32.',
-
-        // JUEGOS
-        'studentGames': 'Juegos de alumnos',
-        'gamePaty': 'Juego de Paty',
-        'gamePatyDesc': 'Juego personalizado creado por Paty',
-        'gameAndres': 'Juego de Andrés',
-        'gameAndresDesc': 'Trivia creada por Andrés',
-        'gameDavid': 'Juego David',
-        'gameDavidDesc': 'Juego de colores y animales para niños pequeños',
-
-        // JUEGO DAVID
-        'davidTitle': 'Animales divertidos',
-        'davidSubtitleSound': 'Toca, escucha y aprende',
-        'davidSubtitleNoSound': 'Toca y aprende sin sonido',
-        'touchAnimal': 'Toca un animalito',
-        'correctAnimal': '¡Muy bien! Es un',
-        'hits': 'Aciertos',
-        'dog': 'Perro',
-        'cat': 'Gato',
-        'chick': 'Pollito',
-        'cow': 'Vaca',
-        // Premios Juego David
-        'zooRewardsTitle': 'Premios del zoológico',
-        'zooRewardDefault': 'Juega con los animales para ganar premios',
-        'zooRewardStar': '¡Muy bien! Ganaste una estrella animal',
-        'zooRewardMedal': '¡Excelente! Ganaste una medalla animal',
-        'zooRewardBoth': '¡Increíble! Ganaste una estrella y una medalla',
-
-        'zooStars': 'Estrellas',
-        'zooMedals': 'Medallas',
-
-        'zooNextStar': 'Próxima estrella',
-        'zooNextMedal': 'Próxima medalla',
-
-        'zooMissingForStar': 'Faltan',
-        'zooAnimalsForStar': 'animales para ganar una estrella',
-
-        'zooMissingForMedal': 'Faltan',
-        'zooAnimalsForMedal': 'animales para ganar una medalla',
-
-        'zooStarUnlocked': '¡Estrella desbloqueada!',
-        'zooMedalUnlocked': '¡Medalla desbloqueada!',
-        // NUTRICIÓN
-        'nutritionChildTitle': 'Nutrición infantil',
-        'nutritionChildSubtitle':
-            'Guía práctica para padres y cuidadores de niños de 0 a 3 años',
-        'touchSectionRecommendations':
-            'Toca cada sección para ver recomendaciones',
-        'nutritionFoodsTitle': 'Alimentos y recetas',
-        'nutritionFoodsSubtitle': 'Ideas nutritivas para niños de 0 a 3 años',
-        'nutritionFoodsTip1':
-            'Ofrezca alimentos naturales, suaves y variados según la edad del niño.',
-        'nutritionFoodsTip2':
-            'Combine frutas, verduras, cereales y proteínas blandas en porciones pequeñas.',
-        'nutritionFoodsTip3':
-            'Evite azúcar añadida, gaseosas, snacks procesados y exceso de sal.',
-        'nutritionFoodsTip4':
-            'Cambie la textura según la edad: puré suave, machacado, trozos blandos y luego alimentos más firmes bajo supervisión.',
-        'nutritionFoodsTip5':
-            'Si el niño rechaza un alimento, no lo obligue; vuelva a ofrecerlo otro día con paciencia.',
-        'nutritionRoutineTitle': 'Rutinas de comida',
-        'nutritionRoutineSubtitle': 'Horarios tranquilos para formar hábitos',
-        'nutritionRoutineTip1':
-            'Mantenga horarios parecidos para desayuno, almuerzo, merienda y cena.',
-        'nutritionRoutineTip2':
-            'Evite que el niño llegue con demasiada hambre, porque puede irritarse o rechazar la comida.',
-        'nutritionRoutineTip3':
-            'Procure que el momento de comer sea tranquilo y sin presión.',
-        'nutritionRoutineTip4':
-            'Comer en familia ayuda al niño a imitar hábitos saludables.',
-        'nutritionRoutineTip5':
-            'Evite pantallas durante la comida para que el niño reconozca hambre y saciedad.',
-        'nutritionHydrationTitle': 'Hidratación saludable',
-        'nutritionHydrationSubtitle': 'Agua y líquidos adecuados',
-        'nutritionHydrationTip1':
-            'El agua debe ser la bebida principal cuando la edad del niño lo permita.',
-        'nutritionHydrationTip2':
-            'Evite gaseosas, jugos artificiales y bebidas con mucho azúcar.',
-        'nutritionHydrationTip3':
-            'En días calurosos o después de jugar, ofrezca agua con más frecuencia.',
-        'nutritionHydrationTip4':
-            'Las sopas, frutas jugosas y alimentos con agua también ayudan a hidratar.',
-        'nutritionHydrationTip5':
-            'Si hay fiebre, vómito o diarrea, observe signos de deshidratación y busque ayuda médica.',
-        'nutritionSignalsTitle': 'Señales del niño',
-        'nutritionSignalsSubtitle': 'Hambre, saciedad y aceptación',
-        'nutritionSignalsTip1':
-            'El niño puede mostrar hambre acercándose a la comida, abriendo la boca o buscando alimento.',
-        'nutritionSignalsTip2':
-            'Puede mostrar saciedad girando la cabeza, cerrando la boca o perdiendo interés.',
-        'nutritionSignalsTip3':
-            'No obligue a terminar el plato; respete sus señales.',
-        'nutritionSignalsTip4':
-            'Sirva porciones pequeñas y repita si el niño desea más.',
-        'nutritionSignalsTip5':
-            'Tocar, oler y explorar la comida también forma parte del aprendizaje.',
-        'nutritionSafetyTitle': 'Seguridad al comer',
-        'nutritionSafetySubtitle': 'Prevención de atragantamiento',
-        'nutritionSafetyTip1': 'Siempre supervise al niño mientras come.',
-        'nutritionSafetyTip2':
-            'Evite alimentos duros, redondos o muy pequeños sin cortar.',
-        'nutritionSafetyTip3':
-            'Corte frutas y alimentos blandos en tamaños seguros.',
-        'nutritionSafetyTip4':
-            'No permita que el niño coma acostado, corriendo o jugando.',
-        'nutritionSafetyTip5':
-            'Evite uvas enteras, caramelos duros, frutos secos enteros y trozos grandes.',
-        'nutritionParentsTitle': 'Consejos para padres',
-        'nutritionParentsSubtitle': 'Acompañar sin presionar',
-        'nutritionParentsTip1':
-            'La paciencia es clave: no todos los niños comen igual ni al mismo ritmo.',
-        'nutritionParentsTip2': 'Evite usar la comida como premio o castigo.',
-        'nutritionParentsTip3':
-            'Presente platos coloridos y sencillos para despertar curiosidad.',
-        'nutritionParentsTip4':
-            'No compare al niño con otros; observe su propio progreso.',
-        'nutritionParentsTip5':
-            'Ante bajo peso, alergias, vómitos frecuentes o rechazo persistente, consulte con un profesional de salud.',
-        'recipesForChildren': 'Recetas para niños de 0 a 3 años',
-        'recipesShortDesc':
-            'Preparaciones suaves, seguras y fáciles para casa.',
-        'viewRecipes': 'Ver recetas',
-        'nutritionFinalNote':
-            'Una buena nutrición acompaña el crecimiento del niño. Ofrezca alimentos variados, seguros y adecuados para su edad. Ante alergias, bajo peso o rechazo frecuente de comida, consulte con un profesional de salud.',
-
-        // RECETAS
-        'recipesAppBar': 'Nutrición infantil',
-        'recipesHeaderTitle': 'Nutrición infantil',
-        'recipesHeaderSubtitle':
-            'Recetas suaves, seguras y nutritivas para niños de 0 a 3 años',
-        'recipesHeaderNote': 'Ideas pensadas para padres y cuidadores',
-        'ingredients': 'Ingredientes',
-        'preparation': 'Preparación',
-        'recipeFinalNote':
-            'Estas recetas son ideas generales. Ajusta la textura, porción e ingredientes según la edad, tolerancia y recomendación del pediatra.',
-        'recipe1Title': 'Cremita de zapallo y pollo',
-        'recipe1Age': 'Desde los 6 meses',
-        'recipe1Moment': 'Almuerzo',
-        'recipe1Desc':
-            'Una receta suave, cálida y nutritiva para iniciar comidas más completas.',
-        'recipe1Ing1': 'Zapallo cocido.',
-        'recipe1Ing2': 'Un trocito pequeño de pollo bien cocido.',
-        'recipe1Ing3': 'Papa pequeña o camote.',
-        'recipe1Ing4': 'Agua tibia o caldo natural sin sal.',
-        'recipe1Step1': 'Cocina bien el zapallo, la papa o camote y el pollo.',
-        'recipe1Step2': 'Desmenuza el pollo para evitar trozos grandes.',
-        'recipe1Step3': 'Aplasta o licúa todo hasta lograr una textura suave.',
-        'recipe1Step4': 'Sirve tibio y en porción pequeña.',
-        'recipe1Rec':
-            'Ideal cuando el niño ya inició alimentación complementaria. No agregues sal ni condimentos fuertes.',
-        'recipe2Title': 'Avena cremosa con banano',
-        'recipe2Age': 'Desde los 6 meses',
-        'recipe2Moment': 'Desayuno o media mañana',
-        'recipe2Desc':
-            'Energética, suave y fácil de preparar. Buena para empezar el día.',
-        'recipe2Ing1': '3 cucharadas de avena.',
-        'recipe2Ing2': '1 banano maduro pequeño.',
-        'recipe2Ing3': 'Agua o leche adecuada para la edad.',
-        'recipe2Ing4': 'Canela mínima opcional, si ya la tolera.',
-        'recipe2Step1': 'Cocina la avena hasta que quede muy suave.',
-        'recipe2Step2': 'Machaca el banano hasta formar puré.',
-        'recipe2Step3': 'Mezcla la avena con el banano.',
-        'recipe2Step4': 'Deja enfriar antes de servir.',
-        'recipe2Rec':
-            'No uses miel antes del año. Tampoco agregues azúcar; el banano ya aporta dulzor natural.',
-        'recipe3Title': 'Tortillita suave de huevo y espinaca',
-        'recipe3Age': 'Desde los 9 a 12 meses',
-        'recipe3Moment': 'Desayuno, almuerzo o cena ligera',
-        'recipe3Desc':
-            'Una opción blanda para niños que ya toleran huevo y texturas más firmes.',
-        'recipe3Ing1': '1 huevo bien cocido.',
-        'recipe3Ing2': 'Hojitas de espinaca muy bien picadas.',
-        'recipe3Ing3': 'Una cucharadita de aceite.',
-        'recipe3Ing4': 'Papa o zanahoria cocida opcional.',
-        'recipe3Step1': 'Bate el huevo y mezcla con la espinaca picada.',
-        'recipe3Step2':
-            'Cocina a fuego bajo hasta que esté completamente cocido.',
-        'recipe3Step3': 'Corta en pedacitos pequeños y blandos.',
-        'recipe3Step4': 'Acompaña con puré o verdura suave.',
-        'recipe3Rec':
-            'El huevo debe quedar totalmente cocido. Si hay antecedentes de alergia, consulta primero con el pediatra.',
-        'recipe4Title': 'Bolitas blandas de arroz y lenteja',
-        'recipe4Age': 'Desde los 10 a 12 meses',
-        'recipe4Moment': 'Almuerzo o merienda salada',
-        'recipe4Desc':
-            'Pequeñas porciones blandas para practicar agarre y masticación segura.',
-        'recipe4Ing1': 'Arroz bien cocido.',
-        'recipe4Ing2': 'Lenteja bien cocida.',
-        'recipe4Ing3': 'Zanahoria cocida y aplastada.',
-        'recipe4Ing4': 'Un poquito de agua tibia si necesita suavizar.',
-        'recipe4Step1': 'Aplasta la lenteja y mezcla con arroz suave.',
-        'recipe4Step2': 'Agrega zanahoria cocida para dar textura y sabor.',
-        'recipe4Step3': 'Forma bolitas pequeñas y blandas.',
-        'recipe4Step4': 'Verifica que se deshagan fácilmente al presionarlas.',
-        'recipe4Rec':
-            'Sirve bajo supervisión. Las bolitas deben ser pequeñas, suaves y fáciles de aplastar.',
-        'recipe5Title': 'Vasito de yogur natural con fruta',
-        'recipe5Age': 'Desde los 12 meses',
-        'recipe5Moment': 'Merienda',
-        'recipe5Desc':
-            'Una merienda fresca, colorida y fácil para niños que ya toleran lácteos.',
-        'recipe5Ing1': 'Yogur natural sin azúcar.',
-        'recipe5Ing2': 'Fruta madura picada o machacada.',
-        'recipe5Ing3': 'Avena suave opcional.',
-        'recipe5Step1': 'Coloca una pequeña porción de yogur natural.',
-        'recipe5Step2': 'Agrega fruta madura machacada o en trozos seguros.',
-        'recipe5Step3': 'Mezcla suavemente.',
-        'recipe5Step4': 'Sirve frío, pero no demasiado helado.',
-        'recipe5Rec':
-            'Evita yogures azucarados. Supervisa si usa trozos de fruta.',
-
-        // LENGUAJE
-        'languageTitle': 'Lenguaje y comunicación',
-        'languageHeaderSubtitle':
-            'Actividades simples para estimular sus primeras palabras',
-        'touchActivityRecommendation':
-            'Toca una actividad y mira la recomendación',
-        'selectActivity': 'Seleccione una actividad',
-        'languageDefaultRec':
-            'Toque una tarjeta para ver cómo estimular el lenguaje del niño en casa.',
-        'languageDefaultHome':
-            'Aquí aparecerá una actividad sencilla que puede adaptarse a cualquier objeto, imagen o momento del día.',
-        'languageDefaultParent':
-            'Recuerde hablarle con calma, mirarlo a los ojos y celebrar sus intentos de comunicarse.',
-        'homeActivity': 'Actividad en casa',
-        'noActivityReviewed': 'Aún no se ha revisado ninguna actividad.',
-        'activitiesReviewed': 'Actividades revisadas',
-        'repeatActivities':
-            'Puede repetirlas varias veces durante el día en momentos tranquilos.',
-        'languageFinalNote':
-            'Cada niño desarrolla el lenguaje a su ritmo. Si no responde a sonidos, no mira al hablarle o pierde habilidades adquiridas, consulte con un profesional.',
-        'nameObjectsTitle': 'Nombrar objetos',
-        'nameObjectsDesc': 'Relaciona palabras con cosas reales.',
-        'nameObjectsRec':
-            'Nombre objetos cercanos usando frases cortas y claras. Puede usar cualquier cosa que tenga a la mano: ropa, comida, juguetes, utensilios o partes del cuerpo.',
-        'nameObjectsHome':
-            'Reto general: elija 3 cosas que estén cerca del niño, señálelas y diga su nombre lentamente. Luego espere si el niño mira, señala o intenta repetir.',
-        'nameObjectsParent':
-            'No importa si el niño aún no pronuncia bien. Lo importante es que escuche, asocie y participe.',
-        'readImagesTitle': 'Leer imágenes',
-        'readImagesDesc': 'Mejora atención, memoria y vocabulario.',
-        'readImagesRec':
-            'Use cualquier cuento, lámina, foto o imagen. No es necesario que tenga cosas específicas; puede describir colores, personas, objetos o acciones.',
-        'readImagesHome':
-            'Reto general: mire una imagen con el niño y describa lo que aparece. Use preguntas simples como: “¿qué ves?”, “¿dónde está?”, “¿qué hace?”.',
-        'readImagesParent':
-            'Si no responde con palabras, también cuenta que mire, señale, sonría o haga sonidos.',
-        'singMoveTitle': 'Cantar y moverse',
-        'singMoveDesc': 'Estimula ritmo, sonidos y expresión.',
-        'singMoveRec':
-            'Cante canciones cortas con gestos. Puede usar palmas, movimientos de manos, sonidos suaves o cambios de voz.',
-        'singMoveHome':
-            'Reto general: cante una canción corta y acompañe con un gesto repetido. Pause un momento para que el niño intente continuar con sonido o movimiento.',
-        'singMoveParent':
-            'La repetición ayuda mucho. Es mejor una canción sencilla repetida varios días que muchas canciones distintas.',
-        'talkTitle': 'Conversar',
-        'talkDesc': 'Fortalece la intención de comunicarse.',
-        'talkRec':
-            'Responda a los sonidos, gestos o miradas del niño como si fueran parte de una conversación. Eso le enseña que comunicarse tiene valor.',
-        'talkHome':
-            'Reto general: observe qué hace el niño y descríbalo con voz tranquila. Espere unos segundos para darle oportunidad de responder con mirada, gesto o sonido.',
-        'talkParent':
-            'No llene todos los silencios. Esperar también ayuda a que el niño intente comunicarse.',
-        'imitateSoundsTitle': 'Imitar sonidos',
-        'imitateSoundsDesc': 'Practica sonidos básicos de forma divertida.',
-        'imitateSoundsRec':
-            'Haga sonidos simples de acciones, objetos o situaciones. No necesita materiales especiales: puede usar sonidos de sorpresa, golpes suaves, vehículos o animales conocidos.',
-        'imitateSoundsHome':
-            'Reto general: haga 3 sonidos fáciles y espere si el niño intenta copiarlos. Puede usar sonidos como “pa-pa”, “ma-ma”, “toc toc”, “mmm” o “brum”.',
-        'imitateSoundsParent':
-            'Felicite cualquier intento. No corrija fuerte; repita el sonido correcto con naturalidad.',
-
-        // ENTORNOS PROTECTORES
-        'environmentTitle': 'Entornos protectores',
-        'environmentHeaderSubtitle':
-            'Guía para cuidar la seguridad, salud y bienestar de niños de 0 a 3 años',
-        'touchEnvironmentActions':
-            'Toca cada sección para ver acciones prácticas',
-        'safeSpacesTitle': 'Espacios seguros',
-        'safeSpacesSubtitle': 'Casa preparada para explorar sin riesgo',
-        'safeSpacesDesc':
-            'Un entorno seguro permite que el niño explore, juegue y aprenda con menos riesgos.',
-        'safeSpacesA1':
-            'Guarde medicinas, productos de limpieza y objetos pequeños fuera de su alcance.',
-        'safeSpacesA2': 'Cubra enchufes y mantenga cables recogidos.',
-        'safeSpacesA3':
-            'Evite dejar objetos cortantes, calientes o pesados en bordes de mesas.',
-        'safeSpacesA4':
-            'Revise el piso para retirar piezas pequeñas que pueda llevarse a la boca.',
-        'safeSpacesAlert':
-            'Tenga especial cuidado con escaleras, cocina, baño, enchufes y objetos pequeños.',
-        'activeSupervisionTitle': 'Supervisión activa',
-        'activeSupervisionSubtitle': 'Acompañar sin distraerse',
-        'activeSupervisionDesc':
-            'La supervisión activa significa estar cerca, mirar lo que hace y anticiparse a posibles peligros.',
-        'activeSupervisionA1':
-            'Mantenga al niño a la vista cuando juega, come o se desplaza.',
-        'activeSupervisionA2':
-            'Evite dejarlo solo cerca de agua, cocina, escaleras o ventanas.',
-        'activeSupervisionA3':
-            'Si debe alejarse, coloque al niño en un lugar seguro.',
-        'activeSupervisionA4':
-            'No confíe solo en el silencio: revise si está explorando algo peligroso.',
-        'activeSupervisionAlert':
-            'Los accidentes pueden ocurrir en segundos, especialmente cerca de agua o alturas.',
-        'protectiveRoutinesTitle': 'Rutinas protectoras',
-        'protectiveRoutinesSubtitle': 'Orden, descanso y tranquilidad',
-        'protectiveRoutinesDesc':
-            'Las rutinas ayudan al niño a sentirse seguro porque sabe qué esperar durante el día.',
-        'protectiveRoutinesA1':
-            'Mantenga horarios parecidos para dormir, comer, jugar y descansar.',
-        'protectiveRoutinesA2':
-            'Avise con calma cuando una actividad va a cambiar.',
-        'protectiveRoutinesA3':
-            'Cree una rutina breve antes de dormir: baño, cuento o canción suave.',
-        'protectiveRoutinesA4':
-            'Evite cambios bruscos cuando el niño está cansado o irritable.',
-        'protectiveRoutinesAlert':
-            'La falta de sueño o rutinas muy desordenadas puede aumentar irritabilidad y llanto.',
-        'affectionTitle': 'Afecto y buen trato',
-        'affectionSubtitle': 'Cuidar también es responder con calma',
-        'affectionDesc':
-            'El afecto, la paciencia y el buen trato fortalecen la confianza y el desarrollo emocional.',
-        'affectionA1':
-            'Abrácelo, háblele con calma y responda a sus necesidades.',
-        'affectionA2':
-            'Valide sus emociones: cansancio, miedo, frustración o alegría.',
-        'affectionA3': 'Evite gritos, golpes o amenazas.',
-        'affectionA4':
-            'Cuando se equivoque, guíelo con palabras sencillas y tono tranquilo.',
-        'affectionAlert':
-            'Si el adulto se siente muy estresado, es mejor pedir apoyo antes de reaccionar con enojo.',
-        'healthAlertTitle': 'Salud y señales de alerta',
-        'healthAlertSubtitle': 'Cuándo buscar ayuda',
-        'healthAlertDesc':
-            'Observar cambios en el niño permite actuar a tiempo y prevenir complicaciones.',
-        'healthAlertA1':
-            'Controle fiebre, respiración, alimentación y nivel de energía.',
-        'healthAlertA2':
-            'Observe golpes, caídas, vómitos, diarrea o rechazo de alimentos.',
-        'healthAlertA3': 'Mantenga controles médicos y vacunas según la edad.',
-        'healthAlertA4': 'No automedique al niño sin indicación profesional.',
-        'healthAlertAlert':
-            'Busque atención médica si hay dificultad para respirar, fiebre alta, decaimiento extremo, convulsiones, golpes fuertes o signos de deshidratación.',
-        'environmentFinalNote':
-            'Un entorno protector combina seguridad, afecto, supervisión y rutinas. Pequeñas acciones diarias ayudan a que el niño crezca con confianza y bienestar.',
-      },
-
-      // ENGLISH
-      'en': {
-        // GENERAL
-        'appName': 'Wawa Kalú',
-        'settingsTitle': 'App settings',
-        'sounds': 'App sounds',
-        'enabled': 'Enabled',
-        'disabled': 'Disabled',
-        'language': 'Language',
-        'spanish': 'Spanish',
-        'english': 'English',
-        'settingsNote':
-            'These settings apply to the whole app and future features.',
-        'vibration': 'Vibration',
-        'vibrationOn': 'Enabled',
-        'vibrationOff': 'Disabled',
-        'appearance': 'Appearance',
-        'lightMode': 'Light mode',
-        'darkMode': 'Dark mode',
-        // HOME
-        'welcome': 'Welcome to\nWawa Kalú',
-        'subtitle': 'Learn, play, and care as a family',
-        'cps': 'CPS',
-        'cpsSubtitle': 'Interactive system',
-        'games': 'Games',
-        'gamesSubtitle': 'Learning through play',
-        'nutrition': 'Nutrition',
-        'nutritionSubtitle': 'Family nutrition',
-        'languageMenu': 'Language',
-        'languageSubtitle': 'Communication at home',
-        'environment': 'Protective environments',
-        'environmentSubtitle': 'Care and health',
-
-        // CPS
-        'cpsTitle': 'Learn with shapes',
-        'cpsSubTitle': 'Place each shape in the correct spot',
-        'espConnected': 'ESP32 connected',
-        'connectEsp': 'Connect your ESP32 to start',
-        'searching': 'Searching...',
-        'disconnect': 'Disconnect',
-        'connectEspButton': 'Connect ESP32',
-        'offlineHistory': 'Offline history',
-        'viewGuide': 'View guide',
-        'selectEsp': 'Select your ESP32',
-        'signal': 'Signal',
-        'noBleDevices': 'No Bluetooth BLE devices were found.',
-        'turnOnBluetooth': 'Turn on Bluetooth to connect to the ESP32.',
-        'noBleService': 'The ESP32 BLE service was not found.',
-        'connectFirst': 'Connect the ESP32 first to view the history.',
-        'quickGuide': 'Quick guide',
-        'guide1': 'Turn on the ESP32.',
-        'guide2': 'Enable Bluetooth on the phone.',
-        'guide3': 'Press Connect ESP32.',
-        'guide4': 'Place a shape in its correct spot.',
-        'hideGuide': 'Hide guide',
-        'prizeGuide':
-            'Rewards: every 5 detections earns a star ⭐ and every 10 detections earns a medal 🏆.',
-        'sessionProgress': 'Session progress',
-        'defaultPrize': 'Every 5 detections earns a star and every 10 a medal',
-        'starPrize': 'Great job! You earned a star ⭐',
-        'medalPrize': 'Excellent! You earned a medal 🏆',
-        'detections': 'detections',
-        'activeNow': 'active now',
-        'stars': 'stars',
-        'medals': 'medals',
-        'keepPlaying': 'Keep placing shapes to win rewards',
-        'starsWon': 'You have earned stars!',
-        'medalsWon': 'You have earned medals!',
-        'circle': 'Circle',
-        'square': 'Square',
-        'triangle': 'Triangle',
-        'star': 'Star',
-        'savedRecords': 'Saved records',
-        'offlineData': 'Data stored in the ESP32 without connection',
-        'updateHistory': 'Update history',
-        'updating': 'Updating...',
-        'noRecords': 'No records loaded.\nPress "Update history".',
-        'syncingHistory': 'Syncing history...',
-        'noOfflineLogs': 'There are no offline records saved.',
-        'logError': 'Error reading the ESP32 log.',
-
-        // GAMES
-        'studentGames': 'Student games',
-        'gamePaty': 'Paty’s game',
-        'gamePatyDesc': 'Custom game created by Paty',
-        'gameAndres': 'Andrés’ game',
-        'gameAndresDesc': 'Trivia created by Andrés',
-        'gameDavid': 'David’s game',
-        'gameDavidDesc': 'Colors and animal game for young children',
-
-        // DAVID GAME
-        'davidTitle': 'Fun animals',
-        'davidSubtitleSound': 'Tap, listen, and learn',
-        'davidSubtitleNoSound': 'Tap and learn without sound',
-        'touchAnimal': 'Tap an animal',
-        'correctAnimal': 'Great job! It is a',
-        'hits': 'Hits',
-        'dog': 'Dog',
-        'cat': 'Cat',
-        'chick': 'Chick',
-        'cow': 'Cow',
-        // David Game rewards
-        'zooRewardsTitle': 'Zoo rewards',
-        'zooRewardDefault': 'Play with the animals to win rewards',
-        'zooRewardStar': 'Great job! You won an animal star',
-        'zooRewardMedal': 'Excellent! You won an animal medal',
-        'zooRewardBoth': 'Amazing! You won a star and a medal',
-
-        'zooStars': 'Stars',
-        'zooMedals': 'Medals',
-
-        'zooNextStar': 'Next star',
-        'zooNextMedal': 'Next medal',
-
-        'zooMissingForStar': 'Missing',
-        'zooAnimalsForStar': 'animals to win a star',
-
-        'zooMissingForMedal': 'Missing',
-        'zooAnimalsForMedal': 'animals to win a medal',
-
-        'zooStarUnlocked': 'Star unlocked!',
-        'zooMedalUnlocked': 'Medal unlocked!',
-        // NUTRITION
-        'nutritionChildTitle': 'Child nutrition',
-        'nutritionChildSubtitle':
-            'Practical guide for parents and caregivers of children from 0 to 3 years old',
-        'touchSectionRecommendations':
-            'Tap each section to see recommendations',
-        'nutritionFoodsTitle': 'Foods and recipes',
-        'nutritionFoodsSubtitle':
-            'Nutritious ideas for children from 0 to 3 years old',
-        'nutritionFoodsTip1':
-            'Offer natural, soft, and varied foods according to the child’s age.',
-        'nutritionFoodsTip2':
-            'Combine fruits, vegetables, grains, and soft proteins in small portions.',
-        'nutritionFoodsTip3':
-            'Avoid added sugar, soda, processed snacks, and excess salt.',
-        'nutritionFoodsTip4':
-            'Change textures according to age: smooth purée, mashed foods, soft pieces, and then firmer foods with supervision.',
-        'nutritionFoodsTip5':
-            'If the child rejects a food, do not force it; offer it again another day with patience.',
-        'nutritionRoutineTitle': 'Mealtime routines',
-        'nutritionRoutineSubtitle': 'Calm schedules to build habits',
-        'nutritionRoutineTip1':
-            'Keep similar times for breakfast, lunch, snacks, and dinner.',
-        'nutritionRoutineTip2':
-            'Avoid letting the child become too hungry, as they may become upset or reject food.',
-        'nutritionRoutineTip3': 'Try to make mealtime calm and pressure-free.',
-        'nutritionRoutineTip4':
-            'Eating as a family helps the child imitate healthy habits.',
-        'nutritionRoutineTip5':
-            'Avoid screens during meals so the child can recognize hunger and fullness.',
-        'nutritionHydrationTitle': 'Healthy hydration',
-        'nutritionHydrationSubtitle': 'Water and suitable drinks',
-        'nutritionHydrationTip1':
-            'Water should be the main drink when the child’s age allows it.',
-        'nutritionHydrationTip2':
-            'Avoid soda, artificial juices, and very sugary drinks.',
-        'nutritionHydrationTip3':
-            'On hot days or after playing, offer water more often.',
-        'nutritionHydrationTip4':
-            'Soups, juicy fruits, and water-rich foods also help with hydration.',
-        'nutritionHydrationTip5':
-            'If there is fever, vomiting, or diarrhea, watch for signs of dehydration and seek medical help.',
-        'nutritionSignalsTitle': 'Child signals',
-        'nutritionSignalsSubtitle': 'Hunger, fullness, and acceptance',
-        'nutritionSignalsTip1':
-            'The child may show hunger by moving toward food, opening the mouth, or seeking food.',
-        'nutritionSignalsTip2':
-            'The child may show fullness by turning the head, closing the mouth, or losing interest.',
-        'nutritionSignalsTip3':
-            'Do not force the child to finish the plate; respect their signals.',
-        'nutritionSignalsTip4':
-            'Serve small portions and offer more if the child wants.',
-        'nutritionSignalsTip5':
-            'Touching, smelling, and exploring food is also part of learning.',
-        'nutritionSafetyTitle': 'Eating safety',
-        'nutritionSafetySubtitle': 'Choking prevention',
-        'nutritionSafetyTip1': 'Always supervise the child while eating.',
-        'nutritionSafetyTip2':
-            'Avoid hard, round, or very small foods unless properly cut.',
-        'nutritionSafetyTip3': 'Cut fruits and soft foods into safe sizes.',
-        'nutritionSafetyTip4':
-            'Do not let the child eat while lying down, running, or playing.',
-        'nutritionSafetyTip5':
-            'Avoid whole grapes, hard candies, whole nuts, and large food pieces.',
-        'nutritionParentsTitle': 'Tips for parents',
-        'nutritionParentsSubtitle': 'Support without pressure',
-        'nutritionParentsTip1':
-            'Patience is key: not all children eat the same way or at the same pace.',
-        'nutritionParentsTip2': 'Avoid using food as a reward or punishment.',
-        'nutritionParentsTip3':
-            'Offer colorful and simple meals to spark curiosity.',
-        'nutritionParentsTip4':
-            'Do not compare the child with others; observe their own progress.',
-        'nutritionParentsTip5':
-            'If there is low weight, allergies, frequent vomiting, or persistent food rejection, consult a healthcare professional.',
-        'recipesForChildren': 'Recipes for children from 0 to 3 years old',
-        'recipesShortDesc': 'Soft, safe, and easy preparations for home.',
-        'viewRecipes': 'View recipes',
-        'nutritionFinalNote':
-            'Good nutrition supports the child’s growth. Offer varied, safe foods that are suitable for their age. If there are allergies, low weight, or frequent food rejection, consult a healthcare professional.',
-
-        // RECIPES
-        'recipesAppBar': 'Child nutrition',
-        'recipesHeaderTitle': 'Child nutrition',
-        'recipesHeaderSubtitle':
-            'Soft, safe, and nutritious recipes for children from 0 to 3 years old',
-        'recipesHeaderNote': 'Ideas designed for parents and caregivers',
-        'ingredients': 'Ingredients',
-        'preparation': 'Preparation',
-        'recipeFinalNote':
-            'These recipes are general ideas. Adjust texture, portion size, and ingredients according to age, tolerance, and pediatric guidance.',
-        'recipe1Title': 'Pumpkin and chicken cream',
-        'recipe1Age': 'From 6 months',
-        'recipe1Moment': 'Lunch',
-        'recipe1Desc':
-            'A soft, warm, and nutritious recipe to introduce more complete meals.',
-        'recipe1Ing1': 'Cooked pumpkin.',
-        'recipe1Ing2': 'A small piece of well-cooked chicken.',
-        'recipe1Ing3': 'Small potato or sweet potato.',
-        'recipe1Ing4': 'Warm water or natural unsalted broth.',
-        'recipe1Step1':
-            'Cook the pumpkin, potato or sweet potato, and chicken well.',
-        'recipe1Step2': 'Shred the chicken to avoid large pieces.',
-        'recipe1Step3': 'Mash or blend everything until smooth.',
-        'recipe1Step4': 'Serve warm and in a small portion.',
-        'recipe1Rec':
-            'Ideal once the child has started complementary feeding. Do not add salt or strong seasonings.',
-        'recipe2Title': 'Creamy oatmeal with banana',
-        'recipe2Age': 'From 6 months',
-        'recipe2Moment': 'Breakfast or mid-morning',
-        'recipe2Desc':
-            'Energetic, soft, and easy to prepare. Good to start the day.',
-        'recipe2Ing1': '3 tablespoons of oatmeal.',
-        'recipe2Ing2': '1 small ripe banana.',
-        'recipe2Ing3': 'Water or age-appropriate milk.',
-        'recipe2Ing4': 'A minimal amount of cinnamon, optional if tolerated.',
-        'recipe2Step1': 'Cook the oatmeal until very soft.',
-        'recipe2Step2': 'Mash the banana into a purée.',
-        'recipe2Step3': 'Mix the oatmeal with the banana.',
-        'recipe2Step4': 'Let it cool before serving.',
-        'recipe2Rec':
-            'Do not use honey before one year of age. Do not add sugar; banana already provides natural sweetness.',
-        'recipe3Title': 'Soft egg and spinach omelet',
-        'recipe3Age': 'From 9 to 12 months',
-        'recipe3Moment': 'Breakfast, lunch, or light dinner',
-        'recipe3Desc':
-            'A soft option for children who already tolerate egg and firmer textures.',
-        'recipe3Ing1': '1 well-cooked egg.',
-        'recipe3Ing2': 'Very finely chopped spinach leaves.',
-        'recipe3Ing3': 'One teaspoon of oil.',
-        'recipe3Ing4': 'Optional cooked potato or carrot.',
-        'recipe3Step1': 'Beat the egg and mix it with chopped spinach.',
-        'recipe3Step2': 'Cook over low heat until fully cooked.',
-        'recipe3Step3': 'Cut into small, soft pieces.',
-        'recipe3Step4': 'Serve with purée or soft vegetables.',
-        'recipe3Rec':
-            'The egg must be fully cooked. If there is a history of allergies, consult the pediatrician first.',
-        'recipe4Title': 'Soft rice and lentil balls',
-        'recipe4Age': 'From 10 to 12 months',
-        'recipe4Moment': 'Lunch or savory snack',
-        'recipe4Desc':
-            'Small soft portions to practice grasping and safe chewing.',
-        'recipe4Ing1': 'Well-cooked rice.',
-        'recipe4Ing2': 'Well-cooked lentils.',
-        'recipe4Ing3': 'Cooked and mashed carrot.',
-        'recipe4Ing4': 'A little warm water if needed to soften.',
-        'recipe4Step1': 'Mash the lentils and mix with soft rice.',
-        'recipe4Step2': 'Add cooked carrot for texture and flavor.',
-        'recipe4Step3': 'Form small, soft balls.',
-        'recipe4Step4': 'Make sure they break apart easily when pressed.',
-        'recipe4Rec':
-            'Serve with supervision. The balls should be small, soft, and easy to mash.',
-        'recipe5Title': 'Natural yogurt cup with fruit',
-        'recipe5Age': 'From 12 months',
-        'recipe5Moment': 'Snack',
-        'recipe5Desc':
-            'A fresh, colorful, and easy snack for children who already tolerate dairy.',
-        'recipe5Ing1': 'Unsweetened natural yogurt.',
-        'recipe5Ing2': 'Ripe fruit, chopped or mashed.',
-        'recipe5Ing3': 'Optional soft oatmeal.',
-        'recipe5Step1': 'Place a small portion of natural yogurt.',
-        'recipe5Step2': 'Add ripe mashed fruit or safe fruit pieces.',
-        'recipe5Step3': 'Mix gently.',
-        'recipe5Step4': 'Serve cold, but not too chilled.',
-        'recipe5Rec':
-            'Avoid sweetened yogurts. Supervise if using fruit pieces.',
-
-        // LANGUAGE
-        'languageTitle': 'Language and communication',
-        'languageHeaderSubtitle': 'Simple activities to stimulate first words',
-        'touchActivityRecommendation':
-            'Tap an activity and see the recommendation',
-        'selectActivity': 'Select an activity',
-        'languageDefaultRec':
-            'Tap a card to see how to stimulate the child’s language at home.',
-        'languageDefaultHome':
-            'A simple activity will appear here and can be adapted to any object, image, or moment of the day.',
-        'languageDefaultParent':
-            'Remember to speak calmly, look at the child, and celebrate communication attempts.',
-        'homeActivity': 'Home activity',
-        'noActivityReviewed': 'No activity has been reviewed yet.',
-        'activitiesReviewed': 'Activities reviewed',
-        'repeatActivities':
-            'You can repeat them several times during the day in calm moments.',
-        'languageFinalNote':
-            'Each child develops language at their own pace. If they do not respond to sounds, do not look when spoken to, or lose acquired skills, consult a professional.',
-        'nameObjectsTitle': 'Name objects',
-        'nameObjectsDesc': 'Connects words with real things.',
-        'nameObjectsRec':
-            'Name nearby objects using short and clear phrases. You can use anything available: clothes, food, toys, utensils, or body parts.',
-        'nameObjectsHome':
-            'General challenge: choose 3 things near the child, point to them, and say their names slowly. Then wait to see if the child looks, points, or tries to repeat.',
-        'nameObjectsParent':
-            'It does not matter if the child cannot pronounce well yet. What matters is listening, associating, and participating.',
-        'readImagesTitle': 'Read images',
-        'readImagesDesc': 'Improves attention, memory, and vocabulary.',
-        'readImagesRec':
-            'Use any storybook, worksheet, photo, or image. It does not need to include specific things; you can describe colors, people, objects, or actions.',
-        'readImagesHome':
-            'General challenge: look at an image with the child and describe what appears. Use simple questions like: “What do you see?”, “Where is it?”, “What is it doing?”.',
-        'readImagesParent':
-            'If the child does not answer with words, looking, pointing, smiling, or making sounds also counts.',
-        'singMoveTitle': 'Sing and move',
-        'singMoveDesc': 'Stimulates rhythm, sounds, and expression.',
-        'singMoveRec':
-            'Sing short songs with gestures. You can use claps, hand movements, soft sounds, or voice changes.',
-        'singMoveHome':
-            'General challenge: sing a short song and add a repeated gesture. Pause briefly so the child can try to continue with a sound or movement.',
-        'singMoveParent':
-            'Repetition helps a lot. One simple song repeated for several days is better than many different songs.',
-        'talkTitle': 'Talk',
-        'talkDesc': 'Strengthens the intention to communicate.',
-        'talkRec':
-            'Respond to the child’s sounds, gestures, or looks as if they were part of a conversation. This teaches that communication has value.',
-        'talkHome':
-            'General challenge: observe what the child is doing and describe it calmly. Wait a few seconds to give them a chance to respond with a look, gesture, or sound.',
-        'talkParent':
-            'Do not fill every silence. Waiting also helps the child try to communicate.',
-        'imitateSoundsTitle': 'Imitate sounds',
-        'imitateSoundsDesc': 'Practices basic sounds in a fun way.',
-        'imitateSoundsRec':
-            'Make simple sounds from actions, objects, or situations. No special materials are needed: you can use surprise sounds, soft knocks, vehicles, or familiar animals.',
-        'imitateSoundsHome':
-            'General challenge: make 3 easy sounds and wait to see if the child tries to copy them. You can use sounds like “pa-pa”, “ma-ma”, “knock knock”, “mmm”, or “vroom”.',
-        'imitateSoundsParent':
-            'Praise any attempt. Do not correct harshly; repeat the correct sound naturally.',
-
-        // PROTECTIVE ENVIRONMENTS
-        'environmentTitle': 'Protective environments',
-        'environmentHeaderSubtitle':
-            'Guide to care for the safety, health, and well-being of children from 0 to 3 years old',
-        'touchEnvironmentActions': 'Tap each section to see practical actions',
-        'safeSpacesTitle': 'Safe spaces',
-        'safeSpacesSubtitle': 'A home prepared for safe exploration',
-        'safeSpacesDesc':
-            'A safe environment allows the child to explore, play, and learn with fewer risks.',
-        'safeSpacesA1':
-            'Keep medicines, cleaning products, and small objects out of reach.',
-        'safeSpacesA2': 'Cover outlets and keep cables organized.',
-        'safeSpacesA3':
-            'Avoid leaving sharp, hot, or heavy objects on table edges.',
-        'safeSpacesA4':
-            'Check the floor to remove small pieces the child could put in their mouth.',
-        'safeSpacesAlert':
-            'Pay special attention to stairs, kitchen, bathroom, outlets, and small objects.',
-        'activeSupervisionTitle': 'Active supervision',
-        'activeSupervisionSubtitle': 'Stay present without distractions',
-        'activeSupervisionDesc':
-            'Active supervision means staying close, watching what the child does, and anticipating possible dangers.',
-        'activeSupervisionA1':
-            'Keep the child in sight while playing, eating, or moving around.',
-        'activeSupervisionA2':
-            'Avoid leaving the child alone near water, kitchen areas, stairs, or windows.',
-        'activeSupervisionA3':
-            'If you need to step away, place the child in a safe area.',
-        'activeSupervisionA4':
-            'Do not rely only on silence: check whether the child is exploring something dangerous.',
-        'activeSupervisionAlert':
-            'Accidents can happen in seconds, especially near water or heights.',
-        'protectiveRoutinesTitle': 'Protective routines',
-        'protectiveRoutinesSubtitle': 'Order, rest, and calm',
-        'protectiveRoutinesDesc':
-            'Routines help the child feel safe because they know what to expect during the day.',
-        'protectiveRoutinesA1':
-            'Keep similar schedules for sleeping, eating, playing, and resting.',
-        'protectiveRoutinesA2':
-            'Calmly let the child know when an activity is about to change.',
-        'protectiveRoutinesA3':
-            'Create a short bedtime routine: bath, story, or soft song.',
-        'protectiveRoutinesA4':
-            'Avoid sudden changes when the child is tired or irritable.',
-        'protectiveRoutinesAlert':
-            'Lack of sleep or very disorganized routines can increase irritability and crying.',
-        'affectionTitle': 'Affection and respectful care',
-        'affectionSubtitle': 'Caring also means responding calmly',
-        'affectionDesc':
-            'Affection, patience, and respectful care strengthen trust and emotional development.',
-        'affectionA1':
-            'Hug the child, speak calmly, and respond to their needs.',
-        'affectionA2':
-            'Validate emotions: tiredness, fear, frustration, or joy.',
-        'affectionA3': 'Avoid shouting, hitting, or threats.',
-        'affectionA4':
-            'When the child makes a mistake, guide them with simple words and a calm tone.',
-        'affectionAlert':
-            'If the adult feels very stressed, it is better to ask for support before reacting with anger.',
-        'healthAlertTitle': 'Health and warning signs',
-        'healthAlertSubtitle': 'When to seek help',
-        'healthAlertDesc':
-            'Observing changes in the child helps you act in time and prevent complications.',
-        'healthAlertA1': 'Monitor fever, breathing, feeding, and energy level.',
-        'healthAlertA2':
-            'Watch for falls, strong hits, vomiting, diarrhea, or food refusal.',
-        'healthAlertA3':
-            'Keep medical checkups and vaccinations according to age.',
-        'healthAlertA4':
-            'Do not medicate the child without professional guidance.',
-        'healthAlertAlert':
-            'Seek medical care if there is difficulty breathing, high fever, extreme tiredness, seizures, strong hits, or signs of dehydration.',
-        'environmentFinalNote':
-            'A protective environment combines safety, affection, supervision, and routines. Small daily actions help the child grow with confidence and well-being.',
-      },
-    };
-
-    return textos[idioma]?[key] ?? key;
+    return selected[key] ?? _spanish[key] ?? key;
   }
+
+  static final Map<String, String> _spanish = {
+    // General
+    'appName': 'Wawa Kalú',
+    'welcome': 'Bienvenido a Wawa Kalú',
+    'subtitle': 'Aprende jugando, explorando y creciendo en familia',
+    'settingsTitle': 'Configuración',
+    'enabled': 'Activado',
+    'disabled': 'Desactivado',
+    'yes': 'Sí',
+    'no': 'No',
+    'back': 'Volver',
+    'continue': 'Continuar',
+    'startApp': 'Comenzar',
+    'startingApp': 'Entrando...',
+
+    // Configuración
+    'sounds': 'Sonidos',
+    'soundsOn': 'Sonidos activos',
+    'soundsOff': 'Sonidos desactivados',
+    'language': 'Idioma',
+    'spanish': 'Español',
+    'english': 'Inglés',
+    'vibration': 'Vibración',
+    'vibrationOn': 'Vibración activada',
+    'vibrationOff': 'Vibración desactivada',
+    'appearance': 'Apariencia',
+    'themeAutomatic': 'Automático',
+    'lightMode': 'Modo claro',
+    'darkMode': 'Modo oscuro',
+    'settingsNote':
+        'Puedes cambiar estas opciones cuando lo necesites desde el engrane.',
+
+    // Bienvenida
+    'welcomeScreenTitle': 'Bienvenido a',
+    'welcomeScreenSubtitle':
+        'Aprende jugando con actividades, figuras inteligentes y consejos para padres.',
+    'welcomeSettingsNote':
+        'Puedes cambiar idioma, sonidos, vibración y apariencia desde el engrane.',
+    'welcomePill1': 'Interactivo',
+    'welcomePill2': 'Infantil',
+    'welcomePill3': 'Familiar',
+    'welcomeMiniGames': 'Juegos',
+    'welcomeMiniCps': 'Figuras',
+    'welcomeMiniFood': 'Nutrición',
+    'welcomeMiniCare': 'Cuidado',
+    'welcomeGamesTitle': 'Juegos educativos',
+    'welcomeGamesSubtitle':
+        'Actividades sencillas para aprender de forma divertida.',
+    'welcomeCpsTitle': 'Figuras inteligentes',
+    'welcomeCpsSubtitle':
+        'Conecta el ESP32 y detecta figuras mediante sensores.',
+    'welcomeNutritionTitle': 'Nutrición infantil',
+    'welcomeNutritionSubtitle':
+        'Consejos y recetas pensadas para niños pequeños.',
+    'welcomeParentsTitle': 'Apoyo para padres',
+    'welcomeParentsSubtitle':
+        'Ideas para lenguaje, cuidado y entornos protectores.',
+
+    // Home
+    'cps': 'CPS',
+    'cpsSubtitle': 'Figuras inteligentes con ESP32',
+    'games': 'Juegos',
+    'gamesSubtitle': 'Actividades interactivas para niños',
+    'nutrition': 'Nutrición',
+    'nutritionSubtitle': 'Consejos y recetas infantiles',
+    'languageMenu': 'Lenguaje',
+    'languageSubtitle': 'Comunicación y estimulación',
+    'environment': 'Entornos',
+    'environmentSubtitle': 'Cuidado y protección infantil',
+
+    // CPS
+    'cpsTitle': 'Figuras inteligentes',
+    'cpsSubTitle': 'Conecta el ESP32 y detecta las figuras',
+    'connectEsp': 'Conecta tu ESP32 para iniciar',
+    'connectEspButton': 'Conectar ESP32',
+    'espConnected': 'ESP32 conectado correctamente',
+    'disconnect': 'Desconectar',
+    'searching': 'Buscando...',
+    'selectEsp': 'Selecciona tu ESP32',
+    'signal': 'Señal',
+    'turnOnBluetooth': 'Activa el Bluetooth para continuar',
+    'noBleDevices': 'No se encontraron dispositivos BLE',
+    'noBleService': 'El dispositivo no tiene el servicio esperado',
+    'connectFirst': 'Primero conecta el ESP32',
+    'offlineHistory': 'Datos offline',
+    'savedRecords': 'Registros guardados',
+    'offlineData': 'Datos almacenados cuando no había conexión',
+    'updateHistory': 'Actualizar historial',
+    'updating': 'Actualizando...',
+    'noRecords': 'No hay registros guardados',
+    'syncingHistory': 'Sincronizando historial...',
+    'noOfflineLogs': 'No hay datos offline guardados',
+    'logError': 'Error al leer el historial',
+    'quickGuide': 'Guía rápida',
+    'guide1': 'Conecta el ESP32 desde el botón verde.',
+    'guide2': 'Coloca una figura sobre su espacio correspondiente.',
+    'guide3': 'La figura detectada se iluminará en pantalla.',
+    'guide4': 'Los avances se reinician cada vez que conectas el ESP32.',
+    'hideGuide': 'Ocultar guía',
+    'viewGuide': 'Ver guía',
+    'prizeGuide':
+        'Cada 5 detecciones ganas una estrella y cada 10 detecciones una medalla.',
+    'sessionProgress': 'Avances de la sesión',
+    'detections': 'Detecciones',
+    'activeNow': 'Activas ahora',
+    'stars': 'Estrellas',
+    'medals': 'Medallas',
+    'defaultPrize': 'Sigue detectando figuras para ganar premios',
+    'starPrize': '¡Ganaste una estrella!',
+    'medalPrize': '¡Ganaste una medalla!',
+    'keepPlaying': 'Sigue jugando para ganar recompensas',
+    'starsWon': 'Ya ganaste estrellas en esta sesión',
+    'medalsWon': 'Ya ganaste medallas en esta sesión',
+    'circle': 'Círculo',
+    'square': 'Cuadrado',
+    'triangle': 'Triángulo',
+    'star': 'Estrella',
+
+    // Juego general
+    'game': 'Juego',
+    'gameTitle': 'Juego de figuras',
+    'gameSubtitle': 'Toca, observa y aprende',
+    'touchFigure': 'Toca una figura para comenzar',
+    'correctFigure': 'Seleccionaste:',
+    'hits': 'Aciertos',
+
+    // Juego David
+    'gameDavid': 'Juego David',
+    'davidTitle': 'Juego de animales',
+    'davidSubtitleSound': 'Toca un animal y escucha su sonido',
+    'davidSubtitleNoSound': 'Toca un animal y aprende sin sonido',
+    'touchAnimal': 'Toca un animal para jugar',
+    'correctAnimal': 'Seleccionaste:',
+    'dog': 'Perro',
+    'cat': 'Gato',
+    'chick': 'Pollito',
+    'cow': 'Vaca',
+
+    // Premios Juego David
+    'zooRewardsTitle': 'Premios del zoológico',
+    'zooRewardDefault': 'Juega con los animales para ganar premios',
+    'zooRewardStar': '¡Muy bien! Ganaste una estrella animal',
+    'zooRewardMedal': '¡Excelente! Ganaste una medalla animal',
+    'zooRewardBoth': '¡Increíble! Ganaste una estrella y una medalla',
+    'zooStars': 'Estrellas',
+    'zooMedals': 'Medallas',
+    'zooNextStar': 'Próxima estrella',
+    'zooNextMedal': 'Próxima medalla',
+    'zooMissingForStar': 'Faltan',
+    'zooAnimalsForStar': 'animales para ganar una estrella',
+    'zooMissingForMedal': 'Faltan',
+    'zooAnimalsForMedal': 'animales para ganar una medalla',
+    'zooStarUnlocked': '¡Estrella desbloqueada!',
+    'zooMedalUnlocked': '¡Medalla desbloqueada!',
+
+    // Nutrición
+    'nutritionChildTitle': 'Nutrición infantil',
+    'nutritionChildSubtitle': 'Consejos para niños de 0 a 3 años',
+    'touchSectionRecommendations':
+        'Toca una sección para ver recomendaciones',
+    'nutritionFoodsTitle': 'Alimentos',
+    'nutritionFoodsSubtitle': 'Ideas saludables y fáciles',
+    'nutritionFoodsTip1':
+        'Ofrece alimentos suaves, variados y adecuados para la edad.',
+    'nutritionFoodsTip2':
+        'Incluye frutas, verduras, cereales, proteínas y grasas saludables.',
+    'nutritionFoodsTip3':
+        'Evita azúcar añadida, gaseosas, exceso de sal y ultraprocesados.',
+    'nutritionFoodsTip4':
+        'Introduce alimentos nuevos poco a poco y observa posibles alergias.',
+    'nutritionFoodsTip5':
+        'Acompaña las comidas con paciencia, sin presionar al niño.',
+    'nutritionRoutineTitle': 'Rutina',
+    'nutritionRoutineSubtitle': 'Horarios y hábitos',
+    'nutritionRoutineTip1':
+        'Mantén horarios similares para desayuno, almuerzo, merienda y cena.',
+    'nutritionRoutineTip2':
+        'Crea un ambiente tranquilo durante la comida.',
+    'nutritionRoutineTip3':
+        'Evita pantallas mientras el niño se alimenta.',
+    'nutritionRoutineTip4':
+        'Permite que el niño explore texturas con supervisión.',
+    'nutritionRoutineTip5':
+        'Respeta señales de hambre y saciedad.',
+    'nutritionHydrationTitle': 'Hidratación',
+    'nutritionHydrationSubtitle': 'Agua y bebidas adecuadas',
+    'nutritionHydrationTip1':
+        'Ofrece agua simple durante el día según la edad.',
+    'nutritionHydrationTip2':
+        'Evita jugos artificiales, gaseosas y bebidas azucaradas.',
+    'nutritionHydrationTip3':
+        'En días calurosos, aumenta la atención a la hidratación.',
+    'nutritionHydrationTip4':
+        'La leche materna o fórmula sigue siendo importante en etapas tempranas.',
+    'nutritionHydrationTip5':
+        'Consulta al pediatra si hay diarrea, fiebre o rechazo de líquidos.',
+    'nutritionSignalsTitle': 'Señales del niño',
+    'nutritionSignalsSubtitle': 'Observar antes de insistir',
+    'nutritionSignalsTip1':
+        'Si gira la cabeza o cierra la boca, puede estar satisfecho.',
+    'nutritionSignalsTip2':
+        'Si mira la comida o abre la boca, puede tener interés.',
+    'nutritionSignalsTip3':
+        'No obligues a terminar el plato.',
+    'nutritionSignalsTip4':
+        'Observa cambios de apetito durante enfermedad o dentición.',
+    'nutritionSignalsTip5':
+        'El apetito puede variar de un día a otro.',
+    'nutritionSafetyTitle': 'Seguridad',
+    'nutritionSafetySubtitle': 'Evitar riesgos al comer',
+    'nutritionSafetyTip1':
+        'Supervisa siempre al niño mientras come.',
+    'nutritionSafetyTip2':
+        'Evita alimentos duros, redondos o pequeños que puedan causar atragantamiento.',
+    'nutritionSafetyTip3':
+        'Corta los alimentos en tamaños seguros.',
+    'nutritionSafetyTip4':
+        'Sienta al niño correctamente durante la comida.',
+    'nutritionSafetyTip5':
+        'Ante alergias o dudas, consulta al pediatra.',
+    'nutritionParentsTitle': 'Para padres',
+    'nutritionParentsSubtitle': 'Acompañamiento positivo',
+    'nutritionParentsTip1':
+        'El ejemplo de la familia influye en los hábitos del niño.',
+    'nutritionParentsTip2':
+        'Evita usar dulces como premio o castigo.',
+    'nutritionParentsTip3':
+        'Celebra pequeños avances sin presionar.',
+    'nutritionParentsTip4':
+        'Planifica comidas sencillas con ingredientes disponibles.',
+    'nutritionParentsTip5':
+        'Consulta a un profesional si hay bajo peso, rechazo constante o alergias.',
+    'nutritionFinalNote':
+        'Estas recomendaciones son generales y no reemplazan la orientación del pediatra. La alimentación debe ajustarse a la edad, salud, desarrollo, alergias y necesidades de cada niño.',
+
+    // Recetas
+    'recipesForChildren': 'Recetas para niños',
+    'recipesShortDesc':
+        'Encuentra ideas nutritivas y fáciles para diferentes momentos del día.',
+    'viewRecipes': 'Ver recetas',
+    'recipesAppBar': 'Recetas',
+    'recipesHeaderTitle': 'Recetas infantiles',
+    'recipesHeaderSubtitle': 'Ideas suaves, nutritivas y fáciles',
+    'recipesHeaderNote':
+        'Pensadas como apoyo general para niños pequeños',
+    'ingredients': 'Ingredientes',
+    'preparation': 'Preparación',
+    'recipeFinalNote':
+        'Ajusta cada receta según la edad, textura tolerada, alergias y recomendación del pediatra.',
+
+    'recipe1Title': 'Puré suave de zapallo y pollo',
+    'recipe1Age': 'Desde 8 meses',
+    'recipe1Moment': 'Almuerzo',
+    'recipe1Desc':
+        'Una receta suave con proteína y vegetales para una comida completa.',
+    'recipe1Ing1': 'Zapallo cocido',
+    'recipe1Ing2': 'Pollo cocido y desmenuzado',
+    'recipe1Ing3': 'Un poco de arroz bien cocido',
+    'recipe1Ing4': 'Agua tibia o caldo natural sin sal',
+    'recipe1Step1': 'Cocina todos los ingredientes hasta que estén suaves.',
+    'recipe1Step2': 'Tritura o licúa según la textura que tolere el niño.',
+    'recipe1Step3': 'Agrega líquido poco a poco hasta lograr una textura cremosa.',
+    'recipe1Step4': 'Sirve tibio y en porciones pequeñas.',
+    'recipe1Rec':
+        'Es recomendable al almuerzo, cuando el niño está más activo y receptivo.',
+
+    'recipe2Title': 'Avena cremosa con banana',
+    'recipe2Age': 'Desde 7 meses',
+    'recipe2Moment': 'Desayuno',
+    'recipe2Desc':
+        'Una opción suave y energética para iniciar el día.',
+    'recipe2Ing1': 'Avena cocida',
+    'recipe2Ing2': 'Banana madura aplastada',
+    'recipe2Ing3': 'Leche materna, fórmula o agua',
+    'recipe2Ing4': 'Canela mínima opcional',
+    'recipe2Step1': 'Cocina la avena hasta que quede muy suave.',
+    'recipe2Step2': 'Agrega la banana aplastada.',
+    'recipe2Step3': 'Mezcla hasta obtener una textura cremosa.',
+    'recipe2Step4': 'Deja enfriar antes de servir.',
+    'recipe2Rec':
+        'Ideal para desayuno o media mañana, sin añadir azúcar.',
+
+    'recipe3Title': 'Tortillita suave de huevo y verduras',
+    'recipe3Age': 'Desde 12 meses',
+    'recipe3Moment': 'Cena o almuerzo',
+    'recipe3Desc':
+        'Una preparación blanda para practicar masticación con supervisión.',
+    'recipe3Ing1': 'Huevo bien cocido',
+    'recipe3Ing2': 'Zanahoria rallada cocida',
+    'recipe3Ing3': 'Espinaca picada cocida',
+    'recipe3Ing4': 'Aceite vegetal en pequeña cantidad',
+    'recipe3Step1': 'Bate el huevo y mezcla las verduras cocidas.',
+    'recipe3Step2': 'Cocina a fuego bajo hasta que el huevo esté completamente cocido.',
+    'recipe3Step3': 'Corta en trozos pequeños y blandos.',
+    'recipe3Step4': 'Sirve tibio y supervisa mientras come.',
+    'recipe3Rec':
+        'Úsala solo si el niño ya tolera huevo y verduras.',
+
+    'recipe4Title': 'Arroz suave con lenteja',
+    'recipe4Age': 'Desde 10 meses',
+    'recipe4Moment': 'Almuerzo',
+    'recipe4Desc':
+        'Combina cereal y legumbre para una comida nutritiva.',
+    'recipe4Ing1': 'Arroz bien cocido',
+    'recipe4Ing2': 'Lentejas cocidas y suaves',
+    'recipe4Ing3': 'Zanahoria cocida',
+    'recipe4Ing4': 'Agua o caldo natural sin sal',
+    'recipe4Step1': 'Cocina las lentejas hasta que estén muy blandas.',
+    'recipe4Step2': 'Mezcla con arroz y zanahoria cocida.',
+    'recipe4Step3': 'Aplasta ligeramente si el niño aún no mastica bien.',
+    'recipe4Step4': 'Sirve en porciones pequeñas.',
+    'recipe4Rec':
+        'Puede darse al almuerzo, observando tolerancia digestiva.',
+
+    'recipe5Title': 'Yogur natural con fruta',
+    'recipe5Age': 'Desde 12 meses',
+    'recipe5Moment': 'Merienda',
+    'recipe5Desc':
+        'Una merienda fresca y sencilla sin azúcar añadida.',
+    'recipe5Ing1': 'Yogur natural sin azúcar',
+    'recipe5Ing2': 'Fruta madura picada o aplastada',
+    'recipe5Ing3': 'Avena suave opcional',
+    'recipe5Step1': 'Lava y prepara la fruta.',
+    'recipe5Step2': 'Mezcla con yogur natural.',
+    'recipe5Step3': 'Aplasta si se requiere una textura más suave.',
+    'recipe5Step4': 'Sirve frío, pero no helado.',
+    'recipe5Rec':
+        'Ideal para merienda, siempre que el niño tolere lácteos.',
+
+    // Lenguaje
+    'languageTitle': 'Lenguaje y comunicación',
+    'languageHeaderSubtitle': 'Actividades sencillas para estimular el habla',
+    'touchActivityRecommendation':
+        'Toca una actividad para ver cómo hacerla en casa',
+    'selectActivity': 'Selecciona una actividad',
+    'languageDefaultRec':
+        'Elige una actividad para recibir una recomendación práctica.',
+    'languageDefaultHome':
+        'Puedes iniciar con una conversación corta usando objetos cercanos.',
+    'languageDefaultParent':
+        'Hablar con calma y responder a los sonidos del niño ayuda a fortalecer su comunicación.',
+    'homeActivity': 'Actividad en casa',
+    'noActivityReviewed': 'Aún no revisas actividades',
+    'activitiesReviewed': 'Actividades revisadas',
+    'languageFinalNote':
+        'Cada niño desarrolla el lenguaje a su ritmo. Si existen dudas sobre audición, comprensión o habla, consulta con un profesional.',
+
+    'nameObjectsTitle': 'Nombrar objetos',
+    'nameObjectsDesc': 'Usa cosas cercanas y nómbralas con claridad.',
+    'nameObjectsRec':
+        'Señala un objeto, di su nombre y espera una reacción del niño.',
+    'nameObjectsHome':
+        'Durante el juego, nombra colores, formas, personas o acciones.',
+    'nameObjectsParent':
+        'Repite las palabras sin corregir de forma brusca.',
+
+    'readImagesTitle': 'Leer imágenes',
+    'readImagesDesc': 'Usa cuentos, fotos o láminas.',
+    'readImagesRec':
+        'Describe lo que ves: colores, personas, objetos o acciones.',
+    'readImagesHome':
+        'Use cualquier cuento, lámina, foto o imagen. No es necesario que tenga cosas específicas; puede describir colores, personas, objetos o acciones.',
+    'readImagesParent':
+        'Hacer preguntas simples ayuda a que el niño participe.',
+
+    'singMoveTitle': 'Cantar y moverse',
+    'singMoveDesc': 'Une música, gestos y palabras.',
+    'singMoveRec':
+        'Canta canciones cortas y acompáñalas con movimientos de manos.',
+    'singMoveHome':
+        'Usa canciones conocidas y repite frases fáciles.',
+    'singMoveParent':
+        'La repetición favorece memoria, ritmo y lenguaje.',
+
+    'talkTitle': 'Conversar',
+    'talkDesc': 'Habla durante actividades diarias.',
+    'talkRec':
+        'Describe lo que hacen mientras comen, juegan o se visten.',
+    'talkHome':
+        'Usa frases cortas como: ahora lavamos manos, ahora guardamos juguetes.',
+    'talkParent':
+        'Conversar no necesita materiales, solo atención y paciencia.',
+
+    'imitateSoundsTitle': 'Imitar sonidos',
+    'imitateSoundsDesc': 'Juega con sonidos de objetos o animales.',
+    'imitateSoundsRec':
+        'Haz un sonido simple y espera que el niño intente repetirlo.',
+    'imitateSoundsHome':
+        'Pueden imitar sonidos de carros, agua, animales o juguetes.',
+    'imitateSoundsParent':
+        'Celebra cualquier intento de comunicación.',
+
+    // Entornos
+    'environmentTitle': 'Entornos protectores',
+    'environmentHeaderSubtitle':
+        'Ideas para cuidar, acompañar y prevenir riesgos',
+    'touchEnvironmentActions':
+        'Toca una sección para ver acciones recomendadas',
+    'environmentFinalNote':
+        'Un entorno protector combina seguridad física, afecto, rutinas y supervisión constante.',
+
+    'safeSpacesTitle': 'Espacios seguros',
+    'safeSpacesSubtitle': 'Casa organizada y libre de riesgos',
+    'safeSpacesDesc':
+        'Un espacio seguro permite que el niño explore sin exponerse a peligros innecesarios.',
+    'safeSpacesAlert':
+        'Revisa enchufes, esquinas, objetos pequeños, cables y productos de limpieza.',
+    'safeSpacesA1': 'Mantén objetos pequeños fuera del alcance.',
+    'safeSpacesA2': 'Guarda medicinas y químicos en lugares altos o cerrados.',
+    'safeSpacesA3': 'Usa protectores en enchufes si es necesario.',
+    'safeSpacesA4': 'Asegura muebles que puedan caerse.',
+
+    'activeSupervisionTitle': 'Supervisión activa',
+    'activeSupervisionSubtitle': 'Acompañar sin distraerse',
+    'activeSupervisionDesc':
+        'Supervisar significa observar, anticiparse y estar presente durante el juego.',
+    'activeSupervisionAlert':
+        'Evita dejar al niño solo cerca de agua, escaleras, cocina o calles.',
+    'activeSupervisionA1': 'Observa mientras juega o explora.',
+    'activeSupervisionA2': 'Mantén contacto visual frecuente.',
+    'activeSupervisionA3': 'Evita distracciones largas con el celular.',
+    'activeSupervisionA4': 'Acompaña especialmente en espacios nuevos.',
+
+    'protectiveRoutinesTitle': 'Rutinas protectoras',
+    'protectiveRoutinesSubtitle': 'Hábitos que dan seguridad',
+    'protectiveRoutinesDesc':
+        'Las rutinas ayudan a que el niño anticipe lo que viene y se sienta seguro.',
+    'protectiveRoutinesAlert':
+        'Los cambios bruscos pueden generar irritabilidad o inseguridad.',
+    'protectiveRoutinesA1': 'Mantén horarios similares para dormir y comer.',
+    'protectiveRoutinesA2': 'Anticipa cambios con frases simples.',
+    'protectiveRoutinesA3': 'Crea rituales de sueño tranquilos.',
+    'protectiveRoutinesA4': 'Evita pantallas antes de dormir.',
+
+    'affectionTitle': 'Afecto y vínculo',
+    'affectionSubtitle': 'Cuidado emocional diario',
+    'affectionDesc':
+        'El afecto ayuda al desarrollo emocional y fortalece la confianza.',
+    'affectionAlert':
+        'Gritos, castigos físicos o humillaciones afectan el bienestar del niño.',
+    'affectionA1': 'Responde con calma al llanto.',
+    'affectionA2': 'Abraza, mira y habla con cariño.',
+    'affectionA3': 'Valida emociones con palabras simples.',
+    'affectionA4': 'Celebra pequeños logros.',
+
+    'healthAlertTitle': 'Señales de alerta',
+    'healthAlertSubtitle': 'Cuándo buscar ayuda',
+    'healthAlertDesc':
+        'Algunas señales requieren atención de un profesional de salud.',
+    'healthAlertAlert':
+        'Busca ayuda si hay fiebre persistente, dificultad para respirar, convulsiones, deshidratación o cambios fuertes de conducta.',
+    'healthAlertA1': 'Observa fiebre, sueño excesivo o rechazo de alimentos.',
+    'healthAlertA2': 'Consulta si hay golpes fuertes o caídas.',
+    'healthAlertA3': 'No automediques al niño.',
+    'healthAlertA4': 'Mantén controles pediátricos al día.',
+  };
+
+  static final Map<String, String> _english = {
+    // General
+    'appName': 'Wawa Kalú',
+    'welcome': 'Welcome to Wawa Kalú',
+    'subtitle': 'Learn by playing, exploring, and growing as a family',
+    'settingsTitle': 'Settings',
+    'enabled': 'Enabled',
+    'disabled': 'Disabled',
+    'yes': 'Yes',
+    'no': 'No',
+    'back': 'Back',
+    'continue': 'Continue',
+    'startApp': 'Start',
+    'startingApp': 'Starting...',
+
+    // Settings
+    'sounds': 'Sounds',
+    'soundsOn': 'Sounds on',
+    'soundsOff': 'Sounds off',
+    'language': 'Language',
+    'spanish': 'Spanish',
+    'english': 'English',
+    'vibration': 'Vibration',
+    'vibrationOn': 'Vibration on',
+    'vibrationOff': 'Vibration off',
+    'appearance': 'Appearance',
+    'themeAutomatic': 'Automatic',
+    'lightMode': 'Light mode',
+    'darkMode': 'Dark mode',
+    'settingsNote':
+        'You can change these options whenever you need from the gear icon.',
+
+    // Welcome
+    'welcomeScreenTitle': 'Welcome to ',
+    'welcomeScreenSubtitle':
+        'Learn through games, smart shapes, and helpful tips for parents.',
+    'welcomeSettingsNote':
+        'You can change language, sounds, vibration, and appearance from the gear icon.',
+    'welcomePill1': 'Interactive',
+    'welcomePill2': 'Child-friendly',
+    'welcomePill3': 'Family',
+    'welcomeMiniGames': 'Games',
+    'welcomeMiniCps': 'Shapes',
+    'welcomeMiniFood': 'Nutrition',
+    'welcomeMiniCare': 'Care',
+    'welcomeGamesTitle': 'Educational games',
+    'welcomeGamesSubtitle':
+        'Simple activities to learn in a fun way.',
+    'welcomeCpsTitle': 'Smart shapes',
+    'welcomeCpsSubtitle':
+        'Connect the ESP32 and detect shapes using sensors.',
+    'welcomeNutritionTitle': 'Child nutrition',
+    'welcomeNutritionSubtitle':
+        'Tips and recipes designed for young children.',
+    'welcomeParentsTitle': 'Support for parents',
+    'welcomeParentsSubtitle':
+        'Ideas for language, care, and protective environments.',
+
+    // Home
+    'cps': 'CPS',
+    'cpsSubtitle': 'Smart shapes with ESP32',
+    'games': 'Games',
+    'gamesSubtitle': 'Interactive activities for children',
+    'nutrition': 'Nutrition',
+    'nutritionSubtitle': 'Child nutrition tips and recipes',
+    'languageMenu': 'Language',
+    'languageSubtitle': 'Communication and stimulation',
+    'environment': 'Environments',
+    'environmentSubtitle': 'Child care and protection',
+
+    // CPS
+    'cpsTitle': 'Smart shapes',
+    'cpsSubTitle': 'Connect the ESP32 and detect the shapes',
+    'connectEsp': 'Connect your ESP32 to start',
+    'connectEspButton': 'Connect ESP32',
+    'espConnected': 'ESP32 connected successfully',
+    'disconnect': 'Disconnect',
+    'searching': 'Searching...',
+    'selectEsp': 'Select your ESP32',
+    'signal': 'Signal',
+    'turnOnBluetooth': 'Turn on Bluetooth to continue',
+    'noBleDevices': 'No BLE devices found',
+    'noBleService': 'The device does not have the expected service',
+    'connectFirst': 'Connect the ESP32 first',
+    'offlineHistory': 'Offline data',
+    'savedRecords': 'Saved records',
+    'offlineData': 'Data stored when there was no connection',
+    'updateHistory': 'Update history',
+    'updating': 'Updating...',
+    'noRecords': 'No saved records',
+    'syncingHistory': 'Syncing history...',
+    'noOfflineLogs': 'No offline data saved',
+    'logError': 'Error reading history',
+    'quickGuide': 'Quick guide',
+    'guide1': 'Connect the ESP32 using the green button.',
+    'guide2': 'Place a shape on its matching space.',
+    'guide3': 'The detected shape will light up on the screen.',
+    'guide4': 'Progress resets every time you connect the ESP32.',
+    'hideGuide': 'Hide guide',
+    'viewGuide': 'View guide',
+    'prizeGuide':
+        'Every 5 detections you win a star, and every 10 detections you win a medal.',
+    'sessionProgress': 'Session progress',
+    'detections': 'Detections',
+    'activeNow': 'Active now',
+    'stars': 'Stars',
+    'medals': 'Medals',
+    'defaultPrize': 'Keep detecting shapes to win rewards',
+    'starPrize': 'You won a star!',
+    'medalPrize': 'You won a medal!',
+    'keepPlaying': 'Keep playing to win rewards',
+    'starsWon': 'You already won stars this session',
+    'medalsWon': 'You already won medals this session',
+    'circle': 'Circle',
+    'square': 'Square',
+    'triangle': 'Triangle',
+    'star': 'Star',
+
+    // General game
+    'game': 'Game',
+    'gameTitle': 'Shape game',
+    'gameSubtitle': 'Tap, observe, and learn',
+    'touchFigure': 'Tap a shape to start',
+    'correctFigure': 'You selected:',
+    'hits': 'Hits',
+
+    // David game
+    'gameDavid': 'David Game',
+    'davidTitle': 'Animal game',
+    'davidSubtitleSound': 'Tap an animal and listen to its sound',
+    'davidSubtitleNoSound': 'Tap an animal and learn without sound',
+    'touchAnimal': 'Tap an animal to play',
+    'correctAnimal': 'You selected:',
+    'dog': 'Dog',
+    'cat': 'Cat',
+    'chick': 'Chick',
+    'cow': 'Cow',
+
+    // David game rewards
+    'zooRewardsTitle': 'Zoo rewards',
+    'zooRewardDefault': 'Play with the animals to win rewards',
+    'zooRewardStar': 'Great job! You won an animal star',
+    'zooRewardMedal': 'Excellent! You won an animal medal',
+    'zooRewardBoth': 'Amazing! You won a star and a medal',
+    'zooStars': 'Stars',
+    'zooMedals': 'Medals',
+    'zooNextStar': 'Next star',
+    'zooNextMedal': 'Next medal',
+    'zooMissingForStar': 'Missing',
+    'zooAnimalsForStar': 'animals to win a star',
+    'zooMissingForMedal': 'Missing',
+    'zooAnimalsForMedal': 'animals to win a medal',
+    'zooStarUnlocked': 'Star unlocked!',
+    'zooMedalUnlocked': 'Medal unlocked!',
+
+    // Nutrition
+    'nutritionChildTitle': 'Child nutrition',
+    'nutritionChildSubtitle': 'Tips for children from 0 to 3 years old',
+    'touchSectionRecommendations':
+        'Tap a section to see recommendations',
+    'nutritionFoodsTitle': 'Foods',
+    'nutritionFoodsSubtitle': 'Healthy and simple ideas',
+    'nutritionFoodsTip1':
+        'Offer soft, varied foods appropriate for the child’s age.',
+    'nutritionFoodsTip2':
+        'Include fruits, vegetables, grains, proteins, and healthy fats.',
+    'nutritionFoodsTip3':
+        'Avoid added sugar, soda, excess salt, and ultra-processed foods.',
+    'nutritionFoodsTip4':
+        'Introduce new foods gradually and watch for possible allergies.',
+    'nutritionFoodsTip5':
+        'Support meals with patience, without pressuring the child.',
+    'nutritionRoutineTitle': 'Routine',
+    'nutritionRoutineSubtitle': 'Schedules and habits',
+    'nutritionRoutineTip1':
+        'Keep similar times for breakfast, lunch, snack, and dinner.',
+    'nutritionRoutineTip2':
+        'Create a calm environment during meals.',
+    'nutritionRoutineTip3':
+        'Avoid screens while the child is eating.',
+    'nutritionRoutineTip4':
+        'Allow the child to explore textures with supervision.',
+    'nutritionRoutineTip5':
+        'Respect hunger and fullness cues.',
+    'nutritionHydrationTitle': 'Hydration',
+    'nutritionHydrationSubtitle': 'Water and suitable drinks',
+    'nutritionHydrationTip1':
+        'Offer plain water during the day according to age.',
+    'nutritionHydrationTip2':
+        'Avoid artificial juices, soda, and sugary drinks.',
+    'nutritionHydrationTip3':
+        'On hot days, pay more attention to hydration.',
+    'nutritionHydrationTip4':
+        'Breast milk or formula remains important in early stages.',
+    'nutritionHydrationTip5':
+        'Consult the pediatrician if there is diarrhea, fever, or refusal of fluids.',
+    'nutritionSignalsTitle': 'Child signals',
+    'nutritionSignalsSubtitle': 'Observe before insisting',
+    'nutritionSignalsTip1':
+        'Turning the head or closing the mouth may mean the child is full.',
+    'nutritionSignalsTip2':
+        'Looking at food or opening the mouth may show interest.',
+    'nutritionSignalsTip3':
+        'Do not force the child to finish the plate.',
+    'nutritionSignalsTip4':
+        'Watch appetite changes during illness or teething.',
+    'nutritionSignalsTip5':
+        'Appetite may vary from day to day.',
+    'nutritionSafetyTitle': 'Safety',
+    'nutritionSafetySubtitle': 'Avoid risks while eating',
+    'nutritionSafetyTip1':
+        'Always supervise the child while eating.',
+    'nutritionSafetyTip2':
+        'Avoid hard, round, or small foods that may cause choking.',
+    'nutritionSafetyTip3':
+        'Cut food into safe sizes.',
+    'nutritionSafetyTip4':
+        'Seat the child correctly during meals.',
+    'nutritionSafetyTip5':
+        'For allergies or concerns, consult the pediatrician.',
+    'nutritionParentsTitle': 'For parents',
+    'nutritionParentsSubtitle': 'Positive support',
+    'nutritionParentsTip1':
+        'Family example influences the child’s habits.',
+    'nutritionParentsTip2':
+        'Avoid using sweets as rewards or punishment.',
+    'nutritionParentsTip3':
+        'Celebrate small progress without pressure.',
+    'nutritionParentsTip4':
+        'Plan simple meals with available ingredients.',
+    'nutritionParentsTip5':
+        'Consult a professional if there is low weight, constant refusal, or allergies.',
+    'nutritionFinalNote':
+        'These recommendations are general and do not replace pediatric guidance. Feeding should be adapted to each child’s age, health, development, allergies, and needs.',
+
+    // Recipes
+    'recipesForChildren': 'Recipes for children',
+    'recipesShortDesc':
+        'Find nutritious and easy ideas for different moments of the day.',
+    'viewRecipes': 'View recipes',
+    'recipesAppBar': 'Recipes',
+    'recipesHeaderTitle': 'Child recipes',
+    'recipesHeaderSubtitle': 'Soft, nutritious, and easy ideas',
+    'recipesHeaderNote':
+        'Designed as general support for young children',
+    'ingredients': 'Ingredients',
+    'preparation': 'Preparation',
+    'recipeFinalNote':
+        'Adjust each recipe according to age, tolerated texture, allergies, and pediatric guidance.',
+
+    'recipe1Title': 'Soft pumpkin and chicken purée',
+    'recipe1Age': 'From 8 months',
+    'recipe1Moment': 'Lunch',
+    'recipe1Desc':
+        'A soft recipe with protein and vegetables for a complete meal.',
+    'recipe1Ing1': 'Cooked pumpkin',
+    'recipe1Ing2': 'Cooked shredded chicken',
+    'recipe1Ing3': 'A little well-cooked rice',
+    'recipe1Ing4': 'Warm water or natural broth without salt',
+    'recipe1Step1': 'Cook all ingredients until soft.',
+    'recipe1Step2': 'Mash or blend according to the child’s tolerated texture.',
+    'recipe1Step3': 'Add liquid little by little until creamy.',
+    'recipe1Step4': 'Serve warm in small portions.',
+    'recipe1Rec':
+        'Recommended for lunch, when the child is more active and receptive.',
+
+    'recipe2Title': 'Creamy oatmeal with banana',
+    'recipe2Age': 'From 7 months',
+    'recipe2Moment': 'Breakfast',
+    'recipe2Desc':
+        'A soft and energetic option to start the day.',
+    'recipe2Ing1': 'Cooked oatmeal',
+    'recipe2Ing2': 'Mashed ripe banana',
+    'recipe2Ing3': 'Breast milk, formula, or water',
+    'recipe2Ing4': 'A tiny amount of cinnamon, optional',
+    'recipe2Step1': 'Cook the oatmeal until very soft.',
+    'recipe2Step2': 'Add mashed banana.',
+    'recipe2Step3': 'Mix until creamy.',
+    'recipe2Step4': 'Let it cool before serving.',
+    'recipe2Rec':
+        'Ideal for breakfast or mid-morning, without added sugar.',
+
+    'recipe3Title': 'Soft egg and vegetable omelet',
+    'recipe3Age': 'From 12 months',
+    'recipe3Moment': 'Dinner or lunch',
+    'recipe3Desc':
+        'A soft preparation to practice chewing with supervision.',
+    'recipe3Ing1': 'Well-cooked egg',
+    'recipe3Ing2': 'Cooked grated carrot',
+    'recipe3Ing3': 'Cooked chopped spinach',
+    'recipe3Ing4': 'Small amount of vegetable oil',
+    'recipe3Step1': 'Beat the egg and mix with cooked vegetables.',
+    'recipe3Step2': 'Cook on low heat until the egg is fully cooked.',
+    'recipe3Step3': 'Cut into small soft pieces.',
+    'recipe3Step4': 'Serve warm and supervise while eating.',
+    'recipe3Rec':
+        'Use only if the child already tolerates egg and vegetables.',
+
+    'recipe4Title': 'Soft rice with lentils',
+    'recipe4Age': 'From 10 months',
+    'recipe4Moment': 'Lunch',
+    'recipe4Desc':
+        'Combines grain and legume for a nutritious meal.',
+    'recipe4Ing1': 'Well-cooked rice',
+    'recipe4Ing2': 'Cooked soft lentils',
+    'recipe4Ing3': 'Cooked carrot',
+    'recipe4Ing4': 'Water or natural broth without salt',
+    'recipe4Step1': 'Cook the lentils until very soft.',
+    'recipe4Step2': 'Mix with rice and cooked carrot.',
+    'recipe4Step3': 'Mash slightly if the child does not chew well yet.',
+    'recipe4Step4': 'Serve in small portions.',
+    'recipe4Rec':
+        'Can be given at lunch while observing digestive tolerance.',
+
+    'recipe5Title': 'Natural yogurt with fruit',
+    'recipe5Age': 'From 12 months',
+    'recipe5Moment': 'Snack',
+    'recipe5Desc':
+        'A fresh and simple snack without added sugar.',
+    'recipe5Ing1': 'Natural unsweetened yogurt',
+    'recipe5Ing2': 'Ripe fruit, chopped or mashed',
+    'recipe5Ing3': 'Soft oatmeal, optional',
+    'recipe5Step1': 'Wash and prepare the fruit.',
+    'recipe5Step2': 'Mix with natural yogurt.',
+    'recipe5Step3': 'Mash if a softer texture is needed.',
+    'recipe5Step4': 'Serve cold, but not frozen.',
+    'recipe5Rec':
+        'Ideal as a snack if the child tolerates dairy.',
+
+    // Language
+    'languageTitle': 'Language and communication',
+    'languageHeaderSubtitle': 'Simple activities to stimulate speech',
+    'touchActivityRecommendation':
+        'Tap an activity to see how to do it at home',
+    'selectActivity': 'Select an activity',
+    'languageDefaultRec':
+        'Choose an activity to receive a practical recommendation.',
+    'languageDefaultHome':
+        'You can start with a short conversation using nearby objects.',
+    'languageDefaultParent':
+        'Speaking calmly and responding to the child’s sounds helps strengthen communication.',
+    'homeActivity': 'Home activity',
+    'noActivityReviewed': 'No activities reviewed yet',
+    'activitiesReviewed': 'Activities reviewed',
+    'languageFinalNote':
+        'Each child develops language at their own pace. If there are concerns about hearing, understanding, or speech, consult a professional.',
+
+    'nameObjectsTitle': 'Name objects',
+    'nameObjectsDesc': 'Use nearby things and name them clearly.',
+    'nameObjectsRec':
+        'Point to an object, say its name, and wait for the child’s reaction.',
+    'nameObjectsHome':
+        'During play, name colors, shapes, people, or actions.',
+    'nameObjectsParent':
+        'Repeat words without correcting harshly.',
+
+    'readImagesTitle': 'Read images',
+    'readImagesDesc': 'Use stories, photos, or pictures.',
+    'readImagesRec':
+        'Describe what you see: colors, people, objects, or actions.',
+    'readImagesHome':
+        'Use any story, picture, photo, or image. It does not need to contain specific things; you can describe colors, people, objects, or actions.',
+    'readImagesParent':
+        'Simple questions help the child participate.',
+
+    'singMoveTitle': 'Sing and move',
+    'singMoveDesc': 'Combine music, gestures, and words.',
+    'singMoveRec':
+        'Sing short songs and accompany them with hand movements.',
+    'singMoveHome':
+        'Use familiar songs and repeat easy phrases.',
+    'singMoveParent':
+        'Repetition supports memory, rhythm, and language.',
+
+    'talkTitle': 'Talk',
+    'talkDesc': 'Talk during daily activities.',
+    'talkRec':
+        'Describe what you are doing while eating, playing, or getting dressed.',
+    'talkHome':
+        'Use short phrases like: now we wash hands, now we put toys away.',
+    'talkParent':
+        'Talking does not require materials, only attention and patience.',
+
+    'imitateSoundsTitle': 'Imitate sounds',
+    'imitateSoundsDesc': 'Play with sounds from objects or animals.',
+    'imitateSoundsRec':
+        'Make a simple sound and wait for the child to try repeating it.',
+    'imitateSoundsHome':
+        'You can imitate sounds of cars, water, animals, or toys.',
+    'imitateSoundsParent':
+        'Celebrate any attempt to communicate.',
+
+    // Environment
+    'environmentTitle': 'Protective environments',
+    'environmentHeaderSubtitle':
+        'Ideas to care, support, and prevent risks',
+    'touchEnvironmentActions':
+        'Tap a section to see recommended actions',
+    'environmentFinalNote':
+        'A protective environment combines physical safety, affection, routines, and constant supervision.',
+
+    'safeSpacesTitle': 'Safe spaces',
+    'safeSpacesSubtitle': 'Organized home free of risks',
+    'safeSpacesDesc':
+        'A safe space allows the child to explore without unnecessary danger.',
+    'safeSpacesAlert':
+        'Check outlets, corners, small objects, cables, and cleaning products.',
+    'safeSpacesA1': 'Keep small objects out of reach.',
+    'safeSpacesA2': 'Store medicine and chemicals in high or locked places.',
+    'safeSpacesA3': 'Use outlet covers if necessary.',
+    'safeSpacesA4': 'Secure furniture that could fall.',
+
+    'activeSupervisionTitle': 'Active supervision',
+    'activeSupervisionSubtitle': 'Support without distractions',
+    'activeSupervisionDesc':
+        'Supervision means watching, anticipating, and being present during play.',
+    'activeSupervisionAlert':
+        'Avoid leaving the child alone near water, stairs, kitchen, or streets.',
+    'activeSupervisionA1': 'Observe while the child plays or explores.',
+    'activeSupervisionA2': 'Keep frequent eye contact.',
+    'activeSupervisionA3': 'Avoid long distractions with your phone.',
+    'activeSupervisionA4': 'Support especially in new spaces.',
+
+    'protectiveRoutinesTitle': 'Protective routines',
+    'protectiveRoutinesSubtitle': 'Habits that provide safety',
+    'protectiveRoutinesDesc':
+        'Routines help children anticipate what comes next and feel safe.',
+    'protectiveRoutinesAlert':
+        'Sudden changes may cause irritability or insecurity.',
+    'protectiveRoutinesA1': 'Keep similar times for sleeping and eating.',
+    'protectiveRoutinesA2': 'Prepare for changes with simple phrases.',
+    'protectiveRoutinesA3': 'Create calm bedtime rituals.',
+    'protectiveRoutinesA4': 'Avoid screens before sleep.',
+
+    'affectionTitle': 'Affection and bonding',
+    'affectionSubtitle': 'Daily emotional care',
+    'affectionDesc':
+        'Affection supports emotional development and strengthens trust.',
+    'affectionAlert':
+        'Yelling, physical punishment, or humiliation affects the child’s well-being.',
+    'affectionA1': 'Respond calmly to crying.',
+    'affectionA2': 'Hug, look, and speak with affection.',
+    'affectionA3': 'Validate emotions with simple words.',
+    'affectionA4': 'Celebrate small achievements.',
+
+    'healthAlertTitle': 'Warning signs',
+    'healthAlertSubtitle': 'When to seek help',
+    'healthAlertDesc':
+        'Some signs require attention from a health professional.',
+    'healthAlertAlert':
+        'Seek help if there is persistent fever, trouble breathing, seizures, dehydration, or strong behavior changes.',
+    'healthAlertA1': 'Watch for fever, excessive sleepiness, or food refusal.',
+    'healthAlertA2': 'Consult after strong hits or falls.',
+    'healthAlertA3': 'Do not self-medicate the child.',
+    'healthAlertA4': 'Keep pediatric checkups up to date.',
+  };
 }

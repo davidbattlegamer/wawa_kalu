@@ -497,7 +497,7 @@ class RecetasPage extends StatelessWidget {
         return ValueListenableBuilder<ThemeMode>(
           valueListenable: AppConfig.temaApp,
           builder: (context, temaActual, _) {
-            final bool modoOscuro = temaActual == ThemeMode.dark;
+            final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
             final listaRecetas = _recetas();
 
             return Scaffold(

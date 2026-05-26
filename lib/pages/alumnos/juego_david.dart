@@ -848,7 +848,7 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
             return ValueListenableBuilder<ThemeMode>(
               valueListenable: AppConfig.temaApp,
               builder: (context, temaActual, _) {
-                final bool modoOscuro = temaActual == ThemeMode.dark;
+                final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
 
                 return Scaffold(
                   backgroundColor: modoOscuro

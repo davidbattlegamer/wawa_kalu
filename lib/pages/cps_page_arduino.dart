@@ -224,7 +224,7 @@ class _CpsPageState extends State<CpsPage> {
           child: ValueListenableBuilder<ThemeMode>(
             valueListenable: AppConfig.temaApp,
             builder: (context, temaActual, _) {
-              final bool modoOscuro = temaActual == ThemeMode.dark;
+              final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
 
               return Container(
                 decoration: BoxDecoration(
@@ -1200,7 +1200,7 @@ class _CpsPageState extends State<CpsPage> {
         return ValueListenableBuilder<ThemeMode>(
           valueListenable: AppConfig.temaApp,
           builder: (context, temaActual, _) {
-            final bool modoOscuro = temaActual == ThemeMode.dark;
+            final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
 
             const azul = Colors.blue;
             const rojo = Colors.red;
@@ -1527,7 +1527,7 @@ class _LogOfflinePageState extends State<LogOfflinePage> {
         return ValueListenableBuilder<ThemeMode>(
           valueListenable: AppConfig.temaApp,
           builder: (context, temaActual, _) {
-            final bool modoOscuro = temaActual == ThemeMode.dark;
+            final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
 
             return Scaffold(
               backgroundColor: modoOscuro

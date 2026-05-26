@@ -554,7 +554,7 @@ class _LenguajePageState extends State<LenguajePage> {
         return ValueListenableBuilder<ThemeMode>(
           valueListenable: AppConfig.temaApp,
           builder: (context, temaActual, _) {
-            final bool modoOscuro = temaActual == ThemeMode.dark;
+            final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
             final lista = _actividades();
 
             return Scaffold(
