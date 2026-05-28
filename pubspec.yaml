@@ -1,16 +1,14 @@
 name: wawa_kalu
 description: "Aplicación educativa infantil Wawa Kalú."
 publish_to: 'none'
-
 version: 1.0.0+1
 
 environment:
   sdk: ^3.9.2
-
+#hola chat gpt
 dependencies:
   flutter:
     sdk: flutter
-
   cupertino_icons: ^1.0.8
   flutter_blue_plus: ^2.3.2
   audioplayers: ^6.6.0
@@ -60,3 +58,4 @@ flutter_launcher_icons:
     image_path: "assets/images/WawaKalu_icono.png"
     background_color: "#FAF7F2"
     theme_color: "#7B2CBF"
+    
