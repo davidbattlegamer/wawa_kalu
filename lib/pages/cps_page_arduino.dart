@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:vibration/vibration.dart';
 
@@ -164,9 +163,7 @@ class _CpsPageState extends State<CpsPage> {
 
       await FlutterBluePlus.startScan(
         timeout: const Duration(seconds: 8),
-        webOptionalServices: [
-          Guid(serviceUuid),
-        ],
+        webOptionalServices: [Guid(serviceUuid)],
       );
 
       scanSubscription = FlutterBluePlus.scanResults.listen((resultados) {
@@ -212,19 +209,19 @@ class _CpsPageState extends State<CpsPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor:
-          modoOscuroInicial ? const Color(0xFF15131A) : const Color(0xFFFAF7F2),
+      backgroundColor: modoOscuroInicial
+          ? const Color(0xFF15131A)
+          : const Color(0xFFFAF7F2),
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(28),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       builder: (context) {
         return SafeArea(
           child: ValueListenableBuilder<ThemeMode>(
             valueListenable: AppConfig.temaApp,
             builder: (context, temaActual, _) {
-              final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
+              final bool modoOscuro =
+                  Theme.of(context).brightness == Brightness.dark;
 
               return Container(
                 decoration: BoxDecoration(
@@ -252,7 +249,8 @@ class _CpsPageState extends State<CpsPage> {
                           Text(
                             T.txt('selectEsp'),
                             textAlign: TextAlign.center,
-                            style: GoogleFonts.fredoka(
+                            style: TextStyle(
+                              fontFamily: 'Fredoka',
                               fontSize: 25,
                               fontWeight: FontWeight.w700,
                               color: modoOscuro
@@ -310,8 +308,9 @@ class _CpsPageState extends State<CpsPage> {
                                                     ),
                                             ],
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(22),
+                                          borderRadius: BorderRadius.circular(
+                                            22,
+                                          ),
                                           border: Border.all(
                                             color: esEsp
                                                 ? Colors.green.withValues(
@@ -352,22 +351,24 @@ class _CpsPageState extends State<CpsPage> {
                                                     maxLines: 1,
                                                     overflow:
                                                         TextOverflow.ellipsis,
-                                                    style:
-                                                        GoogleFonts.fredoka(
+                                                    style: TextStyle(
+                                                      fontFamily: 'Fredoka',
                                                       fontSize: 18,
                                                       fontWeight:
                                                           FontWeight.w700,
                                                       color: esEsp
                                                           ? Colors.green
                                                           : modoOscuro
-                                                              ? Colors.white
-                                                              : const Color(
-                                                                  0xFF2D2D2D),
+                                                          ? Colors.white
+                                                          : const Color(
+                                                              0xFF2D2D2D,
+                                                            ),
                                                     ),
                                                   ),
                                                   Text(
                                                     '${T.txt('signal')}: $rssi dBm',
-                                                    style: GoogleFonts.baloo2(
+                                                    style: TextStyle(
+                                                      fontFamily: 'Baloo2',
                                                       fontSize: 14,
                                                       color: modoOscuro
                                                           ? Colors.white70
@@ -546,7 +547,8 @@ class _CpsPageState extends State<CpsPage> {
     }
 
     bool huboNuevaDeteccion =
-        nuevasFiguras.isNotEmpty && !_setsIguales(nuevasFiguras, figurasActivas);
+        nuevasFiguras.isNotEmpty &&
+        !_setsIguales(nuevasFiguras, figurasActivas);
 
     setState(() {
       figurasActivas = nuevasFiguras;
@@ -749,7 +751,8 @@ class _CpsPageState extends State<CpsPage> {
         children: [
           Text(
             T.txt('quickGuide'),
-            style: GoogleFonts.fredoka(
+            style: TextStyle(
+              fontFamily: 'Fredoka',
               fontSize: 22,
               fontWeight: FontWeight.w700,
               color: modoOscuro ? Colors.white : Colors.blue.shade800,
@@ -771,7 +774,8 @@ class _CpsPageState extends State<CpsPage> {
             child: Text(
               T.txt('prizeGuide'),
               textAlign: TextAlign.center,
-              style: GoogleFonts.baloo2(
+              style: TextStyle(
+                fontFamily: 'Baloo2',
                 fontSize: 15.5,
                 fontWeight: FontWeight.w600,
                 color: modoOscuro ? Colors.white : Colors.black87,
@@ -805,7 +809,8 @@ class _CpsPageState extends State<CpsPage> {
             backgroundColor: Colors.blue.withValues(alpha: 0.16),
             child: Text(
               numero,
-              style: GoogleFonts.fredoka(
+              style: TextStyle(
+                fontFamily: 'Fredoka',
                 color: modoOscuro ? Colors.white : Colors.blue.shade800,
                 fontWeight: FontWeight.w700,
               ),
@@ -815,7 +820,8 @@ class _CpsPageState extends State<CpsPage> {
           Expanded(
             child: Text(
               texto,
-              style: GoogleFonts.baloo2(
+              style: TextStyle(
+                fontFamily: 'Baloo2',
                 fontSize: 15.5,
                 color: modoOscuro ? Colors.white70 : Colors.black87,
               ),
@@ -844,8 +850,9 @@ class _CpsPageState extends State<CpsPage> {
         ),
         borderRadius: BorderRadius.circular(26),
         border: Border.all(
-          color:
-              const Color(0xFF4A2C82).withValues(alpha: modoOscuro ? 0.32 : 0.18),
+          color: const Color(
+            0xFF4A2C82,
+          ).withValues(alpha: modoOscuro ? 0.32 : 0.18),
           width: 1.5,
         ),
       ),
@@ -873,7 +880,8 @@ class _CpsPageState extends State<CpsPage> {
           Text(
             T.txt('sessionProgress'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.fredoka(
+            style: TextStyle(
+              fontFamily: 'Fredoka',
               fontSize: 23,
               fontWeight: FontWeight.w700,
               color: modoOscuro ? Colors.white : const Color(0xFF4A2C82),
@@ -883,7 +891,8 @@ class _CpsPageState extends State<CpsPage> {
           Text(
             T.txt(mensajePremioKey),
             textAlign: TextAlign.center,
-            style: GoogleFonts.baloo2(
+            style: TextStyle(
+              fontFamily: 'Baloo2',
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: modoOscuro ? Colors.white70 : Colors.black54,
@@ -961,7 +970,8 @@ class _CpsPageState extends State<CpsPage> {
             const SizedBox(height: 5),
             Text(
               titulo,
-              style: GoogleFonts.fredoka(
+              style: TextStyle(
+                fontFamily: 'Fredoka',
                 fontSize: 23,
                 fontWeight: FontWeight.w700,
                 color: color,
@@ -970,7 +980,8 @@ class _CpsPageState extends State<CpsPage> {
             Text(
               subtitulo,
               textAlign: TextAlign.center,
-              style: GoogleFonts.baloo2(
+              style: TextStyle(
+                fontFamily: 'Baloo2',
                 fontSize: 13.5,
                 color: modoOscuro ? Colors.white70 : Colors.black54,
               ),
@@ -1022,17 +1033,14 @@ class _CpsPageState extends State<CpsPage> {
               color: color.withValues(alpha: 0.14),
               borderRadius: BorderRadius.circular(18),
             ),
-            child: Icon(
-              icono,
-              color: color,
-              size: 36,
-            ),
+            child: Icon(icono, color: color, size: 36),
           ),
           const SizedBox(width: 14),
           Expanded(
             child: Text(
               mensajeRecompensa,
-              style: GoogleFonts.fredoka(
+              style: TextStyle(
+                fontFamily: 'Fredoka',
                 fontSize: 19,
                 fontWeight: FontWeight.w700,
                 color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
@@ -1054,10 +1062,7 @@ class _CpsPageState extends State<CpsPage> {
     bool encendida = activa(numero);
 
     return TweenAnimationBuilder<double>(
-      tween: Tween<double>(
-        begin: 0,
-        end: encendida ? 1 : 0,
-      ),
+      tween: Tween<double>(begin: 0, end: encendida ? 1 : 0),
       duration: const Duration(milliseconds: 600),
       builder: (context, valor, child) {
         double sacudida = encendida ? math.sin(valor * math.pi * 8) * 4 : 0;
@@ -1113,10 +1118,7 @@ class _CpsPageState extends State<CpsPage> {
                         child: SizedBox(
                           width: tamFigura,
                           height: tamFigura,
-                          child: FittedBox(
-                            fit: BoxFit.contain,
-                            child: figura,
-                          ),
+                          child: FittedBox(fit: BoxFit.contain, child: figura),
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -1125,14 +1127,15 @@ class _CpsPageState extends State<CpsPage> {
                         child: Text(
                           T.txt(nombreKey),
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.fredoka(
+                          style: TextStyle(
+                            fontFamily: 'Fredoka',
                             fontSize: 23,
                             fontWeight: FontWeight.w700,
                             color: encendida
                                 ? Colors.white
                                 : modoOscuro
-                                    ? Colors.white
-                                    : const Color(0xFF2D2D2D),
+                                ? Colors.white
+                                : const Color(0xFF2D2D2D),
                           ),
                         ),
                       ),
@@ -1151,10 +1154,7 @@ class _CpsPageState extends State<CpsPage> {
     return Container(
       width: 90,
       height: 90,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
     );
   }
 
@@ -1200,7 +1200,8 @@ class _CpsPageState extends State<CpsPage> {
         return ValueListenableBuilder<ThemeMode>(
           valueListenable: AppConfig.temaApp,
           builder: (context, temaActual, _) {
-            final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
+            final bool modoOscuro =
+                Theme.of(context).brightness == Brightness.dark;
 
             const azul = Colors.blue;
             const rojo = Colors.red;
@@ -1214,17 +1215,20 @@ class _CpsPageState extends State<CpsPage> {
               appBar: AppBar(
                 title: Text(
                   T.txt('cps'),
-                  style: GoogleFonts.fredoka(
+                  style: TextStyle(
+                    fontFamily: 'Fredoka',
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
                   ),
                 ),
                 centerTitle: true,
-                backgroundColor:
-                    modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-                foregroundColor:
-                    modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
+                backgroundColor: modoOscuro
+                    ? const Color(0xFF211B2E)
+                    : Colors.white,
+                foregroundColor: modoOscuro
+                    ? Colors.white
+                    : const Color(0xFF2D2D2D),
                 elevation: 0,
               ),
               body: SafeArea(
@@ -1235,7 +1239,8 @@ class _CpsPageState extends State<CpsPage> {
                       Text(
                         T.txt('cpsTitle'),
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.fredoka(
+                        style: TextStyle(
+                          fontFamily: 'Fredoka',
                           fontSize: 34,
                           fontWeight: FontWeight.w700,
                           color: modoOscuro
@@ -1248,7 +1253,8 @@ class _CpsPageState extends State<CpsPage> {
                       Text(
                         T.txt('cpsSubTitle'),
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.baloo2(
+                        style: TextStyle(
+                          fontFamily: 'Baloo2',
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
                           color: const Color(0xFFEF476F),
@@ -1289,8 +1295,9 @@ class _CpsPageState extends State<CpsPage> {
                                   ? Icons.bluetooth_connected
                                   : Icons.bluetooth_searching,
                               size: 46,
-                              color:
-                                  conectado ? Colors.green : Colors.deepPurple,
+                              color: conectado
+                                  ? Colors.green
+                                  : Colors.deepPurple,
                             ),
                             const SizedBox(height: 8),
                             Text(
@@ -1298,7 +1305,8 @@ class _CpsPageState extends State<CpsPage> {
                                   ? T.txt('espConnected')
                                   : T.txt('connectEsp'),
                               textAlign: TextAlign.center,
-                              style: GoogleFonts.fredoka(
+                              style: TextStyle(
+                                fontFamily: 'Fredoka',
                                 fontSize: 19,
                                 fontWeight: FontWeight.w700,
                                 color: modoOscuro
@@ -1323,8 +1331,8 @@ class _CpsPageState extends State<CpsPage> {
                                     cargando
                                         ? T.txt('searching')
                                         : conectado
-                                            ? T.txt('disconnect')
-                                            : T.txt('connectEspButton'),
+                                        ? T.txt('disconnect')
+                                        : T.txt('connectEspButton'),
                                   ),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: conectado
@@ -1527,7 +1535,8 @@ class _LogOfflinePageState extends State<LogOfflinePage> {
         return ValueListenableBuilder<ThemeMode>(
           valueListenable: AppConfig.temaApp,
           builder: (context, temaActual, _) {
-            final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
+            final bool modoOscuro =
+                Theme.of(context).brightness == Brightness.dark;
 
             return Scaffold(
               backgroundColor: modoOscuro
@@ -1536,17 +1545,20 @@ class _LogOfflinePageState extends State<LogOfflinePage> {
               appBar: AppBar(
                 title: Text(
                   T.txt('offlineHistory'),
-                  style: GoogleFonts.fredoka(
+                  style: TextStyle(
+                    fontFamily: 'Fredoka',
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
                   ),
                 ),
                 centerTitle: true,
-                backgroundColor:
-                    modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-                foregroundColor:
-                    modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
+                backgroundColor: modoOscuro
+                    ? const Color(0xFF211B2E)
+                    : Colors.white,
+                foregroundColor: modoOscuro
+                    ? Colors.white
+                    : const Color(0xFF2D2D2D),
                 elevation: 0,
               ),
               body: Padding(
@@ -1559,9 +1571,7 @@ class _LogOfflinePageState extends State<LogOfflinePage> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            modoOscuro
-                                ? const Color(0xFF211B2E)
-                                : Colors.white,
+                            modoOscuro ? const Color(0xFF211B2E) : Colors.white,
                             Colors.deepPurple.withValues(
                               alpha: modoOscuro ? 0.20 : 0.10,
                             ),
@@ -1586,7 +1596,8 @@ class _LogOfflinePageState extends State<LogOfflinePage> {
                           Text(
                             T.txt('savedRecords'),
                             textAlign: TextAlign.center,
-                            style: GoogleFonts.fredoka(
+                            style: TextStyle(
+                              fontFamily: 'Fredoka',
                               fontSize: 28,
                               fontWeight: FontWeight.w700,
                               color: modoOscuro
@@ -1598,11 +1609,13 @@ class _LogOfflinePageState extends State<LogOfflinePage> {
                           Text(
                             T.txt('offlineData'),
                             textAlign: TextAlign.center,
-                            style: GoogleFonts.baloo2(
+                            style: TextStyle(
+                              fontFamily: 'Baloo2',
                               fontSize: 17,
                               fontWeight: FontWeight.w500,
-                              color:
-                                  modoOscuro ? Colors.white70 : Colors.black54,
+                              color: modoOscuro
+                                  ? Colors.white70
+                                  : Colors.black54,
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -1631,7 +1644,8 @@ class _LogOfflinePageState extends State<LogOfflinePage> {
                               child: Text(
                                 T.txt('noRecords'),
                                 textAlign: TextAlign.center,
-                                style: GoogleFonts.baloo2(
+                                style: TextStyle(
+                                  fontFamily: 'Baloo2',
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500,
                                   color: modoOscuro
@@ -1672,13 +1686,12 @@ class _LogOfflinePageState extends State<LogOfflinePage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       CircleAvatar(
-                                        backgroundColor:
-                                            Colors.deepPurple.withValues(
-                                          alpha: 0.15,
-                                        ),
+                                        backgroundColor: Colors.deepPurple
+                                            .withValues(alpha: 0.15),
                                         child: Text(
                                           '${index + 1}',
-                                          style: GoogleFonts.fredoka(
+                                          style: TextStyle(
+                                            fontFamily: 'Fredoka',
                                             color: Colors.deepPurple,
                                             fontWeight: FontWeight.w700,
                                           ),
@@ -1688,7 +1701,8 @@ class _LogOfflinePageState extends State<LogOfflinePage> {
                                       Expanded(
                                         child: Text(
                                           log,
-                                          style: GoogleFonts.baloo2(
+                                          style: TextStyle(
+                                            fontFamily: 'Baloo2',
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,
                                             color: modoOscuro
