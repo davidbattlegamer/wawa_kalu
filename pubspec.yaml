@@ -1,5 +1,5 @@
 name: wawa_kalu
-description: "A new Flutter project."
+description: "Aplicación educativa infantil Wawa Kalú."
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -32,6 +32,21 @@ flutter:
   assets:
     - assets/images/
     - assets/sonidos/
+
+  fonts:
+    - family: Fredoka
+      fonts:
+        - asset: assets/fonts/Fredoka-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Fredoka-Bold.ttf
+          weight: 700
+
+    - family: Baloo2
+      fonts:
+        - asset: assets/fonts/Baloo2-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Baloo2-Bold.ttf
+          weight: 700
 
 flutter_launcher_icons:
   android: true
