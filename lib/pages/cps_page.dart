@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'app_config.dart';
 import 'app_texts.dart';
@@ -52,7 +54,7 @@ class _CpsPageState extends State<CpsPage> {
     if (conectado) {
       await desconectarESP32();
     } else {
-      await buscarESP32();
+      await buscarDispositivosBluetooth();
     }
   }
 
@@ -76,39 +78,94 @@ class _CpsPageState extends State<CpsPage> {
     }
   }
 
-  Future<bool> verificarBluetoothEncendido() async {
-    BluetoothAdapterState estado = await FlutterBluePlus.adapterState.first;
+  Future<bool> pedirPermisosBluetooth() async {
+    if (kIsWeb) return true;
 
-    if (estado == BluetoothAdapterState.on) {
+    if (defaultTargetPlatform != TargetPlatform.android) {
       return true;
     }
 
-    try {
-      await FlutterBluePlus.turnOn();
+    final Map<Permission, PermissionStatus> permisos = await [
+      Permission.bluetoothScan,
+      Permission.bluetoothConnect,
+      Permission.location,
+    ].request();
 
-      await FlutterBluePlus.adapterState
-          .where((state) => state == BluetoothAdapterState.on)
-          .first
-          .timeout(const Duration(seconds: 8));
+    final bool bluetoothScanOk =
+        permisos[Permission.bluetoothScan]?.isGranted ?? false;
 
-      return true;
-    } catch (e) {
+    final bool bluetoothConnectOk =
+        permisos[Permission.bluetoothConnect]?.isGranted ?? false;
+
+    final bool locationOk = permisos[Permission.location]?.isGranted ?? false;
+
+    if (!bluetoothScanOk || !bluetoothConnectOk) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(T.txt('turnOnBluetooth')),
+          const SnackBar(
+            content: Text(
+              'Activa permisos de Bluetooth o dispositivos cercanos.',
+            ),
             backgroundColor: Colors.redAccent,
           ),
         );
       }
 
-      debugPrint('Bluetooth no se pudo activar: $e');
       return false;
     }
+
+    if (!locationOk) {
+      debugPrint(
+        'Ubicación no concedida. En algunos Android puede afectar el escaneo BLE.',
+      );
+    }
+
+    return true;
   }
 
-  Future<void> buscarESP32() async {
-    bool bluetoothListo = await verificarBluetoothEncendido();
+  Future<bool> verificarBluetoothEncendido() async {
+    if (kIsWeb) return true;
+
+    final BluetoothAdapterState estado =
+        await FlutterBluePlus.adapterState.first;
+
+    if (estado == BluetoothAdapterState.on) {
+      return true;
+    }
+
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      try {
+        await FlutterBluePlus.turnOn();
+
+        await FlutterBluePlus.adapterState
+            .where((state) => state == BluetoothAdapterState.on)
+            .first
+            .timeout(const Duration(seconds: 8));
+
+        return true;
+      } catch (e) {
+        debugPrint('Bluetooth no se pudo activar en Android: $e');
+      }
+    }
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(T.txt('turnOnBluetooth')),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+    }
+
+    return false;
+  }
+
+  Future<void> buscarDispositivosBluetooth() async {
+    final bool permisosOk = await pedirPermisosBluetooth();
+
+    if (!permisosOk) return;
+
+    final bool bluetoothListo = await verificarBluetoothEncendido();
 
     if (!bluetoothListo) return;
 
@@ -121,27 +178,65 @@ class _CpsPageState extends State<CpsPage> {
     await datosSubscription?.cancel();
     await logSubscription?.cancel();
 
-    List<ScanResult> dispositivosEncontrados = [];
+    final Map<String, ScanResult> dispositivosMap = {};
 
     try {
       await FlutterBluePlus.stopScan();
 
+      scanSubscription = FlutterBluePlus.scanResults.listen((resultados) {
+        for (final resultado in resultados) {
+          final device = resultado.device;
+
+          final String nombreDevice = device.platformName.trim();
+          final String nombreAdv = resultado.advertisementData.advName.trim();
+
+          final String id = device.remoteId.str;
+
+          debugPrint(
+            'BLE encontrado: deviceName="$nombreDevice" advName="$nombreAdv" '
+            'id=$id rssi=${resultado.rssi} servicios=${resultado.advertisementData.serviceUuids}',
+          );
+
+          dispositivosMap[id] = resultado;
+        }
+      });
+
       await FlutterBluePlus.startScan(
-        timeout: const Duration(seconds: 8),
+        timeout: const Duration(seconds: 10),
+
+        // En web se deja vacío para permitir listar más dispositivos.
+        // Los servicios CPS quedan como opcionales para poder conectar al ESP32.
+        withServices: const [],
         webOptionalServices: [
           Guid(serviceUuid),
         ],
       );
 
-      scanSubscription = FlutterBluePlus.scanResults.listen((resultados) {
-        dispositivosEncontrados = resultados
-            .where((r) => r.device.platformName.isNotEmpty)
-            .toList();
-      });
-
-      await Future.delayed(const Duration(seconds: 4));
+      await Future.delayed(const Duration(seconds: 10));
 
       await FlutterBluePlus.stopScan();
+
+      final List<ScanResult> dispositivosEncontrados =
+          dispositivosMap.values.toList();
+
+      dispositivosEncontrados.sort((a, b) {
+        final bool aEsEsp = esDispositivoEsp(a);
+        final bool bEsEsp = esDispositivoEsp(b);
+
+        if (aEsEsp && !bEsEsp) return -1;
+        if (!aEsEsp && bEsEsp) return 1;
+
+        final String aName = nombreVisible(a);
+        final String bName = nombreVisible(b);
+
+        final bool aTieneNombre = aName.trim().isNotEmpty;
+        final bool bTieneNombre = bName.trim().isNotEmpty;
+
+        if (aTieneNombre && !bTieneNombre) return -1;
+        if (!aTieneNombre && bTieneNombre) return 1;
+
+        return b.rssi.compareTo(a.rssi);
+      });
 
       setState(() {
         cargando = false;
@@ -156,8 +251,41 @@ class _CpsPageState extends State<CpsPage> {
         conectado = false;
       });
 
-      debugPrint('Error buscando ESP32: $e');
+      debugPrint('Error buscando dispositivos BLE: $e');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error buscando dispositivos BLE: $e'),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
     }
+  }
+
+  bool esDispositivoEsp(ScanResult resultado) {
+    final String nombreDevice = resultado.device.platformName.trim();
+    final String nombreAdv = resultado.advertisementData.advName.trim();
+
+    final bool esEspPorNombre =
+        nombreDevice == nombreArduino || nombreAdv == nombreArduino;
+
+    final bool esEspPorServicio = resultado.advertisementData.serviceUuids.any(
+      (uuid) => uuid.toString().toLowerCase() == serviceUuid.toLowerCase(),
+    );
+
+    return esEspPorNombre || esEspPorServicio;
+  }
+
+  String nombreVisible(ScanResult resultado) {
+    final String nombreDevice = resultado.device.platformName.trim();
+    final String nombreAdv = resultado.advertisementData.advName.trim();
+
+    if (nombreDevice.isNotEmpty) return nombreDevice;
+    if (nombreAdv.isNotEmpty) return nombreAdv;
+
+    return 'Dispositivo sin nombre';
   }
 
   void mostrarDispositivosBluetooth(List<ScanResult> dispositivos) {
@@ -179,18 +307,20 @@ class _CpsPageState extends State<CpsPage> {
       backgroundColor:
           modoOscuroInicial ? const Color(0xFF15131A) : const Color(0xFFFAF7F2),
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(28),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       builder: (context) {
         return SafeArea(
           child: ValueListenableBuilder<ThemeMode>(
             valueListenable: AppConfig.temaApp,
             builder: (context, temaActual, _) {
-              final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
+              final bool modoOscuro =
+                  Theme.of(context).brightness == Brightness.dark;
 
               return Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.82,
+                ),
                 decoration: BoxDecoration(
                   color: modoOscuro
                       ? const Color(0xFF15131A)
@@ -207,6 +337,15 @@ class _CpsPageState extends State<CpsPage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          Container(
+                            width: 48,
+                            height: 5,
+                            decoration: BoxDecoration(
+                              color: modoOscuro ? Colors.white24 : Colors.black26,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          const SizedBox(height: 18),
                           const Icon(
                             Icons.bluetooth_searching,
                             size: 55,
@@ -214,7 +353,7 @@ class _CpsPageState extends State<CpsPage> {
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            T.txt('selectEsp'),
+                            'Selecciona un dispositivo Bluetooth',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.fredoka(
                               fontSize: 25,
@@ -224,6 +363,18 @@ class _CpsPageState extends State<CpsPage> {
                                   : const Color(0xFF4A2C82),
                             ),
                           ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'Se muestran todos los dispositivos BLE detectados. El ESP32 aparecerá resaltado si se encuentra.',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.baloo2(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color:
+                                  modoOscuro ? Colors.white70 : Colors.black54,
+                              height: 1.15,
+                            ),
+                          ),
                           const SizedBox(height: 15),
                           Flexible(
                             child: ListView.builder(
@@ -231,9 +382,15 @@ class _CpsPageState extends State<CpsPage> {
                               itemCount: dispositivos.length,
                               itemBuilder: (context, index) {
                                 final resultado = dispositivos[index];
-                                final nombre = resultado.device.platformName;
-                                final rssi = resultado.rssi;
-                                final esEsp = nombre == nombreArduino;
+
+                                final String nombre = nombreVisible(resultado);
+                                final String id = resultado.device.remoteId.str;
+                                final int rssi = resultado.rssi;
+
+                                final bool esEsp = esDispositivoEsp(resultado);
+
+                                final List<Guid> servicios =
+                                    resultado.advertisementData.serviceUuids;
 
                                 return Container(
                                   margin: const EdgeInsets.only(bottom: 12),
@@ -251,7 +408,7 @@ class _CpsPageState extends State<CpsPage> {
                                           cargando = true;
                                         });
 
-                                        await conectarESP32();
+                                        await conectarDispositivoSeleccionado();
                                       },
                                       child: Container(
                                         padding: const EdgeInsets.all(14),
@@ -267,10 +424,10 @@ class _CpsPageState extends State<CpsPage> {
                                                           ? 0.22
                                                           : 0.12,
                                                     )
-                                                  : Colors.grey.withValues(
+                                                  : Colors.blueGrey.withValues(
                                                       alpha: modoOscuro
                                                           ? 0.18
-                                                          : 0.10,
+                                                          : 0.08,
                                                     ),
                                             ],
                                           ),
@@ -279,10 +436,10 @@ class _CpsPageState extends State<CpsPage> {
                                           border: Border.all(
                                             color: esEsp
                                                 ? Colors.green.withValues(
-                                                    alpha: 0.30,
+                                                    alpha: 0.35,
                                                   )
-                                                : Colors.grey.withValues(
-                                                    alpha: 0.20,
+                                                : Colors.blueGrey.withValues(
+                                                    alpha: 0.18,
                                                   ),
                                             width: 1.5,
                                           ),
@@ -290,19 +447,21 @@ class _CpsPageState extends State<CpsPage> {
                                         child: Row(
                                           children: [
                                             CircleAvatar(
-                                              radius: 27,
+                                              radius: 28,
                                               backgroundColor: esEsp
                                                   ? Colors.green.withValues(
                                                       alpha: 0.18,
                                                     )
-                                                  : Colors.grey.withValues(
-                                                      alpha: 0.18,
+                                                  : Colors.blueGrey.withValues(
+                                                      alpha: 0.16,
                                                     ),
                                               child: Icon(
-                                                Icons.bluetooth,
+                                                esEsp
+                                                    ? Icons.developer_board
+                                                    : Icons.bluetooth,
                                                 color: esEsp
                                                     ? Colors.green
-                                                    : Colors.grey,
+                                                    : Colors.blueGrey,
                                               ),
                                             ),
                                             const SizedBox(width: 14),
@@ -311,24 +470,65 @@ class _CpsPageState extends State<CpsPage> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    nombre,
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style:
-                                                        GoogleFonts.fredoka(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: esEsp
-                                                          ? Colors.green
-                                                          : modoOscuro
-                                                              ? Colors.white
-                                                              : const Color(
-                                                                  0xFF2D2D2D),
-                                                    ),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                          nombre,
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: GoogleFonts
+                                                              .fredoka(
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            color: esEsp
+                                                                ? Colors.green
+                                                                : modoOscuro
+                                                                    ? Colors.white
+                                                                    : const Color(
+                                                                        0xFF2D2D2D,
+                                                                      ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      if (esEsp)
+                                                        Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                            horizontal: 8,
+                                                            vertical: 4,
+                                                          ),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.green
+                                                                .withValues(
+                                                              alpha: 0.16,
+                                                            ),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                              14,
+                                                            ),
+                                                          ),
+                                                          child: Text(
+                                                            'ESP32',
+                                                            style: GoogleFonts
+                                                                .fredoka(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              color:
+                                                                  Colors.green,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                    ],
                                                   ),
+                                                  const SizedBox(height: 3),
                                                   Text(
                                                     '${T.txt('signal')}: $rssi dBm',
                                                     style: GoogleFonts.baloo2(
@@ -338,6 +538,36 @@ class _CpsPageState extends State<CpsPage> {
                                                           : Colors.black54,
                                                     ),
                                                   ),
+                                                  const SizedBox(height: 2),
+                                                  Text(
+                                                    id,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: GoogleFonts.baloo2(
+                                                      fontSize: 12.5,
+                                                      color: modoOscuro
+                                                          ? Colors.white38
+                                                          : Colors.black38,
+                                                    ),
+                                                  ),
+                                                  if (servicios.isNotEmpty)
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                        top: 2,
+                                                      ),
+                                                      child: Text(
+                                                        'Servicios: ${servicios.length}',
+                                                        style:
+                                                            GoogleFonts.baloo2(
+                                                          fontSize: 12.5,
+                                                          color: modoOscuro
+                                                              ? Colors.white38
+                                                              : Colors.black38,
+                                                        ),
+                                                      ),
+                                                    ),
                                                 ],
                                               ),
                                             ),
@@ -345,7 +575,7 @@ class _CpsPageState extends State<CpsPage> {
                                               Icons.chevron_right,
                                               color: esEsp
                                                   ? Colors.green
-                                                  : Colors.grey,
+                                                  : Colors.blueGrey,
                                             ),
                                           ],
                                         ),
@@ -369,7 +599,7 @@ class _CpsPageState extends State<CpsPage> {
     );
   }
 
-  Future<void> conectarESP32() async {
+  Future<void> conectarDispositivoSeleccionado() async {
     if (dispositivo == null) {
       setState(() {
         cargando = false;
@@ -388,27 +618,36 @@ class _CpsPageState extends State<CpsPage> {
     }
 
     try {
-      await dispositivo!.requestMtu(185);
+      if (!kIsWeb) {
+        await dispositivo!.requestMtu(185);
 
-      await dispositivo!.requestConnectionPriority(
-        connectionPriorityRequest: ConnectionPriority.high,
-      );
+        await dispositivo!.requestConnectionPriority(
+          connectionPriorityRequest: ConnectionPriority.high,
+        );
 
-      debugPrint('BLE optimizado: MTU 185 y prioridad alta');
+        debugPrint('BLE optimizado: MTU 185 y prioridad alta');
+      }
     } catch (e) {
       debugPrint('No se pudo optimizar BLE: $e');
     }
 
     try {
-      List<BluetoothService> servicios = await dispositivo!.discoverServices();
+      final List<BluetoothService> servicios =
+          await dispositivo!.discoverServices();
 
+      bool encontroServicioCps = false;
       bool encontroStatus = false;
 
+      commandCharacteristic = null;
+
       for (BluetoothService servicio in servicios) {
-        if (servicio.uuid.toString().toLowerCase() ==
-            serviceUuid.toLowerCase()) {
+        final String servicioId = servicio.uuid.toString().toLowerCase();
+
+        if (servicioId == serviceUuid.toLowerCase()) {
+          encontroServicioCps = true;
+
           for (BluetoothCharacteristic c in servicio.characteristics) {
-            final uuid = c.uuid.toString().toLowerCase();
+            final String uuid = c.uuid.toString().toLowerCase();
 
             if (uuid == characteristicUuid.toLowerCase()) {
               encontroStatus = true;
@@ -419,17 +658,19 @@ class _CpsPageState extends State<CpsPage> {
 
               datosSubscription = c.lastValueStream.listen((valor) {
                 if (valor.isNotEmpty) {
-                  String dato = utf8.decode(valor).trim();
+                  final String dato = utf8.decode(valor).trim();
+
                   actualizarFiguras(dato);
+
                   debugPrint('Dato recibido: $dato');
                 }
               });
 
               try {
-                List<int> valorInicial = await c.read();
+                final List<int> valorInicial = await c.read();
 
                 if (valorInicial.isNotEmpty) {
-                  String datoInicial = utf8.decode(valorInicial).trim();
+                  final String datoInicial = utf8.decode(valorInicial).trim();
                   actualizarFiguras(datoInicial);
                 }
               } catch (e) {
@@ -444,8 +685,10 @@ class _CpsPageState extends State<CpsPage> {
 
               logSubscription = c.lastValueStream.listen((valor) {
                 if (valor.isNotEmpty) {
-                  String dato = utf8.decode(valor).trim();
+                  final String dato = utf8.decode(valor).trim();
+
                   recibirLog(dato);
+
                   debugPrint('Log recibido: $dato');
                 }
               });
@@ -473,13 +716,26 @@ class _CpsPageState extends State<CpsPage> {
         }
       });
 
-      if (!encontroStatus && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(T.txt('noBleService')),
-            backgroundColor: Colors.redAccent,
-          ),
-        );
+      if (!encontroServicioCps || !encontroStatus) {
+        try {
+          await dispositivo?.disconnect();
+        } catch (_) {}
+
+        setState(() {
+          conectado = false;
+          cargando = false;
+          dispositivo = null;
+          commandCharacteristic = null;
+        });
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(T.txt('noBleService')),
+              backgroundColor: Colors.redAccent,
+            ),
+          );
+        }
       }
     } catch (e) {
       setState(() {
@@ -488,6 +744,15 @@ class _CpsPageState extends State<CpsPage> {
       });
 
       debugPrint('Error discoverServices: $e');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No se pudo conectar o leer servicios: $e'),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
     }
   }
 
@@ -510,7 +775,8 @@ class _CpsPageState extends State<CpsPage> {
     }
 
     bool huboNuevaDeteccion =
-        nuevasFiguras.isNotEmpty && !_setsIguales(nuevasFiguras, figurasActivas);
+        nuevasFiguras.isNotEmpty &&
+        !_setsIguales(nuevasFiguras, figurasActivas);
 
     setState(() {
       figurasActivas = nuevasFiguras;
@@ -803,12 +1069,16 @@ class _CpsPageState extends State<CpsPage> {
         gradient: LinearGradient(
           colors: [
             modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-            const Color(0xFF4A2C82).withValues(alpha: modoOscuro ? 0.22 : 0.08),
+            const Color(0xFF4A2C82).withValues(
+              alpha: modoOscuro ? 0.22 : 0.08,
+            ),
           ],
         ),
         borderRadius: BorderRadius.circular(26),
         border: Border.all(
-          color: const Color(0xFF4A2C82).withValues(alpha: modoOscuro ? 0.32 : 0.18),
+          color: const Color(0xFF4A2C82).withValues(
+            alpha: modoOscuro ? 0.32 : 0.18,
+          ),
           width: 1.5,
         ),
       ),
@@ -1163,7 +1433,8 @@ class _CpsPageState extends State<CpsPage> {
         return ValueListenableBuilder<ThemeMode>(
           valueListenable: AppConfig.temaApp,
           builder: (context, temaActual, _) {
-            final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
+            final bool modoOscuro =
+                Theme.of(context).brightness == Brightness.dark;
 
             const azul = Colors.blue;
             const rojo = Colors.red;
@@ -1490,7 +1761,8 @@ class _LogOfflinePageState extends State<LogOfflinePage> {
         return ValueListenableBuilder<ThemeMode>(
           valueListenable: AppConfig.temaApp,
           builder: (context, temaActual, _) {
-            final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
+            final bool modoOscuro =
+                Theme.of(context).brightness == Brightness.dark;
 
             return Scaffold(
               backgroundColor: modoOscuro

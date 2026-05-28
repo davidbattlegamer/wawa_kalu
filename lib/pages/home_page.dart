@@ -100,7 +100,7 @@ class HomePage extends StatelessWidget {
                 leading: Padding(
                   padding: const EdgeInsets.all(8),
                   child: Image.asset(
-                    'assets/images/WawaKalu_icono.png',
+                    'assets/images/home.png', 
                     fit: BoxFit.contain,
                   ),
                 ),

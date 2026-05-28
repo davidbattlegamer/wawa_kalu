@@ -62,21 +62,26 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 
-	<!-- Permisos Bluetooth para conectar con ESP32 BLE -->
+	<!-- Permisos Bluetooth para conectar con ESP32 y otros dispositivos BLE -->
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Wawa Kalú usa Bluetooth para conectarse con el ESP32 y recibir datos de las figuras educativas.</string>
+	<string>Wawa Kalú usa Bluetooth para buscar, conectar y comunicarse con dispositivos BLE como el ESP32.</string>
 
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Wawa Kalú necesita Bluetooth para comunicarse con el sistema educativo de figuras mediante BLE.</string>
+	<string>Wawa Kalú usa Bluetooth para conectarse con dispositivos cercanos y recibir datos de figuras inteligentes.</string>
 
-	<!-- Permiso de ubicación solo si el plugin Bluetooth lo solicita en ciertas versiones -->
+	<!-- Permiso de ubicación por compatibilidad con algunos procesos de escaneo Bluetooth -->
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Wawa Kalú puede requerir ubicación para detectar dispositivos Bluetooth cercanos en algunas versiones del sistema.</string>
+	<string>Wawa Kalú puede requerir ubicación para mejorar la búsqueda de dispositivos Bluetooth cercanos.</string>
 
-	<!-- Permite que la app use Bluetooth en segundo plano si luego quieres mantener conexión BLE -->
-	<key>UIBackgroundModes</key>
+	<!-- Permiso de red local, útil si en el futuro usas conexión local, IoT o servicios en red -->
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Wawa Kalú puede usar la red local para comunicarse con dispositivos educativos cercanos.</string>
+
+	<!-- Permite consultar servicios Bonjour si en el futuro se usa red local -->
+	<key>NSBonjourServices</key>
 	<array>
-		<string>bluetooth-central</string>
+		<string>_http._tcp</string>
 	</array>
+
 </dict>
 </plist>

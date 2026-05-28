@@ -1,15 +1,42 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Bluetooth para Android 11 o menor -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
 
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
+
+    <!-- Ubicación para escaneo BLE en Android 11 o menor -->
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:maxSdkVersion="30" />
+
+    <uses-permission
+        android:name="android.permission.ACCESS_COARSE_LOCATION"
+        android:maxSdkVersion="30" />
+
+    <!-- Bluetooth para Android 12 o superior -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
+
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+    <!-- Solo si algún módulo futuro necesita anunciar Bluetooth desde el celular -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
 
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- Indica que la app usa Bluetooth Low Energy -->
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="false" />
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Indica que la app puede usar Bluetooth clásico -->
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="false" />
 
     <application
         android:label="Wawa Kalú"
@@ -31,6 +58,7 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 

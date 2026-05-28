@@ -1,11 +1,11 @@
 {
-    "name": "wawa_kalu",
-    "short_name": "wawa_kalu",
+    "name": "Wawa Kalú",
+    "short_name": "Wawa Kalú",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FAF7F2",
+    "theme_color": "#7B2CBF",
+    "description": "Aplicación educativa infantil con juegos, CPS, nutrición, lenguaje y entornos protectores.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
