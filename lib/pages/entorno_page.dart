@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'app_config.dart';
 import 'app_texts.dart';
@@ -148,7 +147,8 @@ class _EntornoPageState extends State<EntornoPage> {
           Text(
             T.txt('environmentTitle'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.fredoka(
+            style: TextStyle(
+              fontFamily: 'Fredoka',
               fontSize: 34,
               fontWeight: FontWeight.w700,
               color: modoOscuro ? Colors.white : colorPrincipal,
@@ -159,7 +159,8 @@ class _EntornoPageState extends State<EntornoPage> {
           Text(
             T.txt('environmentHeaderSubtitle'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.baloo2(
+            style: TextStyle(
+              fontFamily: 'Baloo2',
               fontSize: 19,
               fontWeight: FontWeight.w600,
               color: colorSecundario,
@@ -176,7 +177,8 @@ class _EntornoPageState extends State<EntornoPage> {
             child: Text(
               T.txt('touchEnvironmentActions'),
               textAlign: TextAlign.center,
-              style: GoogleFonts.baloo2(
+              style: TextStyle(
+                fontFamily: 'Baloo2',
                 fontSize: 16.5,
                 fontWeight: FontWeight.w700,
                 color: modoOscuro ? Colors.white : colorPrincipal,
@@ -255,7 +257,8 @@ class _EntornoPageState extends State<EntornoPage> {
                         children: [
                           Text(
                             T.txt(item.tituloKey),
-                            style: GoogleFonts.fredoka(
+                            style: TextStyle(
+                              fontFamily: 'Fredoka',
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
                               color: modoOscuro
@@ -266,10 +269,12 @@ class _EntornoPageState extends State<EntornoPage> {
                           const SizedBox(height: 3),
                           Text(
                             T.txt(item.subtituloKey),
-                            style: GoogleFonts.baloo2(
+                            style: TextStyle(
+                              fontFamily: 'Baloo2',
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
-                              color: modoOscuro ? Colors.white70 : Colors.black54,
+                              color:
+                                  modoOscuro ? Colors.white70 : Colors.black54,
                             ),
                           ),
                         ],
@@ -304,10 +309,12 @@ class _EntornoPageState extends State<EntornoPage> {
                           child: Text(
                             T.txt(item.descripcionKey),
                             textAlign: TextAlign.center,
-                            style: GoogleFonts.baloo2(
+                            style: TextStyle(
+                              fontFamily: 'Baloo2',
                               fontSize: 15.8,
                               fontWeight: FontWeight.w600,
-                              color: modoOscuro ? Colors.white70 : Colors.black87,
+                              color:
+                                  modoOscuro ? Colors.white70 : Colors.black87,
                               height: 1.25,
                             ),
                           ),
@@ -354,7 +361,8 @@ class _EntornoPageState extends State<EntornoPage> {
                               Expanded(
                                 child: Text(
                                   T.txt(item.alertaKey),
-                                  style: GoogleFonts.baloo2(
+                                  style: TextStyle(
+                                    fontFamily: 'Baloo2',
                                     fontSize: 15.2,
                                     fontWeight: FontWeight.w600,
                                     color: modoOscuro
@@ -402,13 +410,17 @@ class _EntornoPageState extends State<EntornoPage> {
       ),
       child: Row(
         children: [
-          Icon(Icons.volunteer_activism_rounded,
-              color: colorPrincipal, size: 32),
+          Icon(
+            Icons.volunteer_activism_rounded,
+            color: colorPrincipal,
+            size: 32,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               T.txt('environmentFinalNote'),
-              style: GoogleFonts.baloo2(
+              style: TextStyle(
+                fontFamily: 'Baloo2',
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
                 color: modoOscuro ? Colors.white70 : Colors.black87,
@@ -428,7 +440,8 @@ class _EntornoPageState extends State<EntornoPage> {
         return ValueListenableBuilder<ThemeMode>(
           valueListenable: AppConfig.temaApp,
           builder: (context, temaActual, _) {
-            final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
+            final bool modoOscuro =
+                Theme.of(context).brightness == Brightness.dark;
             final listaItems = _items();
 
             return Scaffold(
@@ -438,7 +451,8 @@ class _EntornoPageState extends State<EntornoPage> {
               appBar: AppBar(
                 title: Text(
                   T.txt('environmentTitle'),
-                  style: GoogleFonts.fredoka(
+                  style: TextStyle(
+                    fontFamily: 'Fredoka',
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
@@ -505,7 +519,8 @@ class InfoBulletEntorno extends StatelessWidget {
           Expanded(
             child: Text(
               texto,
-              style: GoogleFonts.baloo2(
+              style: TextStyle(
+                fontFamily: 'Baloo2',
                 fontSize: 15.6,
                 fontWeight: FontWeight.w500,
                 color: modoOscuro ? Colors.white70 : Colors.black87,

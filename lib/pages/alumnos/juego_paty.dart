@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../app_config.dart';
 import '../app_texts.dart';
@@ -97,7 +96,8 @@ class JuegoPatyPageState extends State<JuegoPatyPage> {
               appBar: AppBar(
                 title: Text(
                   T.txt('patyGameCardTitle'),
-                  style: GoogleFonts.fredoka(
+                  style: TextStyle(
+                    fontFamily: 'Fredoka',
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
@@ -165,7 +165,8 @@ class JuegoPatyPageState extends State<JuegoPatyPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(22),
                               ),
-                              textStyle: GoogleFonts.fredoka(
+                              textStyle: const TextStyle(
+                                fontFamily: 'Fredoka',
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -231,7 +232,8 @@ class JuegoPatyPageState extends State<JuegoPatyPage> {
           Text(
             T.txt('gameTitle'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.fredoka(
+            style: TextStyle(
+              fontFamily: 'Fredoka',
               fontSize: pantallaPequena ? 30 : 36,
               fontWeight: FontWeight.w800,
               color: modoOscuro ? Colors.white : const Color(0xFF4A2C82),
@@ -242,7 +244,8 @@ class JuegoPatyPageState extends State<JuegoPatyPage> {
           Text(
             T.txt('gameSubtitle'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.baloo2(
+            style: TextStyle(
+              fontFamily: 'Baloo2',
               fontSize: pantallaPequena ? 17 : 20,
               fontWeight: FontWeight.w700,
               color: const Color(0xFFEF476F),
@@ -253,7 +256,8 @@ class JuegoPatyPageState extends State<JuegoPatyPage> {
           Text(
             T.txt('gameDescription'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.baloo2(
+            style: TextStyle(
+              fontFamily: 'Baloo2',
               fontSize: pantallaPequena ? 15 : 16.5,
               fontWeight: FontWeight.w500,
               color: modoOscuro ? Colors.white70 : Colors.black54,
@@ -264,7 +268,8 @@ class JuegoPatyPageState extends State<JuegoPatyPage> {
           Text(
             T.txt('figureInstructions'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.baloo2(
+            style: TextStyle(
+              fontFamily: 'Baloo2',
               fontSize: pantallaPequena ? 14.5 : 15.5,
               fontWeight: FontWeight.w600,
               color: modoOscuro ? Colors.white60 : Colors.black45,
@@ -299,7 +304,8 @@ class JuegoPatyPageState extends State<JuegoPatyPage> {
                 ? '${T.txt('correctFigure')} ${T.txt(figuraActiva)}'
                 : T.txt(mensajeKey),
             textAlign: TextAlign.center,
-            style: GoogleFonts.fredoka(
+            style: TextStyle(
+              fontFamily: 'Fredoka',
               fontSize: 20,
               fontWeight: FontWeight.w700,
               color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
@@ -308,7 +314,8 @@ class JuegoPatyPageState extends State<JuegoPatyPage> {
           const SizedBox(height: 9),
           Text(
             '${T.txt('hits')}: $aciertos',
-            style: GoogleFonts.baloo2(
+            style: TextStyle(
+              fontFamily: 'Baloo2',
               fontSize: 17,
               fontWeight: FontWeight.w700,
               color: Colors.orange.shade700,
@@ -318,7 +325,8 @@ class JuegoPatyPageState extends State<JuegoPatyPage> {
           Text(
             T.txt(recompensaKey),
             textAlign: TextAlign.center,
-            style: GoogleFonts.baloo2(
+            style: TextStyle(
+              fontFamily: 'Baloo2',
               fontSize: 15.5,
               fontWeight: FontWeight.w600,
               color: modoOscuro ? Colors.white70 : Colors.black54,
@@ -377,7 +385,8 @@ class JuegoPatyPageState extends State<JuegoPatyPage> {
               Text(
                 T.txt(keyName),
                 textAlign: TextAlign.center,
-                style: GoogleFonts.fredoka(
+                style: TextStyle(
+                  fontFamily: 'Fredoka',
                   fontSize: 22,
                   fontWeight: FontWeight.w700,
                   color: color,

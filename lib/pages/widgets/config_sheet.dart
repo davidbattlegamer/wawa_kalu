@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:vibration/vibration.dart';
 
 import '../app_config.dart';
@@ -13,9 +12,7 @@ Future<void> vibrarActivacionFuerte() async {
       final bool tieneVibrador = await Vibration.hasVibrator();
 
       if (tieneVibrador) {
-        await Vibration.vibrate(
-          pattern: [0, 160, 70, 160],
-        );
+        await Vibration.vibrate(pattern: [0, 160, 70, 160]);
         return;
       }
     }
@@ -63,9 +60,7 @@ void showConfigSheet(BuildContext context) {
         ? const Color(0xFF15131A)
         : const Color(0xFFFAF7F2),
     shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(28),
-      ),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
     ),
     builder: (context) {
       final altoPantalla = MediaQuery.of(context).size.height;
@@ -76,11 +71,13 @@ void showConfigSheet(BuildContext context) {
           final bool modoOscuro =
               Theme.of(context).brightness == Brightness.dark;
 
-          final Color fondoModal =
-              modoOscuro ? const Color(0xFF15131A) : const Color(0xFFFAF7F2);
+          final Color fondoModal = modoOscuro
+              ? const Color(0xFF15131A)
+              : const Color(0xFFFAF7F2);
 
-          final Color textoSecundario =
-              modoOscuro ? Colors.white70 : Colors.black54;
+          final Color textoSecundario = modoOscuro
+              ? Colors.white70
+              : Colors.black54;
 
           final Color colorApariencia = colorTema(temaActual);
 
@@ -93,9 +90,7 @@ void showConfigSheet(BuildContext context) {
             ),
             child: SafeArea(
               child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: altoPantalla * 0.90,
-                ),
+                constraints: BoxConstraints(maxHeight: altoPantalla * 0.90),
                 child: SingleChildScrollView(
                   padding: EdgeInsets.only(
                     left: 18,
@@ -125,8 +120,9 @@ void showConfigSheet(BuildContext context) {
                                           color: modoOscuro
                                               ? Colors.white24
                                               : Colors.black26,
-                                          borderRadius:
-                                              BorderRadius.circular(20),
+                                          borderRadius: BorderRadius.circular(
+                                            20,
+                                          ),
                                         ),
                                       ),
                                       const SizedBox(height: 18),
@@ -137,12 +133,10 @@ void showConfigSheet(BuildContext context) {
                                           gradient: LinearGradient(
                                             colors: [
                                               Colors.deepPurple.withValues(
-                                                alpha:
-                                                    modoOscuro ? 0.38 : 0.22,
+                                                alpha: modoOscuro ? 0.38 : 0.22,
                                               ),
                                               Colors.deepPurple.withValues(
-                                                alpha:
-                                                    modoOscuro ? 0.16 : 0.08,
+                                                alpha: modoOscuro ? 0.16 : 0.08,
                                               ),
                                             ],
                                           ),
@@ -158,7 +152,8 @@ void showConfigSheet(BuildContext context) {
                                       Text(
                                         T.txt('settingsTitle'),
                                         textAlign: TextAlign.center,
-                                        style: GoogleFonts.fredoka(
+                                        style: TextStyle(
+                                          fontFamily: 'Fredoka',
                                           fontSize: 28,
                                           fontWeight: FontWeight.w700,
                                           color: modoOscuro
@@ -270,7 +265,8 @@ void showConfigSheet(BuildContext context) {
                                       Text(
                                         T.txt('settingsNote'),
                                         textAlign: TextAlign.center,
-                                        style: GoogleFonts.baloo2(
+                                        style: TextStyle(
+                                          fontFamily: 'Baloo2',
                                           fontSize: 15.5,
                                           color: textoSecundario,
                                         ),
@@ -365,10 +361,7 @@ class SettingCard extends StatelessWidget {
                     const SizedBox(height: 12),
                     Align(
                       alignment: Alignment.centerRight,
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: trailing,
-                      ),
+                      child: FittedBox(fit: BoxFit.scaleDown, child: trailing),
                     ),
                   ],
                 )
@@ -405,11 +398,7 @@ class SettingIcon extends StatelessWidget {
   final Color color;
   final IconData icon;
 
-  const SettingIcon({
-    super.key,
-    required this.color,
-    required this.icon,
-  });
+  const SettingIcon({super.key, required this.color, required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -425,11 +414,7 @@ class SettingIcon extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Icon(
-        icon,
-        color: color,
-        size: 30,
-      ),
+      child: Icon(icon, color: color, size: 30),
     );
   }
 }
@@ -455,7 +440,8 @@ class SettingText extends StatelessWidget {
           title,
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
-          style: GoogleFonts.fredoka(
+          style: TextStyle(
+            fontFamily: 'Fredoka',
             fontSize: 19,
             fontWeight: FontWeight.w700,
             color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
@@ -466,7 +452,8 @@ class SettingText extends StatelessWidget {
           subtitle,
           overflow: TextOverflow.ellipsis,
           maxLines: 2,
-          style: GoogleFonts.baloo2(
+          style: TextStyle(
+            fontFamily: 'Baloo2',
             fontSize: 15,
             fontWeight: FontWeight.w500,
             color: modoOscuro ? Colors.white70 : Colors.black54,
@@ -521,17 +508,15 @@ class LanguageSelector extends StatelessWidget {
     final Color seleccionado = idiomaAuto
         ? const Color(0xFF00A896)
         : idiomaActual == 'en'
-            ? Colors.deepPurple
-            : Colors.orange;
+        ? Colors.deepPurple
+        : Colors.orange;
 
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: modoOscuro ? const Color(0xFF15131A) : const Color(0xFFF2ECFF),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: seleccionado.withValues(alpha: 0.22),
-        ),
+        border: Border.all(color: seleccionado.withValues(alpha: 0.22)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -625,19 +610,20 @@ class LanguageOptionButton extends StatelessWidget {
                     color: selected
                         ? Colors.white
                         : modoOscuro
-                            ? Colors.white70
-                            : const Color(0xFF4A2C82),
+                        ? Colors.white70
+                        : const Color(0xFF4A2C82),
                   )
                 : Text(
                     text,
-                    style: GoogleFonts.fredoka(
+                    style: TextStyle(
+                      fontFamily: 'Fredoka',
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
                       color: selected
                           ? Colors.white
                           : modoOscuro
-                              ? Colors.white70
-                              : const Color(0xFF4A2C82),
+                          ? Colors.white70
+                          : const Color(0xFF4A2C82),
                     ),
                   ),
           ),
@@ -661,8 +647,9 @@ class ThemeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color fondo =
-        modoOscuro ? const Color(0xFF15131A) : const Color(0xFFF2ECFF);
+    final Color fondo = modoOscuro
+        ? const Color(0xFF15131A)
+        : const Color(0xFFF2ECFF);
 
     Color colorSeleccionado() {
       if (temaActual == ThemeMode.system) {
@@ -683,9 +670,7 @@ class ThemeSelector extends StatelessWidget {
       decoration: BoxDecoration(
         color: fondo,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: seleccionado.withValues(alpha: 0.22),
-        ),
+        border: Border.all(color: seleccionado.withValues(alpha: 0.22)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -762,8 +747,8 @@ class ThemeOptionButton extends StatelessWidget {
             color: selected
                 ? Colors.white
                 : modoOscuro
-                    ? Colors.white70
-                    : const Color(0xFF4A2C82),
+                ? Colors.white70
+                : const Color(0xFF4A2C82),
           ),
         ),
       ),

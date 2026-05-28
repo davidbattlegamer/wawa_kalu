@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'app_config.dart';
 import 'app_texts.dart';
@@ -29,7 +28,8 @@ class JuegoPage extends StatelessWidget {
               appBar: AppBar(
                 title: Text(
                   T.txt('games'),
-                  style: GoogleFonts.fredoka(
+                  style: TextStyle(
+                    fontFamily: 'Fredoka',
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
@@ -64,7 +64,8 @@ class JuegoPage extends StatelessWidget {
                             alignment: Alignment.centerLeft,
                             child: Text(
                               T.txt('availableGames'),
-                              style: GoogleFonts.fredoka(
+                              style: TextStyle(
+                                fontFamily: 'Fredoka',
                                 fontSize: 23,
                                 fontWeight: FontWeight.w700,
                                 color: modoOscuro
@@ -171,7 +172,8 @@ class JuegoPage extends StatelessWidget {
           Text(
             T.txt('gamesPageTitle'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.fredoka(
+            style: TextStyle(
+              fontFamily: 'Fredoka',
               fontSize: pantallaPequena ? 30 : 36,
               fontWeight: FontWeight.w800,
               color: modoOscuro ? Colors.white : const Color(0xFF4A2C82),
@@ -182,7 +184,8 @@ class JuegoPage extends StatelessWidget {
           Text(
             T.txt('gamesPageSubtitle'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.baloo2(
+            style: TextStyle(
+              fontFamily: 'Baloo2',
               fontSize: pantallaPequena ? 17 : 20,
               fontWeight: FontWeight.w700,
               color: const Color(0xFFEF476F),
@@ -193,7 +196,8 @@ class JuegoPage extends StatelessWidget {
           Text(
             T.txt('gamesPageDescription'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.baloo2(
+            style: TextStyle(
+              fontFamily: 'Baloo2',
               fontSize: pantallaPequena ? 14.5 : 16,
               fontWeight: FontWeight.w500,
               color: modoOscuro ? Colors.white70 : Colors.black54,
@@ -252,7 +256,8 @@ class JuegoPage extends StatelessWidget {
               Expanded(
                 child: Text(
                   T.txt('gameBenefits'),
-                  style: GoogleFonts.fredoka(
+                  style: TextStyle(
+                    fontFamily: 'Fredoka',
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
                     color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
@@ -277,7 +282,8 @@ class JuegoPage extends StatelessWidget {
                   Expanded(
                     child: Text(
                       beneficio,
-                      style: GoogleFonts.baloo2(
+                      style: TextStyle(
+                        fontFamily: 'Baloo2',
                         fontSize: 15.5,
                         fontWeight: FontWeight.w500,
                         color: modoOscuro ? Colors.white70 : Colors.black87,
@@ -374,7 +380,8 @@ class JuegoPage extends StatelessWidget {
                         title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.fredoka(
+                        style: TextStyle(
+                          fontFamily: 'Fredoka',
                           fontSize: 21,
                           fontWeight: FontWeight.w700,
                           color: modoOscuro
@@ -387,7 +394,8 @@ class JuegoPage extends StatelessWidget {
                         subtitle,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.baloo2(
+                        style: TextStyle(
+                          fontFamily: 'Baloo2',
                           fontSize: 15.5,
                           fontWeight: FontWeight.w700,
                           color: color,
@@ -399,7 +407,8 @@ class JuegoPage extends StatelessWidget {
                         description,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.baloo2(
+                        style: TextStyle(
+                          fontFamily: 'Baloo2',
                           fontSize: 14.5,
                           fontWeight: FontWeight.w500,
                           color: modoOscuro ? Colors.white70 : Colors.black54,
@@ -422,7 +431,8 @@ class JuegoPage extends StatelessWidget {
                           ),
                           child: Text(
                             T.txt('playNow'),
-                            style: GoogleFonts.fredoka(
+                            style: TextStyle(
+                              fontFamily: 'Fredoka',
                               fontSize: 14.5,
                               fontWeight: FontWeight.w700,
                               color: color,

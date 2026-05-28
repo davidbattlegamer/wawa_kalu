@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'app_config.dart';
 import 'app_texts.dart';
@@ -141,7 +140,8 @@ class _LenguajePageState extends State<LenguajePage> {
           Text(
             T.txt('languageTitle'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.fredoka(
+            style: TextStyle(
+              fontFamily: 'Fredoka',
               fontSize: 34,
               fontWeight: FontWeight.w700,
               color: modoOscuro ? Colors.white : const Color(0xFF7B2CBF),
@@ -152,10 +152,11 @@ class _LenguajePageState extends State<LenguajePage> {
           Text(
             T.txt('languageHeaderSubtitle'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.baloo2(
+            style: const TextStyle(
+              fontFamily: 'Baloo2',
               fontSize: 19,
               fontWeight: FontWeight.w600,
-              color: const Color(0xFFFF6B6B),
+              color: Color(0xFFFF6B6B),
               height: 1.15,
             ),
           ),
@@ -171,7 +172,8 @@ class _LenguajePageState extends State<LenguajePage> {
             child: Text(
               T.txt('touchActivityRecommendation'),
               textAlign: TextAlign.center,
-              style: GoogleFonts.baloo2(
+              style: TextStyle(
+                fontFamily: 'Baloo2',
                 fontSize: 16.5,
                 fontWeight: FontWeight.w700,
                 color: modoOscuro ? Colors.white : const Color(0xFF7B2CBF),
@@ -242,7 +244,8 @@ class _LenguajePageState extends State<LenguajePage> {
           Text(
             T.txt(tituloSeleccionadoKey),
             textAlign: TextAlign.center,
-            style: GoogleFonts.fredoka(
+            style: TextStyle(
+              fontFamily: 'Fredoka',
               fontSize: 25,
               fontWeight: FontWeight.w700,
               color: sinSeleccion
@@ -256,7 +259,8 @@ class _LenguajePageState extends State<LenguajePage> {
           Text(
             T.txt(recomendacionKey),
             textAlign: TextAlign.center,
-            style: GoogleFonts.baloo2(
+            style: TextStyle(
+              fontFamily: 'Baloo2',
               fontSize: 16.5,
               fontWeight: FontWeight.w500,
               color: modoOscuro ? Colors.white70 : Colors.black87,
@@ -303,7 +307,8 @@ class _LenguajePageState extends State<LenguajePage> {
               const SizedBox(width: 8),
               Text(
                 titulo,
-                style: GoogleFonts.fredoka(
+                style: TextStyle(
+                  fontFamily: 'Fredoka',
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                   color: modoOscuro ? Colors.white : color,
@@ -314,7 +319,8 @@ class _LenguajePageState extends State<LenguajePage> {
           const SizedBox(height: 8),
           Text(
             texto,
-            style: GoogleFonts.baloo2(
+            style: TextStyle(
+              fontFamily: 'Baloo2',
               fontSize: 15.5,
               fontWeight: FontWeight.w500,
               color: modoOscuro ? Colors.white70 : Colors.black87,
@@ -347,7 +353,8 @@ class _LenguajePageState extends State<LenguajePage> {
           Expanded(
             child: Text(
               T.txt(frasePadresKey),
-              style: GoogleFonts.baloo2(
+              style: TextStyle(
+                fontFamily: 'Baloo2',
                 fontSize: 15.5,
                 fontWeight: FontWeight.w600,
                 color: modoOscuro ? Colors.white70 : Colors.black87,
@@ -389,7 +396,8 @@ class _LenguajePageState extends State<LenguajePage> {
               actividadesRealizadas == 0
                   ? T.txt('noActivityReviewed')
                   : '${T.txt('activitiesReviewed')}: $actividadesRealizadas',
-              style: GoogleFonts.baloo2(
+              style: TextStyle(
+                fontFamily: 'Baloo2',
                 fontSize: 14.5,
                 fontWeight: FontWeight.w500,
                 color: modoOscuro ? Colors.white60 : Colors.black54,
@@ -474,7 +482,8 @@ class _LenguajePageState extends State<LenguajePage> {
                     children: [
                       Text(
                         T.txt(actividad.tituloKey),
-                        style: GoogleFonts.fredoka(
+                        style: TextStyle(
+                          fontFamily: 'Fredoka',
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
                           color: modoOscuro
@@ -485,7 +494,8 @@ class _LenguajePageState extends State<LenguajePage> {
                       const SizedBox(height: 3),
                       Text(
                         T.txt(actividad.descripcionKey),
-                        style: GoogleFonts.baloo2(
+                        style: TextStyle(
+                          fontFamily: 'Baloo2',
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
                           color: modoOscuro ? Colors.white70 : Colors.black54,
@@ -528,13 +538,17 @@ class _LenguajePageState extends State<LenguajePage> {
       ),
       child: Row(
         children: [
-          const Icon(Icons.info_outline_rounded,
-              color: Colors.redAccent, size: 32),
+          const Icon(
+            Icons.info_outline_rounded,
+            color: Colors.redAccent,
+            size: 32,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               T.txt('languageFinalNote'),
-              style: GoogleFonts.baloo2(
+              style: TextStyle(
+                fontFamily: 'Baloo2',
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
                 color: modoOscuro ? Colors.white70 : Colors.black87,
@@ -554,7 +568,8 @@ class _LenguajePageState extends State<LenguajePage> {
         return ValueListenableBuilder<ThemeMode>(
           valueListenable: AppConfig.temaApp,
           builder: (context, temaActual, _) {
-            final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
+            final bool modoOscuro =
+                Theme.of(context).brightness == Brightness.dark;
             final lista = _actividades();
 
             return Scaffold(
@@ -564,7 +579,8 @@ class _LenguajePageState extends State<LenguajePage> {
               appBar: AppBar(
                 title: Text(
                   T.txt('languageMenu'),
-                  style: GoogleFonts.fredoka(
+                  style: TextStyle(
+                    fontFamily: 'Fredoka',
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),

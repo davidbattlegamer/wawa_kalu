@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'app_config.dart';
 import 'app_texts.dart';
@@ -84,7 +83,8 @@ class HomePage extends StatelessWidget {
               appBar: AppBar(
                 title: Text(
                   T.txt('appName'),
-                  style: GoogleFonts.fredoka(
+                  style: TextStyle(
+                    fontFamily: 'Fredoka',
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     color:
@@ -100,7 +100,7 @@ class HomePage extends StatelessWidget {
                 leading: Padding(
                   padding: const EdgeInsets.all(8),
                   child: Image.asset(
-                    'assets/images/home.png', 
+                    'assets/images/home.png',
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -135,7 +135,8 @@ class HomePage extends StatelessWidget {
                               Text(
                                 T.txt('welcome'),
                                 textAlign: TextAlign.center,
-                                style: GoogleFonts.fredoka(
+                                style: TextStyle(
+                                  fontFamily: 'Fredoka',
                                   fontSize: tituloTamano,
                                   fontWeight: FontWeight.w700,
                                   color: modoOscuro
@@ -157,7 +158,8 @@ class HomePage extends StatelessWidget {
                               Text(
                                 T.txt('subtitle'),
                                 textAlign: TextAlign.center,
-                                style: GoogleFonts.baloo2(
+                                style: TextStyle(
+                                  fontFamily: 'Baloo2',
                                   fontSize: subtituloTamano,
                                   fontWeight: FontWeight.w600,
                                   color: const Color(0xFFEF476F),
@@ -278,7 +280,8 @@ class MinimalMenuItem extends StatelessWidget {
                             item.title,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: GoogleFonts.fredoka(
+                            style: TextStyle(
+                              fontFamily: 'Fredoka',
                               fontSize: estrecho ? 17 : 19,
                               fontWeight: FontWeight.w700,
                               color: modoOscuro
@@ -291,7 +294,8 @@ class MinimalMenuItem extends StatelessWidget {
                             item.subtitle,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: GoogleFonts.baloo2(
+                            style: TextStyle(
+                              fontFamily: 'Baloo2',
                               fontSize: estrecho ? 13.5 : 15,
                               fontWeight: FontWeight.w500,
                               color: modoOscuro

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'app_config.dart';
 import 'app_texts.dart';
@@ -153,7 +152,7 @@ class _NutricionPageState extends State<NutricionPage> {
             ),
             child: const Center(
               child: Text(
-                '🧸',
+                '🥗',
                 style: TextStyle(fontSize: 48),
               ),
             ),
@@ -162,7 +161,8 @@ class _NutricionPageState extends State<NutricionPage> {
           Text(
             T.txt('nutritionChildTitle'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.fredoka(
+            style: TextStyle(
+              fontFamily: 'Fredoka',
               fontSize: 34,
               fontWeight: FontWeight.w700,
               color: modoOscuro ? Colors.white : colorPrincipal,
@@ -173,7 +173,8 @@ class _NutricionPageState extends State<NutricionPage> {
           Text(
             T.txt('nutritionChildSubtitle'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.baloo2(
+            style: TextStyle(
+              fontFamily: 'Baloo2',
               fontSize: 19,
               fontWeight: FontWeight.w600,
               color: colorSecundario,
@@ -190,7 +191,8 @@ class _NutricionPageState extends State<NutricionPage> {
             child: Text(
               T.txt('touchSectionRecommendations'),
               textAlign: TextAlign.center,
-              style: GoogleFonts.baloo2(
+              style: TextStyle(
+                fontFamily: 'Baloo2',
                 fontSize: 16.5,
                 fontWeight: FontWeight.w700,
                 color: modoOscuro ? Colors.white : colorPrincipal,
@@ -202,7 +204,11 @@ class _NutricionPageState extends State<NutricionPage> {
     );
   }
 
-  Widget _cardNutricion(MenuNutricionItem item, int index, bool modoOscuro) {
+  Widget _cardNutricion(
+    MenuNutricionItem item,
+    int index,
+    bool modoOscuro,
+  ) {
     final bool abierto = indiceAbierto == index;
 
     return AnimatedContainer(
@@ -275,7 +281,8 @@ class _NutricionPageState extends State<NutricionPage> {
                         children: [
                           Text(
                             T.txt(item.tituloKey),
-                            style: GoogleFonts.fredoka(
+                            style: TextStyle(
+                              fontFamily: 'Fredoka',
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
                               color: modoOscuro
@@ -286,10 +293,12 @@ class _NutricionPageState extends State<NutricionPage> {
                           const SizedBox(height: 3),
                           Text(
                             T.txt(item.subtituloKey),
-                            style: GoogleFonts.baloo2(
+                            style: TextStyle(
+                              fontFamily: 'Baloo2',
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
-                              color: modoOscuro ? Colors.white70 : Colors.black54,
+                              color:
+                                  modoOscuro ? Colors.white70 : Colors.black54,
                             ),
                           ),
                         ],
@@ -335,17 +344,21 @@ class _NutricionPageState extends State<NutricionPage> {
                                 Text(
                                   T.txt('recipesForChildren'),
                                   textAlign: TextAlign.center,
-                                  style: GoogleFonts.fredoka(
+                                  style: TextStyle(
+                                    fontFamily: 'Fredoka',
                                     fontSize: 19,
                                     fontWeight: FontWeight.w700,
-                                    color: modoOscuro ? Colors.white : item.color,
+                                    color: modoOscuro
+                                        ? Colors.white
+                                        : item.color,
                                   ),
                                 ),
                                 const SizedBox(height: 6),
                                 Text(
                                   T.txt('recipesShortDesc'),
                                   textAlign: TextAlign.center,
-                                  style: GoogleFonts.baloo2(
+                                  style: TextStyle(
+                                    fontFamily: 'Baloo2',
                                     fontSize: 15,
                                     fontWeight: FontWeight.w500,
                                     color: modoOscuro
@@ -375,7 +388,8 @@ class _NutricionPageState extends State<NutricionPage> {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
                                     ),
-                                    textStyle: GoogleFonts.fredoka(
+                                    textStyle: const TextStyle(
+                                      fontFamily: 'Fredoka',
                                       fontSize: 17,
                                       fontWeight: FontWeight.w700,
                                     ),
@@ -430,7 +444,8 @@ class _NutricionPageState extends State<NutricionPage> {
           Expanded(
             child: Text(
               T.txt('nutritionFinalNote'),
-              style: GoogleFonts.baloo2(
+              style: TextStyle(
+                fontFamily: 'Baloo2',
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
                 color: modoOscuro ? Colors.white70 : Colors.black87,
@@ -450,7 +465,9 @@ class _NutricionPageState extends State<NutricionPage> {
         return ValueListenableBuilder<ThemeMode>(
           valueListenable: AppConfig.temaApp,
           builder: (context, temaActual, _) {
-            final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
+            final bool modoOscuro =
+                Theme.of(context).brightness == Brightness.dark;
+
             final listaItems = _items();
 
             return Scaffold(
@@ -460,10 +477,12 @@ class _NutricionPageState extends State<NutricionPage> {
               appBar: AppBar(
                 title: Text(
                   T.txt('nutritionChildTitle'),
-                  style: GoogleFonts.fredoka(
+                  style: TextStyle(
+                    fontFamily: 'Fredoka',
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
-                    color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
+                    color:
+                        modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
                   ),
                 ),
                 centerTitle: true,
@@ -533,7 +552,8 @@ class InfoBullet extends StatelessWidget {
           Expanded(
             child: Text(
               texto,
-              style: GoogleFonts.baloo2(
+              style: TextStyle(
+                fontFamily: 'Baloo2',
                 fontSize: 15.6,
                 fontWeight: FontWeight.w500,
                 color: modoOscuro ? Colors.white70 : Colors.black87,

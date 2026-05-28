@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 
 import 'app_config.dart';
 import 'app_texts.dart';
@@ -170,7 +170,8 @@ class RecetasPage extends StatelessWidget {
           Text(
             T.txt('recipesHeaderTitle'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.fredoka(
+            style: TextStyle(
+  fontFamily: 'Fredoka',
               fontSize: 34,
               fontWeight: FontWeight.w700,
               color: modoOscuro ? Colors.white : const Color(0xFF7B2CBF),
@@ -181,7 +182,8 @@ class RecetasPage extends StatelessWidget {
           Text(
             T.txt('recipesHeaderSubtitle'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.baloo2(
+            style: TextStyle(
+  fontFamily: 'Baloo2',
               fontSize: 19,
               fontWeight: FontWeight.w600,
               color: const Color(0xFFFF6B6B),
@@ -198,7 +200,8 @@ class RecetasPage extends StatelessWidget {
             child: Text(
               T.txt('recipesHeaderNote'),
               textAlign: TextAlign.center,
-              style: GoogleFonts.baloo2(
+              style: TextStyle(
+  fontFamily: 'Baloo2',
                 fontSize: 16.5,
                 fontWeight: FontWeight.w700,
                 color: modoOscuro ? Colors.white : const Color(0xFF7B2CBF),
@@ -262,7 +265,8 @@ class RecetasPage extends StatelessWidget {
           Text(
             T.txt(receta.tituloKey),
             textAlign: TextAlign.center,
-            style: GoogleFonts.fredoka(
+            style: TextStyle(
+  fontFamily: 'Fredoka',
               fontSize: 25,
               fontWeight: FontWeight.w700,
               color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
@@ -272,7 +276,8 @@ class RecetasPage extends StatelessWidget {
           Text(
             T.txt(receta.descripcionKey),
             textAlign: TextAlign.center,
-            style: GoogleFonts.baloo2(
+            style: TextStyle(
+  fontFamily: 'Baloo2',
               fontSize: 16,
               fontWeight: FontWeight.w500,
               color: modoOscuro ? Colors.white70 : Colors.black87,
@@ -334,7 +339,8 @@ class RecetasPage extends StatelessWidget {
                 Expanded(
                   child: Text(
                     T.txt(receta.recomendacionKey),
-                    style: GoogleFonts.baloo2(
+                    style: TextStyle(
+  fontFamily: 'Baloo2',
                       fontSize: 15.5,
                       fontWeight: FontWeight.w600,
                       color: modoOscuro ? Colors.white70 : Colors.black87,
@@ -368,7 +374,8 @@ class RecetasPage extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             texto,
-            style: GoogleFonts.baloo2(
+            style: TextStyle(
+  fontFamily: 'Baloo2',
               fontSize: 15.5,
               fontWeight: FontWeight.w700,
               color: modoOscuro ? Colors.white : color,
@@ -408,7 +415,8 @@ class RecetasPage extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 titulo,
-                style: GoogleFonts.fredoka(
+                style: TextStyle(
+  fontFamily: 'Fredoka',
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: modoOscuro ? Colors.white : color,
@@ -425,7 +433,8 @@ class RecetasPage extends StatelessWidget {
                 children: [
                   Text(
                     '• ',
-                    style: GoogleFonts.baloo2(
+                    style: TextStyle(
+  fontFamily: 'Baloo2',
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                       color: color,
@@ -434,7 +443,8 @@ class RecetasPage extends StatelessWidget {
                   Expanded(
                     child: Text(
                       dato,
-                      style: GoogleFonts.baloo2(
+                      style: TextStyle(
+  fontFamily: 'Baloo2',
                         fontSize: 15.5,
                         fontWeight: FontWeight.w500,
                         color: modoOscuro ? Colors.white70 : Colors.black87,
@@ -477,7 +487,8 @@ class RecetasPage extends StatelessWidget {
           Expanded(
             child: Text(
               T.txt('recipeFinalNote'),
-              style: GoogleFonts.baloo2(
+              style: TextStyle(
+  fontFamily: 'Baloo2',
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
                 color: modoOscuro ? Colors.white70 : Colors.black87,
@@ -507,7 +518,8 @@ class RecetasPage extends StatelessWidget {
               appBar: AppBar(
                 title: Text(
                   T.txt('recipesAppBar'),
-                  style: GoogleFonts.fredoka(
+                  style: TextStyle(
+  fontFamily: 'Fredoka',
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),

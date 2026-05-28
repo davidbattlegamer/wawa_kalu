@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'app_config.dart';
 import 'app_texts.dart';
@@ -220,7 +219,8 @@ class WelcomePageState extends State<WelcomePage>
         Text(
           T.txt('welcomeScreenTitle'),
           textAlign: TextAlign.center,
-          style: GoogleFonts.baloo2(
+          style: TextStyle(
+            fontFamily: 'Baloo2',
             fontSize: pantallaPequena ? 19 : 22,
             fontWeight: FontWeight.w700,
             color: const Color(0xFFEF476F),
@@ -256,7 +256,8 @@ class WelcomePageState extends State<WelcomePage>
                   },
                   child: Text(
                     letra,
-                    style: GoogleFonts.fredoka(
+                    style: TextStyle(
+                      fontFamily: 'Fredoka',
                       fontSize: pantallaPequena ? 43 : 52,
                       fontWeight: FontWeight.w800,
                       color: modoOscuro
@@ -296,7 +297,7 @@ class WelcomePageState extends State<WelcomePage>
                   builder: (context, constraints) {
                     final bool pantallaPequena =
                         constraints.maxHeight < 720 ||
-                            constraints.maxWidth < 380;
+                        constraints.maxWidth < 380;
 
                     return Padding(
                       padding: EdgeInsets.fromLTRB(
@@ -429,7 +430,8 @@ class WelcomePageState extends State<WelcomePage>
                     title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.fredoka(
+                    style: TextStyle(
+                      fontFamily: 'Fredoka',
                       fontSize: 18.5,
                       fontWeight: FontWeight.w700,
                       color:
@@ -441,7 +443,8 @@ class WelcomePageState extends State<WelcomePage>
                     subtitle,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.baloo2(
+                    style: TextStyle(
+                      fontFamily: 'Baloo2',
                       fontSize: 14.5,
                       fontWeight: FontWeight.w500,
                       color: modoOscuro ? Colors.white70 : Colors.black54,
@@ -517,7 +520,8 @@ class WelcomePageState extends State<WelcomePage>
                               const SizedBox(width: 12),
                               Text(
                                 T.txt('startingApp'),
-                                style: GoogleFonts.fredoka(
+                                style: const TextStyle(
+                                  fontFamily: 'Fredoka',
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.white,
@@ -531,7 +535,8 @@ class WelcomePageState extends State<WelcomePage>
                             children: [
                               Text(
                                 T.txt('startApp'),
-                                style: GoogleFonts.fredoka(
+                                style: const TextStyle(
+                                  fontFamily: 'Fredoka',
                                   fontSize: 21,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.white,
@@ -630,7 +635,8 @@ class WelcomePageState extends State<WelcomePage>
                             Text(
                               T.txt('welcomeSettingsNote'),
                               textAlign: TextAlign.center,
-                              style: GoogleFonts.baloo2(
+                              style: TextStyle(
+                                fontFamily: 'Baloo2',
                                 fontSize: 14.5,
                                 fontWeight: FontWeight.w500,
                                 color: modoOscuro

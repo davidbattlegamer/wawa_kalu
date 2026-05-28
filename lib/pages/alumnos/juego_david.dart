@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:vibration/vibration.dart';
 
 import '../app_config.dart';
@@ -83,10 +82,7 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
     }
   }
 
-  Future<void> vibrarPremio({
-    required bool medalla,
-    bool ambos = false,
-  }) async {
+  Future<void> vibrarPremio({required bool medalla, bool ambos = false}) async {
     if (!AppConfig.vibracionActiva.value) return;
 
     try {
@@ -139,9 +135,7 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
     await audioPlayer.stop();
 
     if (AppConfig.sonidosActivos.value) {
-      await audioPlayer.play(
-        AssetSource('sonidos/$sonido'),
-      );
+      await audioPlayer.play(AssetSource('sonidos/$sonido'));
     }
 
     await revisarPremio();
@@ -168,11 +162,7 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
         premioMensajeKey = 'zooRewardBoth';
       });
 
-      await activarPremio(
-        sonido: 'medalla.mp3',
-        medalla: true,
-        ambos: true,
-      );
+      await activarPremio(sonido: 'medalla.mp3', medalla: true, ambos: true);
       return;
     }
 
@@ -184,10 +174,7 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
         premioMensajeKey = 'zooRewardMedal';
       });
 
-      await activarPremio(
-        sonido: 'medalla.mp3',
-        medalla: true,
-      );
+      await activarPremio(sonido: 'medalla.mp3', medalla: true);
       return;
     }
 
@@ -199,10 +186,7 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
         premioMensajeKey = 'zooRewardStar';
       });
 
-      await activarPremio(
-        sonido: 'estrella.mp3',
-        medalla: false,
-      );
+      await activarPremio(sonido: 'estrella.mp3', medalla: false);
     }
   }
 
@@ -211,17 +195,12 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
     required bool medalla,
     bool ambos = false,
   }) async {
-    await vibrarPremio(
-      medalla: medalla,
-      ambos: ambos,
-    );
+    await vibrarPremio(medalla: medalla, ambos: ambos);
 
     if (AppConfig.sonidosActivos.value) {
       try {
         await audioPremio.stop();
-        await audioPremio.play(
-          AssetSource('sonidos/$sonido'),
-        );
+        await audioPremio.play(AssetSource('sonidos/$sonido'));
       } catch (e) {
         debugPrint('No se pudo reproducir sonido de premio: $e');
       }
@@ -271,33 +250,27 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
         gradient: LinearGradient(
           colors: [
             modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-            const Color(0xFFFF8C42).withValues(
-              alpha: modoOscuro ? 0.22 : 0.12,
-            ),
-            const Color(0xFF7B2CBF).withValues(
-              alpha: modoOscuro ? 0.18 : 0.08,
-            ),
+            const Color(0xFFFF8C42).withValues(alpha: modoOscuro ? 0.22 : 0.12),
+            const Color(0xFF7B2CBF).withValues(alpha: modoOscuro ? 0.18 : 0.08),
           ],
         ),
         borderRadius: BorderRadius.circular(30),
         border: Border.all(
-          color: const Color(0xFFFF8C42).withValues(
-            alpha: modoOscuro ? 0.32 : 0.18,
-          ),
+          color: const Color(
+            0xFFFF8C42,
+          ).withValues(alpha: modoOscuro ? 0.32 : 0.18),
           width: 1.5,
         ),
       ),
       child: Column(
         children: [
-          Text(
-            '🦁',
-            style: TextStyle(fontSize: pantallaPequena ? 44 : 54),
-          ),
+          Text('🦁', style: TextStyle(fontSize: pantallaPequena ? 44 : 54)),
           SizedBox(height: pantallaPequena ? 8 : 10),
           Text(
             T.txt('davidTitle'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.fredoka(
+            style: TextStyle(
+              fontFamily: 'Fredoka',
               fontSize: pantallaPequena ? 28 : 34,
               fontWeight: FontWeight.w700,
               color: modoOscuro ? Colors.white : const Color(0xFF7B2CBF),
@@ -313,7 +286,8 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
                     ? T.txt('davidSubtitleSound')
                     : T.txt('davidSubtitleNoSound'),
                 textAlign: TextAlign.center,
-                style: GoogleFonts.baloo2(
+                style: TextStyle(
+                  fontFamily: 'Baloo2',
                   fontSize: pantallaPequena ? 17 : 20,
                   fontWeight: FontWeight.w600,
                   color: const Color(0xFFEF476F),
@@ -338,16 +312,14 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
         gradient: LinearGradient(
           colors: [
             modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-            const Color(0xFFFF8C42).withValues(
-              alpha: modoOscuro ? 0.22 : 0.13,
-            ),
+            const Color(0xFFFF8C42).withValues(alpha: modoOscuro ? 0.22 : 0.13),
           ],
         ),
         borderRadius: BorderRadius.circular(28),
         border: Border.all(
-          color: const Color(0xFFFF8C42).withValues(
-            alpha: modoOscuro ? 0.32 : 0.20,
-          ),
+          color: const Color(
+            0xFFFF8C42,
+          ).withValues(alpha: modoOscuro ? 0.32 : 0.20),
           width: 1.5,
         ),
       ),
@@ -376,7 +348,8 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
           Text(
             mensajePrincipal(),
             textAlign: TextAlign.center,
-            style: GoogleFonts.fredoka(
+            style: TextStyle(
+              fontFamily: 'Fredoka',
               fontSize: pantallaPequena ? 19 : 22,
               fontWeight: FontWeight.w700,
               color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
@@ -394,15 +367,16 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFF8C42).withValues(
-                    alpha: modoOscuro ? 0.20 : 0.14,
-                  ),
+                  color: const Color(
+                    0xFFFF8C42,
+                  ).withValues(alpha: modoOscuro ? 0.20 : 0.14),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   '${T.txt('hits')}: $puntos',
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.baloo2(
+                  style: TextStyle(
+                    fontFamily: 'Baloo2',
                     fontSize: pantallaPequena ? 16 : 18,
                     fontWeight: FontWeight.w700,
                     color: modoOscuro
@@ -425,17 +399,21 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
     final int avanceEstrella = puntos % 3;
     final int avanceMedalla = puntos % 5;
 
-    final int faltanEstrella =
-        avanceEstrella == 0 && puntos > 0 ? 0 : 3 - avanceEstrella;
+    final int faltanEstrella = avanceEstrella == 0 && puntos > 0
+        ? 0
+        : 3 - avanceEstrella;
 
-    final int faltanMedalla =
-        avanceMedalla == 0 && puntos > 0 ? 0 : 5 - avanceMedalla;
+    final int faltanMedalla = avanceMedalla == 0 && puntos > 0
+        ? 0
+        : 5 - avanceMedalla;
 
-    final double progresoEstrella =
-        avanceEstrella == 0 && puntos > 0 ? 1 : avanceEstrella / 3;
+    final double progresoEstrella = avanceEstrella == 0 && puntos > 0
+        ? 1
+        : avanceEstrella / 3;
 
-    final double progresoMedalla =
-        avanceMedalla == 0 && puntos > 0 ? 1 : avanceMedalla / 5;
+    final double progresoMedalla = avanceMedalla == 0 && puntos > 0
+        ? 1
+        : avanceMedalla / 5;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 350),
@@ -445,19 +423,15 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
         gradient: LinearGradient(
           colors: [
             modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-            const Color(0xFFFFC300).withValues(
-              alpha: modoOscuro ? 0.20 : 0.14,
-            ),
-            const Color(0xFFFF006E).withValues(
-              alpha: modoOscuro ? 0.14 : 0.07,
-            ),
+            const Color(0xFFFFC300).withValues(alpha: modoOscuro ? 0.20 : 0.14),
+            const Color(0xFFFF006E).withValues(alpha: modoOscuro ? 0.14 : 0.07),
           ],
         ),
         borderRadius: BorderRadius.circular(30),
         border: Border.all(
-          color: const Color(0xFFFFC300).withValues(
-            alpha: modoOscuro ? 0.38 : 0.25,
-          ),
+          color: const Color(
+            0xFFFFC300,
+          ).withValues(alpha: modoOscuro ? 0.38 : 0.25),
           width: 1.7,
         ),
         boxShadow: [
@@ -502,17 +476,20 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
                   children: [
                     Text(
                       T.txt('zooRewardsTitle'),
-                      style: GoogleFonts.fredoka(
+                      style: TextStyle(
+                        fontFamily: 'Fredoka',
                         fontSize: pantallaPequena ? 20 : 23,
                         fontWeight: FontWeight.w700,
-                        color:
-                            modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
+                        color: modoOscuro
+                            ? Colors.white
+                            : const Color(0xFF2D2D2D),
                       ),
                     ),
                     const SizedBox(height: 3),
                     Text(
                       T.txt(premioMensajeKey),
-                      style: GoogleFonts.baloo2(
+                      style: TextStyle(
+                        fontFamily: 'Baloo2',
                         fontSize: pantallaPequena ? 14.5 : 16,
                         fontWeight: FontWeight.w600,
                         color: modoOscuro ? Colors.white70 : Colors.black54,
@@ -595,26 +572,23 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
         children: [
           Row(
             children: [
-              Icon(
-                icono,
-                color: color,
-                size: 27,
-              ),
+              Icon(icono, color: color, size: 27),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   titulo,
-                  style: GoogleFonts.fredoka(
+                  style: TextStyle(
+                    fontFamily: 'Fredoka',
                     fontSize: 17,
                     fontWeight: FontWeight.w700,
-                    color:
-                        modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
+                    color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
                   ),
                 ),
               ),
               Text(
                 avance,
-                style: GoogleFonts.fredoka(
+                style: TextStyle(
+                  fontFamily: 'Fredoka',
                   fontSize: 17,
                   fontWeight: FontWeight.w700,
                   color: color,
@@ -638,7 +612,8 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
           Text(
             mensaje,
             textAlign: TextAlign.center,
-            style: GoogleFonts.baloo2(
+            style: TextStyle(
+              fontFamily: 'Baloo2',
               fontSize: 14.5,
               fontWeight: FontWeight.w700,
               color: modoOscuro ? Colors.white70 : Colors.black54,
@@ -668,14 +643,12 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
         ),
         child: Column(
           children: [
-            Text(
-              icono,
-              style: const TextStyle(fontSize: 28),
-            ),
+            Text(icono, style: const TextStyle(fontSize: 28)),
             const SizedBox(height: 3),
             Text(
               '$valor',
-              style: GoogleFonts.fredoka(
+              style: TextStyle(
+                fontFamily: 'Fredoka',
                 fontSize: 23,
                 fontWeight: FontWeight.w700,
                 color: color,
@@ -684,7 +657,8 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
             Text(
               texto,
               textAlign: TextAlign.center,
-              style: GoogleFonts.baloo2(
+              style: TextStyle(
+                fontFamily: 'Baloo2',
                 fontSize: 13.5,
                 fontWeight: FontWeight.w600,
                 color: modoOscuro ? Colors.white70 : Colors.black54,
@@ -708,10 +682,7 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
 
     return GestureDetector(
       onTap: () async {
-        await tocarAnimal(
-          animalKey: animalKey,
-          sonido: sonido,
-        );
+        await tocarAnimal(animalKey: animalKey, sonido: sonido);
       },
       child: AnimatedScale(
         scale: activo ? 1.06 : 1.0,
@@ -757,10 +728,7 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
                   AnimatedScale(
                     scale: activo ? 1.18 : 1.0,
                     duration: const Duration(milliseconds: 230),
-                    child: Text(
-                      emoji,
-                      style: TextStyle(fontSize: emojiSize),
-                    ),
+                    child: Text(emoji, style: TextStyle(fontSize: emojiSize)),
                   ),
                   SizedBox(height: pantallaPequena ? 5 : 8),
                   FittedBox(
@@ -769,7 +737,8 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
                       T.txt(animalKey),
                       maxLines: 1,
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.fredoka(
+                      style: TextStyle(
+                        fontFamily: 'Fredoka',
                         fontSize: pantallaPequena ? 20 : 25,
                         fontWeight: FontWeight.w700,
                         color: color,
@@ -848,7 +817,8 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
             return ValueListenableBuilder<ThemeMode>(
               valueListenable: AppConfig.temaApp,
               builder: (context, temaActual, _) {
-                final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
+                final bool modoOscuro =
+                    Theme.of(context).brightness == Brightness.dark;
 
                 return Scaffold(
                   backgroundColor: modoOscuro
@@ -857,18 +827,22 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
                   appBar: AppBar(
                     title: Text(
                       T.txt('gameDavid'),
-                      style: GoogleFonts.fredoka(
+                      style: TextStyle(
+                        fontFamily: 'Fredoka',
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
-                        color:
-                            modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
+                        color: modoOscuro
+                            ? Colors.white
+                            : const Color(0xFF2D2D2D),
                       ),
                     ),
                     centerTitle: true,
-                    backgroundColor:
-                        modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-                    foregroundColor:
-                        modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
+                    backgroundColor: modoOscuro
+                        ? const Color(0xFF211B2E)
+                        : Colors.white,
+                    foregroundColor: modoOscuro
+                        ? Colors.white
+                        : const Color(0xFF2D2D2D),
                     elevation: 0,
                   ),
                   body: SafeArea(
@@ -876,8 +850,7 @@ class _JuegoDavidPageState extends State<JuegoDavidPage> {
                       builder: (context, constraints) {
                         final double ancho = constraints.maxWidth;
                         final double alto = constraints.maxHeight;
-                        final bool pantallaPequena =
-                            alto < 720 || ancho < 380;
+                        final bool pantallaPequena = alto < 720 || ancho < 380;
 
                         return SingleChildScrollView(
                           padding: EdgeInsets.all(pantallaPequena ? 14 : 18),
