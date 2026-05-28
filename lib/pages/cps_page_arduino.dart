@@ -257,7 +257,7 @@ class _CpsPageState extends State<CpsPage> {
                               fontWeight: FontWeight.w700,
                               color: modoOscuro
                                   ? Colors.white
-                                  : const Color(0xFF4A2C82),
+                                  : const Color.fromARGB(255, 0, 255, 38),
                             ),
                           ),
                           const SizedBox(height: 15),
