@@ -3,9 +3,10 @@ description: "Aplicación educativa infantil Wawa Kalú."
 publish_to: 'none'
 version: 1.0.0+1
 
+
 environment:
   sdk: ^3.9.2
-
+#123
 dependencies:
   flutter:
     sdk: flutter
