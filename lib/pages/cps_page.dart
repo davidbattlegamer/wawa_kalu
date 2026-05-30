@@ -8,9 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import 'app_config.dart';
 import 'app_texts.dart';
+import 'package:vibration/vibration.dart';
 
 TextStyle fredoka({
   double? fontSize,
@@ -91,21 +91,39 @@ class _CpsPageState extends State<CpsPage> {
     if (!AppConfig.vibracionActiva.value) return;
 
     try {
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+        final bool tieneVibrador = await Vibration.hasVibrator();
+
+        if (tieneVibrador) {
+          await Vibration.vibrate(duration: 120);
+          return;
+        }
+      }
+
       await HapticFeedback.lightImpact();
     } catch (e) {
       debugPrint('No se pudo vibrar: $e');
     }
   }
 
-  Future<void> vibrarPremio() async {
-    if (!AppConfig.vibracionActiva.value) return;
+ Future<void> vibrarPremio() async {
+  if (!AppConfig.vibracionActiva.value) return;
 
-    try {
-      await HapticFeedback.mediumImpact();
-    } catch (e) {
-      debugPrint('No se pudo vibrar premio: $e');
+  try {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      final bool tieneVibrador = await Vibration.hasVibrator();
+
+      if (tieneVibrador) {
+        await Vibration.vibrate(pattern: [0, 120, 80, 160]);
+        return;
+      }
     }
+
+    await HapticFeedback.mediumImpact();
+  } catch (e) {
+    debugPrint('No se pudo vibrar premio: $e');
   }
+}
 
   Future<bool> pedirPermisosBluetooth() async {
     if (kIsWeb) return true;
@@ -543,15 +561,14 @@ class _CpsPageState extends State<CpsPage> {
                                                           ),
                                                           child: Text(
                                                             'ESP32',
-                                                            style:
-                                                                fredoka(
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                  color: Colors
-                                                                      .green,
-                                                                ),
+                                                            style: fredoka(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              color:
+                                                                  Colors.green,
+                                                            ),
                                                           ),
                                                         ),
                                                     ],
@@ -587,15 +604,12 @@ class _CpsPageState extends State<CpsPage> {
                                                           ),
                                                       child: Text(
                                                         'Servicios: ${servicios.length}',
-                                                        style:
-                                                            baloo2(
-                                                              fontSize: 12.5,
-                                                              color: modoOscuro
-                                                                  ? Colors
-                                                                        .white38
-                                                                  : Colors
-                                                                        .black38,
-                                                            ),
+                                                        style: baloo2(
+                                                          fontSize: 12.5,
+                                                          color: modoOscuro
+                                                              ? Colors.white38
+                                                              : Colors.black38,
+                                                        ),
                                                       ),
                                                     ),
                                                 ],
