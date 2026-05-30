@@ -106,24 +106,24 @@ class _CpsPageState extends State<CpsPage> {
     }
   }
 
- Future<void> vibrarPremio() async {
-  if (!AppConfig.vibracionActiva.value) return;
+  Future<void> vibrarPremio() async {
+    if (!AppConfig.vibracionActiva.value) return;
 
-  try {
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-      final bool tieneVibrador = await Vibration.hasVibrator();
+    try {
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+        final bool tieneVibrador = await Vibration.hasVibrator();
 
-      if (tieneVibrador) {
-        await Vibration.vibrate(pattern: [0, 120, 80, 160]);
-        return;
+        if (tieneVibrador) {
+          await Vibration.vibrate(pattern: [0, 120, 80, 160]);
+          return;
+        }
       }
-    }
 
-    await HapticFeedback.mediumImpact();
-  } catch (e) {
-    debugPrint('No se pudo vibrar premio: $e');
+      await HapticFeedback.mediumImpact();
+    } catch (e) {
+      debugPrint('No se pudo vibrar premio: $e');
+    }
   }
-}
 
   Future<bool> pedirPermisosBluetooth() async {
     if (kIsWeb) return true;
