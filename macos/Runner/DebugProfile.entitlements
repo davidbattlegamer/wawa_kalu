@@ -2,11 +2,20 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!-- Sandbox de macOS -->
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
+
+	<!-- Necesario para Flutter en modo debug/profile -->
 	<key>com.apple.security.cs.allow-jit</key>
 	<true/>
+
+	<!-- Permite servidor local para debug/devtools -->
 	<key>com.apple.security.network.server</key>
+	<true/>
+
+	<!-- Permite usar Bluetooth/BLE en macOS -->
+	<key>com.apple.security.device.bluetooth</key>
 	<true/>
 </dict>
 </plist>
