@@ -6,9 +6,27 @@ import 'package:vibration/vibration.dart';
 import '../app_config.dart';
 import '../app_texts.dart';
 
+Future<bool> dispositivoPermiteVibracion() async {
+  if (kIsWeb) return false;
+
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    try {
+      return await Vibration.hasVibrator();
+    } catch (_) {
+      return false;
+    }
+  }
+
+  if (defaultTargetPlatform == TargetPlatform.iOS) {
+    return true;
+  }
+
+  return false;
+}
+
 Future<void> vibrarActivacionFuerte() async {
   try {
-    if (!kIsWeb) {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
       final bool tieneVibrador = await Vibration.hasVibrator();
 
       if (tieneVibrador) {
@@ -17,7 +35,9 @@ Future<void> vibrarActivacionFuerte() async {
       }
     }
 
-    await HapticFeedback.heavyImpact();
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
+      await HapticFeedback.heavyImpact();
+    }
   } catch (_) {
     try {
       await HapticFeedback.mediumImpact();
@@ -211,34 +231,51 @@ void showConfigSheet(BuildContext context) {
                                         ),
                                       ),
 
-                                      const SizedBox(height: 14),
+                                      FutureBuilder<bool>(
+                                        future: dispositivoPermiteVibracion(),
+                                        builder: (context, snapshot) {
+                                          final bool puedeVibrar =
+                                              snapshot.data ?? false;
 
-                                      SettingCard(
-                                        color: vibracionActiva
-                                            ? Colors.orange
-                                            : Colors.blueGrey,
-                                        icon: vibracionActiva
-                                            ? Icons.vibration_rounded
-                                            : Icons.phone_android_rounded,
-                                        title: T.txt('vibration'),
-                                        subtitle: vibracionActiva
-                                            ? T.txt('vibrationOn')
-                                            : T.txt('vibrationOff'),
-                                        modoOscuro: modoOscuro,
-                                        trailing: AdaptiveSwitch(
-                                          value: vibracionActiva,
-                                          activeColor: Colors.orange,
-                                          inactiveColor: Colors.blueGrey,
-                                          onChanged: (valor) async {
-                                            await AppConfig.cambiarVibracion(
-                                              valor,
-                                            );
+                                          if (!puedeVibrar) {
+                                            return const SizedBox.shrink();
+                                          }
 
-                                            if (!valor) return;
+                                          return Column(
+                                            children: [
+                                              const SizedBox(height: 14),
+                                              SettingCard(
+                                                color: vibracionActiva
+                                                    ? Colors.orange
+                                                    : Colors.blueGrey,
+                                                icon: vibracionActiva
+                                                    ? Icons.vibration_rounded
+                                                    : Icons.phone_android_rounded,
+                                                title: T.txt('vibration'),
+                                                subtitle: vibracionActiva
+                                                    ? T.txt('vibrationOn')
+                                                    : T.txt('vibrationOff'),
+                                                modoOscuro: modoOscuro,
+                                                trailing: AdaptiveSwitch(
+                                                  value: vibracionActiva,
+                                                  activeColor: Colors.orange,
+                                                  inactiveColor:
+                                                      Colors.blueGrey,
+                                                  onChanged: (valor) async {
+                                                    await AppConfig
+                                                        .cambiarVibracion(
+                                                      valor,
+                                                    );
 
-                                            await vibrarActivacionFuerte();
-                                          },
-                                        ),
+                                                    if (!valor) return;
+
+                                                    await vibrarActivacionFuerte();
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        },
                                       ),
 
                                       const SizedBox(height: 14),
@@ -508,8 +545,8 @@ class LanguageSelector extends StatelessWidget {
     final Color seleccionado = idiomaAuto
         ? const Color(0xFF00A896)
         : idiomaActual == 'en'
-        ? Colors.deepPurple
-        : Colors.orange;
+            ? Colors.deepPurple
+            : Colors.orange;
 
     return Container(
       padding: const EdgeInsets.all(4),
@@ -565,7 +602,7 @@ class LanguageOptionButton extends StatelessWidget {
   final Color selectedColor;
   final bool modoOscuro;
   final String tooltip;
-  final VoidCallback onTap;
+  final Future<void> Function() onTap;
 
   const LanguageOptionButton({
     super.key,
@@ -600,7 +637,9 @@ class LanguageOptionButton extends StatelessWidget {
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(14),
-          onTap: onTap,
+          onTap: () async {
+            await onTap();
+          },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 9),
             child: icon != null
@@ -610,8 +649,8 @@ class LanguageOptionButton extends StatelessWidget {
                     color: selected
                         ? Colors.white
                         : modoOscuro
-                        ? Colors.white70
-                        : const Color(0xFF4A2C82),
+                            ? Colors.white70
+                            : const Color(0xFF4A2C82),
                   )
                 : Text(
                     text,
@@ -622,8 +661,8 @@ class LanguageOptionButton extends StatelessWidget {
                       color: selected
                           ? Colors.white
                           : modoOscuro
-                          ? Colors.white70
-                          : const Color(0xFF4A2C82),
+                              ? Colors.white70
+                              : const Color(0xFF4A2C82),
                     ),
                   ),
           ),
@@ -747,8 +786,8 @@ class ThemeOptionButton extends StatelessWidget {
             color: selected
                 ? Colors.white
                 : modoOscuro
-                ? Colors.white70
-                : const Color(0xFF4A2C82),
+                    ? Colors.white70
+                    : const Color(0xFF4A2C82),
           ),
         ),
       ),
