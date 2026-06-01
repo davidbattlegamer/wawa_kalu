@@ -17,7 +17,55 @@ class T {
     'disabled': 'Desactivado',
     'startApp': 'Comenzar',
     'startingApp': 'Entrando...',
-
+    //info
+    'info': 'i',
+    'systemInfo': 'Información del sistema',
+    'permissionsInfo': 'Ver permisos, Bluetooth y plataforma',
+    'platform': 'Plataforma',
+    'bluetoothStatus': 'Bluetooth',
+    'bluetoothWeb': 'Bluetooth Web',
+    'nearbyDevicesScan': 'Dispositivos cercanos / escaneo',
+    'bluetoothConnection': 'Conexión Bluetooth',
+    'preciseLocation': 'Ubicación precisa',
+    'bluetoothPermission': 'Permiso Bluetooth',
+    'macosPermissions': 'Permisos macOS',
+    'windowsPermissions': 'Permisos Windows',
+    'permissions': 'Permisos',
+    'granted': 'Concedido',
+    'denied': 'Denegado',
+    'permanentlyDenied': 'Denegado permanentemente',
+    'restricted': 'Restringido',
+    'limited': 'Limitado',
+    'provisional': 'Provisional',
+    'unknown': 'Desconocido',
+    'on': 'Encendido',
+    'off': 'Apagado',
+    'active': 'Activo',
+    'available': 'Disponible',
+    'unavailable': 'No disponible',
+    'offOrUnavailable': 'Apagado o no disponible',
+    'notAvailableOrConfigured': 'No disponible o no configurado',
+    'webBleNote':
+        'El navegador pedirá permiso al seleccionar un dispositivo BLE.',
+    'webBleLimitedNote':
+        'Chrome no muestra todos los dispositivos; solo los BLE permitidos.',
+    'androidBleNote':
+        'Para escanear BLE en Android, activa Bluetooth, ubicación y dispositivos cercanos.',
+    'iosBleNote':
+        'En iPhone, iOS muestra el permiso Bluetooth cuando la app intenta usar BLE.',
+    'macosBleNote':
+        'Revisar Info.plist y entitlements con Bluetooth habilitado.',
+    'windowsBleNote':
+        'Windows no pide permisos como Android. Debe estar Bluetooth activado.',
+    'genericPermissionNote':
+        'Esta plataforma no usa permisos móviles de Bluetooth.',
+    'grantPermissions': 'Conceder permisos',
+    'openSettings': 'Abrir ajustes',
+    'close': 'Cerrar',
+    'bluetoothCheckError': 'No se pudo activar o verificar Bluetooth',
+    'iosBluetoothPermissionPending':
+        'Permiso Bluetooth en iOS pendiente o no disponible',
+    'permissionRequestError': 'Error al pedir permisos',
     // CONFIGURACIÓN
     'sounds': 'Sonidos',
     'language': 'Idioma',
@@ -146,7 +194,8 @@ class T {
     'prizeGuide':
         'Premios: cada 5 detecciones ganas una estrella ⭐ y cada 10 detecciones ganas una medalla 🏆.',
     'sessionProgress': 'Avances de la sesión',
-    'defaultPrize': 'Cada 5 detecciones ganas una estrella y cada 10 una medalla',
+    'defaultPrize':
+        'Cada 5 detecciones ganas una estrella y cada 10 una medalla',
     'starPrize': '¡Muy bien! Ganaste una estrella ⭐',
     'medalPrize': '¡Excelente! Ganaste una medalla 🏆',
     'detections': 'detecciones',
@@ -173,8 +222,7 @@ class T {
     'nutritionChildTitle': 'Nutrición infantil',
     'nutritionChildSubtitle':
         'Guía práctica para padres y cuidadores de niños de 0 a 3 años',
-    'touchSectionRecommendations':
-        'Toca cada sección para ver recomendaciones',
+    'touchSectionRecommendations': 'Toca cada sección para ver recomendaciones',
     'nutritionFoodsTitle': 'Alimentos y recetas',
     'nutritionFoodsSubtitle': 'Ideas nutritivas para niños de 0 a 3 años',
     'nutritionFoodsTip1':
@@ -246,8 +294,7 @@ class T {
     'nutritionParentsTip5':
         'Ante bajo peso, alergias, vómitos frecuentes o rechazo persistente, consulte con un profesional de salud.',
     'recipesForChildren': 'Recetas para niños de 0 a 3 años',
-    'recipesShortDesc':
-        'Preparaciones suaves, seguras y fáciles para casa.',
+    'recipesShortDesc': 'Preparaciones suaves, seguras y fáciles para casa.',
     'viewRecipes': 'Ver recetas',
     'nutritionFinalNote':
         'Una buena nutrición acompaña el crecimiento del niño. Ofrezca alimentos variados, seguros y adecuados para su edad. Ante alergias, bajo peso o rechazo frecuente de comida, consulte con un profesional de salud.',
@@ -334,15 +381,13 @@ class T {
     'recipe5Step2': 'Agrega fruta madura machacada o en trozos seguros.',
     'recipe5Step3': 'Mezcla suavemente.',
     'recipe5Step4': 'Sirve frío, pero no demasiado helado.',
-    'recipe5Rec':
-        'Evita yogures azucarados. Supervisa si usa trozos de fruta.',
+    'recipe5Rec': 'Evita yogures azucarados. Supervisa si usa trozos de fruta.',
 
     // LENGUAJE
     'languageTitle': 'Lenguaje y comunicación',
     'languageHeaderSubtitle':
         'Actividades simples para estimular sus primeras palabras',
-    'touchActivityRecommendation':
-        'Toca una actividad y mira la recomendación',
+    'touchActivityRecommendation': 'Toca una actividad y mira la recomendación',
     'selectActivity': 'Seleccione una actividad',
     'languageDefaultRec':
         'Toque una tarjeta para ver cómo estimular el lenguaje del niño en casa.',
@@ -400,8 +445,7 @@ class T {
     'environmentTitle': 'Entornos protectores',
     'environmentHeaderSubtitle':
         'Guía para cuidar la seguridad, salud y bienestar de niños de 0 a 3 años',
-    'touchEnvironmentActions':
-        'Toca cada sección para ver acciones prácticas',
+    'touchEnvironmentActions': 'Toca cada sección para ver acciones prácticas',
     'safeSpacesTitle': 'Espacios seguros',
     'safeSpacesSubtitle': 'Casa preparada para explorar sin riesgo',
     'safeSpacesDesc':
@@ -447,8 +491,7 @@ class T {
     'affectionSubtitle': 'Cuidar también es responder con calma',
     'affectionDesc':
         'El afecto, la paciencia y el buen trato fortalecen la confianza y el desarrollo emocional.',
-    'affectionA1':
-        'Abrácelo, háblele con calma y responda a sus necesidades.',
+    'affectionA1': 'Abrácelo, háblele con calma y responda a sus necesidades.',
     'affectionA2':
         'Valide sus emociones: cansancio, miedo, frustración o alegría.',
     'affectionA3': 'Evite gritos, golpes o amenazas.',
@@ -482,7 +525,54 @@ class T {
     'disabled': 'Disabled',
     'startApp': 'Start',
     'startingApp': 'Starting...',
-
+    //info
+    'info': 'i',
+    'systemInfo': 'System information',
+    'permissionsInfo': 'View permissions, Bluetooth and platform',
+    'platform': 'Platform',
+    'bluetoothStatus': 'Bluetooth',
+    'bluetoothWeb': 'Bluetooth Web',
+    'nearbyDevicesScan': 'Nearby devices / scan',
+    'bluetoothConnection': 'Bluetooth connection',
+    'preciseLocation': 'Precise location',
+    'bluetoothPermission': 'Bluetooth permission',
+    'macosPermissions': 'macOS permissions',
+    'windowsPermissions': 'Windows permissions',
+    'permissions': 'Permissions',
+    'granted': 'Granted',
+    'denied': 'Denied',
+    'permanentlyDenied': 'Permanently denied',
+    'restricted': 'Restricted',
+    'limited': 'Limited',
+    'provisional': 'Provisional',
+    'unknown': 'Unknown',
+    'on': 'On',
+    'off': 'Off',
+    'active': 'Active',
+    'available': 'Available',
+    'unavailable': 'Unavailable',
+    'offOrUnavailable': 'Off or unavailable',
+    'notAvailableOrConfigured': 'Not available or not configured',
+    'webBleNote':
+        'The browser will ask for permission when selecting a BLE device.',
+    'webBleLimitedNote':
+        'Chrome does not show all devices; only allowed BLE devices.',
+    'androidBleNote':
+        'To scan BLE on Android, enable Bluetooth, location and nearby devices.',
+    'iosBleNote':
+        'On iPhone, iOS shows the Bluetooth permission when the app tries to use BLE.',
+    'macosBleNote': 'Check Info.plist and entitlements with Bluetooth enabled.',
+    'windowsBleNote':
+        'Windows does not ask for permissions like Android. Bluetooth must be enabled.',
+    'genericPermissionNote':
+        'This platform does not use mobile Bluetooth permissions.',
+    'grantPermissions': 'Grant permissions',
+    'openSettings': 'Open settings',
+    'close': 'Close',
+    'bluetoothCheckError': 'Could not enable or check Bluetooth',
+    'iosBluetoothPermissionPending':
+        'iOS Bluetooth permission is pending or unavailable',
+    'permissionRequestError': 'Error requesting permissions',
     // SETTINGS
     'sounds': 'Sounds',
     'language': 'Language',
@@ -773,8 +863,7 @@ class T {
     'recipe4Title': 'Soft rice and lentil balls',
     'recipe4Age': 'From 10 to 12 months',
     'recipe4Moment': 'Lunch or savory snack',
-    'recipe4Desc':
-        'Small soft portions to practice grasping and safe chewing.',
+    'recipe4Desc': 'Small soft portions to practice grasping and safe chewing.',
     'recipe4Ing1': 'Well-cooked rice.',
     'recipe4Ing2': 'Well-cooked lentils.',
     'recipe4Ing3': 'Cooked and mashed carrot.',
@@ -920,10 +1009,8 @@ class T {
     'healthAlertA1': 'Monitor fever, breathing, feeding, and energy level.',
     'healthAlertA2':
         'Watch for falls, strong hits, vomiting, diarrhea, or food refusal.',
-    'healthAlertA3':
-        'Keep medical checkups and vaccinations according to age.',
-    'healthAlertA4':
-        'Do not medicate the child without professional guidance.',
+    'healthAlertA3': 'Keep medical checkups and vaccinations according to age.',
+    'healthAlertA4': 'Do not medicate the child without professional guidance.',
     'healthAlertAlert':
         'Seek medical care if there is difficulty breathing, high fever, extreme tiredness, seizures, strong hits, or signs of dehydration.',
     'environmentFinalNote':
