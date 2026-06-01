@@ -1,6 +1,7 @@
 import 'dart:async';
-
+import 'permisos_app.dart';
 import 'package:flutter/material.dart';
+
 
 import 'app_config.dart';
 import 'app_texts.dart';
@@ -35,82 +36,86 @@ class WelcomePageState extends State<WelcomePage>
   late Animation<double> tituloScale;
   late Animation<double> tituloFade;
 
-  @override
-  void initState() {
-    super.initState();
+@override
+void initState() {
+  super.initState();
 
-    imagenController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 950),
-    );
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
+    await PermisosApp.pedirPermisosIniciales(context);
+  });
 
-    tituloController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 900),
-    );
+  imagenController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 950),
+  );
 
-    contenidoController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 950),
-    );
+  tituloController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  );
 
-    botonController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 550),
-    );
+  contenidoController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 950),
+  );
 
-    fadeImagen = CurvedAnimation(
+  botonController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 550),
+  );
+
+  fadeImagen = CurvedAnimation(
+    parent: imagenController,
+    curve: Curves.easeOut,
+  );
+
+  scaleImagen = Tween<double>(
+    begin: 1.05,
+    end: 1.0,
+  ).animate(
+    CurvedAnimation(
       parent: imagenController,
-      curve: Curves.easeOut,
-    );
+      curve: Curves.easeOutCubic,
+    ),
+  );
 
-    scaleImagen = Tween<double>(
-      begin: 1.05,
-      end: 1.0,
-    ).animate(
-      CurvedAnimation(
-        parent: imagenController,
-        curve: Curves.easeOutCubic,
-      ),
-    );
-
-    tituloScale = Tween<double>(
-      begin: 0.80,
-      end: 1.0,
-    ).animate(
-      CurvedAnimation(
-        parent: tituloController,
-        curve: Curves.elasticOut,
-      ),
-    );
-
-    tituloFade = CurvedAnimation(
+  tituloScale = Tween<double>(
+    begin: 0.80,
+    end: 1.0,
+  ).animate(
+    CurvedAnimation(
       parent: tituloController,
-      curve: Curves.easeIn,
-    );
+      curve: Curves.elasticOut,
+    ),
+  );
 
-    fadeContenido = CurvedAnimation(
-      parent: contenidoController,
-      curve: Curves.easeIn,
-    );
+  tituloFade = CurvedAnimation(
+    parent: tituloController,
+    curve: Curves.easeIn,
+  );
 
-    fadeBoton = CurvedAnimation(
+  fadeContenido = CurvedAnimation(
+    parent: contenidoController,
+    curve: Curves.easeIn,
+  );
+
+  fadeBoton = CurvedAnimation(
+    parent: botonController,
+    curve: Curves.easeIn,
+  );
+
+  scaleBoton = Tween<double>(
+    begin: 0.92,
+    end: 1.0,
+  ).animate(
+    CurvedAnimation(
       parent: botonController,
-      curve: Curves.easeIn,
-    );
+      curve: Curves.easeOutBack,
+    ),
+  );
 
-    scaleBoton = Tween<double>(
-      begin: 0.92,
-      end: 1.0,
-    ).animate(
-      CurvedAnimation(
-        parent: botonController,
-        curve: Curves.easeOutBack,
-      ),
-    );
-
-    iniciarAnimacion();
-  }
+  iniciarAnimacion();
+}
 
   Future<void> iniciarAnimacion() async {
     await imagenController.forward();
@@ -297,7 +302,7 @@ class WelcomePageState extends State<WelcomePage>
                   builder: (context, constraints) {
                     final bool pantallaPequena =
                         constraints.maxHeight < 720 ||
-                        constraints.maxWidth < 380;
+                            constraints.maxWidth < 380;
 
                     return Padding(
                       padding: EdgeInsets.fromLTRB(
@@ -326,8 +331,6 @@ class WelcomePageState extends State<WelcomePage>
                     );
                   },
                 ),
-
-                // Siempre encima para poder pulsarse
                 botonConfiguracion(modoOscuro),
               ],
             ),
@@ -572,8 +575,9 @@ class WelcomePageState extends State<WelcomePage>
                 opacity: fadeContenido,
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    final bool pantallaPequena = constraints.maxHeight < 720 ||
-                        constraints.maxWidth < 380;
+                    final bool pantallaPequena =
+                        constraints.maxHeight < 720 ||
+                            constraints.maxWidth < 380;
 
                     return SingleChildScrollView(
                       padding: EdgeInsets.fromLTRB(
@@ -652,8 +656,6 @@ class WelcomePageState extends State<WelcomePage>
                 ),
               ),
             ),
-
-            // Este va último y por encima del scroll
             botonConfiguracion(modoOscuro),
           ],
         ),

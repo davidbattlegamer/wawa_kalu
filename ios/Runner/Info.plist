@@ -62,7 +62,7 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 
-	<!-- Permiso Bluetooth para buscar y conectar dispositivos BLE -->
+	<!-- Bluetooth BLE -->
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Wawa Kalú usa Bluetooth para buscar, conectar y comunicarse con dispositivos BLE como el ESP32.</string>
 
@@ -70,9 +70,15 @@
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Wawa Kalú usa Bluetooth para conectarse con dispositivos cercanos y recibir datos de figuras inteligentes.</string>
 
-	<!-- Ubicación opcional por compatibilidad con algunos procesos BLE -->
+	<!-- Ubicación opcional, por compatibilidad con escaneo BLE -->
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Wawa Kalú puede requerir ubicación para mejorar la búsqueda de dispositivos Bluetooth cercanos.</string>
+	<string>Wawa Kalú puede usar ubicación mientras la app está abierta para mejorar la búsqueda de dispositivos Bluetooth cercanos.</string>
+
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Wawa Kalú puede usar ubicación para mejorar la detección de dispositivos Bluetooth cercanos cuando sea necesario.</string>
+
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Wawa Kalú puede usar ubicación para mejorar la detección de dispositivos Bluetooth cercanos cuando sea necesario.</string>
 
 </dict>
 </plist>

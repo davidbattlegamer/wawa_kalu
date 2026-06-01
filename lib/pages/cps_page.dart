@@ -2,15 +2,16 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:vibration/vibration.dart';
+
 import 'app_config.dart';
 import 'app_texts.dart';
-import 'package:vibration/vibration.dart';
 
 TextStyle fredoka({
   double? fontSize,
@@ -95,14 +96,21 @@ class _CpsPageState extends State<CpsPage> {
         final bool tieneVibrador = await Vibration.hasVibrator();
 
         if (tieneVibrador) {
-          await Vibration.vibrate(duration: 120);
+          await Vibration.vibrate(
+            pattern: [0, 220, 80, 220],
+            intensities: [0, 255, 0, 255],
+          );
           return;
         }
       }
 
-      await HapticFeedback.lightImpact();
+      await HapticFeedback.heavyImpact();
     } catch (e) {
-      debugPrint('No se pudo vibrar: $e');
+      debugPrint('No se pudo vibrar fuerte: $e');
+
+      try {
+        await HapticFeedback.mediumImpact();
+      } catch (_) {}
     }
   }
 
@@ -114,14 +122,21 @@ class _CpsPageState extends State<CpsPage> {
         final bool tieneVibrador = await Vibration.hasVibrator();
 
         if (tieneVibrador) {
-          await Vibration.vibrate(pattern: [0, 120, 80, 160]);
+          await Vibration.vibrate(
+            pattern: [0, 160, 70, 160, 70, 220],
+            intensities: [0, 230, 0, 230, 0, 255],
+          );
           return;
         }
       }
 
-      await HapticFeedback.mediumImpact();
+      await HapticFeedback.heavyImpact();
     } catch (e) {
       debugPrint('No se pudo vibrar premio: $e');
+
+      try {
+        await HapticFeedback.mediumImpact();
+      } catch (_) {}
     }
   }
 
@@ -144,14 +159,12 @@ class _CpsPageState extends State<CpsPage> {
     final bool bluetoothConnectOk =
         permisos[Permission.bluetoothConnect]?.isGranted ?? false;
 
-    final bool locationOk = permisos[Permission.location]?.isGranted ?? false;
-
     if (!bluetoothScanOk || !bluetoothConnectOk) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-              'Activa permisos de Bluetooth o dispositivos cercanos.',
+              'Activa el permiso de Bluetooth o dispositivos cercanos.',
             ),
             backgroundColor: Colors.redAccent,
           ),
@@ -161,50 +174,63 @@ class _CpsPageState extends State<CpsPage> {
       return false;
     }
 
-    if (!locationOk) {
-      debugPrint(
-        'Ubicación no concedida. En algunos Android puede afectar el escaneo BLE.',
-      );
-    }
-
     return true;
   }
 
   Future<bool> verificarBluetoothEncendido() async {
     if (kIsWeb) return true;
 
-    final BluetoothAdapterState estado =
-        await FlutterBluePlus.adapterState.first;
-
-    if (estado == BluetoothAdapterState.on) {
-      return true;
-    }
-
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      try {
-        await FlutterBluePlus.turnOn();
-
-        await FlutterBluePlus.adapterState
-            .where((state) => state == BluetoothAdapterState.on)
-            .first
-            .timeout(const Duration(seconds: 8));
-
-        return true;
-      } catch (e) {
-        debugPrint('Bluetooth no se pudo activar en Android: $e');
-      }
-    }
-
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(T.txt('turnOnBluetooth')),
-          backgroundColor: Colors.redAccent,
-        ),
+    try {
+      final BluetoothAdapterState estado =
+          await FlutterBluePlus.adapterState.first.timeout(
+        const Duration(seconds: 6),
       );
-    }
 
-    return false;
+      if (estado == BluetoothAdapterState.on) {
+        return true;
+      }
+
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        try {
+          await FlutterBluePlus.turnOn();
+
+          await FlutterBluePlus.adapterState
+              .where((state) => state == BluetoothAdapterState.on)
+              .first
+              .timeout(const Duration(seconds: 8));
+
+          return true;
+        } catch (e) {
+          debugPrint('Bluetooth no se pudo activar automáticamente: $e');
+        }
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(T.txt('turnOnBluetooth')),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
+
+      return false;
+    } catch (e) {
+      debugPrint('Bluetooth BLE no disponible o no configurado: $e');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Bluetooth BLE no está disponible o no está configurado en esta plataforma.',
+            ),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
+
+      return false;
+    }
   }
 
   Future<void> buscarDispositivosBluetooth() async {
@@ -218,6 +244,7 @@ class _CpsPageState extends State<CpsPage> {
 
     setState(() {
       cargando = true;
+      conectado = false;
       figurasActivas.clear();
     });
 
@@ -228,15 +255,16 @@ class _CpsPageState extends State<CpsPage> {
     final Map<String, ScanResult> dispositivosMap = {};
 
     try {
-      await FlutterBluePlus.stopScan();
+      if (FlutterBluePlus.isScanningNow) {
+        await FlutterBluePlus.stopScan();
+      }
 
       scanSubscription = FlutterBluePlus.scanResults.listen((resultados) {
         for (final resultado in resultados) {
-          final device = resultado.device;
+          final BluetoothDevice device = resultado.device;
 
           final String nombreDevice = device.platformName.trim();
           final String nombreAdv = resultado.advertisementData.advName.trim();
-
           final String id = device.remoteId.str;
 
           debugPrint(
@@ -249,20 +277,25 @@ class _CpsPageState extends State<CpsPage> {
       });
 
       await FlutterBluePlus.startScan(
-        timeout: const Duration(seconds: 10),
-
-        // En web se deja vacío para permitir listar más dispositivos.
-        // Los servicios CPS quedan como opcionales para poder conectar al ESP32.
+        timeout: const Duration(seconds: 15),
         withServices: const [],
-        webOptionalServices: [Guid(serviceUuid)],
+        androidUsesFineLocation: true,
+        webOptionalServices: [
+          Guid(serviceUuid),
+          Guid(characteristicUuid),
+          Guid(logUuid),
+          Guid(commandUuid),
+        ],
       );
 
-      await Future.delayed(const Duration(seconds: 10));
+      await Future.delayed(const Duration(seconds: 15));
 
-      await FlutterBluePlus.stopScan();
+      if (FlutterBluePlus.isScanningNow) {
+        await FlutterBluePlus.stopScan();
+      }
 
-      final List<ScanResult> dispositivosEncontrados = dispositivosMap.values
-          .toList();
+      final List<ScanResult> dispositivosEncontrados =
+          dispositivosMap.values.toList();
 
       dispositivosEncontrados.sort((a, b) {
         final bool aEsEsp = esDispositivoEsp(a);
@@ -274,8 +307,11 @@ class _CpsPageState extends State<CpsPage> {
         final String aName = nombreVisible(a);
         final String bName = nombreVisible(b);
 
-        final bool aTieneNombre = aName.trim().isNotEmpty;
-        final bool bTieneNombre = bName.trim().isNotEmpty;
+        final bool aTieneNombre =
+            aName.trim().isNotEmpty && aName != 'Dispositivo sin nombre';
+
+        final bool bTieneNombre =
+            bName.trim().isNotEmpty && bName != 'Dispositivo sin nombre';
 
         if (aTieneNombre && !bTieneNombre) return -1;
         if (!aTieneNombre && bTieneNombre) return 1;
@@ -413,14 +449,13 @@ class _CpsPageState extends State<CpsPage> {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            'Se muestran todos los dispositivos BLE detectados. El ESP32 aparecerá resaltado si se encuentra.',
+                            'Se muestran todos los dispositivos BLE encontrados. ESP_CPS aparecerá resaltado en verde.',
                             textAlign: TextAlign.center,
                             style: baloo2(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
-                              color: modoOscuro
-                                  ? Colors.white70
-                                  : Colors.black54,
+                              color:
+                                  modoOscuro ? Colors.white70 : Colors.black54,
                               height: 1.15,
                             ),
                           ),
@@ -435,11 +470,12 @@ class _CpsPageState extends State<CpsPage> {
                                 final String nombre = nombreVisible(resultado);
                                 final String id = resultado.device.remoteId.str;
                                 final int rssi = resultado.rssi;
-
                                 final bool esEsp = esDispositivoEsp(resultado);
-
                                 final List<Guid> servicios =
                                     resultado.advertisementData.serviceUuids;
+
+                                final Color colorCard =
+                                    esEsp ? Colors.green : Colors.blueGrey;
 
                                 return Container(
                                   margin: const EdgeInsets.only(bottom: 12),
@@ -467,51 +503,32 @@ class _CpsPageState extends State<CpsPage> {
                                               modoOscuro
                                                   ? const Color(0xFF211B2E)
                                                   : Colors.white,
-                                              esEsp
-                                                  ? Colors.green.withValues(
-                                                      alpha: modoOscuro
-                                                          ? 0.22
-                                                          : 0.12,
-                                                    )
-                                                  : Colors.blueGrey.withValues(
-                                                      alpha: modoOscuro
-                                                          ? 0.18
-                                                          : 0.08,
-                                                    ),
+                                              colorCard.withValues(
+                                                alpha: modoOscuro ? 0.22 : 0.10,
+                                              ),
                                             ],
                                           ),
                                           borderRadius: BorderRadius.circular(
                                             22,
                                           ),
                                           border: Border.all(
-                                            color: esEsp
-                                                ? Colors.green.withValues(
-                                                    alpha: 0.35,
-                                                  )
-                                                : Colors.blueGrey.withValues(
-                                                    alpha: 0.18,
-                                                  ),
-                                            width: 1.5,
+                                            color: colorCard.withValues(
+                                              alpha: esEsp ? 0.42 : 0.20,
+                                            ),
+                                            width: esEsp ? 2 : 1.5,
                                           ),
                                         ),
                                         child: Row(
                                           children: [
                                             CircleAvatar(
                                               radius: 28,
-                                              backgroundColor: esEsp
-                                                  ? Colors.green.withValues(
-                                                      alpha: 0.18,
-                                                    )
-                                                  : Colors.blueGrey.withValues(
-                                                      alpha: 0.16,
-                                                    ),
+                                              backgroundColor: colorCard
+                                                  .withValues(alpha: 0.16),
                                               child: Icon(
                                                 esEsp
                                                     ? Icons.developer_board
                                                     : Icons.bluetooth,
-                                                color: esEsp
-                                                    ? Colors.green
-                                                    : Colors.blueGrey,
+                                                color: colorCard,
                                               ),
                                             ),
                                             const SizedBox(width: 14),
@@ -535,42 +552,43 @@ class _CpsPageState extends State<CpsPage> {
                                                             color: esEsp
                                                                 ? Colors.green
                                                                 : modoOscuro
-                                                                ? Colors.white
-                                                                : const Color(
-                                                                    0xFF2D2D2D,
-                                                                  ),
+                                                                    ? Colors
+                                                                        .white
+                                                                    : const Color(
+                                                                        0xFF2D2D2D,
+                                                                      ),
                                                           ),
                                                         ),
                                                       ),
-                                                      if (esEsp)
-                                                        Container(
-                                                          padding:
-                                                              const EdgeInsets.symmetric(
-                                                                horizontal: 8,
-                                                                vertical: 4,
-                                                              ),
-                                                          decoration: BoxDecoration(
-                                                            color: Colors.green
-                                                                .withValues(
-                                                                  alpha: 0.16,
-                                                                ),
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  14,
-                                                                ),
+                                                      Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                          horizontal: 8,
+                                                          vertical: 4,
+                                                        ),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: colorCard
+                                                              .withValues(
+                                                            alpha: 0.16,
                                                           ),
-                                                          child: Text(
-                                                            'ESP32',
-                                                            style: fredoka(
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              color:
-                                                                  Colors.green,
-                                                            ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(14),
+                                                        ),
+                                                        child: Text(
+                                                          esEsp
+                                                              ? 'ESP_CPS'
+                                                              : 'BLE',
+                                                          style: fredoka(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            color: colorCard,
                                                           ),
                                                         ),
+                                                      ),
                                                     ],
                                                   ),
                                                   const SizedBox(height: 3),
@@ -596,30 +614,29 @@ class _CpsPageState extends State<CpsPage> {
                                                           : Colors.black38,
                                                     ),
                                                   ),
-                                                  if (servicios.isNotEmpty)
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                            top: 2,
-                                                          ),
-                                                      child: Text(
-                                                        'Servicios: ${servicios.length}',
-                                                        style: baloo2(
-                                                          fontSize: 12.5,
-                                                          color: modoOscuro
-                                                              ? Colors.white38
-                                                              : Colors.black38,
-                                                        ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      top: 2,
+                                                    ),
+                                                    child: Text(
+                                                      servicios.isEmpty
+                                                          ? 'Servicios: no anunciados'
+                                                          : 'Servicios: ${servicios.length}',
+                                                      style: baloo2(
+                                                        fontSize: 12.5,
+                                                        color: modoOscuro
+                                                            ? Colors.white38
+                                                            : Colors.black38,
                                                       ),
                                                     ),
+                                                  ),
                                                 ],
                                               ),
                                             ),
                                             Icon(
                                               Icons.chevron_right,
-                                              color: esEsp
-                                                  ? Colors.green
-                                                  : Colors.blueGrey,
+                                              color: colorCard,
                                             ),
                                           ],
                                         ),
@@ -655,29 +672,30 @@ class _CpsPageState extends State<CpsPage> {
     try {
       await dispositivo!.connect(
         license: License.free,
-        timeout: const Duration(seconds: 10),
+        timeout: const Duration(seconds: 12),
+        autoConnect: false,
       );
     } catch (e) {
-      debugPrint('Error o ya estaba conectado: $e');
+      debugPrint('Error o dispositivo ya conectado: $e');
     }
 
     try {
-      if (!kIsWeb) {
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
         await dispositivo!.requestMtu(185);
 
         await dispositivo!.requestConnectionPriority(
           connectionPriorityRequest: ConnectionPriority.high,
         );
 
-        debugPrint('BLE optimizado: MTU 185 y prioridad alta');
+        debugPrint('BLE optimizado en Android: MTU 185 y prioridad alta');
       }
     } catch (e) {
       debugPrint('No se pudo optimizar BLE: $e');
     }
 
     try {
-      final List<BluetoothService> servicios = await dispositivo!
-          .discoverServices();
+      final List<BluetoothService> servicios =
+          await dispositivo!.discoverServices();
 
       bool encontroServicioCps = false;
       bool encontroStatus = false;
@@ -819,8 +837,7 @@ class _CpsPageState extends State<CpsPage> {
     }
 
     bool huboNuevaDeteccion =
-        nuevasFiguras.isNotEmpty &&
-        !_setsIguales(nuevasFiguras, figurasActivas);
+        nuevasFiguras.isNotEmpty && !_setsIguales(nuevasFiguras, figurasActivas);
 
     setState(() {
       figurasActivas = nuevasFiguras;
@@ -1396,8 +1413,8 @@ class _CpsPageState extends State<CpsPage> {
                             color: encendida
                                 ? Colors.white
                                 : modoOscuro
-                                ? Colors.white
-                                : const Color(0xFF2D2D2D),
+                                    ? Colors.white
+                                    : const Color(0xFF2D2D2D),
                           ),
                         ),
                       ),
@@ -1484,12 +1501,10 @@ class _CpsPageState extends State<CpsPage> {
                   ),
                 ),
                 centerTitle: true,
-                backgroundColor: modoOscuro
-                    ? const Color(0xFF211B2E)
-                    : Colors.white,
-                foregroundColor: modoOscuro
-                    ? Colors.white
-                    : const Color(0xFF2D2D2D),
+                backgroundColor:
+                    modoOscuro ? const Color(0xFF211B2E) : Colors.white,
+                foregroundColor:
+                    modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
                 elevation: 0,
               ),
               body: SafeArea(
@@ -1554,9 +1569,8 @@ class _CpsPageState extends State<CpsPage> {
                                   ? Icons.bluetooth_connected
                                   : Icons.bluetooth_searching,
                               size: 46,
-                              color: conectado
-                                  ? Colors.green
-                                  : Colors.deepPurple,
+                              color:
+                                  conectado ? Colors.green : Colors.deepPurple,
                             ),
                             const SizedBox(height: 8),
                             Text(
@@ -1589,8 +1603,8 @@ class _CpsPageState extends State<CpsPage> {
                                     cargando
                                         ? T.txt('searching')
                                         : conectado
-                                        ? T.txt('disconnect')
-                                        : T.txt('connectEspButton'),
+                                            ? T.txt('disconnect')
+                                            : T.txt('connectEspButton'),
                                   ),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: conectado
@@ -1810,12 +1824,10 @@ class _LogOfflinePageState extends State<LogOfflinePage> {
                   ),
                 ),
                 centerTitle: true,
-                backgroundColor: modoOscuro
-                    ? const Color(0xFF211B2E)
-                    : Colors.white,
-                foregroundColor: modoOscuro
-                    ? Colors.white
-                    : const Color(0xFF2D2D2D),
+                backgroundColor:
+                    modoOscuro ? const Color(0xFF211B2E) : Colors.white,
+                foregroundColor:
+                    modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
                 elevation: 0,
               ),
               body: Padding(
