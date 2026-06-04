@@ -170,6 +170,31 @@ class T {
     'zooMedalUnlocked': '¡Medalla desbloqueada!',
 
     // CPS
+    'strongVibrationError': 'No se pudo vibrar fuerte',
+    'rewardVibrationError': 'No se pudo vibrar premio',
+    'bluetoothAutoEnableError': 'Bluetooth no se pudo activar automáticamente',
+    'deviceAlreadyConnectedError': 'Error o dispositivo ya conectado',
+    'bleOptimizedAndroid':
+        'BLE optimizado en Android: MTU 185 y prioridad alta',
+    'bleOptimizeError': 'No se pudo optimizar BLE',
+    'dataReceived': 'Dato recibido',
+    'initialValueReadError': 'No se pudo leer valor inicial',
+    'logReceived': 'Log recibido',
+    'discoverServicesError': 'Error al descubrir servicios',
+    'rewardSoundError': 'No se pudo reproducir el sonido de premio',
+    'disconnectEspError': 'Error desconectando ESP32',
+    'enableBluetoothPermission':
+        'Activa el permiso de Bluetooth o dispositivos cercanos.',
+    'bleUnavailablePlatform':
+        'Bluetooth BLE no está disponible o no está configurado en esta plataforma.',
+    'bleSearchError': 'Error buscando dispositivos BLE',
+    'unnamedDevice': 'Dispositivo sin nombre',
+    'selectBluetoothDevice': 'Selecciona un dispositivo Bluetooth',
+    'bleDevicesDescription':
+        'Se muestran todos los dispositivos BLE encontrados. ESP_CPS aparecerá resaltado en verde.',
+    'servicesNotAdvertised': 'Servicios: no anunciados',
+    'services': 'Servicios',
+    'connectReadServicesError': 'No se pudo conectar o leer servicios',
     'cpsTitle': 'Aprende con figuras',
     'cpsSubTitle': 'Coloca cada figura en su lugar correcto',
     'espConnected': 'ESP32 conectado',
@@ -677,6 +702,31 @@ class T {
     'zooMedalUnlocked': 'Medal unlocked!',
 
     // CPS
+    'strongVibrationError': 'Could not vibrate strongly',
+    'rewardVibrationError': 'Could not vibrate reward',
+    'bluetoothAutoEnableError': 'Bluetooth could not be enabled automatically',
+    'deviceAlreadyConnectedError': 'Error or device already connected',
+    'bleOptimizedAndroid':
+        'BLE optimized on Android: MTU 185 and high priority',
+    'bleOptimizeError': 'Could not optimize BLE',
+    'dataReceived': 'Data received',
+    'initialValueReadError': 'Could not read initial value',
+    'logReceived': 'Log received',
+    'discoverServicesError': 'Error discovering services',
+    'rewardSoundError': 'Could not play reward sound',
+    'disconnectEspError': 'Error disconnecting ESP32',
+    'enableBluetoothPermission':
+        'Enable Bluetooth or nearby devices permission.',
+    'bleUnavailablePlatform':
+        'Bluetooth BLE is not available or is not configured on this platform.',
+    'bleSearchError': 'Error searching BLE devices',
+    'unnamedDevice': 'Unnamed device',
+    'selectBluetoothDevice': 'Select a Bluetooth device',
+    'bleDevicesDescription':
+        'All detected BLE devices are shown. ESP_CPS will appear highlighted in green.',
+    'servicesNotAdvertised': 'Services: not advertised',
+    'services': 'Services',
+    'connectReadServicesError': 'Could not connect or read services',
     'cpsTitle': 'Learn with shapes',
     'cpsSubTitle': 'Place each shape in the correct spot',
     'espConnected': 'ESP32 connected',

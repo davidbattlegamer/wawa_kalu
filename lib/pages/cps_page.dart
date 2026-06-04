@@ -106,7 +106,7 @@ class _CpsPageState extends State<CpsPage> {
 
       await HapticFeedback.heavyImpact();
     } catch (e) {
-      debugPrint('No se pudo vibrar fuerte: $e');
+      debugPrint('${T.txt('strongVibrationError')}: $e');
 
       try {
         await HapticFeedback.mediumImpact();
@@ -132,7 +132,7 @@ class _CpsPageState extends State<CpsPage> {
 
       await HapticFeedback.heavyImpact();
     } catch (e) {
-      debugPrint('No se pudo vibrar premio: $e');
+      debugPrint('${T.txt('rewardVibrationError')}: $e');
 
       try {
         await HapticFeedback.mediumImpact();
@@ -150,7 +150,7 @@ class _CpsPageState extends State<CpsPage> {
     final Map<Permission, PermissionStatus> permisos = await [
       Permission.bluetoothScan,
       Permission.bluetoothConnect,
-      Permission.location,
+      Permission.locationWhenInUse,
     ].request();
 
     final bool bluetoothScanOk =
@@ -159,13 +159,14 @@ class _CpsPageState extends State<CpsPage> {
     final bool bluetoothConnectOk =
         permisos[Permission.bluetoothConnect]?.isGranted ?? false;
 
-    if (!bluetoothScanOk || !bluetoothConnectOk) {
+    final bool ubicacionOk =
+        permisos[Permission.locationWhenInUse]?.isGranted ?? false;
+
+    if (!bluetoothScanOk || !bluetoothConnectOk || !ubicacionOk) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Activa el permiso de Bluetooth o dispositivos cercanos.',
-            ),
+          SnackBar(
+            content: Text(T.txt('enableBluetoothPermission')),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -201,7 +202,7 @@ class _CpsPageState extends State<CpsPage> {
 
           return true;
         } catch (e) {
-          debugPrint('Bluetooth no se pudo activar automáticamente: $e');
+          debugPrint('${T.txt('bluetoothAutoEnableError')}: $e');
         }
       }
 
@@ -216,14 +217,12 @@ class _CpsPageState extends State<CpsPage> {
 
       return false;
     } catch (e) {
-      debugPrint('Bluetooth BLE no disponible o no configurado: $e');
+      debugPrint('${T.txt('bleUnavailablePlatform')}: $e');
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Bluetooth BLE no está disponible o no está configurado en esta plataforma.',
-            ),
+          SnackBar(
+            content: Text(T.txt('bleUnavailablePlatform')),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -308,10 +307,10 @@ class _CpsPageState extends State<CpsPage> {
         final String bName = nombreVisible(b);
 
         final bool aTieneNombre =
-            aName.trim().isNotEmpty && aName != 'Dispositivo sin nombre';
+            aName.trim().isNotEmpty && aName != T.txt('unnamedDevice');
 
         final bool bTieneNombre =
-            bName.trim().isNotEmpty && bName != 'Dispositivo sin nombre';
+            bName.trim().isNotEmpty && bName != T.txt('unnamedDevice');
 
         if (aTieneNombre && !bTieneNombre) return -1;
         if (!aTieneNombre && bTieneNombre) return 1;
@@ -332,12 +331,12 @@ class _CpsPageState extends State<CpsPage> {
         conectado = false;
       });
 
-      debugPrint('Error buscando dispositivos BLE: $e');
+      debugPrint('${T.txt('bleSearchError')}: $e');
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error buscando dispositivos BLE: $e'),
+            content: Text('${T.txt('bleSearchError')}: $e'),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -366,7 +365,7 @@ class _CpsPageState extends State<CpsPage> {
     if (nombreDevice.isNotEmpty) return nombreDevice;
     if (nombreAdv.isNotEmpty) return nombreAdv;
 
-    return 'Dispositivo sin nombre';
+    return T.txt('unnamedDevice');
   }
 
   void mostrarDispositivosBluetooth(List<ScanResult> dispositivos) {
@@ -423,9 +422,8 @@ class _CpsPageState extends State<CpsPage> {
                             width: 48,
                             height: 5,
                             decoration: BoxDecoration(
-                              color: modoOscuro
-                                  ? Colors.white24
-                                  : Colors.black26,
+                              color:
+                                  modoOscuro ? Colors.white24 : Colors.black26,
                               borderRadius: BorderRadius.circular(20),
                             ),
                           ),
@@ -437,7 +435,7 @@ class _CpsPageState extends State<CpsPage> {
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            'Selecciona un dispositivo Bluetooth',
+                            T.txt('selectBluetoothDevice'),
                             textAlign: TextAlign.center,
                             style: fredoka(
                               fontSize: 25,
@@ -449,7 +447,7 @@ class _CpsPageState extends State<CpsPage> {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            'Se muestran todos los dispositivos BLE encontrados. ESP_CPS aparecerá resaltado en verde.',
+                            T.txt('bleDevicesDescription'),
                             textAlign: TextAlign.center,
                             style: baloo2(
                               fontSize: 15,
@@ -504,13 +502,13 @@ class _CpsPageState extends State<CpsPage> {
                                                   ? const Color(0xFF211B2E)
                                                   : Colors.white,
                                               colorCard.withValues(
-                                                alpha: modoOscuro ? 0.22 : 0.10,
+                                                alpha:
+                                                    modoOscuro ? 0.22 : 0.10,
                                               ),
                                             ],
                                           ),
-                                          borderRadius: BorderRadius.circular(
-                                            22,
-                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(22),
                                           border: Border.all(
                                             color: colorCard.withValues(
                                               alpha: esEsp ? 0.42 : 0.20,
@@ -621,8 +619,10 @@ class _CpsPageState extends State<CpsPage> {
                                                     ),
                                                     child: Text(
                                                       servicios.isEmpty
-                                                          ? 'Servicios: no anunciados'
-                                                          : 'Servicios: ${servicios.length}',
+                                                          ? T.txt(
+                                                              'servicesNotAdvertised',
+                                                            )
+                                                          : '${T.txt('services')}: ${servicios.length}',
                                                       style: baloo2(
                                                         fontSize: 12.5,
                                                         color: modoOscuro
@@ -676,7 +676,7 @@ class _CpsPageState extends State<CpsPage> {
         autoConnect: false,
       );
     } catch (e) {
-      debugPrint('Error o dispositivo ya conectado: $e');
+      debugPrint('${T.txt('deviceAlreadyConnectedError')}: $e');
     }
 
     try {
@@ -687,10 +687,10 @@ class _CpsPageState extends State<CpsPage> {
           connectionPriorityRequest: ConnectionPriority.high,
         );
 
-        debugPrint('BLE optimizado en Android: MTU 185 y prioridad alta');
+        debugPrint(T.txt('bleOptimizedAndroid'));
       }
     } catch (e) {
-      debugPrint('No se pudo optimizar BLE: $e');
+      debugPrint('${T.txt('bleOptimizeError')}: $e');
     }
 
     try {
@@ -724,7 +724,7 @@ class _CpsPageState extends State<CpsPage> {
 
                   actualizarFiguras(dato);
 
-                  debugPrint('Dato recibido: $dato');
+                  debugPrint('${T.txt('dataReceived')}: $dato');
                 }
               });
 
@@ -736,7 +736,7 @@ class _CpsPageState extends State<CpsPage> {
                   actualizarFiguras(datoInicial);
                 }
               } catch (e) {
-                debugPrint('No se pudo leer valor inicial: $e');
+                debugPrint('${T.txt('initialValueReadError')}: $e');
               }
             }
 
@@ -751,7 +751,7 @@ class _CpsPageState extends State<CpsPage> {
 
                   recibirLog(dato);
 
-                  debugPrint('Log recibido: $dato');
+                  debugPrint('${T.txt('logReceived')}: $dato');
                 }
               });
             }
@@ -805,12 +805,12 @@ class _CpsPageState extends State<CpsPage> {
         cargando = false;
       });
 
-      debugPrint('Error discoverServices: $e');
+      debugPrint('${T.txt('discoverServicesError')}: $e');
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('No se pudo conectar o leer servicios: $e'),
+            content: Text('${T.txt('connectReadServicesError')}: $e'),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -898,7 +898,7 @@ class _CpsPageState extends State<CpsPage> {
       await audioPremio.stop();
       await audioPremio.play(AssetSource('sonidos/$sonido'));
     } catch (e) {
-      debugPrint('No se pudo reproducir el sonido de premio: $e');
+      debugPrint('${T.txt('rewardSoundError')}: $e');
     }
   }
 
@@ -977,7 +977,7 @@ class _CpsPageState extends State<CpsPage> {
         await dispositivo!.disconnect();
       }
     } catch (e) {
-      debugPrint('Error desconectando ESP32: $e');
+      debugPrint('${T.txt('disconnectEspError')}: $e');
     }
 
     setState(() {
@@ -1135,9 +1135,9 @@ class _CpsPageState extends State<CpsPage> {
         ),
         borderRadius: BorderRadius.circular(26),
         border: Border.all(
-          color: const Color(
-            0xFF4A2C82,
-          ).withValues(alpha: modoOscuro ? 0.32 : 0.18),
+          color: const Color(0xFF4A2C82).withValues(
+            alpha: modoOscuro ? 0.32 : 0.18,
+          ),
           width: 1.5,
         ),
       ),
