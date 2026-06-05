@@ -18,6 +18,23 @@ class T {
     'startApp': 'Comenzar',
     'startingApp': 'Entrando...',
     //info
+    'aboutApp': 'Acerca de la app',
+    'aboutAppSubtitle':
+        'Wawa Kalú es una app educativa infantil que combina juegos, sonidos, vibración y conexión con ESP32 para apoyar el aprendizaje temprano.',
+    'projectVersion': 'Versión',
+    'projectPurpose': 'Propósito',
+    'projectPurposeText':
+        'Apoyar el desarrollo sensorial, cognitivo y motriz de niños mediante actividades interactivas.',
+    'projectFeatures': 'Funciones principales',
+    'projectFeaturesText':
+        'Reconocimiento de figuras, sonidos en español e inglés, vibración, recompensas, configuración e historial offline.',
+    'projectHardware': 'Hardware utilizado',
+    'projectHardwareText':
+        'ESP32, Bluetooth BLE, sensores Hall KY-003, imanes y figuras físicas.',
+    'projectTechnologies': 'Tecnologías',
+    'projectTechnologiesText':
+        'Flutter, Dart, Bluetooth BLE, audioplayers, vibration y permission_handler.',
+    'systemPermissionsTitle': 'Sistema y permisos',
     'info': 'i',
     'systemInfo': 'Información del sistema',
     'permissionsInfo': 'Ver permisos, Bluetooth y plataforma',
@@ -170,6 +187,8 @@ class T {
     'zooMedalUnlocked': '¡Medalla desbloqueada!',
 
     // CPS
+    'demoModeEnabled': 'Modo demo activado',
+    'demoModeDisabled': 'Modo demo desactivado',
     'strongVibrationError': 'No se pudo vibrar fuerte',
     'rewardVibrationError': 'No se pudo vibrar premio',
     'bluetoothAutoEnableError': 'Bluetooth no se pudo activar automáticamente',
@@ -212,7 +231,8 @@ class T {
     'connectFirst': 'Primero conecta el ESP32 para ver el historial.',
     'quickGuide': 'Guía rápida',
     'guide1': 'Enciende el ESP32.',
-    'guide2': 'Activa Bluetooth en el celular.',
+    'guide2':
+        'Ten en cuenta que debes tener activo el Bluetooth en el celular.',
     'guide3': 'Presiona Conectar ESP32.',
     'guide4': 'Coloca una figura en su lugar.',
     'hideGuide': 'Ocultar guía',
@@ -551,6 +571,23 @@ class T {
     'startApp': 'Start',
     'startingApp': 'Starting...',
     //info
+    'aboutApp': 'About the app',
+    'aboutAppSubtitle':
+        'Wawa Kalú is an educational children’s app that combines games, sounds, vibration, and ESP32 connection to support early learning.',
+    'projectVersion': 'Version',
+    'projectPurpose': 'Purpose',
+    'projectPurposeText':
+        'Support children’s sensory, cognitive, and motor development through interactive activities.',
+    'projectFeatures': 'Main features',
+    'projectFeaturesText':
+        'Shape recognition, Spanish and English sounds, vibration, rewards, settings, and offline history.',
+    'projectHardware': 'Hardware used',
+    'projectHardwareText':
+        'ESP32, Bluetooth BLE, KY-003 Hall sensors, magnets, and physical shapes.',
+    'projectTechnologies': 'Technologies',
+    'projectTechnologiesText':
+        'Flutter, Dart, Bluetooth BLE, audioplayers, vibration, and permission_handler.',
+    'systemPermissionsTitle': 'System and permissions',
     'info': 'i',
     'systemInfo': 'System information',
     'permissionsInfo': 'View permissions, Bluetooth and platform',
@@ -702,6 +739,8 @@ class T {
     'zooMedalUnlocked': 'Medal unlocked!',
 
     // CPS
+    'demoModeEnabled': 'Demo mode enabled',
+    'demoModeDisabled': 'Demo mode disabled',
     'strongVibrationError': 'Could not vibrate strongly',
     'rewardVibrationError': 'Could not vibrate reward',
     'bluetoothAutoEnableError': 'Bluetooth could not be enabled automatically',
@@ -744,7 +783,7 @@ class T {
     'connectFirst': 'Connect the ESP32 first to view the history.',
     'quickGuide': 'Quick guide',
     'guide1': 'Turn on the ESP32.',
-    'guide2': 'Enable Bluetooth on the phone.',
+    'guide2': 'Please note that you must have Bluetooth enabled on your phone.',
     'guide3': 'Press Connect ESP32.',
     'guide4': 'Place a shape in its correct spot.',
     'hideGuide': 'Hide guide',

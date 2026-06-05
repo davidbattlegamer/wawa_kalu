@@ -224,6 +224,41 @@ Future<Map<String, String>> obtenerDiagnosticoPermisos() async {
   return datos;
 }
 
+List<Map<String, dynamic>> obtenerInformacionApp() {
+  return [
+    {
+      'titulo': T.txt('projectVersion'),
+      'valor': '3.1..0',
+      'color': Colors.green,
+      'icono': Icons.verified_rounded,
+    },
+    {
+      'titulo': T.txt('projectPurpose'),
+      'valor': T.txt('projectPurposeText'),
+      'color': Colors.orange,
+      'icono': Icons.favorite_rounded,
+    },
+    {
+      'titulo': T.txt('projectFeatures'),
+      'valor': T.txt('projectFeaturesText'),
+      'color': Colors.blue,
+      'icono': Icons.extension_rounded,
+    },
+    {
+      'titulo': T.txt('projectHardware'),
+      'valor': T.txt('projectHardwareText'),
+      'color': Colors.pink,
+      'icono': Icons.memory_rounded,
+    },
+    {
+      'titulo': T.txt('projectTechnologies'),
+      'valor': T.txt('projectTechnologiesText'),
+      'color': Colors.teal,
+      'icono': Icons.code_rounded,
+    },
+  ];
+}
+
 bool faltanPermisos(Map<String, String> datos) {
   if (kIsWeb) return false;
 
@@ -253,9 +288,142 @@ bool faltanPermisos(Map<String, String> datos) {
   return false;
 }
 
-void mostrarInformacionPermisos(BuildContext context, bool modoOscuro) async {
-  final datos = await obtenerDiagnosticoPermisos();
-  final bool hayFaltantes = faltanPermisos(datos);
+Widget tituloSeccionDialog({
+  required String titulo,
+  required bool modoOscuro,
+  required IconData icono,
+  required Color color,
+}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 10, top: 6),
+    child: Row(
+      children: [
+        Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: color.withValues(alpha: modoOscuro ? 0.22 : 0.14),
+            border: Border.all(
+              color: color.withValues(alpha: 0.28),
+            ),
+          ),
+          child: Icon(
+            icono,
+            color: color,
+            size: 22,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            titulo,
+            style: TextStyle(
+              fontFamily: 'Fredoka',
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget tarjetaInfoDialog({
+  required String titulo,
+  required String valor,
+  required bool modoOscuro,
+  required Color color,
+  required IconData icono,
+}) {
+  return Container(
+    width: double.infinity,
+    margin: const EdgeInsets.only(bottom: 10),
+    padding: const EdgeInsets.all(13),
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        colors: [
+          modoOscuro ? const Color(0xFF211B2E) : Colors.white,
+          color.withValues(alpha: modoOscuro ? 0.22 : 0.11),
+        ],
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+      ),
+      borderRadius: BorderRadius.circular(18),
+      border: Border.all(
+        color: color.withValues(alpha: modoOscuro ? 0.34 : 0.20),
+        width: 1.4,
+      ),
+      boxShadow: [
+        BoxShadow(
+          color: color.withValues(alpha: modoOscuro ? 0.10 : 0.08),
+          blurRadius: 10,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    ),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 42,
+          height: 42,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            gradient: LinearGradient(
+              colors: [
+                color.withValues(alpha: 0.30),
+                color.withValues(alpha: 0.12),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: Icon(
+            icono,
+            color: color,
+            size: 25,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                titulo,
+                style: TextStyle(
+                  fontFamily: 'Fredoka',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
+                ),
+              ),
+              const SizedBox(height: 3),
+              Text(
+                valor,
+                style: TextStyle(
+                  fontFamily: 'Baloo2',
+                  fontSize: 14.6,
+                  height: 1.18,
+                  fontWeight: FontWeight.w500,
+                  color: modoOscuro ? Colors.white70 : Colors.black54,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+void mostrarAcercaDelApp(BuildContext context, bool modoOscuro) async {
+  final List<Map<String, dynamic>> datosApp = obtenerInformacionApp();
+  final Map<String, String> datosSistema = await obtenerDiagnosticoPermisos();
+  final bool hayFaltantes = faltanPermisos(datosSistema);
 
   if (!context.mounted) return;
 
@@ -263,18 +431,50 @@ void mostrarInformacionPermisos(BuildContext context, bool modoOscuro) async {
     context: context,
     builder: (dialogContext) {
       return AlertDialog(
-        backgroundColor: modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        backgroundColor: modoOscuro ? const Color(0xFF15131A) : Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(26),
+        ),
+        titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+        contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+        actionsPadding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
         title: Row(
           children: [
-            const Icon(Icons.info_outline_rounded, color: Colors.deepPurple),
-            const SizedBox(width: 10),
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.pink.withValues(alpha: 0.90),
+                    Colors.orange.withValues(alpha: 0.90),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange.withValues(alpha: 0.28),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.info_outline_rounded,
+                color: Colors.white,
+                size: 25,
+              ),
+            ),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(
-                T.txt('systemInfo'),
+                T.txt('aboutApp'),
                 style: TextStyle(
                   fontFamily: 'Fredoka',
-                  fontWeight: FontWeight.w700,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
                   color: modoOscuro ? Colors.white : const Color(0xFF4A2C82),
                 ),
               ),
@@ -284,69 +484,144 @@ void mostrarInformacionPermisos(BuildContext context, bool modoOscuro) async {
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: datos.entries.map((item) {
-              final Color color = colorEstado(item.value);
-
-              return Container(
+            children: [
+              Container(
                 width: double.infinity,
-                margin: const EdgeInsets.only(bottom: 10),
-                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.only(bottom: 16),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: color.withValues(alpha: modoOscuro ? 0.18 : 0.10),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: color.withValues(alpha: 0.25)),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      color == Colors.green
-                          ? Icons.check_circle_rounded
-                          : color == Colors.redAccent
-                              ? Icons.cancel_rounded
-                              : Icons.warning_rounded,
-                      color: color,
-                      size: 22,
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.pink.withValues(alpha: modoOscuro ? 0.34 : 0.20),
+                      Colors.orange.withValues(alpha: modoOscuro ? 0.30 : 0.18),
+                      Colors.lightBlue.withValues(
+                        alpha: modoOscuro ? 0.28 : 0.16,
+                      ),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: Colors.orange.withValues(alpha: 0.28),
+                    width: 1.5,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.orange.withValues(
+                        alpha: modoOscuro ? 0.16 : 0.12,
+                      ),
+                      blurRadius: 14,
+                      offset: const Offset(0, 6),
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item.key,
-                            style: TextStyle(
-                              fontFamily: 'Fredoka',
-                              fontSize: 15.5,
-                              fontWeight: FontWeight.w700,
-                              color: modoOscuro
-                                  ? Colors.white
-                                  : const Color(0xFF2D2D2D),
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            item.value,
-                            style: TextStyle(
-                              fontFamily: 'Baloo2',
-                              fontSize: 14.5,
-                              color:
-                                  modoOscuro ? Colors.white70 : Colors.black54,
-                            ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      width: 72,
+                      height: 72,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.yellow.withValues(alpha: 0.95),
+                            Colors.orange.withValues(alpha: 0.90),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.orange.withValues(alpha: 0.35),
+                            blurRadius: 12,
+                            offset: const Offset(0, 5),
                           ),
                         ],
+                      ),
+                      child: const Icon(
+                        Icons.child_care_rounded,
+                        color: Colors.white,
+                        size: 42,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Wawa Kalú',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Fredoka',
+                        fontSize: 27,
+                        fontWeight: FontWeight.w900,
+                        color:
+                            modoOscuro ? Colors.white : const Color(0xFF4A2C82),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      T.txt('aboutAppSubtitle'),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Baloo2',
+                        fontSize: 15.3,
+                        height: 1.18,
+                        fontWeight: FontWeight.w600,
+                        color: modoOscuro ? Colors.white70 : Colors.black54,
                       ),
                     ),
                   ],
                 ),
-              );
-            }).toList(),
+              ),
+              tituloSeccionDialog(
+                titulo: T.txt('aboutApp'),
+                modoOscuro: modoOscuro,
+                icono: Icons.apps_rounded,
+                color: Colors.pink,
+              ),
+              ...datosApp.map((item) {
+                return tarjetaInfoDialog(
+                  titulo: item['titulo'] as String,
+                  valor: item['valor'] as String,
+                  modoOscuro: modoOscuro,
+                  color: item['color'] as Color,
+                  icono: item['icono'] as IconData,
+                );
+              }),
+              const SizedBox(height: 8),
+              tituloSeccionDialog(
+                titulo: T.txt('systemPermissionsTitle'),
+                modoOscuro: modoOscuro,
+                icono: Icons.settings_suggest_rounded,
+                color: Colors.orange,
+              ),
+              ...datosSistema.entries.map((item) {
+                final Color color = colorEstado(item.value);
+
+                return tarjetaInfoDialog(
+                  titulo: item.key,
+                  valor: item.value,
+                  modoOscuro: modoOscuro,
+                  color: color,
+                  icono: color == Colors.green
+                      ? Icons.check_circle_rounded
+                      : color == Colors.redAccent
+                          ? Icons.cancel_rounded
+                          : Icons.warning_rounded,
+                );
+              }),
+            ],
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: Text(T.txt('close')),
+            child: Text(
+              T.txt('close'),
+              style: const TextStyle(
+                fontFamily: 'Fredoka',
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
           if (hayFaltantes &&
               !kIsWeb &&
@@ -361,10 +636,16 @@ void mostrarInformacionPermisos(BuildContext context, bool modoOscuro) async {
                 }
 
                 if (context.mounted) {
-                  mostrarInformacionPermisos(context, modoOscuro);
+                  mostrarAcercaDelApp(context, modoOscuro);
                 }
               },
-              child: Text(T.txt('grantPermissions')),
+              child: Text(
+                T.txt('grantPermissions'),
+                style: const TextStyle(
+                  fontFamily: 'Fredoka',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
           if (!kIsWeb &&
               (defaultTargetPlatform == TargetPlatform.android ||
@@ -373,7 +654,13 @@ void mostrarInformacionPermisos(BuildContext context, bool modoOscuro) async {
               onPressed: () async {
                 await openAppSettings();
               },
-              child: Text(T.txt('openSettings')),
+              child: Text(
+                T.txt('openSettings'),
+                style: const TextStyle(
+                  fontFamily: 'Fredoka',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
         ],
       );
@@ -646,11 +933,11 @@ void showConfigSheet(BuildContext context) {
                     child: Material(
                       color: Colors.transparent,
                       child: Tooltip(
-                        message: T.txt('permissionsInfo'),
+                        message: T.txt('aboutApp'),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(20),
                           onTap: () {
-                            mostrarInformacionPermisos(context, modoOscuro);
+                            mostrarAcercaDelApp(context, modoOscuro);
                           },
                           child: Container(
                             width: 32,

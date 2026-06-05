@@ -1,4 +1,4 @@
-import 'dart:async';
+/*import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 
@@ -54,10 +54,6 @@ class _CpsPageState extends State<CpsPage> with WidgetsBindingObserver {
   bool conectado = false;
   bool cargando = false;
   bool mostrarGuia = true;
-
-  bool modoDemoOculto = false;
-  int _toquesModoDemo = 0;
-  Timer? _timerModoDemo;
 
   int deteccionesSesion = 0;
   int estrellasNotificadas = 0;
@@ -186,47 +182,6 @@ class _CpsPageState extends State<CpsPage> with WidgetsBindingObserver {
     }
 
     _limpiarEstadoPersistente();
-  }
-
-  void detectarModoDemoOculto() {
-    _toquesModoDemo++;
-
-    _timerModoDemo?.cancel();
-
-    _timerModoDemo = Timer(const Duration(seconds: 3), () {
-      _toquesModoDemo = 0;
-    });
-
-    if (_toquesModoDemo >= 7) {
-      _toquesModoDemo = 0;
-      _timerModoDemo?.cancel();
-
-      setState(() {
-        modoDemoOculto = !modoDemoOculto;
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            modoDemoOculto
-                ? T.txt('demoModeEnabled')
-                : T.txt('demoModeDisabled'),
-          ),
-          backgroundColor: modoDemoOculto ? Colors.orange : Colors.blueGrey,
-          duration: const Duration(seconds: 2),
-        ),
-      );
-    }
-  }
-
-  void tocarFiguraDemo(String numero) {
-    if (!modoDemoOculto) return;
-
-    if (figurasActivas.contains(numero)) {
-      actualizarFiguras('0');
-    } else {
-      actualizarFiguras(numero);
-    }
   }
 
   Future<void> botonBluetooth() async {
@@ -1617,91 +1572,80 @@ void actualizarFiguras(String dato) {
       builder: (context, valor, child) {
         double sacudida = encendida ? math.sin(valor * math.pi * 8) * 4 : 0;
 
-        return GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: modoDemoOculto
-              ? () {
-                  tocarFiguraDemo(numero);
-                }
-              : null,
-          child: Transform.translate(
-            offset: Offset(sacudida, 0),
-            child: AnimatedScale(
-              scale: encendida ? 1.06 : 1.0,
-              duration: const Duration(milliseconds: 250),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 350),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      color.withValues(alpha: encendida ? 0.95 : 0.24),
-                      modoOscuro
-                          ? const Color(0xFF211B2E)
-                          : color.withValues(alpha: encendida ? 0.55 : 0.10),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(26),
-                  border: Border.all(
-                    color: encendida
-                        ? color.withValues(alpha: 1)
-                        : color.withValues(alpha: 0.35),
-                    width: encendida ? 6 : 2,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: encendida
-                          ? color.withValues(alpha: 0.70)
-                          : color.withValues(alpha: 0.18),
-                      blurRadius: encendida ? 28 : 12,
-                      spreadRadius: encendida ? 2 : 0,
-                      offset: const Offset(0, 6),
-                    ),
+        return Transform.translate(
+          offset: Offset(sacudida, 0),
+          child: AnimatedScale(
+            scale: encendida ? 1.06 : 1.0,
+            duration: const Duration(milliseconds: 250),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 350),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    color.withValues(alpha: encendida ? 0.95 : 0.24),
+                    modoOscuro
+                        ? const Color(0xFF211B2E)
+                        : color.withValues(alpha: encendida ? 0.55 : 0.10),
                   ],
                 ),
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    double tamFigura = constraints.maxWidth * 0.45;
-
-                    if (tamFigura > 85) tamFigura = 85;
-                    if (tamFigura < 58) tamFigura = 58;
-
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        AnimatedScale(
-                          duration: const Duration(milliseconds: 300),
-                          scale: encendida ? 1.18 : 0.95,
-                          child: SizedBox(
-                            width: tamFigura,
-                            height: tamFigura,
-                            child: FittedBox(
-                              fit: BoxFit.contain,
-                              child: figura,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            T.txt(nombreKey),
-                            textAlign: TextAlign.center,
-                            style: fredoka(
-                              fontSize: 23,
-                              fontWeight: FontWeight.w700,
-                              color: encendida
-                                  ? Colors.white
-                                  : modoOscuro
-                                      ? Colors.white
-                                      : const Color(0xFF2D2D2D),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
+                borderRadius: BorderRadius.circular(26),
+                border: Border.all(
+                  color: encendida
+                      ? color.withValues(alpha: 1)
+                      : color.withValues(alpha: 0.35),
+                  width: encendida ? 6 : 2,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: encendida
+                        ? color.withValues(alpha: 0.70)
+                        : color.withValues(alpha: 0.18),
+                    blurRadius: encendida ? 28 : 12,
+                    spreadRadius: encendida ? 2 : 0,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  double tamFigura = constraints.maxWidth * 0.45;
+
+                  if (tamFigura > 85) tamFigura = 85;
+                  if (tamFigura < 58) tamFigura = 58;
+
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AnimatedScale(
+                        duration: const Duration(milliseconds: 300),
+                        scale: encendida ? 1.18 : 0.95,
+                        child: SizedBox(
+                          width: tamFigura,
+                          height: tamFigura,
+                          child: FittedBox(fit: BoxFit.contain, child: figura),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          T.txt(nombreKey),
+                          textAlign: TextAlign.center,
+                          style: fredoka(
+                            fontSize: 23,
+                            fontWeight: FontWeight.w700,
+                            color: encendida
+                                ? Colors.white
+                                : modoOscuro
+                                    ? Colors.white
+                                    : const Color(0xFF2D2D2D),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ),
@@ -1751,8 +1695,6 @@ void actualizarFiguras(String dato) {
       _paginaActiva = null;
     }
 
-    _timerModoDemo?.cancel();
-
     _guardarEstadoPersistente();
     cancelarSonidosFiguras();
     audioPremio.dispose();
@@ -1781,23 +1723,12 @@ void actualizarFiguras(String dato) {
                   ? const Color(0xFF15131A)
                   : const Color(0xFFFAF7F2),
               appBar: AppBar(
-                title: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: detectarModoDemoOculto,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 28,
-                      vertical: 8,
-                    ),
-                    child: Text(
-                      T.txt('cps'),
-                      style: fredoka(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        color:
-                            modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
-                      ),
-                    ),
+                title: Text(
+                  T.txt('cps'),
+                  style: fredoka(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
                   ),
                 ),
                 centerTitle: true,
@@ -2290,4 +2221,4 @@ class _LogOfflinePageState extends State<LogOfflinePage> {
       },
     );
   }
-}
+}*/
