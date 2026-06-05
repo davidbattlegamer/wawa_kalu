@@ -31,7 +31,8 @@ flutter:
   assets:
     - assets/images/
     - assets/sonidos/
-
+    - assets/sonidos/es/
+    - assets/sonidos/en/
   fonts:
     - family: Fredoka
       fonts:

@@ -4,9 +4,24 @@ import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:vibration/vibration.dart';
-
+import 'package:audioplayers/audioplayers.dart';
 import '../app_config.dart';
 import '../app_texts.dart';
+
+final AudioPlayer _switchPlayer = AudioPlayer();
+
+Future<void> reproducirSonidoSwitch({bool forzar = false}) async {
+  try {
+    if (!forzar && !AppConfig.sonidosActivos.value) return;
+
+    await _switchPlayer.stop();
+    await _switchPlayer.play(
+      AssetSource('sonidos/switch.mp3'),
+    );
+  } catch (e) {
+    debugPrint('Error reproduciendo sonido switch: $e');
+  }
+}
 
 Future<bool> dispositivoPermiteVibracion() async {
   if (kIsWeb) return false;
@@ -497,6 +512,10 @@ void showConfigSheet(BuildContext context) {
                                               activeColor: Colors.green,
                                               inactiveColor: Colors.redAccent,
                                               onChanged: (valor) async {
+                                                await reproducirSonidoSwitch(
+                                                  forzar: true,
+                                                );
+
                                                 await AppConfig.cambiarSonidos(
                                                   valor,
                                                 );
@@ -562,6 +581,8 @@ void showConfigSheet(BuildContext context) {
                                                       inactiveColor:
                                                           Colors.blueGrey,
                                                       onChanged: (valor) async {
+                                                        await reproducirSonidoSwitch();
+
                                                         await AppConfig
                                                             .cambiarVibracion(
                                                           valor,
@@ -618,7 +639,6 @@ void showConfigSheet(BuildContext context) {
                     ),
                   ),
                 ),
-
                 Positioned(
                   top: 14,
                   right: 16,

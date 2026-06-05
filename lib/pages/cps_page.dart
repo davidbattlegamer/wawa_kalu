@@ -50,7 +50,7 @@ class CpsPage extends StatefulWidget {
   State<CpsPage> createState() => _CpsPageState();
 }
 
-class _CpsPageState extends State<CpsPage> {
+class _CpsPageState extends State<CpsPage> with WidgetsBindingObserver {
   bool conectado = false;
   bool cargando = false;
   bool mostrarGuia = true;
@@ -62,6 +62,9 @@ class _CpsPageState extends State<CpsPage> {
   String mensajePremioKey = 'defaultPrize';
 
   final AudioPlayer audioPremio = AudioPlayer();
+  final AudioPlayer audioFigura = AudioPlayer();
+
+  int _idReproduccionFiguras = 0;
 
   BluetoothDevice? dispositivo;
   BluetoothCharacteristic? commandCharacteristic;
@@ -79,6 +82,107 @@ class _CpsPageState extends State<CpsPage> {
   final String characteristicUuid = '19B10001-E8F2-537E-4F6C-D104768A1214';
   final String logUuid = '19B10002-E8F2-537E-4F6C-D104768A1214';
   final String commandUuid = '19B10003-E8F2-537E-4F6C-D104768A1214';
+
+  static _CpsPageState? _paginaActiva;
+  static BluetoothDevice? _dispositivoPersistente;
+  static BluetoothCharacteristic? _commandCharacteristicPersistente;
+  static StreamSubscription? _scanSubscriptionPersistente;
+  static StreamSubscription? _datosSubscriptionPersistente;
+  static StreamSubscription? _logSubscriptionPersistente;
+  static bool _conectadoPersistente = false;
+  static bool _cargandoPersistente = false;
+  static bool _mostrarGuiaPersistente = true;
+  static int _deteccionesSesionPersistente = 0;
+  static int _estrellasNotificadasPersistente = 0;
+  static int _medallasNotificadasPersistente = 0;
+  static String _mensajePremioKeyPersistente = 'defaultPrize';
+  static Set<String> _figurasActivasPersistente = {};
+  static List<String> _logsOfflinePersistente = [];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _paginaActiva = this;
+    _restaurarEstadoPersistente();
+  }
+
+  void _restaurarEstadoPersistente() {
+    conectado = _conectadoPersistente;
+    cargando = _cargandoPersistente;
+    mostrarGuia = _mostrarGuiaPersistente;
+    deteccionesSesion = _deteccionesSesionPersistente;
+    estrellasNotificadas = _estrellasNotificadasPersistente;
+    medallasNotificadas = _medallasNotificadasPersistente;
+    mensajePremioKey = _mensajePremioKeyPersistente;
+    figurasActivas = Set<String>.from(_figurasActivasPersistente);
+    logsOffline = List<String>.from(_logsOfflinePersistente);
+    dispositivo = _dispositivoPersistente;
+    commandCharacteristic = _commandCharacteristicPersistente;
+    scanSubscription = _scanSubscriptionPersistente;
+    datosSubscription = _datosSubscriptionPersistente;
+    logSubscription = _logSubscriptionPersistente;
+  }
+
+  void _guardarEstadoPersistente() {
+    _conectadoPersistente = conectado;
+    _cargandoPersistente = cargando;
+    _mostrarGuiaPersistente = mostrarGuia;
+    _deteccionesSesionPersistente = deteccionesSesion;
+    _estrellasNotificadasPersistente = estrellasNotificadas;
+    _medallasNotificadasPersistente = medallasNotificadas;
+    _mensajePremioKeyPersistente = mensajePremioKey;
+    _figurasActivasPersistente = Set<String>.from(figurasActivas);
+    _logsOfflinePersistente = List<String>.from(logsOffline);
+    _dispositivoPersistente = dispositivo;
+    _commandCharacteristicPersistente = commandCharacteristic;
+    _scanSubscriptionPersistente = scanSubscription;
+    _datosSubscriptionPersistente = datosSubscription;
+    _logSubscriptionPersistente = logSubscription;
+  }
+
+  static void _limpiarEstadoPersistente() {
+    _conectadoPersistente = false;
+    _cargandoPersistente = false;
+    _mostrarGuiaPersistente = true;
+    _deteccionesSesionPersistente = 0;
+    _estrellasNotificadasPersistente = 0;
+    _medallasNotificadasPersistente = 0;
+    _mensajePremioKeyPersistente = 'defaultPrize';
+    _figurasActivasPersistente = {};
+    _logsOfflinePersistente = [];
+    _dispositivoPersistente = null;
+    _commandCharacteristicPersistente = null;
+    _scanSubscriptionPersistente = null;
+    _datosSubscriptionPersistente = null;
+    _logSubscriptionPersistente = null;
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.detached) {
+      _desconectarAlCerrarApp();
+    }
+  }
+
+  Future<void> _desconectarAlCerrarApp() async {
+    try {
+      await scanSubscription?.cancel();
+      await datosSubscription?.cancel();
+      await logSubscription?.cancel();
+      cancelarSonidosFiguras();
+
+      if (dispositivo != null) {
+        await dispositivo!.disconnect();
+      }
+    } catch (e) {
+      debugPrint('Error desconectando al cerrar la app: $e');
+    }
+
+    _limpiarEstadoPersistente();
+  }
 
   Future<void> botonBluetooth() async {
     if (conectado) {
@@ -247,6 +351,8 @@ class _CpsPageState extends State<CpsPage> {
       figurasActivas.clear();
     });
 
+    _guardarEstadoPersistente();
+
     await scanSubscription?.cancel();
     await datosSubscription?.cancel();
     await logSubscription?.cancel();
@@ -287,6 +393,8 @@ class _CpsPageState extends State<CpsPage> {
         ],
       );
 
+      _guardarEstadoPersistente();
+
       await Future.delayed(const Duration(seconds: 15));
 
       if (FlutterBluePlus.isScanningNow) {
@@ -321,6 +429,8 @@ class _CpsPageState extends State<CpsPage> {
       setState(() {
         cargando = false;
       });
+
+      _guardarEstadoPersistente();
 
       if (!mounted) return;
 
@@ -722,7 +832,7 @@ class _CpsPageState extends State<CpsPage> {
                 if (valor.isNotEmpty) {
                   final String dato = utf8.decode(valor).trim();
 
-                  actualizarFiguras(dato);
+                  _CpsPageState._paginaActiva?.actualizarFiguras(dato);
 
                   debugPrint('${T.txt('dataReceived')}: $dato');
                 }
@@ -749,7 +859,7 @@ class _CpsPageState extends State<CpsPage> {
                 if (valor.isNotEmpty) {
                   final String dato = utf8.decode(valor).trim();
 
-                  recibirLog(dato);
+                  _CpsPageState._paginaActiva?.recibirLog(dato);
 
                   debugPrint('${T.txt('logReceived')}: $dato');
                 }
@@ -777,6 +887,8 @@ class _CpsPageState extends State<CpsPage> {
           mostrarGuia = false;
         }
       });
+
+      _guardarEstadoPersistente();
 
       if (!encontroServicioCps || !encontroStatus) {
         try {
@@ -818,40 +930,133 @@ class _CpsPageState extends State<CpsPage> {
     }
   }
 
-  void actualizarFiguras(String dato) {
-    dato = dato.trim();
+  void cancelarSonidosFiguras() {
+    _idReproduccionFiguras++;
 
-    Set<String> nuevasFiguras = {};
+    try {
+      audioFigura.stop();
+    } catch (_) {}
+  }
 
-    if (dato != '0' && dato.isNotEmpty && dato.toLowerCase() != 'none') {
-      List<String> partes = dato.split(',');
+  String? obtenerRutaSonidoFigura(String numero) {
+    final String idiomaActual = AppConfig.idioma.value;
+    final bool usarIngles = idiomaActual == 'en';
 
-      for (String parte in partes) {
-        String valor = parte.trim();
-
-        if (valor == '1') nuevasFiguras.add('1');
-        if (valor == '2') nuevasFiguras.add('2');
-        if (valor == '3') nuevasFiguras.add('3');
-        if (valor == '4') nuevasFiguras.add('4');
-      }
+    if (usarIngles) {
+      if (numero == '1') return 'sonidos/en/circle.mp3';
+      if (numero == '2') return 'sonidos/en/square.mp3';
+      if (numero == '3') return 'sonidos/en/triangle.mp3';
+      if (numero == '4') return 'sonidos/en/star.mp3';
+    } else {
+      if (numero == '1') return 'sonidos/es/circulo.mp3';
+      if (numero == '2') return 'sonidos/es/cuadrado.mp3';
+      if (numero == '3') return 'sonidos/es/triangulo.mp3';
+      if (numero == '4') return 'sonidos/es/estrella.mp3';
     }
 
-    bool huboNuevaDeteccion =
-        nuevasFiguras.isNotEmpty && !_setsIguales(nuevasFiguras, figurasActivas);
+    return null;
+  }
 
-    setState(() {
-      figurasActivas = nuevasFiguras;
+ Future<void> reproducirSonidosFiguras(Set<String> figuras) async {
+  if (!AppConfig.sonidosActivos.value) return;
+  if (figuras.isEmpty) return;
 
-      if (huboNuevaDeteccion) {
-        deteccionesSesion++;
+  _idReproduccionFiguras++;
+
+  final int idActual = _idReproduccionFiguras;
+
+  try {
+    await audioFigura.stop();
+
+    final List<String> figurasOrdenadas = figuras.toList()
+      ..sort((a, b) => int.parse(a).compareTo(int.parse(b)));
+
+    for (final String figura in figurasOrdenadas) {
+      if (idActual != _idReproduccionFiguras) return;
+
+      final String? ruta = obtenerRutaSonidoFigura(figura);
+
+      if (ruta == null) continue;
+
+      await audioFigura.stop();
+
+      if (idActual != _idReproduccionFiguras) return;
+
+      await audioFigura.play(AssetSource(ruta));
+
+      final DateTime inicio = DateTime.now();
+
+      while (audioFigura.state == PlayerState.playing) {
+        if (idActual != _idReproduccionFiguras) return;
+
+        await Future.delayed(const Duration(milliseconds: 80));
+
+        final int tiempo = DateTime.now().difference(inicio).inMilliseconds;
+
+        if (tiempo > 3000) {
+          await audioFigura.stop();
+          break;
+        }
       }
-    });
 
-    if (huboNuevaDeteccion) {
-      vibrarSuave();
-      revisarRecompensa();
+      await Future.delayed(const Duration(milliseconds: 120));
+    }
+  } catch (e) {
+    debugPrint('Error reproduciendo sonido de figura: $e');
+  }
+}
+
+void actualizarFiguras(String dato) {
+  dato = dato.trim();
+
+  Set<String> nuevasFiguras = {};
+
+  if (dato != '0' && dato.isNotEmpty && dato.toLowerCase() != 'none') {
+    List<String> partes = dato.split(',');
+
+    for (String parte in partes) {
+      String valor = parte.trim();
+
+      if (valor == '1') nuevasFiguras.add('1');
+      if (valor == '2') nuevasFiguras.add('2');
+      if (valor == '3') nuevasFiguras.add('3');
+      if (valor == '4') nuevasFiguras.add('4');
     }
   }
+
+  bool huboCambio = !_setsIguales(nuevasFiguras, figurasActivas);
+
+  bool huboNuevaDeteccion = nuevasFiguras.isNotEmpty && huboCambio;
+
+  if (!mounted) {
+    figurasActivas = nuevasFiguras;
+    if (huboNuevaDeteccion) {
+      deteccionesSesion++;
+    }
+    _guardarEstadoPersistente();
+    return;
+  }
+
+  setState(() {
+    figurasActivas = nuevasFiguras;
+
+    if (huboNuevaDeteccion) {
+      deteccionesSesion++;
+    }
+  });
+
+  _guardarEstadoPersistente();
+
+  if (huboCambio && nuevasFiguras.isEmpty) {
+    cancelarSonidosFiguras();
+  }
+
+  if (huboNuevaDeteccion) {
+    vibrarSuave();
+    reproducirSonidosFiguras(nuevasFiguras);
+    revisarRecompensa();
+  }
+}
 
   bool _setsIguales(Set<String> a, Set<String> b) {
     if (a.length != b.length) return false;
@@ -972,6 +1177,8 @@ class _CpsPageState extends State<CpsPage> {
     await datosSubscription?.cancel();
     await logSubscription?.cancel();
 
+    cancelarSonidosFiguras();
+
     try {
       if (dispositivo != null) {
         await dispositivo!.disconnect();
@@ -980,13 +1187,31 @@ class _CpsPageState extends State<CpsPage> {
       debugPrint('${T.txt('disconnectEspError')}: $e');
     }
 
+    if (!mounted) {
+      conectado = false;
+      cargando = false;
+      figurasActivas.clear();
+      dispositivo = null;
+      commandCharacteristic = null;
+      scanSubscription = null;
+      datosSubscription = null;
+      logSubscription = null;
+      _limpiarEstadoPersistente();
+      return;
+    }
+
     setState(() {
       conectado = false;
       cargando = false;
       figurasActivas.clear();
       dispositivo = null;
       commandCharacteristic = null;
+      scanSubscription = null;
+      datosSubscription = null;
+      logSubscription = null;
     });
+
+    _limpiarEstadoPersistente();
   }
 
   void abrirHistorial() {
@@ -1464,10 +1689,16 @@ class _CpsPageState extends State<CpsPage> {
 
   @override
   void dispose() {
-    scanSubscription?.cancel();
-    datosSubscription?.cancel();
-    logSubscription?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+
+    if (_paginaActiva == this) {
+      _paginaActiva = null;
+    }
+
+    _guardarEstadoPersistente();
+    cancelarSonidosFiguras();
     audioPremio.dispose();
+    audioFigura.dispose();
     super.dispose();
   }
 
