@@ -228,7 +228,7 @@ List<Map<String, dynamic>> obtenerInformacionApp() {
   return [
     {
       'titulo': T.txt('projectVersion'),
-      'valor': '3.1..0',
+      'valor': '3.1.0',
       'color': Colors.green,
       'icono': Icons.verified_rounded,
     },
