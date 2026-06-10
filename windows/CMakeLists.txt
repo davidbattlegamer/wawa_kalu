@@ -9,7 +9,7 @@ project(wawa_kalu LANGUAGES CXX)
 
 # The name of the executable created for the application.
 # Cambia este nombre si quieres que el .exe tenga otro nombre.
-set(BINARY_NAME "wawa_kalu")
+set(BINARY_NAME "WawaKalu")
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.
