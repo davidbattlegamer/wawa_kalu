@@ -3,20 +3,25 @@ description: "Aplicación educativa infantil Wawa Kalú."
 publish_to: 'none'
 version: 1.0.0+1
 
-
 environment:
   sdk: ^3.9.2
 
 dependencies:
   flutter:
     sdk: flutter
+
   cupertino_icons: ^1.0.8
-  flutter_blue_plus: ^2.3.2
   audioplayers: ^6.6.0
   vibration: ^3.1.8
   shared_preferences: ^2.5.5
-  permission_handler: ^12.0.1
-  flutter_blue_plus_winrt: ^0.0.20
+  sqflite: ^2.4.4+1
+  path: ^1.9.1
+  sqflite_common_ffi: ^2.4.3
+  flutter_local_notifications: 20.1.0
+  timezone: ^0.10.1
+  flutter_timezone: ^5.1.1
+  growth_standards: 5.4.1
+  flutter_svg: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -33,6 +38,7 @@ flutter:
     - assets/sonidos/
     - assets/sonidos/es/
     - assets/sonidos/en/
+    - assets/data/vaccines/
   fonts:
     - family: Fredoka
       fonts:
@@ -61,4 +67,3 @@ flutter_launcher_icons:
     image_path: "assets/images/WawaKalu_icono.png"
     background_color: "#FAF7F2"
     theme_color: "#7B2CBF"
-    

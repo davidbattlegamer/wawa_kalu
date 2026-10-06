@@ -1,37 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Vibración del celular -->
+    <!-- Vibración -->
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <!-- Bluetooth para Android 11 o menor -->
-    <uses-permission
-        android:name="android.permission.BLUETOOTH"
-        android:maxSdkVersion="30" />
+    <!-- Notificaciones en Android 13 o superior -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <uses-permission
-        android:name="android.permission.BLUETOOTH_ADMIN"
-        android:maxSdkVersion="30" />
-
-    <!-- Ubicación para escaneo BLE -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <!-- Bluetooth para Android 12 o superior -->
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-
-    <!-- Solo si en el futuro el celular anuncia Bluetooth -->
-    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
-
-    <!-- La app puede usar Bluetooth Low Energy -->
-    <uses-feature
-        android:name="android.hardware.bluetooth_le"
-        android:required="false" />
-
-    <!-- La app puede usar Bluetooth clásico -->
-    <uses-feature
-        android:name="android.hardware.bluetooth"
-        android:required="false" />
+    <!-- Restaurar recordatorios después de reiniciar el dispositivo -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:label="Wawa Kalú"
@@ -57,6 +33,25 @@
             </intent-filter>
 
         </activity>
+
+        <!-- Receptor para notificaciones programadas -->
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
+            android:exported="false" />
+
+        <!-- Restaura las notificaciones después de reiniciar -->
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+            android:exported="false">
+
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+
+        </receiver>
 
         <meta-data
             android:name="flutterEmbedding"

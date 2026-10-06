@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'permisos_app.dart';
 import 'package:flutter/material.dart';
-
 
 import 'app_config.dart';
 import 'app_texts.dart';
@@ -36,86 +34,82 @@ class WelcomePageState extends State<WelcomePage>
   late Animation<double> tituloScale;
   late Animation<double> tituloFade;
 
-@override
-void initState() {
-  super.initState();
+  @override
+  void initState() {
+    super.initState();
 
-  WidgetsBinding.instance.addPostFrameCallback((_) async {
-    await PermisosApp.pedirPermisosIniciales(context);
-  });
+    imagenController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 950),
+    );
 
-  imagenController = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 950),
-  );
+    tituloController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    );
 
-  tituloController = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 900),
-  );
+    contenidoController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 950),
+    );
 
-  contenidoController = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 950),
-  );
+    botonController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 550),
+    );
 
-  botonController = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 550),
-  );
-
-  fadeImagen = CurvedAnimation(
-    parent: imagenController,
-    curve: Curves.easeOut,
-  );
-
-  scaleImagen = Tween<double>(
-    begin: 1.05,
-    end: 1.0,
-  ).animate(
-    CurvedAnimation(
+    fadeImagen = CurvedAnimation(
       parent: imagenController,
-      curve: Curves.easeOutCubic,
-    ),
-  );
+      curve: Curves.easeOut,
+    );
 
-  tituloScale = Tween<double>(
-    begin: 0.80,
-    end: 1.0,
-  ).animate(
-    CurvedAnimation(
+    scaleImagen = Tween<double>(
+      begin: 1.05,
+      end: 1.0,
+    ).animate(
+      CurvedAnimation(
+        parent: imagenController,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+
+    tituloScale = Tween<double>(
+      begin: 0.80,
+      end: 1.0,
+    ).animate(
+      CurvedAnimation(
+        parent: tituloController,
+        curve: Curves.elasticOut,
+      ),
+    );
+
+    tituloFade = CurvedAnimation(
       parent: tituloController,
-      curve: Curves.elasticOut,
-    ),
-  );
+      curve: Curves.easeIn,
+    );
 
-  tituloFade = CurvedAnimation(
-    parent: tituloController,
-    curve: Curves.easeIn,
-  );
+    fadeContenido = CurvedAnimation(
+      parent: contenidoController,
+      curve: Curves.easeIn,
+    );
 
-  fadeContenido = CurvedAnimation(
-    parent: contenidoController,
-    curve: Curves.easeIn,
-  );
-
-  fadeBoton = CurvedAnimation(
-    parent: botonController,
-    curve: Curves.easeIn,
-  );
-
-  scaleBoton = Tween<double>(
-    begin: 0.92,
-    end: 1.0,
-  ).animate(
-    CurvedAnimation(
+    fadeBoton = CurvedAnimation(
       parent: botonController,
-      curve: Curves.easeOutBack,
-    ),
-  );
+      curve: Curves.easeIn,
+    );
 
-  iniciarAnimacion();
-}
+    scaleBoton = Tween<double>(
+      begin: 0.92,
+      end: 1.0,
+    ).animate(
+      CurvedAnimation(
+        parent: botonController,
+        curve: Curves.easeOutBack,
+      ),
+    );
+
+    iniciarAnimacion();
+  }
 
   Future<void> iniciarAnimacion() async {
     await imagenController.forward();
@@ -207,7 +201,9 @@ void initState() {
               child: Icon(
                 Icons.settings_rounded,
                 size: 27,
-                color: modoOscuro ? Colors.white : const Color(0xFF4A2C82),
+                color: modoOscuro
+                    ? Colors.white
+                    : const Color(0xFF4A2C82),
               ),
             ),
           ),
@@ -217,7 +213,17 @@ void initState() {
   }
 
   Widget tituloConImagen(bool modoOscuro, bool pantallaPequena) {
-    final List<String> letras = ['W', 'a', 'w', 'a', ' ', 'K', 'a', 'l', 'ú'];
+    final List<String> letras = [
+      'W',
+      'a',
+      'w',
+      'a',
+      ' ',
+      'K',
+      'a',
+      'l',
+      'ú',
+    ];
 
     return Column(
       children: [
@@ -244,12 +250,20 @@ void initState() {
                 final letra = letras[index];
 
                 return TweenAnimationBuilder<double>(
-                  tween: Tween<double>(begin: 0, end: 1),
-                  duration: Duration(milliseconds: 520 + (index * 55)),
+                  tween: Tween<double>(
+                    begin: 0,
+                    end: 1,
+                  ),
+                  duration: Duration(
+                    milliseconds: 520 + (index * 55),
+                  ),
                   curve: Curves.elasticOut,
                   builder: (context, value, child) {
                     return Transform.translate(
-                      offset: Offset(0, 18 * (1 - value)),
+                      offset: Offset(
+                        0,
+                        18 * (1 - value),
+                      ),
                       child: Transform.scale(
                         scale: value == 0 ? 0.7 : value,
                         child: Opacity(
@@ -271,7 +285,9 @@ void initState() {
                       height: 1,
                       shadows: [
                         Shadow(
-                          color: Colors.deepPurple.withValues(alpha: 0.18),
+                          color: Colors.deepPurple.withValues(
+                            alpha: 0.18,
+                          ),
                           blurRadius: 9,
                           offset: const Offset(0, 4),
                         ),
@@ -289,8 +305,9 @@ void initState() {
 
   Widget pantallaImagenInicial(bool modoOscuro) {
     return Scaffold(
-      backgroundColor:
-          modoOscuro ? const Color(0xFF15131A) : const Color(0xFFFFF7EA),
+      backgroundColor: modoOscuro
+          ? const Color(0xFF15131A)
+          : const Color(0xFFFFF7EA),
       body: SafeArea(
         child: FadeTransition(
           opacity: fadeImagen,
@@ -302,7 +319,7 @@ void initState() {
                   builder: (context, constraints) {
                     final bool pantallaPequena =
                         constraints.maxHeight < 720 ||
-                            constraints.maxWidth < 380;
+                        constraints.maxWidth < 380;
 
                     return Padding(
                       padding: EdgeInsets.fromLTRB(
@@ -324,8 +341,13 @@ void initState() {
                             ),
                           ),
                           const SizedBox(height: 12),
-                          tituloConImagen(modoOscuro, pantallaPequena),
-                          SizedBox(height: pantallaPequena ? 12 : 22),
+                          tituloConImagen(
+                            modoOscuro,
+                            pantallaPequena,
+                          ),
+                          SizedBox(
+                            height: pantallaPequena ? 12 : 22,
+                          ),
                         ],
                       ),
                     );
@@ -354,14 +376,20 @@ void initState() {
       animation: contenidoController,
       builder: (context, child) {
         final double inicio = index * 0.12;
+
         final double progreso =
             ((contenidoController.value - inicio) / (1 - inicio))
                 .clamp(0.0, 1.0);
 
-        final double curva = Curves.easeOutBack.transform(progreso);
-        final double dx =
-            desdeIzquierda ? -90 * (1 - curva) : 90 * (1 - curva);
-        final double opacity = progreso.clamp(0.0, 1.0);
+        final double curva =
+            Curves.easeOutBack.transform(progreso);
+
+        final double dx = desdeIzquierda
+            ? -90 * (1 - curva)
+            : 90 * (1 - curva);
+
+        final double opacity =
+            progreso.clamp(0.0, 1.0);
 
         return Opacity(
           opacity: opacity,
@@ -381,22 +409,33 @@ void initState() {
           gradient: LinearGradient(
             colors: [
               modoOscuro
-                  ? const Color(0xFF211B2E).withValues(alpha: 0.96)
-                  : Colors.white.withValues(alpha: 0.96),
-              color.withValues(alpha: modoOscuro ? 0.18 : 0.08),
+                  ? const Color(0xFF211B2E)
+                      .withValues(alpha: 0.96)
+                  : Colors.white
+                      .withValues(alpha: 0.96),
+              color.withValues(
+                alpha: modoOscuro ? 0.18 : 0.08,
+              ),
             ],
-            begin:
-                desdeIzquierda ? Alignment.centerLeft : Alignment.centerRight,
-            end: desdeIzquierda ? Alignment.centerRight : Alignment.centerLeft,
+            begin: desdeIzquierda
+                ? Alignment.centerLeft
+                : Alignment.centerRight,
+            end: desdeIzquierda
+                ? Alignment.centerRight
+                : Alignment.centerLeft,
           ),
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: color.withValues(alpha: modoOscuro ? 0.32 : 0.18),
+            color: color.withValues(
+              alpha: modoOscuro ? 0.32 : 0.18,
+            ),
             width: 1.4,
           ),
           boxShadow: [
             BoxShadow(
-              color: color.withValues(alpha: modoOscuro ? 0.09 : 0.08),
+              color: color.withValues(
+                alpha: modoOscuro ? 0.09 : 0.08,
+              ),
               blurRadius: 14,
               offset: const Offset(0, 7),
             ),
@@ -427,7 +466,8 @@ void initState() {
             const SizedBox(width: 13),
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
@@ -437,8 +477,9 @@ void initState() {
                       fontFamily: 'Fredoka',
                       fontSize: 18.5,
                       fontWeight: FontWeight.w700,
-                      color:
-                          modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
+                      color: modoOscuro
+                          ? Colors.white
+                          : const Color(0xFF2D2D2D),
                     ),
                   ),
                   const SizedBox(height: 3),
@@ -450,7 +491,9 @@ void initState() {
                       fontFamily: 'Baloo2',
                       fontSize: 14.5,
                       fontWeight: FontWeight.w500,
-                      color: modoOscuro ? Colors.white70 : Colors.black54,
+                      color: modoOscuro
+                          ? Colors.white70
+                          : Colors.black54,
                       height: 1.12,
                     ),
                   ),
@@ -492,7 +535,8 @@ void initState() {
               borderRadius: BorderRadius.circular(28),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF7B2CBF).withValues(alpha: 0.28),
+                  color: const Color(0xFF7B2CBF)
+                      .withValues(alpha: 0.28),
                   blurRadius: 20,
                   offset: const Offset(0, 9),
                 ),
@@ -506,16 +550,19 @@ void initState() {
                 onTap: comenzar,
                 child: Center(
                   child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 260),
+                    duration:
+                        const Duration(milliseconds: 260),
                     child: saliendo
                         ? Row(
                             key: const ValueKey('loading'),
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment:
+                                MainAxisAlignment.center,
                             children: [
                               const SizedBox(
                                 width: 21,
                                 height: 21,
-                                child: CircularProgressIndicator(
+                                child:
+                                    CircularProgressIndicator(
                                   strokeWidth: 2.5,
                                   color: Colors.white,
                                 ),
@@ -526,7 +573,8 @@ void initState() {
                                 style: const TextStyle(
                                   fontFamily: 'Fredoka',
                                   fontSize: 20,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight:
+                                      FontWeight.w700,
                                   color: Colors.white,
                                 ),
                               ),
@@ -534,14 +582,16 @@ void initState() {
                           )
                         : Row(
                             key: const ValueKey('start'),
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment:
+                                MainAxisAlignment.center,
                             children: [
                               Text(
                                 T.txt('startApp'),
                                 style: const TextStyle(
                                   fontFamily: 'Fredoka',
                                   fontSize: 21,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight:
+                                      FontWeight.w700,
                                   color: Colors.white,
                                 ),
                               ),
@@ -565,8 +615,9 @@ void initState() {
 
   Widget pantallaSecciones(bool modoOscuro) {
     return Scaffold(
-      backgroundColor:
-          modoOscuro ? const Color(0xFF15131A) : const Color(0xFFFFF7EA),
+      backgroundColor: modoOscuro
+          ? const Color(0xFF15131A)
+          : const Color(0xFFFFF7EA),
       body: SafeArea(
         child: Stack(
           children: [
@@ -577,7 +628,7 @@ void initState() {
                   builder: (context, constraints) {
                     final bool pantallaPequena =
                         constraints.maxHeight < 720 ||
-                            constraints.maxWidth < 380;
+                        constraints.maxWidth < 380;
 
                     return SingleChildScrollView(
                       padding: EdgeInsets.fromLTRB(
@@ -589,60 +640,67 @@ void initState() {
                       child: Column(
                         children: [
                           seccionCard(
-                            icon: Icons.videogame_asset_rounded,
+                            icon:
+                                Icons.videogame_asset_rounded,
                             title: T.txt('games'),
-                            subtitle: T.txt('gamesSubtitle'),
+                            subtitle:
+                                T.txt('gamesSubtitle'),
                             color: Colors.orange,
                             modoOscuro: modoOscuro,
                             index: 0,
                           ),
                           const SizedBox(height: 12),
                           seccionCard(
-                            icon: Icons.smart_toy_rounded,
-                            title: T.txt('cps'),
-                            subtitle: T.txt('cpsSubtitle'),
-                            color: Colors.deepPurple,
+                            icon:
+                                Icons.restaurant_menu_rounded,
+                            title: T.txt('nutrition'),
+                            subtitle:
+                                T.txt('nutritionSubtitle'),
+                            color: Colors.green,
                             modoOscuro: modoOscuro,
                             index: 1,
                           ),
                           const SizedBox(height: 12),
                           seccionCard(
-                            icon: Icons.restaurant_menu_rounded,
-                            title: T.txt('nutrition'),
-                            subtitle: T.txt('nutritionSubtitle'),
-                            color: Colors.green,
+                            icon:
+                                Icons.record_voice_over_rounded,
+                            title: T.txt('languageMenu'),
+                            subtitle:
+                                T.txt('languageSubtitle'),
+                            color: Colors.pink,
                             modoOscuro: modoOscuro,
                             index: 2,
                           ),
                           const SizedBox(height: 12),
                           seccionCard(
-                            icon: Icons.record_voice_over_rounded,
-                            title: T.txt('languageMenu'),
-                            subtitle: T.txt('languageSubtitle'),
-                            color: Colors.pink,
+                            icon: Icons
+                                .volunteer_activism_rounded,
+                            title: T.txt('environment'),
+                            subtitle:
+                                T.txt('environmentSubtitle'),
+                            color: Colors.teal,
                             modoOscuro: modoOscuro,
                             index: 3,
                           ),
-                          const SizedBox(height: 12),
-                          seccionCard(
-                            icon: Icons.volunteer_activism_rounded,
-                            title: T.txt('environment'),
-                            subtitle: T.txt('environmentSubtitle'),
-                            color: Colors.teal,
-                            modoOscuro: modoOscuro,
-                            index: 4,
+                          SizedBox(
+                            height:
+                                pantallaPequena ? 22 : 34,
                           ),
-                          SizedBox(height: pantallaPequena ? 22 : 34),
-                          if (mostrarBoton) botonComenzar(),
+                          if (mostrarBoton)
+                            botonComenzar(),
                           const SizedBox(height: 14),
                           if (mostrarBoton)
                             Text(
-                              T.txt('welcomeSettingsNote'),
-                              textAlign: TextAlign.center,
+                              T.txt(
+                                'welcomeSettingsNote',
+                              ),
+                              textAlign:
+                                  TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'Baloo2',
                                 fontSize: 14.5,
-                                fontWeight: FontWeight.w500,
+                                fontWeight:
+                                    FontWeight.w500,
                                 color: modoOscuro
                                     ? Colors.white60
                                     : Colors.black45,
@@ -672,11 +730,13 @@ void initState() {
           valueListenable: AppConfig.temaApp,
           builder: (context, temaActual, _) {
             final bool modoOscuro =
-                Theme.of(context).brightness == Brightness.dark;
+                Theme.of(context).brightness ==
+                    Brightness.dark;
 
             return AnimatedOpacity(
               opacity: saliendo ? 0.0 : 1.0,
-              duration: const Duration(milliseconds: 430),
+              duration:
+                  const Duration(milliseconds: 430),
               curve: Curves.easeInOut,
               child: mostrarImagenInicial
                   ? pantallaImagenInicial(modoOscuro)

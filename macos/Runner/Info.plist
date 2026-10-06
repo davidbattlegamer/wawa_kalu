@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+
 <plist version="1.0">
 <dict>
+
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 
@@ -43,14 +45,6 @@
 
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-
-	<!-- Permiso Bluetooth para buscar y conectar dispositivos BLE -->
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Wawa Kalú usa Bluetooth para buscar, conectar y comunicarse con dispositivos BLE como el ESP32.</string>
-
-	<!-- Compatibilidad con versiones antiguas -->
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Wawa Kalú usa Bluetooth para conectarse con dispositivos cercanos y recibir datos de figuras inteligentes.</string>
 
 </dict>
 </plist>

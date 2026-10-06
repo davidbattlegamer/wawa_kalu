@@ -1,0 +1,247 @@
+{
+  "country": "EC",
+  "year": 2026,
+  "source": "Ministerio de Salud Pública del Ecuador",
+  "document": "Manual Inmunizaciones para la Salud 2026",
+  "agreement": "Acuerdo No. 00003-2026",
+  "doses": [
+    {
+      "id": "bcg_birth",
+      "vaccineCode": "BCG",
+      "nameKey": "vaccineBCG",
+      "preventsKey": "vaccineBCGPrevents",
+      "doseLabelKey": "vaccineSingleDose",
+      "scheduleType": "fixed_age",
+      "targetMonths": 0,
+      "targetDays": 0,
+      "notesKey": "vaccineBirth24Hours"
+    },
+    {
+      "id": "hb_birth",
+      "vaccineCode": "HB0",
+      "nameKey": "vaccineHepatitisBZero",
+      "preventsKey": "vaccineHepatitisBPrevents",
+      "doseLabelKey": "vaccineBirthDose",
+      "scheduleType": "fixed_age",
+      "targetMonths": 0,
+      "targetDays": 0,
+      "notesKey": "vaccineBirth24Hours"
+    },
+
+    {
+      "id": "rotavirus_2m",
+      "vaccineCode": "ROTA",
+      "nameKey": "vaccineRotavirus",
+      "preventsKey": "vaccineRotavirusPrevents",
+      "doseLabelKey": "vaccineDose1",
+      "scheduleType": "fixed_age",
+      "targetMonths": 2
+    },
+    {
+      "id": "hexavalent_2m",
+      "vaccineCode": "HEXA",
+      "nameKey": "vaccineHexavalent",
+      "preventsKey": "vaccineHexavalentPrevents",
+      "doseLabelKey": "vaccineDose1",
+      "scheduleType": "fixed_age",
+      "targetMonths": 2
+    },
+    {
+      "id": "pneumococcal_2m",
+      "vaccineCode": "PCV",
+      "nameKey": "vaccinePneumococcal",
+      "preventsKey": "vaccinePneumococcalPrevents",
+      "doseLabelKey": "vaccineDose1",
+      "scheduleType": "fixed_age",
+      "targetMonths": 2
+    },
+
+    {
+      "id": "rotavirus_4m",
+      "vaccineCode": "ROTA",
+      "nameKey": "vaccineRotavirus",
+      "preventsKey": "vaccineRotavirusPrevents",
+      "doseLabelKey": "vaccineDose2",
+      "scheduleType": "fixed_age",
+      "targetMonths": 4
+    },
+    {
+      "id": "hexavalent_4m",
+      "vaccineCode": "HEXA",
+      "nameKey": "vaccineHexavalent",
+      "preventsKey": "vaccineHexavalentPrevents",
+      "doseLabelKey": "vaccineDose2",
+      "scheduleType": "fixed_age",
+      "targetMonths": 4
+    },
+    {
+      "id": "pneumococcal_4m",
+      "vaccineCode": "PCV",
+      "nameKey": "vaccinePneumococcal",
+      "preventsKey": "vaccinePneumococcalPrevents",
+      "doseLabelKey": "vaccineDose2",
+      "scheduleType": "fixed_age",
+      "targetMonths": 4
+    },
+
+    {
+      "id": "bopv_6m",
+      "vaccineCode": "bOPV",
+      "nameKey": "vaccineBOPV",
+      "preventsKey": "vaccinePolioPrevents",
+      "doseLabelKey": "vaccineDose6Months",
+      "scheduleType": "fixed_age",
+      "targetMonths": 6
+    },
+    {
+      "id": "hexavalent_6m",
+      "vaccineCode": "HEXA",
+      "nameKey": "vaccineHexavalent",
+      "preventsKey": "vaccineHexavalentPrevents",
+      "doseLabelKey": "vaccineDose3",
+      "scheduleType": "fixed_age",
+      "targetMonths": 6
+    },
+    {
+      "id": "pneumococcal_6m",
+      "vaccineCode": "PCV",
+      "nameKey": "vaccinePneumococcal",
+      "preventsKey": "vaccinePneumococcalPrevents",
+      "doseLabelKey": "vaccineDose3",
+      "scheduleType": "fixed_age",
+      "targetMonths": 6
+    },
+
+    {
+      "id": "influenza_6_11_1",
+      "vaccineCode": "FLU",
+      "nameKey": "vaccineInfluenza",
+      "preventsKey": "vaccineInfluenzaPrevents",
+      "doseLabelKey": "vaccineDose1",
+      "scheduleType": "seasonal",
+      "minAgeMonths": 6,
+      "maxAgeMonths": 11,
+      "notesKey": "vaccineSeasonalNote"
+    },
+    {
+      "id": "influenza_6_11_2",
+      "vaccineCode": "FLU",
+      "nameKey": "vaccineInfluenza",
+      "preventsKey": "vaccineInfluenzaPrevents",
+      "doseLabelKey": "vaccineDose2",
+      "scheduleType": "interval",
+      "previousDoseId": "influenza_6_11_1",
+      "intervalDays": 28,
+      "minAgeMonths": 6,
+      "maxAgeMonths": 11
+    },
+
+    {
+      "id": "yellow_fever_12m",
+      "vaccineCode": "FA",
+      "nameKey": "vaccineYellowFever",
+      "preventsKey": "vaccineYellowFeverPrevents",
+      "doseLabelKey": "vaccineSingleDose",
+      "scheduleType": "fixed_age",
+      "targetMonths": 12
+    },
+    {
+      "id": "mmr_12m",
+      "vaccineCode": "SRP",
+      "nameKey": "vaccineMMR",
+      "preventsKey": "vaccineMMRPrevents",
+      "doseLabelKey": "vaccineDose1",
+      "scheduleType": "fixed_age",
+      "targetMonths": 12
+    },
+
+    {
+      "id": "varicella_15m",
+      "vaccineCode": "VAR",
+      "nameKey": "vaccineVaricella",
+      "preventsKey": "vaccineVaricellaPrevents",
+      "doseLabelKey": "vaccineDose15Months",
+      "scheduleType": "fixed_age",
+      "targetMonths": 15
+    },
+
+    {
+      "id": "hexavalent_18m",
+      "vaccineCode": "HEXA",
+      "nameKey": "vaccineHexavalent",
+      "preventsKey": "vaccineHexavalentPrevents",
+      "doseLabelKey": "vaccineDose18Months",
+      "scheduleType": "fixed_age",
+      "targetMonths": 18
+    },
+    {
+      "id": "bopv_18m",
+      "vaccineCode": "bOPV",
+      "nameKey": "vaccineBOPV",
+      "preventsKey": "vaccinePolioPrevents",
+      "doseLabelKey": "vaccineDose18Months",
+      "scheduleType": "fixed_age",
+      "targetMonths": 18
+    },
+    {
+      "id": "mmr_18m",
+      "vaccineCode": "SRP",
+      "nameKey": "vaccineMMR",
+      "preventsKey": "vaccineMMRPrevents",
+      "doseLabelKey": "vaccineDose2",
+      "scheduleType": "fixed_age",
+      "targetMonths": 18
+    },
+
+    {
+      "id": "influenza_12_23",
+      "vaccineCode": "FLU",
+      "nameKey": "vaccineInfluenza",
+      "preventsKey": "vaccineInfluenzaPrevents",
+      "doseLabelKey": "vaccineSeasonalDose",
+      "scheduleType": "seasonal",
+      "minAgeMonths": 12,
+      "maxAgeMonths": 23,
+      "notesKey": "vaccineSeasonalNote"
+    },
+    {
+      "id": "influenza_24_59",
+      "vaccineCode": "FLU",
+      "nameKey": "vaccineInfluenza",
+      "preventsKey": "vaccineInfluenzaPrevents",
+      "doseLabelKey": "vaccineSeasonalDose",
+      "scheduleType": "seasonal",
+      "minAgeMonths": 24,
+      "maxAgeMonths": 59,
+      "notesKey": "vaccineSeasonalNote"
+    },
+
+    {
+      "id": "dpt_60m",
+      "vaccineCode": "DPT",
+      "nameKey": "vaccineDPT",
+      "preventsKey": "vaccineDPTPrevents",
+      "doseLabelKey": "vaccineDose5Years",
+      "scheduleType": "fixed_age",
+      "targetMonths": 60
+    },
+    {
+      "id": "bopv_60m",
+      "vaccineCode": "bOPV",
+      "nameKey": "vaccineBOPV",
+      "preventsKey": "vaccinePolioPrevents",
+      "doseLabelKey": "vaccineDose5Years",
+      "scheduleType": "fixed_age",
+      "targetMonths": 60
+    },
+    {
+      "id": "varicella_60m",
+      "vaccineCode": "VAR",
+      "nameKey": "vaccineVaricella",
+      "preventsKey": "vaccineVaricellaPrevents",
+      "doseLabelKey": "vaccineDose5Years",
+      "scheduleType": "fixed_age",
+      "targetMonths": 60
+    }
+  ]
+}

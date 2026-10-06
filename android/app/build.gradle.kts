@@ -1,44 +1,94 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+
+    // El plugin de Flutter debe ir después
+    // de Android y Kotlin.
     id("dev.flutter.flutter-gradle-plugin")
 }
 
 android {
     namespace = "com.example.wawa_kalu"
+
+    // flutter_local_notifications 20.1.0
+    // requiere compileSdk 35 o superior.
     compileSdk = flutter.compileSdkVersion
+
     ndkVersion = flutter.ndkVersion
 
+    // ---------------------------------------------------------
+    // JAVA + DESUGARING
+    // ---------------------------------------------------------
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
+
+        sourceCompatibility =
+            JavaVersion.VERSION_11
+
+        targetCompatibility =
+            JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget =
+            JavaVersion.VERSION_11.toString()
     }
 
+    // ---------------------------------------------------------
+    // CONFIGURACIÓN DE LA APP
+    // ---------------------------------------------------------
+
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.wawa_kalu"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        applicationId =
+            "com.example.wawa_kalu"
+
+        minSdk =
+            flutter.minSdkVersion
+
+        targetSdk =
+            flutter.targetSdkVersion
+
+        versionCode =
+            flutter.versionCode
+
+        versionName =
+            flutter.versionName
+
+        // Necesario para compatibilidad con
+        // flutter_local_notifications.
+        multiDexEnabled = true
     }
+
+    // ---------------------------------------------------------
+    // BUILD
+    // ---------------------------------------------------------
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            // Por ahora utiliza la firma debug.
+            signingConfig =
+                signingConfigs.getByName(
+                    "debug"
+                )
         }
     }
 }
 
+// -------------------------------------------------------------
+// FLUTTER
+// -------------------------------------------------------------
+
 flutter {
     source = "../.."
+}
+
+// -------------------------------------------------------------
+// DEPENDENCIAS ANDROID
+// -------------------------------------------------------------
+
+dependencies {
+    coreLibraryDesugaring(
+        "com.android.tools:desugar_jdk_libs:2.1.4"
+    )
 }
