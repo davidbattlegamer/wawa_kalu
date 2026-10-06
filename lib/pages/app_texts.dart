@@ -38,7 +38,6 @@ class T {
     'La fecha de referencia ya pasó',
     // GENERAL
     'appName': 'Wawa Kalú',
-    'welcome': 'Bienvenido a Wawa Kalú',
     'subtitle': 'Aprende jugando, explorando y creciendo en familia',
     'settingsTitle': 'Configuración',
     'enabled': 'Activado',
@@ -59,8 +58,6 @@ class T {
 'childrenEmptyDescription':
     'Aquí podrás registrar uno o varios niños y llevar su información de crecimiento y salud por separado.',
 'addChild': 'Agregar niño',
-'childRegistrationComingSoon':
-    'El registro de niños se agregará en el siguiente paso.',
 
 // SALUD
 'health': 'Salud',
@@ -76,9 +73,6 @@ class T {
     'Peso, talla y evolución del niño',
 'healthNutritionSubtitle':
     'Consejos y alimentación infantil',
-'comingSoon': 'Próximamente',
-'featureComingSoon':
-    '{feature} se agregará en los siguientes pasos.',
 
 // APRENDER
 'learning': 'Aprender',
@@ -99,14 +93,6 @@ class T {
     'aboutApp': 'Acerca de la app',
     'aboutAppSubtitle':
         'Wawa Kalú es una app educativa infantil que combina juegos, sonidos, vibración y actividades interactivas para apoyar el aprendizaje temprano.',
-    'projectVersion': 'Versión',
-    'projectPurpose': 'Propósito',
-    'projectPurposeText':
-        'Apoyar el desarrollo sensorial, cognitivo y motriz de niños mediante actividades interactivas.',
-    'projectFeatures': 'Funciones principales',
-    'projectFeaturesText':
-        'Juegos educativos, sonidos en español e inglés, vibración, recompensas y configuración personalizada.',
-    'info': 'i',
     'close': 'Cerrar',
 
     // CONFIGURACIÓN
@@ -133,13 +119,8 @@ class T {
 
     // HOME
     'games': 'Juegos',
-    'gamesSubtitle': 'Actividades interactivas para niños',
     'nutrition': 'Nutrición',
-    'nutritionSubtitle': 'Consejos y recetas infantiles',
     'languageMenu': 'Lenguaje',
-    'languageSubtitle': 'Comunicación y estimulación',
-    'environment': 'Entornos',
-    'environmentSubtitle': 'Cuidado y protección infantil',
 
     // PÁGINA DE JUEGOS
     'gamesPageTitle': 'Zona de Juegos',
@@ -507,12 +488,6 @@ class T {
 // VACUNAS
 'vaccinesPageTitle':
     'Vacunas',
-'vaccinesEmptyTitle':
-    'Seguimiento de vacunas',
-'vaccinesEmptySubtitle':
-    'Aquí podrás consultar las vacunas correspondientes por edad, registrar las dosis aplicadas y revisar las próximas.',
-'vaccinesOfficialNote':
-    'El esquema de vacunación se basará en la información oficial vigente del Ministerio de Salud Pública del Ecuador.',
 // VACUNAS - ESQUEMA
 'vaccinesScheduleTitle':
     'Esquema de vacunación',
@@ -614,12 +589,6 @@ class T {
 // CRECIMIENTO
 'growthPageTitle':
     'Crecimiento',
-'growthEmptyTitle':
-    'Control de peso y talla',
-'growthEmptySubtitle':
-    'Aquí podrás registrar controles de peso y talla y observar su evolución a lo largo del tiempo.',
-'growthOfficialNote':
-    'Las gráficas de crecimiento utilizarán referencias oficiales para niños y niñas de acuerdo con la edad.',
     'nutritionHydrationTitle': 'Hidratación saludable',
     'nutritionHydrationSubtitle': 'Agua y líquidos adecuados',
     'nutritionHydrationTip1':
@@ -948,8 +917,6 @@ class T {
 'healthSummary': 'Resumen de salud',
 
 'nextVaccine': 'Próxima vacuna',
-'vaccineDataPending':
-    'El seguimiento de vacunas estará disponible cuando configuremos el esquema del MSP.',
 'viewVaccines': 'Ver vacunas',
 
 'lastGrowthCheck': 'Último control',
@@ -1052,12 +1019,32 @@ class T {
 
     'environmentFinalNote':
         'Un entorno protector combina seguridad, afecto, supervisión y rutinas. Pequeñas acciones diarias ayudan a que el niño crezca con confianza y bienestar.',
+        // TEXTOS INTERNOS DE CURVAS DE CRECIMIENTO
+'growthSvgResult':
+    'Resultado',
+
+'growthSvgAgeX':
+    'Edad/X',
+
+'growthSvgTrajectory':
+    'Trayectoria',
+
+'growthSvgCalculatedResult':
+    'Resultado calculado',
+
+'growthSvgMedian':
+    'Mediana',
+
+'growthSvgPercentile':
+    'Percentil',
+
+'growthSvgBirth':
+    'Nacimiento',
   };
 
   static final Map<String, String> _english = {
     // GENERAL
     'appName': 'Wawa Kalú',
-    'welcome': 'Welcome to Wawa Kalú',
     'subtitle':
         'Learn by playing, exploring, and growing as a family',
     'settingsTitle': 'Settings',
@@ -1066,18 +1053,32 @@ class T {
     'startApp': 'Start',
     'startingApp': 'Starting...',
 
+// INTERNAL GROWTH CHART TEXT
+'growthSvgResult':
+    'Result',
+
+'growthSvgAgeX':
+    'Age/X',
+
+'growthSvgTrajectory':
+    'Trajectory',
+
+'growthSvgCalculatedResult':
+    'Calculated Result',
+
+'growthSvgMedian':
+    'Median',
+
+'growthSvgPercentile':
+    'Percentile',
+
+'growthSvgBirth':
+    'Birth',
+    
     // INFORMATION
     'aboutApp': 'About the app',
     'aboutAppSubtitle':
         'Wawa Kalú is an educational children’s app that combines games, sounds, vibration, and interactive activities to support early learning.',
-    'projectVersion': 'Version',
-    'projectPurpose': 'Purpose',
-    'projectPurposeText':
-        'Support children’s sensory, cognitive, and motor development through interactive activities.',
-    'projectFeatures': 'Main features',
-    'projectFeaturesText':
-        'Educational games, Spanish and English sounds, vibration, rewards, and personalized settings.',
-    'info': 'i',
     'close': 'Close',
 
     // SETTINGS
@@ -1104,17 +1105,8 @@ class T {
 
     // HOME
     'games': 'Games',
-    'gamesSubtitle':
-        'Interactive activities for children',
     'nutrition': 'Nutrition',
-    'nutritionSubtitle':
-        'Child nutrition tips and recipes',
     'languageMenu': 'Language',
-    'languageSubtitle':
-        'Communication and stimulation',
-    'environment': 'Environments',
-    'environmentSubtitle':
-        'Child care and protection',
 
     // GAMES PAGE
     'gamesPageTitle': 'Game Zone',
@@ -2027,8 +2019,6 @@ class T {
 'childrenEmptyDescription':
     'Here you can register one or more children and keep their growth and health information separately.',
 'addChild': 'Add child',
-'childRegistrationComingSoon':
-    'Child registration will be added in the next step.',
 
 // HEALTH
 'health': 'Health',
@@ -2044,9 +2034,6 @@ class T {
     'Weight, height, and child development',
 'healthNutritionSubtitle':
     'Child nutrition tips and guidance',
-'comingSoon': 'Coming soon',
-'featureComingSoon':
-    '{feature} will be added in the next steps.',
 
 // LEARNING
 'learning': 'Learn',
@@ -2074,8 +2061,6 @@ class T {
 'healthSummary': 'Health summary',
 
 'nextVaccine': 'Next vaccine',
-'vaccineDataPending':
-    'Vaccine tracking will be available once the official schedule is configured.',
 'viewVaccines': 'View vaccines',
 
 'lastGrowthCheck': 'Latest check-up',
@@ -2107,22 +2092,10 @@ class T {
 // VACCINES
 'vaccinesPageTitle':
     'Vaccines',
-'vaccinesEmptyTitle':
-    'Vaccine tracking',
-'vaccinesEmptySubtitle':
-    'Here you will be able to check age-based vaccines, register administered doses, and review upcoming vaccines.',
-'vaccinesOfficialNote':
-    'The vaccination schedule will be based on current official information from Ecuador’s Ministry of Public Health.',
 
 // GROWTH
 'growthPageTitle':
     'Growth',
-'growthEmptyTitle':
-    'Weight and height tracking',
-'growthEmptySubtitle':
-    'Here you will be able to record weight and height measurements and follow their progress over time.',
-'growthOfficialNote':
-    'Growth charts will use official references for boys and girls according to age.',
 'homeNoChildTitle':
     'Start by creating a profile',
 'homeNoChildSubtitle':

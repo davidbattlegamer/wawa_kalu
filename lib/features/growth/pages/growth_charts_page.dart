@@ -15,6 +15,257 @@ import '../data/growth_repository.dart';
 import '../models/growth_measurement.dart';
 import '../services/who_growth_service.dart';
 
+// ============================================================================
+// TRADUCCIÓN DE LOS TEXTOS INTERNOS DEL SVG
+//
+// La librería growth_standards genera algunos textos directamente en inglés.
+// Esta función únicamente cambia esos textos.
+//
+// NO modifica:
+// - curvas OMS
+// - Z-score
+// - percentiles
+// - peso
+// - talla
+// - IMC
+// - cálculos
+// - puntos registrados
+// ============================================================================
+
+String _translateGrowthSvg(
+  String svg,
+) {
+  String translated = svg;
+
+  final bool spanish =
+      AppConfig.idioma.value == 'es';
+
+  // ==========================================================================
+  // RESULTADO
+  // ==========================================================================
+
+  translated = translated.replaceAll(
+    'Calculated Result',
+    T.txt(
+      'growthSvgCalculatedResult',
+    ),
+  );
+
+  translated = translated.replaceAll(
+    'Trajectory',
+    T.txt(
+      'growthSvgTrajectory',
+    ),
+  );
+
+  translated = translated.replaceAll(
+    'Result:',
+    '${T.txt('growthSvgResult')}:',
+  );
+
+  translated = translated.replaceAll(
+    'Age/X:',
+    '${T.txt('growthSvgAgeX')}:',
+  );
+
+  translated = translated.replaceAll(
+    '(Median)',
+    '(${T.txt('growthSvgMedian')})',
+  );
+
+  translated = translated.replaceAll(
+    'Birth',
+    T.txt(
+      'growthSvgBirth',
+    ),
+  );
+
+  // ==========================================================================
+  // PERCENTIL
+  //
+  // La librería escribe:
+  // 58.4th %ile
+  //
+  // La app mostrará:
+  //
+  // Español:
+  // Percentil: 58.4
+  //
+  // Inglés:
+  // Percentile: 58.4
+  // ==========================================================================
+
+  translated =
+      translated.replaceAllMapped(
+    RegExp(
+      r'(-?\d+(?:\.\d+)?)th %ile',
+    ),
+    (
+      match,
+    ) {
+      return '${T.txt('growthSvgPercentile')}: '
+          '${match.group(1)}';
+    },
+  );
+
+  // ==========================================================================
+  // ESPAÑOL
+  // ==========================================================================
+
+  if (spanish) {
+    // ------------------------------------------------------------------------
+    // DESVIACIÓN ESTÁNDAR
+    //
+    // Inglés: SD
+    // Español: DE
+    // ------------------------------------------------------------------------
+
+    translated = translated.replaceAll(
+      RegExp(
+        r'\bSD\b',
+      ),
+      'DE',
+    );
+
+    // ------------------------------------------------------------------------
+    // EDAD DEL RESULTADO
+    //
+    // 5 days -> 5 días
+    // ------------------------------------------------------------------------
+
+    translated =
+        translated.replaceAllMapped(
+      RegExp(
+        r'(\d+)\s+days',
+      ),
+      (
+        match,
+      ) {
+        return '${match.group(1)} días';
+      },
+    );
+
+    // ------------------------------------------------------------------------
+    // FORMATO DEL CALLOUT
+    //
+    // 12.0 mo -> 12.0 meses
+    // ------------------------------------------------------------------------
+
+    translated =
+        translated.replaceAllMapped(
+      RegExp(
+        r'(\d+(?:\.\d+)?)\s+mo\b',
+      ),
+      (
+        match,
+      ) {
+        return '${match.group(1)} meses';
+      },
+    );
+
+    // ------------------------------------------------------------------------
+    // DÍAS ENTRE PARÉNTESIS
+    //
+    // (365d) -> (365 d)
+    // ------------------------------------------------------------------------
+
+    translated =
+        translated.replaceAllMapped(
+      RegExp(
+        r'\((\d+)d\)',
+      ),
+      (
+        match,
+      ) {
+        return '(${match.group(1)} d)';
+      },
+    );
+
+    // ------------------------------------------------------------------------
+    // AÑOS ENTRE PARÉNTESIS
+    //
+    // (2.0y) -> (2.0 a)
+    // ------------------------------------------------------------------------
+
+    translated =
+        translated.replaceAllMapped(
+      RegExp(
+        r'\((\d+(?:\.\d+)?)y\)',
+      ),
+      (
+        match,
+      ) {
+        return '(${match.group(1)} a)';
+      },
+    );
+
+    // ------------------------------------------------------------------------
+    // ETIQUETAS DEL EJE X
+    //
+    // 1y -> 1 a
+    // 2y -> 2 a
+    //
+    // Solo se cambia cuando aparece dentro de una etiqueta SVG.
+    // ------------------------------------------------------------------------
+
+    translated =
+        translated.replaceAllMapped(
+      RegExp(
+        r'>(\d+)y<',
+      ),
+      (
+        match,
+      ) {
+        return '>${match.group(1)} a<';
+      },
+    );
+
+    // ------------------------------------------------------------------------
+    // MESES DEL EJE
+    //
+    // 6m -> 6 m
+    // 12m -> 12 m
+    // ------------------------------------------------------------------------
+
+    translated =
+        translated.replaceAllMapped(
+      RegExp(
+        r'>(\d+)m<',
+      ),
+      (
+        match,
+      ) {
+        return '>${match.group(1)} m<';
+      },
+    );
+
+    // ------------------------------------------------------------------------
+    // SI EN EL FUTURO SE CAMBIA DE Z-SCORE A PERCENTILES
+    // ------------------------------------------------------------------------
+
+    translated = translated.replaceAll(
+      '50th (Mediana)',
+      'P50 (Mediana)',
+    );
+
+    translated = translated.replaceAll(
+      '15th / 85th',
+      'P15 / P85',
+    );
+
+    translated = translated.replaceAll(
+      '3rd / 97th',
+      'P3 / P97',
+    );
+  }
+
+  return translated;
+}
+
+// ============================================================================
+// PÁGINA
+// ============================================================================
+
 class GrowthChartsPage extends StatefulWidget {
   final Child child;
 
@@ -272,10 +523,6 @@ class _GrowthChartsContent
             ),
             child: Row(
               children: [
-                // ================================================
-                // FOTO DEL NIÑO
-                // ================================================
-
                 ChildAvatar(
                   child:
                       child,
@@ -464,7 +711,7 @@ class _GrowthChartsContent
           ),
 
           // ======================================================
-          // LONGITUD / TALLA POR EDAD
+          // LONGITUD / TALLA PARA EDAD
           // ======================================================
 
           _GrowthChartCard(
@@ -527,6 +774,7 @@ class _GrowthChartsContent
                 'weightKgShort',
               ),
             ),
+
             const SizedBox(
               height:
                   22,
@@ -563,6 +811,7 @@ class _GrowthChartsContent
                 'weightKgShort',
               ),
             ),
+
             const SizedBox(
               height:
                   22,
@@ -608,6 +857,7 @@ class _GrowthChartsContent
               height:
                   20,
             ),
+
             Container(
               padding:
                   const EdgeInsets.all(
@@ -637,10 +887,12 @@ class _GrowthChartsContent
                     color:
                         Colors.orange,
                   ),
+
                   const SizedBox(
                     width:
                         10,
                   ),
+
                   Expanded(
                     child: Text(
                       T.txt(
@@ -787,10 +1039,15 @@ class _GrowthChartCard
     late final String svg;
 
     try {
-      svg =
+      final String generatedSvg =
           results.toSvg(
         config:
             config,
+      );
+
+      svg =
+          _translateGrowthSvg(
+        generatedSvg,
       );
     } catch (_) {
       return _ChartErrorCard(
@@ -939,10 +1196,12 @@ class _GrowthChartCard
                   0xFF00A896,
                 ),
               ),
+
               const SizedBox(
                 width:
                     6,
               ),
+
               Expanded(
                 child: Text(
                   T.txt(
@@ -1013,10 +1272,12 @@ class _EmptyChartCard
               0xFF00A896,
             ),
           ),
+
           const SizedBox(
             width:
                 12,
           ),
+
           Expanded(
             child: Column(
               crossAxisAlignment:
@@ -1032,6 +1293,7 @@ class _EmptyChartCard
                         FontWeight.w700,
                   ),
                 ),
+
                 Text(
                   T.txt(
                     'growthChartNoData',
@@ -1097,13 +1359,16 @@ class _ChartErrorCard
             color:
                 Colors.orange,
           ),
+
           const SizedBox(
             width:
                 10,
           ),
+
           Expanded(
             child: Text(
-              '$title\n${T.txt('growthChartRenderError')}',
+              '$title\n'
+              '${T.txt('growthChartRenderError')}',
               style:
                   TextStyle(
                 fontFamily:
