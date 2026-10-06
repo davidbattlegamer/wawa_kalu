@@ -59,10 +59,16 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
+
   image_path: "assets/images/WawaKalu_icono.png"
 
   adaptive_icon_foreground: "assets/images/WawaKalu_icono.png"
-  adaptive_icon_background: "#00000000"
+  adaptive_icon_background: "#FFFFFF"
+
+  windows:
+    generate: true
+    image_path: "assets/images/WawaKalu_icono.png"
+    icon_size: 256
 
   web:
     generate: true

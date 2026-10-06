@@ -999,7 +999,8 @@ class T {
         'Cuando se equivoque, guíelo con palabras sencillas y tono tranquilo.',
     'affectionAlert':
         'Si el adulto se siente muy estresado, es mejor pedir apoyo antes de reaccionar con enojo.',
-
+'vaccinePreviousDoseRequired':
+    'Primero debes registrar la dosis anterior para poder registrar esta vacuna.',
     'healthAlertTitle':
         'Salud y señales de alerta',
     'healthAlertSubtitle':
@@ -1971,7 +1972,8 @@ class T {
         'Check the floor to remove small pieces the child could put in their mouth.',
     'safeSpacesAlert':
         'Pay special attention to stairs, kitchen, bathroom, outlets, and small objects.',
-
+'vaccinePreviousDoseRequired':
+    'You must register the previous dose before you can register this vaccine.',
     'activeSupervisionTitle':
         'Active supervision',
     'activeSupervisionSubtitle':
