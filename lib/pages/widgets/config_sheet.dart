@@ -14,7 +14,7 @@ import '../app_texts.dart';
 // DATOS DE LA APP
 // ============================================================================
 
-const String _appVersion = '1.0.0';
+const String _appVersion = '1.1.0';
 const String _developers = 'D.S Y K.T';
 
 // ============================================================================
