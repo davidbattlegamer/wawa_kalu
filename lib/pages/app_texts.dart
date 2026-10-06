@@ -832,6 +832,18 @@ class T {
         'Verifica que se deshagan fácilmente al presionarlas.',
     'recipe4Rec':
         'Sirve bajo supervisión. Las bolitas deben ser pequeñas, suaves y fáciles de aplastar.',
+'homeHealthLoading':
+    'Actualizando información de salud...',
+
+'homeHealthLoadError':
+    'No se pudo actualizar esta información.',
+'appVersion': 'Versión',
+'developers': 'Desarrolladores',
+'homeVaccinesNoPending':
+    'No hay dosis pendientes en el seguimiento actual.',
+
+'deleteChildError':
+    'No se pudo eliminar el perfil. Inténtalo nuevamente.',
 
     'recipe5Title': 'Vasito de yogur natural con fruta',
     'recipe5Age': 'Desde los 12 meses',
@@ -1563,7 +1575,17 @@ class T {
 
 'testNotification':
     'Test notification',
+'homeHealthLoading':
+    'Updating health information...',
 
+'homeHealthLoadError':
+    'This information could not be updated.',
+
+'homeVaccinesNoPending':
+    'There are no pending doses in the current tracking schedule.',
+
+'deleteChildError':
+    'The profile could not be deleted. Please try again.',
 'vaccineNotificationTitle':
     '{name}’s vaccine 💉',
 
@@ -2122,7 +2144,8 @@ class T {
         'When the child makes a mistake, guide them with simple words and a calm tone.',
     'affectionAlert':
         'If the adult feels very stressed, it is better to ask for support before reacting with anger.',
-
+'appVersion': 'Version',
+'developers': 'Developers',
     'healthAlertTitle':
         'Health and warning signs',
     'healthAlertSubtitle':
