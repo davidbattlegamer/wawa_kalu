@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../../pages/app_texts.dart';
 
+import '../../growth/pages/growth_page.dart';
+import '../../vaccines/pages/vaccines_page.dart';
+import '../../vaccines/services/vaccine_notification_service.dart';
+
 import '../data/child_repository.dart';
 import '../models/child.dart';
 import '../utils/child_display_utils.dart';
@@ -9,8 +13,7 @@ import '../widgets/child_avatar.dart';
 
 import 'child_form_page.dart';
 
-class ChildProfilePage
-    extends StatelessWidget {
+class ChildProfilePage extends StatelessWidget {
   final String childId;
 
   const ChildProfilePage({
@@ -19,33 +22,24 @@ class ChildProfilePage
   });
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
-    return ValueListenableBuilder<
-        List<Child>>(
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<List<Child>>(
       valueListenable:
-          ChildRepository
-              .instance
-              .children,
+          ChildRepository.instance.children,
       builder: (
         context,
         children,
         _,
       ) {
         final Child? child =
-            ChildRepository
-                .instance
-                .findById(
+            ChildRepository.instance.findById(
           childId,
         );
 
         if (child == null) {
           return Scaffold(
-            body:
-                Center(
-              child:
-                  Text(
+            body: Center(
+              child: Text(
                 T.txt(
                   'childNotFound',
                 ),
@@ -55,21 +49,27 @@ class ChildProfilePage
         }
 
         return _ChildProfileContent(
-          child:
-              child,
+          child: child,
         );
       },
     );
   }
 }
 
-class _ChildProfileContent
-    extends StatelessWidget {
+// =================================================================
+// CONTENIDO DEL PERFIL
+// =================================================================
+
+class _ChildProfileContent extends StatelessWidget {
   final Child child;
 
   const _ChildProfileContent({
     required this.child,
   });
+
+  // ===============================================================
+  // EDITAR
+  // ===============================================================
 
   Future<void> _edit(
     BuildContext context,
@@ -77,35 +77,81 @@ class _ChildProfileContent
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) =>
-            ChildFormPage(
-          child:
-              child,
+        builder: (_) => ChildFormPage(
+          child: child,
         ),
       ),
     );
   }
+
+  // ===============================================================
+  // ABRIR VACUNAS
+  // ===============================================================
+
+  Future<void> _openVaccines(
+    BuildContext context,
+  ) async {
+    await ChildRepository.instance.selectChild(
+      child.id,
+    );
+
+    if (!context.mounted) {
+      return;
+    }
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            const VaccinesPage(),
+      ),
+    );
+  }
+
+  // ===============================================================
+  // ABRIR CRECIMIENTO
+  // ===============================================================
+
+  Future<void> _openGrowth(
+    BuildContext context,
+  ) async {
+    await ChildRepository.instance.selectChild(
+      child.id,
+    );
+
+    if (!context.mounted) {
+      return;
+    }
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            const GrowthPage(),
+      ),
+    );
+  }
+
+  // ===============================================================
+  // ELIMINAR
+  // ===============================================================
 
   Future<void> _delete(
     BuildContext context,
   ) async {
     final bool? confirm =
         await showDialog<bool>(
-      context:
-          context,
-      builder:
-          (
+      context: context,
+      builder: (
         dialogContext,
       ) {
         return AlertDialog(
-          title:
-              Text(
+          title: Text(
             T.txt(
               'deleteChild',
             ),
           ),
-          content:
-              Text(
+          content: Text(
             T.txt(
               'deleteChildConfirmation',
             ).replaceAll(
@@ -115,38 +161,33 @@ class _ChildProfileContent
           ),
           actions: [
             TextButton(
-              onPressed:
-                  () {
+              onPressed: () {
                 Navigator.pop(
                   dialogContext,
                   false,
                 );
               },
-              child:
-                  Text(
+              child: Text(
                 T.txt(
                   'cancel',
                 ),
               ),
             ),
             FilledButton(
-              onPressed:
-                  () {
+              onPressed: () {
                 Navigator.pop(
                   dialogContext,
                   true,
                 );
               },
               style:
-                  FilledButton
-                      .styleFrom(
+                  FilledButton.styleFrom(
                 backgroundColor:
                     Colors.redAccent,
                 foregroundColor:
                     Colors.white,
               ),
-              child:
-                  Text(
+              child: Text(
                 T.txt(
                   'delete',
                 ),
@@ -162,11 +203,71 @@ class _ChildProfileContent
       return;
     }
 
-    await ChildRepository
-        .instance
-        .removeChild(
-      child.id,
-    );
+    bool notificationsCancelled =
+        false;
+
+    try {
+      // -----------------------------------------------------------
+      // CANCELAR TODAS LAS NOTIFICACIONES DE ESTE NIÑO
+      // -----------------------------------------------------------
+
+      await VaccineNotificationService
+          .instance
+          .cancelForChild(
+        child,
+      );
+
+      notificationsCancelled =
+          true;
+
+      // -----------------------------------------------------------
+      // ELIMINAR PERFIL
+      //
+      // La base elimina por cascada vacunas y crecimiento.
+      // ChildRepository elimina también la fotografía.
+      // -----------------------------------------------------------
+
+      await ChildRepository.instance
+          .removeChild(
+        child.id,
+      );
+    } catch (e) {
+      // Si las notificaciones se alcanzaron a cancelar
+      // pero falló la eliminación del perfil,
+      // intentamos restaurarlas.
+      if (notificationsCancelled) {
+        try {
+          await VaccineNotificationService
+              .instance
+              .rescheduleForChild(
+            child,
+          );
+        } catch (_) {
+          // No ocultamos el error principal.
+        }
+      }
+
+      debugPrint(
+        'Error eliminando perfil infantil: $e',
+      );
+
+      if (!context.mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+        SnackBar(
+          content: Text(
+            T.txt(
+              'deleteChildError',
+            ),
+          ),
+        ),
+      );
+
+      return;
+    }
 
     if (!context.mounted) {
       return;
@@ -177,13 +278,14 @@ class _ChildProfileContent
     );
   }
 
+  // ===============================================================
+  // BUILD
+  // ===============================================================
+
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     final bool dark =
-        Theme.of(context)
-                .brightness ==
+        Theme.of(context).brightness ==
             Brightness.dark;
 
     final Color childColor =
@@ -199,6 +301,11 @@ class _ChildProfileContent
           : const Color(
               0xFFFAF7F2,
             ),
+
+      // ===========================================================
+      // APP BAR
+      // ===========================================================
+
       appBar: AppBar(
         backgroundColor: dark
             ? const Color(
@@ -210,17 +317,13 @@ class _ChildProfileContent
             : const Color(
                 0xFF2D2D2D,
               ),
-        elevation:
-            0,
-        title:
-            Text(
+        elevation: 0,
+        title: Text(
           T.txt(
             'childProfile',
           ),
-          style:
-              const TextStyle(
-            fontFamily:
-                'Fredoka',
+          style: const TextStyle(
+            fontFamily: 'Fredoka',
             fontWeight:
                 FontWeight.w700,
           ),
@@ -231,37 +334,29 @@ class _ChildProfileContent
                 T.txt(
               'edit',
             ),
-            onPressed:
-                () {
+            onPressed: () {
               _edit(
                 context,
               );
             },
-            icon:
-                const Icon(
-              Icons
-                  .edit_rounded,
+            icon: const Icon(
+              Icons.edit_rounded,
             ),
           ),
           PopupMenuButton<String>(
-            onSelected:
-                (
+            onSelected: (
               value,
             ) {
-              if (value ==
-                  'delete') {
+              if (value == 'delete') {
                 _delete(
                   context,
                 );
               }
             },
-            itemBuilder:
-                (_) => [
+            itemBuilder: (_) => [
               PopupMenuItem<String>(
-                value:
-                    'delete',
-                child:
-                    Row(
+                value: 'delete',
+                child: Row(
                   children: [
                     const Icon(
                       Icons
@@ -270,8 +365,7 @@ class _ChildProfileContent
                           Colors.redAccent,
                     ),
                     const SizedBox(
-                      width:
-                          10,
+                      width: 10,
                     ),
                     Text(
                       T.txt(
@@ -285,9 +379,9 @@ class _ChildProfileContent
           ),
         ],
       ),
+
       body:
-          ValueListenableBuilder<
-              String?>(
+          ValueListenableBuilder<String?>(
         valueListenable:
             ChildRepository
                 .instance
@@ -298,51 +392,46 @@ class _ChildProfileContent
           _,
         ) {
           final bool selected =
-              selectedId ==
-                  child.id;
+              selectedId == child.id;
 
           return SafeArea(
             child:
                 SingleChildScrollView(
               padding:
-                  const EdgeInsets
-                      .fromLTRB(
+                  const EdgeInsets.fromLTRB(
                 20,
                 24,
                 20,
                 36,
               ),
-              child:
-                  Column(
+              child: Column(
                 children: [
-                  // ==============================================
+                  // ===============================================
                   // FOTO
-                  // ==============================================
+                  // ===============================================
 
                   ChildAvatar(
-                    child:
-                        child,
-                    size:
-                        112,
-                    borderWidth:
-                        2.5,
+                    child: child,
+                    size: 112,
+                    borderWidth: 2.5,
                   ),
 
                   const SizedBox(
-                    height:
-                        14,
+                    height: 14,
                   ),
+
+                  // ===============================================
+                  // NOMBRE
+                  // ===============================================
 
                   Text(
                     child.name,
                     textAlign:
                         TextAlign.center,
-                    style:
-                        TextStyle(
+                    style: TextStyle(
                       fontFamily:
                           'Fredoka',
-                      fontSize:
-                          29,
+                      fontSize: 29,
                       fontWeight:
                           FontWeight.w800,
                       color: dark
@@ -354,8 +443,7 @@ class _ChildProfileContent
                   ),
 
                   const SizedBox(
-                    height:
-                        4,
+                    height: 4,
                   ),
 
                   Text(
@@ -364,12 +452,10 @@ class _ChildProfileContent
                     ),
                     textAlign:
                         TextAlign.center,
-                    style:
-                        TextStyle(
+                    style: TextStyle(
                       fontFamily:
                           'Baloo2',
-                      fontSize:
-                          17,
+                      fontSize: 17,
                       fontWeight:
                           FontWeight.w500,
                       color: dark
@@ -379,16 +465,18 @@ class _ChildProfileContent
                   ),
 
                   const SizedBox(
-                    height:
-                        20,
+                    height: 20,
                   ),
+
+                  // ===============================================
+                  // NIÑO ACTIVO
+                  // ===============================================
 
                   if (!selected)
                     SizedBox(
                       width:
                           double.infinity,
-                      height:
-                          52,
+                      height: 52,
                       child:
                           OutlinedButton.icon(
                         onPressed:
@@ -408,26 +496,24 @@ class _ChildProfileContent
                           ),
                           side:
                               const BorderSide(
-                            color:
-                                Color(
+                            color: Color(
                               0xFF7B2CBF,
                             ),
                           ),
                           shape:
                               RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.circular(
+                                BorderRadius
+                                    .circular(
                               18,
                             ),
                           ),
                         ),
-                        icon:
-                            const Icon(
+                        icon: const Icon(
                           Icons
                               .check_circle_outline_rounded,
                         ),
-                        label:
-                            Text(
+                        label: Text(
                           T.txt(
                             'selectThisChild',
                           ),
@@ -446,8 +532,7 @@ class _ChildProfileContent
                       width:
                           double.infinity,
                       padding:
-                          const EdgeInsets
-                              .all(
+                          const EdgeInsets.all(
                         13,
                       ),
                       decoration:
@@ -456,11 +541,11 @@ class _ChildProfileContent
                             const Color(
                           0xFF00A896,
                         ).withValues(
-                          alpha:
-                              0.12,
+                          alpha: 0.12,
                         ),
                         borderRadius:
-                            BorderRadius.circular(
+                            BorderRadius
+                                .circular(
                           16,
                         ),
                         border:
@@ -469,15 +554,14 @@ class _ChildProfileContent
                               const Color(
                             0xFF00A896,
                           ).withValues(
-                            alpha:
-                                0.20,
+                            alpha: 0.20,
                           ),
                         ),
                       ),
-                      child:
-                          Row(
+                      child: Row(
                         mainAxisAlignment:
-                            MainAxisAlignment.center,
+                            MainAxisAlignment
+                                .center,
                         children: [
                           const Icon(
                             Icons
@@ -488,8 +572,7 @@ class _ChildProfileContent
                             ),
                           ),
                           const SizedBox(
-                            width:
-                                8,
+                            width: 8,
                           ),
                           Text(
                             T.txt(
@@ -512,14 +595,16 @@ class _ChildProfileContent
                     ),
 
                   const SizedBox(
-                    height:
-                        22,
+                    height: 22,
                   ),
+
+                  // ===============================================
+                  // FECHA DE NACIMIENTO
+                  // ===============================================
 
                   _InfoCard(
                     icon:
-                        Icons
-                            .cake_outlined,
+                        Icons.cake_outlined,
                     title:
                         T.txt(
                       'birthDate',
@@ -533,9 +618,12 @@ class _ChildProfileContent
                   ),
 
                   const SizedBox(
-                    height:
-                        12,
+                    height: 12,
                   ),
+
+                  // ===============================================
+                  // SEXO
+                  // ===============================================
 
                   _InfoCard(
                     icon:
@@ -558,25 +646,24 @@ class _ChildProfileContent
                   ),
 
                   const SizedBox(
-                    height:
-                        26,
+                    height: 26,
                   ),
+
+                  // ===============================================
+                  // SALUD
+                  // ===============================================
 
                   Align(
                     alignment:
-                        Alignment
-                            .centerLeft,
-                    child:
-                        Text(
+                        Alignment.centerLeft,
+                    child: Text(
                       T.txt(
                         'childHealth',
                       ),
-                      style:
-                          TextStyle(
+                      style: TextStyle(
                         fontFamily:
                             'Fredoka',
-                        fontSize:
-                            22,
+                        fontSize: 22,
                         fontWeight:
                             FontWeight.w800,
                         color: dark
@@ -589,11 +676,14 @@ class _ChildProfileContent
                   ),
 
                   const SizedBox(
-                    height:
-                        12,
+                    height: 12,
                   ),
 
-                  _ComingHealthCard(
+                  // ===============================================
+                  // VACUNAS
+                  // ===============================================
+
+                  _HealthCard(
                     icon:
                         Icons
                             .vaccines_rounded,
@@ -607,14 +697,22 @@ class _ChildProfileContent
                     ),
                     color:
                         Colors.blue,
+                    onTap: () {
+                      _openVaccines(
+                        context,
+                      );
+                    },
                   ),
 
                   const SizedBox(
-                    height:
-                        12,
+                    height: 12,
                   ),
 
-                  _ComingHealthCard(
+                  // ===============================================
+                  // CRECIMIENTO
+                  // ===============================================
+
+                  _HealthCard(
                     icon:
                         Icons
                             .show_chart_rounded,
@@ -630,6 +728,11 @@ class _ChildProfileContent
                         const Color(
                       0xFF00A896,
                     ),
+                    onTap: () {
+                      _openGrowth(
+                        context,
+                      );
+                    },
                   ),
                 ],
               ),
@@ -641,8 +744,11 @@ class _ChildProfileContent
   }
 }
 
-class _InfoCard
-    extends StatelessWidget {
+// =================================================================
+// TARJETA DE INFORMACIÓN
+// =================================================================
+
+class _InfoCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String value;
@@ -656,25 +762,19 @@ class _InfoCard
   });
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     final bool dark =
-        Theme.of(context)
-                .brightness ==
+        Theme.of(context).brightness ==
             Brightness.dark;
 
     return Container(
-      width:
-          double.infinity,
+      width: double.infinity,
       padding:
           const EdgeInsets.all(
         16,
       ),
-      decoration:
-          BoxDecoration(
-        gradient:
-            LinearGradient(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
           colors: [
             dark
                 ? const Color(
@@ -682,9 +782,8 @@ class _InfoCard
                   )
                 : Colors.white,
             color.withValues(
-              alpha: dark
-                  ? 0.12
-                  : 0.06,
+              alpha:
+                  dark ? 0.12 : 0.06,
             ),
           ],
         ),
@@ -692,80 +791,63 @@ class _InfoCard
             BorderRadius.circular(
           20,
         ),
-        border:
-            Border.all(
-          color:
-              color.withValues(
-            alpha:
-                0.12,
+        border: Border.all(
+          color: color.withValues(
+            alpha: 0.12,
           ),
         ),
       ),
-      child:
-          Row(
+      child: Row(
         children: [
           Container(
-            width:
-                48,
-            height:
-                48,
+            width: 48,
+            height: 48,
             decoration:
                 BoxDecoration(
-              color:
-                  color.withValues(
-                alpha:
-                    0.13,
+              color: color.withValues(
+                alpha: 0.13,
               ),
               borderRadius:
-                  BorderRadius
-                      .circular(
+                  BorderRadius.circular(
                 15,
               ),
             ),
-            child:
-                Icon(
+            child: Icon(
               icon,
-              color:
-                  color,
-              size:
-                  27,
+              color: color,
+              size: 27,
             ),
           ),
+
           const SizedBox(
-            width:
-                14,
+            width: 14,
           ),
+
           Expanded(
-            child:
-                Column(
+            child: Column(
               crossAxisAlignment:
                   CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style:
-                      TextStyle(
+                  style: TextStyle(
                     fontFamily:
                         'Baloo2',
-                    fontSize:
-                        14,
+                    fontSize: 14,
                     color: dark
                         ? Colors.white60
                         : Colors.black54,
                   ),
                 ),
                 const SizedBox(
-                  height:
-                      1,
+                  height: 1,
                 ),
                 Text(
                   value,
-                  style:
-                      TextStyle(
+                  style: TextStyle(
                     fontFamily:
                         'Fredoka',
-                    fontSize:
-                        17,
+                    fontSize: 17,
                     fontWeight:
                         FontWeight.w700,
                     color: dark
@@ -784,175 +866,165 @@ class _InfoCard
   }
 }
 
-class _ComingHealthCard
-    extends StatelessWidget {
+// =================================================================
+// TARJETA DE SALUD
+// =================================================================
+
+class _HealthCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
   final Color color;
+  final VoidCallback onTap;
 
-  const _ComingHealthCard({
+  const _HealthCard({
     required this.icon,
     required this.title,
     required this.subtitle,
     required this.color,
+    required this.onTap,
   });
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     final bool dark =
-        Theme.of(context)
-                .brightness ==
+        Theme.of(context).brightness ==
             Brightness.dark;
 
-    return Container(
-      width:
-          double.infinity,
-      padding:
-          const EdgeInsets.all(
-        16,
+    return Material(
+      color:
+          Colors.transparent,
+      borderRadius:
+          BorderRadius.circular(
+        20,
       ),
-      decoration:
-          BoxDecoration(
-        gradient:
-            LinearGradient(
-          colors: [
-            dark
-                ? const Color(
-                    0xFF211B2E,
-                  )
-                : Colors.white,
-            color.withValues(
-              alpha: dark
-                  ? 0.16
-                  : 0.08,
-            ),
-          ],
-        ),
+      child: InkWell(
+        onTap:
+            onTap,
         borderRadius:
             BorderRadius.circular(
           20,
         ),
-        border:
-            Border.all(
-          color:
-              color.withValues(
-            alpha:
-                0.13,
+        child: Container(
+          width:
+              double.infinity,
+          padding:
+              const EdgeInsets.all(
+            16,
           ),
-        ),
-      ),
-      child:
-          Row(
-        children: [
-          Container(
-            width:
-                50,
-            height:
-                50,
-            decoration:
-                BoxDecoration(
-              color:
-                  color.withValues(
-                alpha:
-                    0.14,
-              ),
-              borderRadius:
-                  BorderRadius
-                      .circular(
-                16,
-              ),
-            ),
-            child:
-                Icon(
-              icon,
-              color:
-                  color,
-              size:
-                  28,
-            ),
-          ),
-          const SizedBox(
-            width:
-                13,
-          ),
-          Expanded(
-            child:
-                Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style:
-                      TextStyle(
-                    fontFamily:
-                        'Fredoka',
-                    fontSize:
-                        17,
-                    fontWeight:
-                        FontWeight.w700,
-                    color: dark
-                        ? Colors.white
-                        : const Color(
-                            0xFF2D2D2D,
-                          ),
-                  ),
-                ),
-                const SizedBox(
-                  height:
-                      2,
-                ),
-                Text(
-                  subtitle,
-                  style:
-                      TextStyle(
-                    fontFamily:
-                        'Baloo2',
-                    fontSize:
-                        14,
-                    height:
-                        1.15,
-                    color: dark
-                        ? Colors.white60
-                        : Colors.black54,
-                  ),
-                ),
-                const SizedBox(
-                  height:
-                      2,
-                ),
-                Text(
-                  T.txt(
-                    'comingSoon',
-                  ),
-                  style:
-                      TextStyle(
-                    fontFamily:
-                        'Baloo2',
-                    fontSize:
-                        13,
-                    fontWeight:
-                        FontWeight.w700,
-                    color:
-                        color,
-                  ),
+          decoration:
+              BoxDecoration(
+            gradient:
+                LinearGradient(
+              colors: [
+                dark
+                    ? const Color(
+                        0xFF211B2E,
+                      )
+                    : Colors.white,
+                color.withValues(
+                  alpha:
+                      dark
+                          ? 0.16
+                          : 0.08,
                 ),
               ],
             ),
-          ),
-          Icon(
-            Icons
-                .chevron_right_rounded,
-            color:
-                color.withValues(
-              alpha:
-                  0.65,
+            borderRadius:
+                BorderRadius.circular(
+              20,
+            ),
+            border:
+                Border.all(
+              color:
+                  color.withValues(
+                alpha:
+                    0.13,
+              ),
             ),
           ),
-        ],
+          child: Row(
+            children: [
+              Container(
+                width: 50,
+                height: 50,
+                decoration:
+                    BoxDecoration(
+                  color:
+                      color.withValues(
+                    alpha: 0.14,
+                  ),
+                  borderRadius:
+                      BorderRadius
+                          .circular(
+                    16,
+                  ),
+                ),
+                child: Icon(
+                  icon,
+                  color:
+                      color,
+                  size: 28,
+                ),
+              ),
+
+              const SizedBox(
+                width: 13,
+              ),
+
+              Expanded(
+                child: Column(
+                  crossAxisAlignment:
+                      CrossAxisAlignment
+                          .start,
+                  children: [
+                    Text(
+                      title,
+                      style:
+                          TextStyle(
+                        fontFamily:
+                            'Fredoka',
+                        fontSize:
+                            17,
+                        fontWeight:
+                            FontWeight.w700,
+                        color: dark
+                            ? Colors.white
+                            : const Color(
+                                0xFF2D2D2D,
+                              ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 2,
+                    ),
+                    Text(
+                      subtitle,
+                      style:
+                          TextStyle(
+                        fontFamily:
+                            'Baloo2',
+                        fontSize:
+                            14,
+                        height:
+                            1.15,
+                        color: dark
+                            ? Colors.white60
+                            : Colors.black54,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Icon(
+                Icons
+                    .chevron_right_rounded,
+                color: color,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

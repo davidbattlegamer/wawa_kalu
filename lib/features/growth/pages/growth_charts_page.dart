@@ -9,6 +9,7 @@ import '../../../pages/app_texts.dart';
 
 import '../../children/models/child.dart';
 import '../../children/utils/child_display_utils.dart';
+import '../../children/widgets/child_avatar.dart';
 
 import '../data/growth_repository.dart';
 import '../models/growth_measurement.dart';
@@ -104,7 +105,9 @@ class _GrowthChartsPageState
             actions: [
               IconButton(
                 tooltip:
-                    T.txt('refresh'),
+                    T.txt(
+                  'refresh',
+                ),
                 onPressed:
                     _reload,
                 icon:
@@ -123,7 +126,8 @@ class _GrowthChartsPageState
               context,
               snapshot,
             ) {
-              if (snapshot.connectionState ==
+              if (snapshot
+                      .connectionState ==
                   ConnectionState.waiting) {
                 return const Center(
                   child:
@@ -135,8 +139,7 @@ class _GrowthChartsPageState
                 return Center(
                   child: Padding(
                     padding:
-                        const EdgeInsets
-                            .all(
+                        const EdgeInsets.all(
                       24,
                     ),
                     child: Text(
@@ -144,28 +147,26 @@ class _GrowthChartsPageState
                         'growthChartsLoadError',
                       ),
                       textAlign:
-                          TextAlign
-                              .center,
+                          TextAlign.center,
                     ),
                   ),
                 );
               }
 
-              final List<GrowthMeasurement>
+              final List<
+                      GrowthMeasurement>
                   measurements =
                   snapshot.data ??
                       <GrowthMeasurement>[];
 
               if (measurements.isEmpty) {
                 return _NoMeasurements(
-                  dark:
-                      dark,
+                  dark: dark,
                 );
               }
 
               final WhoGrowthChartData data =
-                  WhoGrowthService
-                      .instance
+                  WhoGrowthService.instance
                       .build(
                 child:
                     widget.child,
@@ -175,8 +176,7 @@ class _GrowthChartsPageState
 
               if (!data.hasAnyData) {
                 return _NoValidMeasurements(
-                  dark:
-                      dark,
+                  dark: dark,
                 );
               }
 
@@ -195,6 +195,10 @@ class _GrowthChartsPageState
     );
   }
 }
+
+// ================================================================
+// CONTENIDO PRINCIPAL
+// ================================================================
 
 class _GrowthChartsContent
     extends StatelessWidget {
@@ -220,17 +224,16 @@ class _GrowthChartsContent
     return SafeArea(
       child: ListView(
         padding:
-            const EdgeInsets
-                .fromLTRB(
+            const EdgeInsets.fromLTRB(
           18,
           18,
           18,
           40,
         ),
         children: [
-          // ------------------------------------------------------
-          // PERFIL
-          // ------------------------------------------------------
+          // ======================================================
+          // PERFIL DEL NIÑO
+          // ======================================================
 
           Container(
             padding:
@@ -260,42 +263,33 @@ class _GrowthChartsContent
                   BorderRadius.circular(
                 23,
               ),
+              border: Border.all(
+                color:
+                    childColor.withValues(
+                  alpha: 0.12,
+                ),
+              ),
             ),
             child: Row(
               children: [
-                Container(
-                  width:
+                // ================================================
+                // FOTO DEL NIÑO
+                // ================================================
+
+                ChildAvatar(
+                  child:
+                      child,
+                  size:
                       54,
-                  height:
-                      54,
-                  decoration:
-                      BoxDecoration(
-                    shape:
-                        BoxShape.circle,
-                    color:
-                        childColor
-                            .withValues(
-                      alpha:
-                          0.14,
-                    ),
-                  ),
-                  child: Icon(
-                    child.sex ==
-                            ChildSex.girl
-                        ? Icons
-                            .face_3_rounded
-                        : Icons
-                            .face_6_rounded,
-                    color:
-                        childColor,
-                    size:
-                        31,
-                  ),
+                  borderWidth:
+                      2,
                 ),
+
                 const SizedBox(
                   width:
                       13,
                 ),
+
                 Expanded(
                   child: Column(
                     crossAxisAlignment:
@@ -304,6 +298,11 @@ class _GrowthChartsContent
                     children: [
                       Text(
                         child.name,
+                        maxLines:
+                            1,
+                        overflow:
+                            TextOverflow
+                                .ellipsis,
                         style:
                             TextStyle(
                           fontFamily:
@@ -320,6 +319,10 @@ class _GrowthChartsContent
                                 ),
                         ),
                       ),
+                      const SizedBox(
+                        height:
+                            2,
+                      ),
                       Text(
                         childAgeText(
                           child.birthDate,
@@ -329,15 +332,14 @@ class _GrowthChartsContent
                           fontFamily:
                               'Baloo2',
                           color: dark
-                              ? Colors
-                                  .white60
-                              : Colors
-                                  .black54,
+                              ? Colors.white60
+                              : Colors.black54,
                         ),
                       ),
                     ],
                   ),
                 ),
+
                 const Icon(
                   Icons
                       .insert_chart_rounded,
@@ -357,9 +359,9 @@ class _GrowthChartsContent
                 18,
           ),
 
-          // ------------------------------------------------------
+          // ======================================================
           // INFORMACIÓN OMS
-          // ------------------------------------------------------
+          // ======================================================
 
           Container(
             padding:
@@ -427,9 +429,9 @@ class _GrowthChartsContent
                 24,
           ),
 
-          // ------------------------------------------------------
+          // ======================================================
           // PESO / EDAD
-          // ------------------------------------------------------
+          // ======================================================
 
           _GrowthChartCard(
             title:
@@ -447,9 +449,13 @@ class _GrowthChartsContent
             dark:
                 dark,
             xLabel:
-                T.txt('age'),
+                T.txt(
+              'age',
+            ),
             yLabel:
-                T.txt('weightKgShort'),
+                T.txt(
+              'weightKgShort',
+            ),
           ),
 
           const SizedBox(
@@ -457,9 +463,9 @@ class _GrowthChartsContent
                 22,
           ),
 
-          // ------------------------------------------------------
-          // LONGITUD/TALLA / EDAD
-          // ------------------------------------------------------
+          // ======================================================
+          // LONGITUD / TALLA POR EDAD
+          // ======================================================
 
           _GrowthChartCard(
             title:
@@ -477,9 +483,13 @@ class _GrowthChartsContent
             dark:
                 dark,
             xLabel:
-                T.txt('age'),
+                T.txt(
+              'age',
+            ),
             yLabel:
-                T.txt('heightCmShort'),
+                T.txt(
+              'heightCmShort',
+            ),
           ),
 
           const SizedBox(
@@ -487,9 +497,9 @@ class _GrowthChartsContent
                 22,
           ),
 
-          // ------------------------------------------------------
+          // ======================================================
           // PESO / LONGITUD
-          // ------------------------------------------------------
+          // ======================================================
 
           if (data.weightForLength
               .isNotEmpty) ...[
@@ -523,9 +533,9 @@ class _GrowthChartsContent
             ),
           ],
 
-          // ------------------------------------------------------
+          // ======================================================
           // PESO / TALLA
-          // ------------------------------------------------------
+          // ======================================================
 
           if (data.weightForHeight
               .isNotEmpty) ...[
@@ -559,9 +569,9 @@ class _GrowthChartsContent
             ),
           ],
 
-          // ------------------------------------------------------
+          // ======================================================
           // IMC / EDAD
-          // ------------------------------------------------------
+          // ======================================================
 
           _GrowthChartCard(
             title:
@@ -579,10 +589,18 @@ class _GrowthChartsContent
             dark:
                 dark,
             xLabel:
-                T.txt('age'),
+                T.txt(
+              'age',
+            ),
             yLabel:
-                T.txt('bmiShort'),
+                T.txt(
+              'bmiShort',
+            ),
           ),
+
+          // ======================================================
+          // CONTROLES OMITIDOS
+          // ======================================================
 
           if (data.skippedMeasurements >
               0) ...[
@@ -653,6 +671,10 @@ class _GrowthChartsContent
                 20,
           ),
 
+          // ======================================================
+          // AVISO
+          // ======================================================
+
           Text(
             T.txt(
               'growthChartDisclaimer',
@@ -677,6 +699,10 @@ class _GrowthChartsContent
     );
   }
 }
+
+// ================================================================
+// TARJETA DE GRÁFICA
+// ================================================================
 
 class _GrowthChartCard
     extends StatelessWidget {
@@ -721,42 +747,31 @@ class _GrowthChartCard
           900,
       height:
           650,
-
       title:
           title,
-
       subtitle:
           T.txt(
         'whoChildGrowthStandards',
       ),
-
       xLabel:
           xLabel,
-
       yLabel:
           yLabel,
-
       theme:
           GrowthChartTheme.forSex(
         sex,
       ),
-
       displayMode:
           GrowthChartDisplayMode
               .zScore,
-
       showGridLines:
           true,
-
       showLegend:
           true,
-
       showResultCallout:
           true,
-
       showTrajectoryLine:
           true,
-
       zScoreLines:
           const <int>[
         -3,
@@ -861,6 +876,10 @@ class _GrowthChartCard
                 12,
           ),
 
+          // ======================================================
+          // GRÁFICA SVG
+          // ======================================================
+
           Container(
             height:
                 430,
@@ -949,6 +968,10 @@ class _GrowthChartCard
   }
 }
 
+// ================================================================
+// GRÁFICA SIN DATOS
+// ================================================================
+
 class _EmptyChartCard
     extends StatelessWidget {
   final String title;
@@ -997,8 +1020,7 @@ class _EmptyChartCard
           Expanded(
             child: Column(
               crossAxisAlignment:
-                  CrossAxisAlignment
-                      .start,
+                  CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
@@ -1032,6 +1054,10 @@ class _EmptyChartCard
   }
 }
 
+// ================================================================
+// ERROR AL GENERAR GRÁFICA
+// ================================================================
+
 class _ChartErrorCard
     extends StatelessWidget {
   final String title;
@@ -1054,8 +1080,7 @@ class _ChartErrorCard
       decoration:
           BoxDecoration(
         color:
-            Colors.orange
-                .withValues(
+            Colors.orange.withValues(
           alpha:
               0.08,
         ),
@@ -1095,6 +1120,10 @@ class _ChartErrorCard
   }
 }
 
+// ================================================================
+// SIN CONTROLES
+// ================================================================
+
 class _NoMeasurements
     extends StatelessWidget {
   final bool dark;
@@ -1127,10 +1156,12 @@ class _NoMeasurements
                 0xFF00A896,
               ),
             ),
+
             const SizedBox(
               height:
                   18,
             ),
+
             Text(
               T.txt(
                 'growthChartsNoMeasurements',
@@ -1152,10 +1183,12 @@ class _NoMeasurements
                       ),
               ),
             ),
+
             const SizedBox(
               height:
                   8,
             ),
+
             Text(
               T.txt(
                 'growthChartsNoMeasurementsSubtitle',
@@ -1177,6 +1210,10 @@ class _NoMeasurements
     );
   }
 }
+
+// ================================================================
+// DATOS FUERA DE RANGO
+// ================================================================
 
 class _NoValidMeasurements
     extends StatelessWidget {

@@ -4,9 +4,6 @@ import 'app_config.dart';
 import 'app_texts.dart';
 import 'widgets/config_sheet.dart';
 
-import '../features/growth/pages/growth_page.dart';
-import '../features/vaccines/pages/vaccines_page.dart';
-
 import '../features/children/data/child_repository.dart';
 import '../features/children/models/child.dart';
 import '../features/children/pages/child_form_page.dart';
@@ -14,14 +11,29 @@ import '../features/children/pages/child_profile_page.dart';
 import '../features/children/utils/child_display_utils.dart';
 import '../features/children/widgets/child_avatar.dart';
 
-class HomePage extends StatelessWidget {
+import '../features/growth/data/growth_repository.dart';
+import '../features/growth/models/growth_measurement.dart';
+import '../features/growth/pages/growth_page.dart';
+
+import '../features/vaccines/pages/vaccines_page.dart';
+import '../features/vaccines/services/vaccine_service.dart';
+
+class HomePage extends StatefulWidget {
   const HomePage({
     super.key,
   });
 
-  Future<void> _addChild(
-    BuildContext context,
-  ) async {
+  @override
+  State<HomePage> createState() =>
+      _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  // ===============================================================
+  // AGREGAR NIÑO
+  // ===============================================================
+
+  Future<void> _addChild() async {
     await Navigator.push(
       context,
       MaterialPageRoute(
@@ -29,10 +41,19 @@ class HomePage extends StatelessWidget {
             const ChildFormPage(),
       ),
     );
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {});
   }
 
+  // ===============================================================
+  // PERFIL
+  // ===============================================================
+
   Future<void> _openProfile(
-    BuildContext context,
     Child child,
   ) async {
     await Navigator.push(
@@ -44,19 +65,67 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {});
   }
 
-  Future<void> _showChildSelector(
-    BuildContext context,
-  ) async {
+  // ===============================================================
+  // VACUNAS
+  // ===============================================================
+
+  Future<void> _openVaccines() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            const VaccinesPage(),
+      ),
+    );
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {});
+  }
+
+  // ===============================================================
+  // CRECIMIENTO
+  // ===============================================================
+
+  Future<void> _openGrowth() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            const GrowthPage(),
+      ),
+    );
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {});
+  }
+
+  // ===============================================================
+  // SELECTOR DE NIÑO
+  // ===============================================================
+
+  Future<void> _showChildSelector() async {
     final List<Child> children =
-        ChildRepository.instance.children.value;
+        ChildRepository
+            .instance
+            .children
+            .value;
 
     if (children.isEmpty) {
-      await _addChild(
-        context,
-      );
-
+      await _addChild();
       return;
     }
 
@@ -73,7 +142,8 @@ class HomePage extends StatelessWidget {
         sheetContext,
       ) {
         return Container(
-          decoration: BoxDecoration(
+          decoration:
+              BoxDecoration(
             color: dark
                 ? const Color(
                     0xFF15131A,
@@ -83,8 +153,7 @@ class HomePage extends StatelessWidget {
                   ),
             borderRadius:
                 const BorderRadius.vertical(
-              top:
-                  Radius.circular(
+              top: Radius.circular(
                 28,
               ),
             ),
@@ -116,9 +185,11 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                 ),
+
                 const SizedBox(
                   height: 18,
                 ),
+
                 Row(
                   children: [
                     Expanded(
@@ -130,11 +201,9 @@ class HomePage extends StatelessWidget {
                             TextStyle(
                           fontFamily:
                               'Fredoka',
-                          fontSize:
-                              23,
+                          fontSize: 23,
                           fontWeight:
-                              FontWeight
-                                  .w800,
+                              FontWeight.w800,
                           color: dark
                               ? Colors.white
                               : const Color(
@@ -143,6 +212,7 @@ class HomePage extends StatelessWidget {
                         ),
                       ),
                     ),
+
                     IconButton(
                       tooltip:
                           T.txt(
@@ -154,23 +224,21 @@ class HomePage extends StatelessWidget {
                           sheetContext,
                         );
 
-                        await _addChild(
-                          context,
-                        );
+                        await _addChild();
                       },
-                      icon:
-                          const Icon(
+                      icon: const Icon(
                         Icons
                             .person_add_alt_1_rounded,
                       ),
                     ),
                   ],
                 ),
+
                 const SizedBox(
                   height: 8,
                 ),
-                ValueListenableBuilder<
-                    String?>(
+
+                ValueListenableBuilder<String?>(
                   valueListenable:
                       ChildRepository
                           .instance
@@ -181,8 +249,7 @@ class HomePage extends StatelessWidget {
                     _,
                   ) {
                     return ListView.separated(
-                      shrinkWrap:
-                          true,
+                      shrinkWrap: true,
                       physics:
                           const NeverScrollableScrollPhysics(),
                       itemCount:
@@ -193,11 +260,9 @@ class HomePage extends StatelessWidget {
                         __,
                       ) =>
                               const SizedBox(
-                        height:
-                            10,
+                        height: 10,
                       ),
-                      itemBuilder:
-                          (
+                      itemBuilder: (
                         context,
                         index,
                       ) {
@@ -215,10 +280,9 @@ class HomePage extends StatelessWidget {
                                 : Colors.blue;
 
                         return Material(
-                          color: Colors
-                              .transparent,
-                          child:
-                              InkWell(
+                          color:
+                              Colors.transparent,
+                          child: InkWell(
                             borderRadius:
                                 BorderRadius
                                     .circular(
@@ -240,12 +304,16 @@ class HomePage extends StatelessWidget {
                               Navigator.pop(
                                 sheetContext,
                               );
+
+                              if (mounted) {
+                                setState(
+                                  () {},
+                                );
+                              }
                             },
-                            child:
-                                Container(
+                            child: Container(
                               padding:
-                                  const EdgeInsets
-                                      .all(
+                                  const EdgeInsets.all(
                                 14,
                               ),
                               decoration:
@@ -269,16 +337,18 @@ class HomePage extends StatelessWidget {
                                     Border.all(
                                   color: selected
                                       ? childColor
-                                      : childColor.withValues(
-                                          alpha: 0.14,
+                                      : childColor
+                                          .withValues(
+                                          alpha:
+                                              0.14,
                                         ),
-                                  width: selected
-                                      ? 1.8
-                                      : 1,
+                                  width:
+                                      selected
+                                          ? 1.8
+                                          : 1,
                                 ),
                               ),
-                              child:
-                                  Row(
+                              child: Row(
                                 children: [
                                   ChildAvatar(
                                     child:
@@ -286,22 +356,23 @@ class HomePage extends StatelessWidget {
                                     size:
                                         48,
                                   ),
+
                                   const SizedBox(
-                                    width:
-                                        12,
+                                    width: 12,
                                   ),
+
                                   Expanded(
-                                    child:
-                                        Column(
+                                    child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                          CrossAxisAlignment
+                                              .start,
                                       children: [
                                         Text(
                                           child.name,
-                                          maxLines:
-                                              1,
+                                          maxLines: 1,
                                           overflow:
-                                              TextOverflow.ellipsis,
+                                              TextOverflow
+                                                  .ellipsis,
                                           style:
                                               TextStyle(
                                             fontFamily:
@@ -309,7 +380,8 @@ class HomePage extends StatelessWidget {
                                             fontSize:
                                                 17,
                                             fontWeight:
-                                                FontWeight.w700,
+                                                FontWeight
+                                                    .w700,
                                             color: dark
                                                 ? Colors.white
                                                 : const Color(
@@ -335,6 +407,7 @@ class HomePage extends StatelessWidget {
                                       ],
                                     ),
                                   ),
+
                                   if (selected)
                                     const Icon(
                                       Icons
@@ -361,10 +434,12 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  // ===============================================================
+  // BUILD
+  // ===============================================================
+
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     return ValueListenableBuilder<String>(
       valueListenable:
           AppConfig.idioma,
@@ -374,8 +449,7 @@ class HomePage extends StatelessWidget {
         _,
       ) {
         final bool dark =
-            Theme.of(context)
-                    .brightness ==
+            Theme.of(context).brightness ==
                 Brightness.dark;
 
         return Scaffold(
@@ -386,32 +460,31 @@ class HomePage extends StatelessWidget {
               : const Color(
                   0xFFFAF7F2,
                 ),
+
+          // =======================================================
+          // APP BAR
+          // =======================================================
+
           appBar: AppBar(
             automaticallyImplyLeading:
                 false,
-            elevation:
-                0,
+            elevation: 0,
             backgroundColor: dark
                 ? const Color(
                     0xFF211B2E,
                   )
                 : Colors.white,
-            titleSpacing:
-                16,
+            titleSpacing: 16,
             title: Row(
               mainAxisSize:
                   MainAxisSize.min,
               children: [
                 Image.asset(
                   'assets/images/home.png',
-                  width:
-                      39,
-                  height:
-                      39,
-                  fit:
-                      BoxFit.contain,
-                  errorBuilder:
-                      (
+                  width: 39,
+                  height: 39,
+                  fit: BoxFit.contain,
+                  errorBuilder: (
                     context,
                     error,
                     stackTrace,
@@ -423,14 +496,15 @@ class HomePage extends StatelessWidget {
                           Color(
                         0xFF7B2CBF,
                       ),
-                      size:
-                          34,
+                      size: 34,
                     );
                   },
                 ),
+
                 const SizedBox(
                   width: 9,
                 ),
+
                 Flexible(
                   child: Text(
                     T.txt(
@@ -443,11 +517,9 @@ class HomePage extends StatelessWidget {
                         TextStyle(
                       fontFamily:
                           'Fredoka',
-                      fontSize:
-                          24,
+                      fontSize: 24,
                       fontWeight:
-                          FontWeight
-                              .w800,
+                          FontWeight.w800,
                       color: dark
                           ? Colors.white
                           : const Color(
@@ -464,23 +536,25 @@ class HomePage extends StatelessWidget {
                     T.txt(
                   'settingsTitle',
                 ),
-                onPressed:
-                    () {
+                onPressed: () {
                   showConfigSheet(
                     context,
                   );
                 },
-                icon:
-                    const Icon(
+                icon: const Icon(
                   Icons
                       .settings_rounded,
                 ),
               ),
             ],
           ),
+
+          // =======================================================
+          // CONTENIDO
+          // =======================================================
+
           body:
-              ValueListenableBuilder<
-                  List<Child>>(
+              ValueListenableBuilder<List<Child>>(
             valueListenable:
                 ChildRepository
                     .instance
@@ -492,19 +566,13 @@ class HomePage extends StatelessWidget {
             ) {
               if (children.isEmpty) {
                 return _EmptyHome(
-                  dark:
-                      dark,
+                  dark: dark,
                   onAdd:
-                      () {
-                    _addChild(
-                      context,
-                    );
-                  },
+                      _addChild,
                 );
               }
 
-              return ValueListenableBuilder<
-                  String?>(
+              return ValueListenableBuilder<String?>(
                 valueListenable:
                     ChildRepository
                         .instance
@@ -514,23 +582,15 @@ class HomePage extends StatelessWidget {
                   selectedId,
                   _,
                 ) {
-                  Child? child;
-
-                  if (selectedId !=
-                      null) {
-                    child =
-                        ChildRepository
-                            .instance
-                            .findById(
-                      selectedId,
-                    );
-                  }
-
-                  child ??=
-                      children.first;
-
                   final Child activeChild =
-                      child;
+                      selectedId == null
+                          ? children.first
+                          : ChildRepository
+                                  .instance
+                                  .findById(
+                                selectedId,
+                              ) ??
+                              children.first;
 
                   return _Dashboard(
                     child:
@@ -538,40 +598,17 @@ class HomePage extends StatelessWidget {
                     dark:
                         dark,
                     onChangeChild:
-                        () {
-                      _showChildSelector(
-                        context,
-                      );
-                    },
+                        _showChildSelector,
                     onOpenProfile:
                         () {
                       _openProfile(
-                        context,
                         activeChild,
                       );
                     },
                     onVaccines:
-                        () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (_) =>
-                                  const VaccinesPage(),
-                        ),
-                      );
-                    },
+                        _openVaccines,
                     onGrowth:
-                        () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (_) =>
-                                  const GrowthPage(),
-                        ),
-                      );
-                    },
+                        _openGrowth,
                   );
                 },
               );
@@ -583,9 +620,176 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _Dashboard
-    extends StatelessWidget {
+// =================================================================
+// DATOS DEL DASHBOARD
+// =================================================================
+
+class _HomeHealthData {
+  final VaccineEvaluation? vaccine;
+
+  final GrowthMeasurement? growth;
+
+  const _HomeHealthData({
+    required this.vaccine,
+    required this.growth,
+  });
+}
+
+Future<_HomeHealthData> _loadHomeHealthData(
+  Child child,
+) async {
+  final List<VaccineEvaluation> vaccines =
+      await VaccineService.instance
+          .evaluateChild(
+    child,
+  );
+
+  final GrowthMeasurement? growth =
+      await GrowthRepository.instance
+          .getLatestMeasurement(
+    child.id,
+  );
+
+  return _HomeHealthData(
+    vaccine:
+        _selectHomeVaccine(
+      vaccines,
+    ),
+    growth:
+        growth,
+  );
+}
+
+// =================================================================
+// SELECCIONAR VACUNA PARA MOSTRAR EN INICIO
+// =================================================================
+
+VaccineEvaluation? _selectHomeVaccine(
+  List<VaccineEvaluation> evaluations,
+) {
+  final List<VaccineEvaluation> pending =
+      evaluations
+          .where(
+            (
+              evaluation,
+            ) =>
+                evaluation.status !=
+                VaccineStatus.applied,
+          )
+          .toList();
+
+  if (pending.isEmpty) {
+    return null;
+  }
+
+  // ---------------------------------------------------------------
+  // PRIMERO: DOSIS CUYA FECHA YA PASÓ Y REQUIEREN REVISIÓN
+  // ---------------------------------------------------------------
+
+  final List<VaccineEvaluation> review =
+      pending
+          .where(
+            (
+              evaluation,
+            ) =>
+                evaluation.status ==
+                VaccineStatus.review,
+          )
+          .toList();
+
+  review.sort(
+    (
+      a,
+      b,
+    ) {
+      final DateTime aDate =
+          a.expectedDate ??
+              DateTime(
+                9999,
+              );
+
+      final DateTime bDate =
+          b.expectedDate ??
+              DateTime(
+                9999,
+              );
+
+      return aDate.compareTo(
+        bDate,
+      );
+    },
+  );
+
+  if (review.isNotEmpty) {
+    return review.first;
+  }
+
+  // ---------------------------------------------------------------
+  // SEGUNDO: PRÓXIMA DOSIS CON FECHA
+  // ---------------------------------------------------------------
+
+  final List<VaccineEvaluation> upcoming =
+      pending
+          .where(
+            (
+              evaluation,
+            ) =>
+                evaluation.status ==
+                    VaccineStatus
+                        .upcoming &&
+                evaluation.expectedDate !=
+                    null,
+          )
+          .toList();
+
+  upcoming.sort(
+    (
+      a,
+      b,
+    ) =>
+        a.expectedDate!.compareTo(
+      b.expectedDate!,
+    ),
+  );
+
+  if (upcoming.isNotEmpty) {
+    return upcoming.first;
+  }
+
+  // ---------------------------------------------------------------
+  // TERCERO: ESTACIONAL
+  // ---------------------------------------------------------------
+
+  for (final VaccineEvaluation evaluation
+      in pending) {
+    if (evaluation.status ==
+        VaccineStatus.seasonalReview) {
+      return evaluation;
+    }
+  }
+
+  // ---------------------------------------------------------------
+  // CUARTO: ESPERA UNA DOSIS ANTERIOR
+  // ---------------------------------------------------------------
+
+  for (final VaccineEvaluation evaluation
+      in pending) {
+    if (evaluation.status ==
+        VaccineStatus.waitingPreviousDose) {
+      return evaluation;
+    }
+  }
+
+  return pending.first;
+}
+
+// =================================================================
+// DASHBOARD
+// =================================================================
+
+class _Dashboard extends StatelessWidget {
   final Child child;
+
   final bool dark;
 
   final VoidCallback onChangeChild;
@@ -602,21 +806,114 @@ class _Dashboard
     required this.onGrowth,
   });
 
-  @override
-  Widget build(
-    BuildContext context,
+  String _formatNumber(
+    double value,
   ) {
+    if (value ==
+        value.roundToDouble()) {
+      return value.toStringAsFixed(
+        0,
+      );
+    }
+
+    return value.toStringAsFixed(
+      1,
+    );
+  }
+
+  String _vaccineStatusText(
+    VaccineEvaluation evaluation,
+  ) {
+    switch (evaluation.status) {
+      case VaccineStatus.applied:
+        return T.txt(
+          'vaccineApplied',
+        );
+
+      case VaccineStatus.upcoming:
+        return T.txt(
+          'vaccineUpcoming',
+        );
+
+      case VaccineStatus.review:
+        return T.txt(
+          'vaccineReview',
+        );
+
+      case VaccineStatus.seasonalReview:
+        return T.txt(
+          'vaccineSeasonalReview',
+        );
+
+      case VaccineStatus.waitingPreviousDose:
+        return T.txt(
+          'vaccineWaitingPrevious',
+        );
+    }
+  }
+
+  String _vaccineSubtitle(
+    VaccineEvaluation? evaluation,
+  ) {
+    if (evaluation == null) {
+      return T.txt(
+        'homeVaccinesNoPending',
+      );
+    }
+
+    final String vaccineName =
+        T.txt(
+      evaluation.dose.nameKey,
+    );
+
+    final String status =
+        _vaccineStatusText(
+      evaluation,
+    );
+
+    final DateTime? date =
+        evaluation.expectedDate;
+
+    if (date == null) {
+      return '$vaccineName • $status';
+    }
+
+    return '$vaccineName • $status • '
+        '${simpleDateText(date)}';
+  }
+
+  String _growthSubtitle(
+    GrowthMeasurement? measurement,
+  ) {
+    if (measurement == null) {
+      return T.txt(
+        'growthDataPending',
+      );
+    }
+
+    return '${simpleDateText(measurement.measuredAt)} • '
+        '${_formatNumber(measurement.weightKg)} kg • '
+        '${_formatNumber(measurement.heightCm)} cm';
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final Color childColor =
         child.sex == ChildSex.girl
             ? Colors.pink
             : Colors.blue;
 
+    final Future<_HomeHealthData>
+        healthFuture =
+        _loadHomeHealthData(
+      child,
+    );
+
     return SafeArea(
       child:
           SingleChildScrollView(
         padding:
-            const EdgeInsets
-                .fromLTRB(
+            const EdgeInsets.fromLTRB(
           20,
           20,
           20,
@@ -626,16 +923,18 @@ class _Dashboard
           crossAxisAlignment:
               CrossAxisAlignment.start,
           children: [
+            // =====================================================
+            // SALUDO
+            // =====================================================
+
             Text(
               T.txt(
                 'homeGreeting',
               ),
-              style:
-                  TextStyle(
+              style: TextStyle(
                 fontFamily:
                     'Fredoka',
-                fontSize:
-                    28,
+                fontSize: 28,
                 fontWeight:
                     FontWeight.w800,
                 color: dark
@@ -645,31 +944,32 @@ class _Dashboard
                       ),
               ),
             ),
+
             const SizedBox(
               height: 4,
             ),
+
             Text(
               T.txt(
                 'homeGreetingSubtitle',
               ),
-              style:
-                  TextStyle(
+              style: TextStyle(
                 fontFamily:
                     'Baloo2',
-                fontSize:
-                    16,
+                fontSize: 16,
                 color: dark
                     ? Colors.white60
                     : Colors.black54,
               ),
             ),
+
             const SizedBox(
               height: 20,
             ),
 
-            // ================================================
+            // =====================================================
             // NIÑO ACTIVO
-            // ================================================
+            // =====================================================
 
             Material(
               color:
@@ -689,8 +989,7 @@ class _Dashboard
                   width:
                       double.infinity,
                   padding:
-                      const EdgeInsets
-                          .all(
+                      const EdgeInsets.all(
                     18,
                   ),
                   decoration:
@@ -704,77 +1003,60 @@ class _Dashboard
                               )
                             : Colors.white,
                         childColor.withValues(
-                          alpha: dark
-                              ? 0.18
-                              : 0.08,
+                          alpha:
+                              dark
+                                  ? 0.18
+                                  : 0.08,
                         ),
                       ],
                     ),
                     borderRadius:
-                        BorderRadius
-                            .circular(
+                        BorderRadius.circular(
                       26,
                     ),
                     border:
                         Border.all(
-                      color: childColor
-                          .withValues(
+                      color:
+                          childColor.withValues(
                         alpha:
                             0.18,
                       ),
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: childColor
-                            .withValues(
-                          alpha:
-                              0.08,
-                        ),
-                        blurRadius:
-                            15,
-                        offset:
-                            const Offset(
-                          0,
-                          6,
-                        ),
-                      ),
-                    ],
                   ),
-                  child:
-                      Row(
+                  child: Row(
                     children: [
                       ChildAvatar(
                         child:
                             child,
-                        size:
-                            68,
+                        size: 68,
                         borderWidth:
                             2.2,
                       ),
+
                       const SizedBox(
-                        width:
-                            15,
+                        width: 15,
                       ),
+
                       Expanded(
-                        child:
-                            Column(
+                        child: Column(
                           crossAxisAlignment:
-                              CrossAxisAlignment.start,
+                              CrossAxisAlignment
+                                  .start,
                           children: [
                             Text(
                               child.name,
-                              maxLines:
-                                  1,
+                              maxLines: 1,
                               overflow:
-                                  TextOverflow.ellipsis,
+                                  TextOverflow
+                                      .ellipsis,
                               style:
                                   TextStyle(
                                 fontFamily:
                                     'Fredoka',
-                                fontSize:
-                                    23,
+                                fontSize: 23,
                                 fontWeight:
-                                    FontWeight.w800,
+                                    FontWeight
+                                        .w800,
                                 color: dark
                                     ? Colors.white
                                     : const Color(
@@ -783,8 +1065,7 @@ class _Dashboard
                               ),
                             ),
                             const SizedBox(
-                              height:
-                                  3,
+                              height: 3,
                             ),
                             Text(
                               childAgeText(
@@ -794,18 +1075,14 @@ class _Dashboard
                                   TextStyle(
                                 fontFamily:
                                     'Baloo2',
-                                fontSize:
-                                    16,
-                                fontWeight:
-                                    FontWeight.w500,
+                                fontSize: 16,
                                 color: dark
                                     ? Colors.white70
                                     : Colors.black54,
                               ),
                             ),
                             const SizedBox(
-                              height:
-                                  5,
+                              height: 5,
                             ),
                             Text(
                               T.txt(
@@ -822,12 +1099,14 @@ class _Dashboard
                                   0xFF7B2CBF,
                                 ),
                                 fontWeight:
-                                    FontWeight.w700,
+                                    FontWeight
+                                        .w700,
                               ),
                             ),
                           ],
                         ),
                       ),
+
                       const Icon(
                         Icons
                             .keyboard_arrow_down_rounded,
@@ -835,8 +1114,7 @@ class _Dashboard
                             Color(
                           0xFF7B2CBF,
                         ),
-                        size:
-                            30,
+                        size: 30,
                       ),
                     ],
                   ),
@@ -850,19 +1128,16 @@ class _Dashboard
 
             Align(
               alignment:
-                  Alignment
-                      .centerRight,
+                  Alignment.centerRight,
               child:
                   TextButton.icon(
                 onPressed:
                     onOpenProfile,
-                icon:
-                    const Icon(
+                icon: const Icon(
                   Icons
                       .person_outline_rounded,
                 ),
-                label:
-                    Text(
+                label: Text(
                   T.txt(
                     'viewProfile',
                   ),
@@ -873,6 +1148,10 @@ class _Dashboard
             const SizedBox(
               height: 12,
             ),
+
+            // =====================================================
+            // RESUMEN DE SALUD
+            // =====================================================
 
             _SectionTitle(
               title:
@@ -887,63 +1166,207 @@ class _Dashboard
               height: 12,
             ),
 
-            _DashboardHealthCard(
-              icon:
-                  Icons
-                      .vaccines_rounded,
-              color:
-                  Colors.blue,
-              title:
-                  T.txt(
-                'nextVaccine',
-              ),
-              subtitle:
-                  T.txt(
-                'vaccineDataPending',
-              ),
-              actionText:
-                  T.txt(
-                'viewVaccines',
-              ),
-              dark:
-                  dark,
-              onTap:
-                  onVaccines,
-            ),
+            FutureBuilder<_HomeHealthData>(
+              future:
+                  healthFuture,
+              builder: (
+                context,
+                snapshot,
+              ) {
+                if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return Column(
+                    children: [
+                      _DashboardHealthCard(
+                        icon:
+                            Icons
+                                .vaccines_rounded,
+                        color:
+                            Colors.blue,
+                        title:
+                            T.txt(
+                          'nextVaccine',
+                        ),
+                        subtitle:
+                            T.txt(
+                          'homeHealthLoading',
+                        ),
+                        actionText:
+                            T.txt(
+                          'viewVaccines',
+                        ),
+                        dark:
+                            dark,
+                        onTap:
+                            onVaccines,
+                      ),
 
-            const SizedBox(
-              height: 14,
-            ),
+                      const SizedBox(
+                        height: 14,
+                      ),
 
-            _DashboardHealthCard(
-              icon:
-                  Icons
-                      .show_chart_rounded,
-              color:
-                  const Color(
-                0xFF00A896,
-              ),
-              title:
-                  T.txt(
-                'lastGrowthCheck',
-              ),
-              subtitle:
-                  T.txt(
-                'growthDataPending',
-              ),
-              actionText:
-                  T.txt(
-                'viewGrowth',
-              ),
-              dark:
-                  dark,
-              onTap:
-                  onGrowth,
+                      _DashboardHealthCard(
+                        icon:
+                            Icons
+                                .show_chart_rounded,
+                        color:
+                            const Color(
+                          0xFF00A896,
+                        ),
+                        title:
+                            T.txt(
+                          'lastGrowthCheck',
+                        ),
+                        subtitle:
+                            T.txt(
+                          'homeHealthLoading',
+                        ),
+                        actionText:
+                            T.txt(
+                          'viewGrowth',
+                        ),
+                        dark:
+                            dark,
+                        onTap:
+                            onGrowth,
+                      ),
+                    ],
+                  );
+                }
+
+                if (snapshot.hasError) {
+                  return Column(
+                    children: [
+                      _DashboardHealthCard(
+                        icon:
+                            Icons
+                                .vaccines_rounded,
+                        color:
+                            Colors.blue,
+                        title:
+                            T.txt(
+                          'nextVaccine',
+                        ),
+                        subtitle:
+                            T.txt(
+                          'homeHealthLoadError',
+                        ),
+                        actionText:
+                            T.txt(
+                          'viewVaccines',
+                        ),
+                        dark:
+                            dark,
+                        onTap:
+                            onVaccines,
+                      ),
+
+                      const SizedBox(
+                        height: 14,
+                      ),
+
+                      _DashboardHealthCard(
+                        icon:
+                            Icons
+                                .show_chart_rounded,
+                        color:
+                            const Color(
+                          0xFF00A896,
+                        ),
+                        title:
+                            T.txt(
+                          'lastGrowthCheck',
+                        ),
+                        subtitle:
+                            T.txt(
+                          'homeHealthLoadError',
+                        ),
+                        actionText:
+                            T.txt(
+                          'viewGrowth',
+                        ),
+                        dark:
+                            dark,
+                        onTap:
+                            onGrowth,
+                      ),
+                    ],
+                  );
+                }
+
+                final _HomeHealthData data =
+                    snapshot.data!;
+
+                return Column(
+                  children: [
+                    _DashboardHealthCard(
+                      icon:
+                          Icons
+                              .vaccines_rounded,
+                      color: data.vaccine
+                                  ?.status ==
+                              VaccineStatus.review
+                          ? Colors.orange
+                          : Colors.blue,
+                      title:
+                          T.txt(
+                        'nextVaccine',
+                      ),
+                      subtitle:
+                          _vaccineSubtitle(
+                        data.vaccine,
+                      ),
+                      actionText:
+                          T.txt(
+                        'viewVaccines',
+                      ),
+                      dark:
+                          dark,
+                      onTap:
+                          onVaccines,
+                    ),
+
+                    const SizedBox(
+                      height: 14,
+                    ),
+
+                    _DashboardHealthCard(
+                      icon:
+                          Icons
+                              .show_chart_rounded,
+                      color:
+                          const Color(
+                        0xFF00A896,
+                      ),
+                      title:
+                          T.txt(
+                        'lastGrowthCheck',
+                      ),
+                      subtitle:
+                          _growthSubtitle(
+                        data.growth,
+                      ),
+                      actionText:
+                          T.txt(
+                        'viewGrowth',
+                      ),
+                      dark:
+                          dark,
+                      onTap:
+                          onGrowth,
+                    ),
+                  ],
+                );
+              },
             ),
 
             const SizedBox(
               height: 24,
             ),
+
+            // =====================================================
+            // DATOS PRINCIPALES
+            // =====================================================
 
             _SectionTitle(
               title:
@@ -980,9 +1403,11 @@ class _Dashboard
                         dark,
                   ),
                 ),
+
                 const SizedBox(
                   width: 12,
                 ),
+
                 Expanded(
                   child:
                       _SmallInfoCard(
@@ -1016,9 +1441,13 @@ class _Dashboard
   }
 }
 
-class _EmptyHome
-    extends StatelessWidget {
+// =================================================================
+// HOME SIN NIÑO
+// =================================================================
+
+class _EmptyHome extends StatelessWidget {
   final bool dark;
+
   final VoidCallback onAdd;
 
   const _EmptyHome({
@@ -1027,27 +1456,20 @@ class _EmptyHome
   });
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     return SafeArea(
-      child:
-          Center(
+      child: Center(
         child:
             SingleChildScrollView(
           padding:
-              const EdgeInsets
-                  .all(
+              const EdgeInsets.all(
             24,
           ),
-          child:
-              Column(
+          child: Column(
             children: [
               Container(
-                width:
-                    125,
-                height:
-                    125,
+                width: 125,
+                height: 125,
                 decoration:
                     BoxDecoration(
                   shape:
@@ -1058,34 +1480,31 @@ class _EmptyHome
                       const Color(
                         0xFF7B2CBF,
                       ).withValues(
-                        alpha:
-                            0.20,
+                        alpha: 0.20,
                       ),
                       const Color(
                         0xFFFF006E,
                       ).withValues(
-                        alpha:
-                            0.10,
+                        alpha: 0.10,
                       ),
                     ],
                   ),
                 ),
-                child:
-                    const Icon(
+                child: const Icon(
                   Icons
                       .family_restroom_rounded,
-                  size:
-                      65,
+                  size: 65,
                   color:
                       Color(
                     0xFF7B2CBF,
                   ),
                 ),
               ),
+
               const SizedBox(
-                height:
-                    24,
+                height: 24,
               ),
+
               Text(
                 T.txt(
                   'homeNoChildTitle',
@@ -1096,8 +1515,7 @@ class _EmptyHome
                     TextStyle(
                   fontFamily:
                       'Fredoka',
-                  fontSize:
-                      26,
+                  fontSize: 26,
                   fontWeight:
                       FontWeight.w800,
                   color: dark
@@ -1107,10 +1525,11 @@ class _EmptyHome
                         ),
                 ),
               ),
+
               const SizedBox(
-                height:
-                    10,
+                height: 10,
               ),
+
               Text(
                 T.txt(
                   'homeNoChildSubtitle',
@@ -1121,24 +1540,22 @@ class _EmptyHome
                     TextStyle(
                   fontFamily:
                       'Baloo2',
-                  fontSize:
-                      16,
-                  height:
-                      1.3,
+                  fontSize: 16,
+                  height: 1.3,
                   color: dark
                       ? Colors.white70
                       : Colors.black54,
                 ),
               ),
+
               const SizedBox(
-                height:
-                    28,
+                height: 28,
               ),
+
               SizedBox(
                 width:
                     double.infinity,
-                height:
-                    56,
+                height: 56,
                 child:
                     FilledButton.icon(
                   onPressed:
@@ -1155,19 +1572,15 @@ class _EmptyHome
                     shape:
                         RoundedRectangleBorder(
                       borderRadius:
-                          BorderRadius
-                              .circular(
+                          BorderRadius.circular(
                         20,
                       ),
                     ),
                   ),
-                  icon:
-                      const Icon(
-                    Icons
-                        .add_rounded,
+                  icon: const Icon(
+                    Icons.add_rounded,
                   ),
-                  label:
-                      Text(
+                  label: Text(
                     T.txt(
                       'addFirstChild',
                     ),
@@ -1175,11 +1588,9 @@ class _EmptyHome
                         const TextStyle(
                       fontFamily:
                           'Fredoka',
-                      fontSize:
-                          18,
+                      fontSize: 18,
                       fontWeight:
-                          FontWeight
-                              .w700,
+                          FontWeight.w700,
                     ),
                   ),
                 ),
@@ -1192,8 +1603,11 @@ class _EmptyHome
   }
 }
 
-class _SectionTitle
-    extends StatelessWidget {
+// =================================================================
+// TÍTULO
+// =================================================================
+
+class _SectionTitle extends StatelessWidget {
   final String title;
   final bool dark;
 
@@ -1203,17 +1617,13 @@ class _SectionTitle
   });
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     return Text(
       title,
-      style:
-          TextStyle(
+      style: TextStyle(
         fontFamily:
             'Fredoka',
-        fontSize:
-            21,
+        fontSize: 21,
         fontWeight:
             FontWeight.w800,
         color: dark
@@ -1226,14 +1636,21 @@ class _SectionTitle
   }
 }
 
+// =================================================================
+// TARJETA DE SALUD
+// =================================================================
+
 class _DashboardHealthCard
     extends StatelessWidget {
   final IconData icon;
   final Color color;
+
   final String title;
   final String subtitle;
   final String actionText;
+
   final bool dark;
+
   final VoidCallback onTap;
 
   const _DashboardHealthCard({
@@ -1247,9 +1664,7 @@ class _DashboardHealthCard
   });
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     return Material(
       color:
           Colors.transparent,
@@ -1257,16 +1672,14 @@ class _DashboardHealthCard
           BorderRadius.circular(
         24,
       ),
-      child:
-          InkWell(
+      child: InkWell(
         onTap:
             onTap,
         borderRadius:
             BorderRadius.circular(
           24,
         ),
-        child:
-            Container(
+        child: Container(
           width:
               double.infinity,
           padding:
@@ -1284,9 +1697,10 @@ class _DashboardHealthCard
                       )
                     : Colors.white,
                 color.withValues(
-                  alpha: dark
-                      ? 0.16
-                      : 0.08,
+                  alpha:
+                      dark
+                          ? 0.16
+                          : 0.08,
                 ),
               ],
             ),
@@ -1298,66 +1712,42 @@ class _DashboardHealthCard
                 Border.all(
               color:
                   color.withValues(
-                alpha:
-                    0.15,
+                alpha: 0.15,
               ),
             ),
-            boxShadow: [
-              BoxShadow(
-                color:
-                    color.withValues(
-                  alpha:
-                      0.07,
-                ),
-                blurRadius:
-                    12,
-                offset:
-                    const Offset(
-                  0,
-                  5,
-                ),
-              ),
-            ],
           ),
-          child:
-              Row(
+          child: Row(
             children: [
               Container(
-                width:
-                    58,
-                height:
-                    58,
+                width: 58,
+                height: 58,
                 decoration:
                     BoxDecoration(
                   color:
                       color.withValues(
-                    alpha:
-                        0.14,
+                    alpha: 0.14,
                   ),
                   borderRadius:
-                      BorderRadius
-                          .circular(
+                      BorderRadius.circular(
                     18,
                   ),
                 ),
-                child:
-                    Icon(
+                child: Icon(
                   icon,
-                  color:
-                      color,
-                  size:
-                      31,
+                  color: color,
+                  size: 31,
                 ),
               ),
+
               const SizedBox(
-                width:
-                    14,
+                width: 14,
               ),
+
               Expanded(
-                child:
-                    Column(
+                child: Column(
                   crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                      CrossAxisAlignment
+                          .start,
                   children: [
                     Text(
                       title,
@@ -1365,8 +1755,7 @@ class _DashboardHealthCard
                           TextStyle(
                         fontFamily:
                             'Fredoka',
-                        fontSize:
-                            18,
+                        fontSize: 18,
                         fontWeight:
                             FontWeight.w700,
                         color: dark
@@ -1376,53 +1765,50 @@ class _DashboardHealthCard
                               ),
                       ),
                     ),
+
                     const SizedBox(
-                      height:
-                          3,
+                      height: 3,
                     ),
+
                     Text(
                       subtitle,
                       style:
                           TextStyle(
                         fontFamily:
                             'Baloo2',
-                        fontSize:
-                            14,
-                        height:
-                            1.2,
+                        fontSize: 14,
+                        height: 1.25,
                         color: dark
                             ? Colors.white60
                             : Colors.black54,
                       ),
                     ),
+
                     const SizedBox(
-                      height:
-                          4,
+                      height: 4,
                     ),
+
                     Text(
                       actionText,
                       style:
                           TextStyle(
                         fontFamily:
                             'Baloo2',
-                        fontSize:
-                            13,
+                        fontSize: 13,
                         fontWeight:
                             FontWeight.w700,
-                        color:
-                            color,
+                        color: color,
                       ),
                     ),
                   ],
                 ),
               ),
+
               Icon(
                 Icons
                     .chevron_right_rounded,
-                color:
-                    color,
-                size:
-                    28,
+                color: color,
+                size: 28,
               ),
             ],
           ),
@@ -1432,8 +1818,11 @@ class _DashboardHealthCard
   }
 }
 
-class _SmallInfoCard
-    extends StatelessWidget {
+// =================================================================
+// TARJETA PEQUEÑA
+// =================================================================
+
+class _SmallInfoCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String value;
@@ -1449,9 +1838,7 @@ class _SmallInfoCard
   });
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     return Container(
       padding:
           const EdgeInsets.all(
@@ -1472,58 +1859,51 @@ class _SmallInfoCard
             Border.all(
           color:
               color.withValues(
-            alpha:
-                0.12,
+            alpha: 0.12,
           ),
         ),
       ),
-      child:
-          Column(
+      child: Column(
         crossAxisAlignment:
             CrossAxisAlignment.start,
         children: [
           Icon(
             icon,
-            color:
-                color,
+            color: color,
           ),
+
           const SizedBox(
-            height:
-                10,
+            height: 10,
           ),
+
           Text(
             title,
-            maxLines:
-                1,
+            maxLines: 1,
             overflow:
                 TextOverflow.ellipsis,
-            style:
-                TextStyle(
+            style: TextStyle(
               fontFamily:
                   'Baloo2',
-              fontSize:
-                  13,
+              fontSize: 13,
               color: dark
                   ? Colors.white60
                   : Colors.black54,
             ),
           ),
+
           const SizedBox(
-            height:
-                2,
+            height: 2,
           ),
+
           Text(
             value,
-            maxLines:
-                1,
+            maxLines: 1,
             overflow:
                 TextOverflow.ellipsis,
-            style:
-                TextStyle(
+            style: TextStyle(
               fontFamily:
                   'Fredoka',
-              fontSize:
-                  15,
+              fontSize: 15,
               fontWeight:
                   FontWeight.w700,
               color: dark

@@ -4,6 +4,8 @@ enum GrowthMeasurementType {
 }
 
 class GrowthMeasurement {
+  static const Object _unset = Object();
+
   final String id;
   final String childId;
 
@@ -34,7 +36,7 @@ class GrowthMeasurement {
     double? weightKg,
     double? heightCm,
     GrowthMeasurementType? measurementType,
-    String? notes,
+    Object? notes = _unset,
   }) {
     return GrowthMeasurement(
       id: id,
@@ -48,10 +50,16 @@ class GrowthMeasurement {
       measurementType:
           measurementType ??
               this.measurementType,
-      notes:
-          notes ?? this.notes,
-      createdAt:
-          createdAt,
+
+      // Ahora notes: null realmente elimina la nota.
+      notes: identical(
+        notes,
+        _unset,
+      )
+          ? this.notes
+          : notes as String?,
+
+      createdAt: createdAt,
     );
   }
 
@@ -79,12 +87,14 @@ class GrowthMeasurement {
             as String;
 
     return GrowthMeasurement(
-      id: map['id'] as String,
+      id:
+          map['id'] as String,
       childId:
           map['child_id'] as String,
       measuredAt:
           DateTime.parse(
-        map['measured_at'] as String,
+        map['measured_at']
+            as String,
       ),
       weightKg:
           (map['weight_kg'] as num)
@@ -104,7 +114,8 @@ class GrowthMeasurement {
           map['notes'] as String?,
       createdAt:
           DateTime.parse(
-        map['created_at'] as String,
+        map['created_at']
+            as String,
       ),
     );
   }

@@ -8,6 +8,7 @@ import '../../../pages/app_texts.dart';
 import '../../children/data/child_repository.dart';
 import '../../children/models/child.dart';
 import '../../children/utils/child_display_utils.dart';
+import '../../children/widgets/child_avatar.dart';
 
 import '../models/vaccine_record.dart';
 
@@ -26,10 +27,8 @@ class VaccinesPage extends StatefulWidget {
       _VaccinesPageState();
 }
 
-class _VaccinesPageState
-    extends State<VaccinesPage> {
-  Future<List<VaccineEvaluation>>?
-      _future;
+class _VaccinesPageState extends State<VaccinesPage> {
+  Future<List<VaccineEvaluation>>? _future;
 
   String? _loadedChildId;
 
@@ -43,12 +42,11 @@ class _VaccinesPageState
     _loadReminderState();
   }
 
-  // ------------------------------------------------------------
+  // ============================================================
   // RECORDATORIOS
-  // ------------------------------------------------------------
+  // ============================================================
 
-  Future<void>
-      _loadReminderState() async {
+  Future<void> _loadReminderState() async {
     final bool enabled =
         await VaccineNotificationService
             .instance
@@ -59,11 +57,8 @@ class _VaccinesPageState
     }
 
     setState(() {
-      _remindersEnabled =
-          enabled;
-
-      _loadingReminders =
-          false;
+      _remindersEnabled = enabled;
+      _loadingReminders = false;
     });
   }
 
@@ -75,8 +70,7 @@ class _VaccinesPageState
     }
 
     setState(() {
-      _loadingReminders =
-          true;
+      _loadingReminders = true;
     });
 
     final bool enabled =
@@ -91,11 +85,8 @@ class _VaccinesPageState
     }
 
     setState(() {
-      _remindersEnabled =
-          enabled;
-
-      _loadingReminders =
-          false;
+      _remindersEnabled = enabled;
+      _loadingReminders = false;
     });
 
     final String message;
@@ -114,17 +105,16 @@ class _VaccinesPageState
       );
     }
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text(message),
+        content: Text(
+          message,
+        ),
       ),
     );
   }
 
-  Future<void>
-      _testNotification() async {
+  Future<void> _testNotification() async {
     final bool permission =
         await NotificationService
             .instance
@@ -135,8 +125,7 @@ class _VaccinesPageState
         return;
       }
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             T.txt(
@@ -149,30 +138,26 @@ class _VaccinesPageState
       return;
     }
 
-    await NotificationService
-        .instance
+    await NotificationService.instance
         .showTestNotification();
   }
 
-  // ------------------------------------------------------------
+  // ============================================================
   // VACUNAS
-  // ------------------------------------------------------------
+  // ============================================================
 
   void _prepare(
     Child child,
   ) {
-    if (_loadedChildId ==
-            child.id &&
+    if (_loadedChildId == child.id &&
         _future != null) {
       return;
     }
 
-    _loadedChildId =
-        child.id;
+    _loadedChildId = child.id;
 
-    _future =
-        VaccineService.instance
-            .evaluateChild(
+    _future = VaccineService.instance
+        .evaluateChild(
       child,
     );
   }
@@ -181,12 +166,10 @@ class _VaccinesPageState
     Child child,
   ) {
     setState(() {
-      _loadedChildId =
-          child.id;
+      _loadedChildId = child.id;
 
-      _future =
-          VaccineService.instance
-              .evaluateChild(
+      _future = VaccineService.instance
+          .evaluateChild(
         child,
       );
     });
@@ -200,45 +183,39 @@ class _VaccinesPageState
         await Navigator.push<bool>(
       context,
       MaterialPageRoute(
-        builder: (_) =>
-            VaccineFormPage(
+        builder: (_) => VaccineFormPage(
           child: child,
-
-          dose:
-              evaluation.dose,
-
-          record:
-              evaluation.record,
+          dose: evaluation.dose,
+          record: evaluation.record,
         ),
       ),
     );
 
     if (changed == true &&
         mounted) {
-      _reload(child);
+      _reload(
+        child,
+      );
     }
   }
 
-  // ------------------------------------------------------------
+  // ============================================================
   // BUILD
-  // ------------------------------------------------------------
+  // ============================================================
 
   @override
   Widget build(
     BuildContext context,
   ) {
     return ValueListenableBuilder<String>(
-      valueListenable:
-          AppConfig.idioma,
-
+      valueListenable: AppConfig.idioma,
       builder: (
         context,
         idioma,
         _,
       ) {
         final bool dark =
-            Theme.of(context)
-                    .brightness ==
+            Theme.of(context).brightness ==
                 Brightness.dark;
 
         return Scaffold(
@@ -249,77 +226,46 @@ class _VaccinesPageState
               : const Color(
                   0xFFFAF7F2,
                 ),
-
           appBar: AppBar(
             backgroundColor: dark
                 ? const Color(
                     0xFF211B2E,
                   )
                 : Colors.white,
-
             foregroundColor: dark
                 ? Colors.white
                 : const Color(
                     0xFF2D2D2D,
                   ),
-
             elevation: 0,
-
             title: Text(
               T.txt(
                 'vaccinesPageTitle',
               ),
-
-              style:
-                  const TextStyle(
-                fontFamily:
-                    'Fredoka',
-
-                fontWeight:
-                    FontWeight.w700,
+              style: const TextStyle(
+                fontFamily: 'Fredoka',
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),
-
-          body:
-              ValueListenableBuilder<
-                  String?>(
+          body: ValueListenableBuilder<String?>(
             valueListenable:
                 ChildRepository
                     .instance
                     .selectedChildId,
-
             builder: (
               context,
               selectedId,
               _,
             ) {
-              if (selectedId ==
-                  null) {
-                return Center(
-                  child: Padding(
-                    padding:
-                        const EdgeInsets
-                            .all(
-                      24,
-                    ),
-
-                    child: Text(
-                      T.txt(
-                        'healthProfileRequiredTitle',
-                      ),
-
-                      textAlign:
-                          TextAlign
-                              .center,
-                    ),
-                  ),
+              if (selectedId == null) {
+                return _NoChildState(
+                  dark: dark,
                 );
               }
 
               final Child? child =
-                  ChildRepository
-                      .instance
+                  ChildRepository.instance
                       .findById(
                 selectedId,
               );
@@ -334,22 +280,19 @@ class _VaccinesPageState
                 );
               }
 
-              _prepare(child);
+              _prepare(
+                child,
+              );
 
               return FutureBuilder<
-                  List<
-                      VaccineEvaluation>>(
-                future:
-                    _future,
-
+                  List<VaccineEvaluation>>(
+                future: _future,
                 builder: (
                   context,
                   snapshot,
                 ) {
-                  if (snapshot
-                          .connectionState ==
-                      ConnectionState
-                          .waiting) {
+                  if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
                     return const Center(
                       child:
                           CircularProgressIndicator(),
@@ -360,52 +303,73 @@ class _VaccinesPageState
                     return Center(
                       child: Padding(
                         padding:
-                            const EdgeInsets
-                                .all(
+                            const EdgeInsets.all(
                           24,
                         ),
-
-                        child: Text(
-                          T.txt(
-                            'vaccinesLoadError',
-                          ),
-
-                          textAlign:
-                              TextAlign
-                                  .center,
+                        child: Column(
+                          mainAxisSize:
+                              MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons
+                                  .error_outline_rounded,
+                              size: 48,
+                              color:
+                                  Colors.orange,
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            Text(
+                              T.txt(
+                                'vaccinesLoadError',
+                              ),
+                              textAlign:
+                                  TextAlign.center,
+                            ),
+                            const SizedBox(
+                              height: 14,
+                            ),
+                            OutlinedButton.icon(
+                              onPressed: () {
+                                _reload(
+                                  child,
+                                );
+                              },
+                              icon: const Icon(
+                                Icons
+                                    .refresh_rounded,
+                              ),
+                              label: Text(
+                                T.txt(
+                                  'refresh',
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     );
                   }
 
-                  final List<
-                          VaccineEvaluation>
+                  final List<VaccineEvaluation>
                       evaluations =
                       snapshot.data ??
-                          [];
+                          <VaccineEvaluation>[];
 
                   return _VaccinesContent(
-                    child:
-                        child,
-
+                    child: child,
                     evaluations:
                         evaluations,
-
-                    dark:
-                        dark,
-
+                    dark: dark,
                     remindersEnabled:
                         _remindersEnabled,
-
                     loadingReminders:
                         _loadingReminders,
-
                     onReminderChanged:
                         _changeReminders,
-
                     onTestNotification:
                         _testNotification,
-
                     onOpenRecord:
                         (
                       evaluation,
@@ -426,12 +390,14 @@ class _VaccinesPageState
   }
 }
 
-class _VaccinesContent
-    extends StatelessWidget {
+// ================================================================
+// CONTENIDO
+// ================================================================
+
+class _VaccinesContent extends StatelessWidget {
   final Child child;
 
-  final List<VaccineEvaluation>
-      evaluations;
+  final List<VaccineEvaluation> evaluations;
 
   final bool dark;
 
@@ -477,83 +443,46 @@ class _VaccinesContent
           20,
           35,
         ),
-
         children: [
-          // ------------------------------------------------------
+          // ======================================================
           // NIÑO SELECCIONADO
-          // ------------------------------------------------------
+          // ======================================================
 
           Container(
             padding:
                 const EdgeInsets.all(
               17,
             ),
-
             decoration: BoxDecoration(
-              gradient:
-                  LinearGradient(
+              gradient: LinearGradient(
                 colors: [
                   dark
                       ? const Color(
                           0xFF211B2E,
                         )
                       : Colors.white,
-
-                  childColor
-                      .withValues(
+                  childColor.withValues(
                     alpha:
-                        dark
-                            ? 0.16
-                            : 0.07,
+                        dark ? 0.16 : 0.07,
                   ),
                 ],
               ),
-
               borderRadius:
                   BorderRadius.circular(
                 24,
               ),
-
               border: Border.all(
-                color: childColor
-                    .withValues(
-                  alpha:
-                      0.16,
+                color: childColor.withValues(
+                  alpha: 0.16,
                 ),
               ),
             ),
-
             child: Row(
               children: [
-                Container(
-                  width: 55,
-                  height: 55,
-
-                  decoration:
-                      BoxDecoration(
-                    color: childColor
-                        .withValues(
-                      alpha:
-                          0.14,
-                    ),
-
-                    shape:
-                        BoxShape.circle,
-                  ),
-
-                  child: Icon(
-                    child.sex ==
-                            ChildSex.girl
-                        ? Icons
-                            .face_3_rounded
-                        : Icons
-                            .face_6_rounded,
-
-                    size: 32,
-
-                    color:
-                        childColor,
-                  ),
+                ChildAvatar(
+                  child: child,
+                  size: 55,
+                  borderWidth: 2,
                 ),
 
                 const SizedBox(
@@ -563,24 +492,19 @@ class _VaccinesContent
                 Expanded(
                   child: Column(
                     crossAxisAlignment:
-                        CrossAxisAlignment
-                            .start,
-
+                        CrossAxisAlignment.start,
                     children: [
                       Text(
                         child.name,
-
-                        style:
-                            TextStyle(
+                        maxLines: 1,
+                        overflow:
+                            TextOverflow.ellipsis,
+                        style: TextStyle(
                           fontFamily:
                               'Fredoka',
-
                           fontSize: 21,
-
                           fontWeight:
-                              FontWeight
-                                  .w800,
-
+                              FontWeight.w800,
                           color: dark
                               ? Colors.white
                               : const Color(
@@ -588,28 +512,20 @@ class _VaccinesContent
                                 ),
                         ),
                       ),
-
                       const SizedBox(
                         height: 2,
                       ),
-
                       Text(
                         childAgeText(
                           child.birthDate,
                         ),
-
-                        style:
-                            TextStyle(
+                        style: TextStyle(
                           fontFamily:
                               'Baloo2',
-
                           fontSize: 15,
-
                           color: dark
-                              ? Colors
-                                  .white70
-                              : Colors
-                                  .black54,
+                              ? Colors.white70
+                              : Colors.black54,
                         ),
                       ),
                     ],
@@ -617,12 +533,8 @@ class _VaccinesContent
                 ),
 
                 const Icon(
-                  Icons
-                      .vaccines_rounded,
-
-                  color:
-                      Colors.blue,
-
+                  Icons.vaccines_rounded,
+                  color: Colors.blue,
                   size: 31,
                 ),
               ],
@@ -633,23 +545,18 @@ class _VaccinesContent
             height: 16,
           ),
 
-          // ------------------------------------------------------
+          // ======================================================
           // RECORDATORIOS
-          // ------------------------------------------------------
+          // ======================================================
 
           _ReminderCard(
-            dark:
-                dark,
-
+            dark: dark,
             enabled:
                 remindersEnabled,
-
             loading:
                 loadingReminders,
-
             onChanged:
                 onReminderChanged,
-
             onTest:
                 onTestNotification,
           ),
@@ -658,24 +565,19 @@ class _VaccinesContent
             height: 25,
           ),
 
-          // ------------------------------------------------------
+          // ======================================================
           // TÍTULO
-          // ------------------------------------------------------
+          // ======================================================
 
           Text(
             T.txt(
               'vaccinesScheduleTitle',
             ),
-
             style: TextStyle(
-              fontFamily:
-                  'Fredoka',
-
+              fontFamily: 'Fredoka',
               fontSize: 23,
-
               fontWeight:
                   FontWeight.w800,
-
               color: dark
                   ? Colors.white
                   : const Color(
@@ -692,13 +594,9 @@ class _VaccinesContent
             T.txt(
               'vaccinesScheduleSubtitle',
             ),
-
             style: TextStyle(
-              fontFamily:
-                  'Baloo2',
-
+              fontFamily: 'Baloo2',
               fontSize: 14.5,
-
               color: dark
                   ? Colors.white60
                   : Colors.black54,
@@ -709,30 +607,23 @@ class _VaccinesContent
             height: 18,
           ),
 
-          // ------------------------------------------------------
-          // TARJETAS
-          // ------------------------------------------------------
+          // ======================================================
+          // VACUNAS
+          // ======================================================
 
           ...evaluations.map(
             (
-              VaccineEvaluation
-                  evaluation,
+              VaccineEvaluation evaluation,
             ) {
               return Padding(
                 padding:
-                    const EdgeInsets
-                        .only(
+                    const EdgeInsets.only(
                   bottom: 13,
                 ),
-
-                child:
-                    _VaccineCard(
+                child: _VaccineCard(
                   evaluation:
                       evaluation,
-
-                  dark:
-                      dark,
-
+                  dark: dark,
                   onTap: () {
                     onOpenRecord(
                       evaluation,
@@ -747,79 +638,56 @@ class _VaccinesContent
             height: 10,
           ),
 
-          // ------------------------------------------------------
+          // ======================================================
           // AVISO
-          // ------------------------------------------------------
+          // ======================================================
 
           Container(
             padding:
                 const EdgeInsets.all(
               16,
             ),
-
-            decoration:
-                BoxDecoration(
-              color: Colors.blue
-                  .withValues(
+            decoration: BoxDecoration(
+              color: Colors.blue.withValues(
                 alpha:
-                    dark
-                        ? 0.13
-                        : 0.07,
+                    dark ? 0.13 : 0.07,
               ),
-
               borderRadius:
                   BorderRadius.circular(
                 20,
               ),
-
-              border:
-                  Border.all(
-                color: Colors.blue
-                    .withValues(
-                  alpha:
-                      0.13,
+              border: Border.all(
+                color:
+                    Colors.blue.withValues(
+                  alpha: 0.13,
                 ),
               ),
             ),
-
             child: Row(
               crossAxisAlignment:
-                  CrossAxisAlignment
-                      .start,
-
+                  CrossAxisAlignment.start,
               children: [
                 const Icon(
                   Icons
                       .health_and_safety_outlined,
-
-                  color:
-                      Colors.blue,
+                  color: Colors.blue,
                 ),
-
                 const SizedBox(
                   width: 11,
                 ),
-
                 Expanded(
                   child: Text(
                     T.txt(
                       'vaccinesDisclaimer',
                     ),
-
-                    style:
-                        TextStyle(
+                    style: TextStyle(
                       fontFamily:
                           'Baloo2',
-
                       fontSize: 14,
-
                       height: 1.3,
-
                       color: dark
-                          ? Colors
-                              .white70
-                          : Colors
-                              .black87,
+                          ? Colors.white70
+                          : Colors.black87,
                     ),
                   ),
                 ),
@@ -836,15 +704,12 @@ class _VaccinesContent
 // RECORDATORIOS
 // ================================================================
 
-class _ReminderCard
-    extends StatelessWidget {
+class _ReminderCard extends StatelessWidget {
   final bool dark;
   final bool enabled;
   final bool loading;
 
-  final ValueChanged<bool>
-      onChanged;
-
+  final ValueChanged<bool> onChanged;
   final VoidCallback onTest;
 
   const _ReminderCard({
@@ -865,108 +730,76 @@ class _ReminderCard
     );
 
     return Container(
-      width:
-          double.infinity,
-
+      width: double.infinity,
       padding:
           const EdgeInsets.all(
         16,
       ),
-
-      decoration:
-          BoxDecoration(
-        gradient:
-            LinearGradient(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
           colors: [
             dark
                 ? const Color(
                     0xFF211B2E,
                   )
                 : Colors.white,
-
             color.withValues(
               alpha:
-                  dark
-                      ? 0.16
-                      : 0.07,
+                  dark ? 0.16 : 0.07,
             ),
           ],
         ),
-
         borderRadius:
             BorderRadius.circular(
           24,
         ),
-
-        border:
-            Border.all(
-          color:
-              color.withValues(
-            alpha:
-                0.15,
+        border: Border.all(
+          color: color.withValues(
+            alpha: 0.14,
           ),
         ),
       ),
-
       child: Column(
         children: [
           Row(
             children: [
               Container(
-                width: 49,
-                height: 49,
-
+                width: 48,
+                height: 48,
                 decoration:
                     BoxDecoration(
-                  color:
-                      color.withValues(
-                    alpha:
-                        0.13,
+                  color: color.withValues(
+                    alpha: 0.13,
                   ),
-
                   borderRadius:
-                      BorderRadius
-                          .circular(
+                      BorderRadius.circular(
                     15,
                   ),
                 ),
-
                 child: const Icon(
                   Icons
                       .notifications_active_rounded,
-
-                  color:
-                      color,
+                  color: color,
                 ),
               ),
-
               const SizedBox(
                 width: 12,
               ),
-
               Expanded(
                 child: Column(
                   crossAxisAlignment:
-                      CrossAxisAlignment
-                          .start,
-
+                      CrossAxisAlignment.start,
                   children: [
                     Text(
                       T.txt(
                         'vaccineRemindersTitle',
                       ),
-
-                      style:
-                          TextStyle(
+                      style: TextStyle(
                         fontFamily:
                             'Fredoka',
-
                         fontSize: 17,
-
                         fontWeight:
-                            FontWeight
-                                .w800,
-
+                            FontWeight.w800,
                         color: dark
                             ? Colors.white
                             : const Color(
@@ -974,25 +807,18 @@ class _ReminderCard
                               ),
                       ),
                     ),
-
                     const SizedBox(
                       height: 2,
                     ),
-
                     Text(
                       T.txt(
                         'vaccineRemindersSubtitle',
                       ),
-
-                      style:
-                          TextStyle(
+                      style: TextStyle(
                         fontFamily:
                             'Baloo2',
-
                         fontSize: 13.5,
-
                         height: 1.15,
-
                         color: dark
                             ? Colors.white60
                             : Colors.black54,
@@ -1001,23 +827,18 @@ class _ReminderCard
                   ],
                 ),
               ),
-
               if (loading)
                 const SizedBox(
-                  width: 25,
-                  height: 25,
-
+                  width: 24,
+                  height: 24,
                   child:
                       CircularProgressIndicator(
-                    strokeWidth:
-                        2.2,
+                    strokeWidth: 2.2,
                   ),
                 )
               else
                 Switch.adaptive(
-                  value:
-                      enabled,
-
+                  value: enabled,
                   onChanged:
                       onChanged,
                 ),
@@ -1031,62 +852,42 @@ class _ReminderCard
           Container(
             width:
                 double.infinity,
-
             padding:
-                const EdgeInsets
-                    .all(
+                const EdgeInsets.all(
               11,
             ),
-
             decoration:
                 BoxDecoration(
               color:
                   color.withValues(
-                alpha:
-                    0.08,
+                alpha: 0.08,
               ),
-
               borderRadius:
-                  BorderRadius
-                      .circular(
+                  BorderRadius.circular(
                 15,
               ),
             ),
-
             child: Row(
               children: [
                 const Icon(
-                  Icons
-                      .schedule_rounded,
-
+                  Icons.schedule_rounded,
                   size: 20,
-
-                  color:
-                      color,
+                  color: color,
                 ),
-
                 const SizedBox(
                   width: 9,
                 ),
-
                 Expanded(
                   child: Text(
                     T.txt(
                       'vaccineRemindersSchedule',
                     ),
-
-                    style:
-                        TextStyle(
+                    style: TextStyle(
                       fontFamily:
                           'Baloo2',
-
-                      fontSize:
-                          13.5,
-
+                      fontSize: 13.5,
                       fontWeight:
-                          FontWeight
-                              .w600,
-
+                          FontWeight.w600,
                       color: dark
                           ? Colors.white70
                           : Colors.black87,
@@ -1101,24 +902,18 @@ class _ReminderCard
             const SizedBox(
               height: 12,
             ),
-
             SizedBox(
               width:
                   double.infinity,
-
               child:
                   OutlinedButton.icon(
                 onPressed:
                     onTest,
-
-                icon:
-                    const Icon(
+                icon: const Icon(
                   Icons
                       .notifications_none_rounded,
                 ),
-
-                label:
-                    Text(
+                label: Text(
                   T.txt(
                     'testNotification',
                   ),
@@ -1136,10 +931,8 @@ class _ReminderCard
 // TARJETA DE VACUNA
 // ================================================================
 
-class _VaccineCard
-    extends StatelessWidget {
-  final VaccineEvaluation
-      evaluation;
+class _VaccineCard extends StatelessWidget {
+  final VaccineEvaluation evaluation;
 
   final bool dark;
 
@@ -1152,8 +945,7 @@ class _VaccineCard
   });
 
   String _statusText() {
-    switch (
-        evaluation.status) {
+    switch (evaluation.status) {
       case VaccineStatus.applied:
         return T.txt(
           'vaccineApplied',
@@ -1169,8 +961,7 @@ class _VaccineCard
           'vaccineReview',
         );
 
-      case VaccineStatus
-            .seasonalReview:
+      case VaccineStatus.seasonalReview:
         return T.txt(
           'vaccineSeasonalReview',
         );
@@ -1184,8 +975,7 @@ class _VaccineCard
   }
 
   Color _statusColor() {
-    switch (
-        evaluation.status) {
+    switch (evaluation.status) {
       case VaccineStatus.applied:
         return const Color(
           0xFF00A896,
@@ -1197,8 +987,7 @@ class _VaccineCard
       case VaccineStatus.review:
         return Colors.orange;
 
-      case VaccineStatus
-            .seasonalReview:
+      case VaccineStatus.seasonalReview:
         return Colors.deepPurple;
 
       case VaccineStatus
@@ -1258,12 +1047,9 @@ class _VaccineCard
     final DateTime? date =
         evaluation.expectedDate;
 
-    if (date == null) {
-      return null;
-    }
-
-    if (evaluation.status ==
-        VaccineStatus.applied) {
+    if (date == null ||
+        evaluation.status ==
+            VaccineStatus.applied) {
       return null;
     }
 
@@ -1318,78 +1104,53 @@ class _VaccineCard
     return Material(
       color:
           Colors.transparent,
-
       borderRadius:
           BorderRadius.circular(
         24,
       ),
-
       child: InkWell(
         onTap:
             onTap,
-
         borderRadius:
             BorderRadius.circular(
           24,
         ),
-
         child: Container(
-          width:
-              double.infinity,
-
+          width: double.infinity,
           padding:
               const EdgeInsets.all(
             16,
           ),
-
-          decoration:
-              BoxDecoration(
-            gradient:
-                LinearGradient(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
               colors: [
                 dark
                     ? const Color(
                         0xFF211B2E,
                       )
                     : Colors.white,
-
                 color.withValues(
                   alpha:
-                      dark
-                          ? 0.14
-                          : 0.065,
+                      dark ? 0.14 : 0.065,
                 ),
               ],
             ),
-
             borderRadius:
                 BorderRadius.circular(
               24,
             ),
-
-            border:
-                Border.all(
-              color:
-                  color.withValues(
-                alpha:
-                    0.18,
+            border: Border.all(
+              color: color.withValues(
+                alpha: 0.18,
               ),
-
-              width:
-                  1.2,
+              width: 1.2,
             ),
-
             boxShadow: [
               BoxShadow(
-                color:
-                    color.withValues(
-                  alpha:
-                      0.06,
+                color: color.withValues(
+                  alpha: 0.06,
                 ),
-
-                blurRadius:
-                    10,
-
+                blurRadius: 10,
                 offset:
                     const Offset(
                   0,
@@ -1398,82 +1159,56 @@ class _VaccineCard
               ),
             ],
           ),
-
           child: Row(
             crossAxisAlignment:
-                CrossAxisAlignment
-                    .start,
-
+                CrossAxisAlignment.start,
             children: [
               Container(
                 width: 52,
                 height: 52,
-
                 decoration:
                     BoxDecoration(
-                  color:
-                      color.withValues(
-                    alpha:
-                        0.13,
+                  color: color.withValues(
+                    alpha: 0.13,
                   ),
-
                   borderRadius:
-                      BorderRadius
-                          .circular(
+                      BorderRadius.circular(
                     16,
                   ),
                 ),
-
                 child: Icon(
                   evaluation.status ==
-                          VaccineStatus
-                              .applied
+                          VaccineStatus.applied
                       ? Icons
                           .check_circle_rounded
                       : Icons
                           .vaccines_rounded,
-
-                  color:
-                      color,
-
-                  size:
-                      29,
+                  color: color,
+                  size: 29,
                 ),
               ),
 
               const SizedBox(
-                width:
-                    14,
+                width: 14,
               ),
 
               Expanded(
                 child: Column(
                   crossAxisAlignment:
-                      CrossAxisAlignment
-                          .start,
-
+                      CrossAxisAlignment.start,
                   children: [
-                    // VACUNA
-
                     Text(
                       T.txt(
                         evaluation
                             .dose
                             .nameKey,
                       ),
-
-                      style:
-                          TextStyle(
+                      style: TextStyle(
                         fontFamily:
                             'Fredoka',
-
-                        fontSize:
-                            18,
-
+                        fontSize: 18,
                         fontWeight:
-                            FontWeight
-                                .w800,
-
+                            FontWeight.w800,
                         color: dark
                             ? Colors.white
                             : const Color(
@@ -1483,11 +1218,8 @@ class _VaccineCard
                     ),
 
                     const SizedBox(
-                      height:
-                          2,
+                      height: 2,
                     ),
-
-                    // DOSIS
 
                     Text(
                       T.txt(
@@ -1495,19 +1227,10 @@ class _VaccineCard
                             .dose
                             .doseLabelKey,
                       ),
-
-                      style:
-                          TextStyle(
+                      style: TextStyle(
                         fontFamily:
                             'Baloo2',
-
-                        fontSize:
-                            14,
-
-                        fontWeight:
-                            FontWeight
-                                .w500,
-
+                        fontSize: 14,
                         color: dark
                             ? Colors.white60
                             : Colors.black54,
@@ -1515,128 +1238,98 @@ class _VaccineCard
                     ),
 
                     const SizedBox(
-                      height:
-                          9,
+                      height: 6,
                     ),
 
-                    // ESTADO
+                    Text(
+                      T.txt(
+                        evaluation
+                            .dose
+                            .preventsKey,
+                      ),
+                      style: TextStyle(
+                        fontFamily:
+                            'Baloo2',
+                        fontSize: 13,
+                        height: 1.2,
+                        color: dark
+                            ? Colors.white54
+                            : Colors.black54,
+                      ),
+                    ),
+
+                    const SizedBox(
+                      height: 9,
+                    ),
 
                     Container(
                       padding:
-                          const EdgeInsets
-                              .symmetric(
-                        horizontal:
-                            10,
-
-                        vertical:
-                            4,
+                          const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
                       ),
-
                       decoration:
                           BoxDecoration(
-                        color:
-                            color.withValues(
-                          alpha:
-                              0.13,
+                        color: color.withValues(
+                          alpha: 0.13,
                         ),
-
                         borderRadius:
-                            BorderRadius
-                                .circular(
+                            BorderRadius.circular(
                           20,
                         ),
                       ),
-
                       child: Text(
                         _statusText(),
-
-                        style:
-                            TextStyle(
+                        style: TextStyle(
                           fontFamily:
                               'Fredoka',
-
-                          fontSize:
-                              12,
-
+                          fontSize: 12,
                           fontWeight:
-                              FontWeight
-                                  .w800,
-
-                          color:
-                              color,
-
-                          letterSpacing:
-                              0.3,
+                              FontWeight.w800,
+                          color: color,
                         ),
                       ),
                     ),
 
-                    // FECHA
-
-                    if (visibleDate !=
-                        null) ...[
+                    if (visibleDate != null) ...[
                       const SizedBox(
-                        height:
-                            12,
+                        height: 12,
                       ),
-
                       Text(
                         _dateLabel(),
-
-                        style:
-                            TextStyle(
+                        style: TextStyle(
                           fontFamily:
                               'Baloo2',
-
-                          fontSize:
-                              12.5,
-
+                          fontSize: 12.5,
                           color: dark
                               ? Colors.white54
                               : Colors.black45,
                         ),
                       ),
-
                       const SizedBox(
-                        height:
-                            2,
+                        height: 2,
                       ),
-
                       Row(
                         children: [
                           Icon(
                             Icons
                                 .calendar_month_rounded,
-
-                            size:
-                                18,
-
-                            color:
-                                color,
+                            size: 18,
+                            color: color,
                           ),
-
                           const SizedBox(
-                            width:
-                                6,
+                            width: 6,
                           ),
-
                           Text(
                             simpleDateText(
                               visibleDate,
                             ),
-
-                            style:
-                                TextStyle(
+                            style: TextStyle(
                               fontFamily:
                                   'Fredoka',
-
-                              fontSize:
-                                  16,
-
+                              fontSize: 16,
                               fontWeight:
-                                  FontWeight
-                                      .w800,
-
+                                  FontWeight.w800,
                               color: dark
                                   ? Colors.white
                                   : const Color(
@@ -1648,56 +1341,35 @@ class _VaccineCard
                       ),
                     ],
 
-                    // FALTAN X DÍAS
-
-                    if (remainingText !=
-                        null) ...[
+                    if (remainingText != null) ...[
                       const SizedBox(
-                        height:
-                            7,
+                        height: 7,
                       ),
-
                       Row(
                         children: [
                           Icon(
                             evaluation.status ==
-                                    VaccineStatus
-                                        .review
+                                    VaccineStatus.review
                                 ? Icons
                                     .info_outline_rounded
                                 : Icons
                                     .schedule_rounded,
-
-                            size:
-                                17,
-
-                            color:
-                                color,
+                            size: 17,
+                            color: color,
                           ),
-
                           const SizedBox(
-                            width:
-                                5,
+                            width: 5,
                           ),
-
                           Expanded(
                             child: Text(
                               remainingText,
-
-                              style:
-                                  TextStyle(
+                              style: TextStyle(
                                 fontFamily:
                                     'Baloo2',
-
-                                fontSize:
-                                    13.5,
-
+                                fontSize: 13.5,
                                 fontWeight:
-                                    FontWeight
-                                        .w700,
-
-                                color:
-                                    color,
+                                    FontWeight.w700,
+                                color: color,
                               ),
                             ),
                           ),
@@ -1705,38 +1377,26 @@ class _VaccineCard
                       ),
                     ],
 
-                    // NOTA DEL MSP
-
                     if (evaluation
                                 .dose
                                 .notesKey !=
                             null &&
                         evaluation.status !=
-                            VaccineStatus
-                                .applied) ...[
+                            VaccineStatus.applied) ...[
                       const SizedBox(
-                        height:
-                            8,
+                        height: 8,
                       ),
-
                       Text(
                         T.txt(
                           evaluation
                               .dose
                               .notesKey!,
                         ),
-
-                        style:
-                            TextStyle(
+                        style: TextStyle(
                           fontFamily:
                               'Baloo2',
-
-                          fontSize:
-                              12.5,
-
-                          height:
-                              1.2,
-
+                          fontSize: 12.5,
+                          height: 1.2,
                           color: dark
                               ? Colors.white54
                               : Colors.black54,
@@ -1748,22 +1408,111 @@ class _VaccineCard
               ),
 
               const SizedBox(
-                width:
-                    5,
+                width: 5,
               ),
 
               Icon(
-                Icons
-                    .chevron_right_rounded,
-
-                color:
-                    color,
-
-                size:
-                    27,
+                Icons.chevron_right_rounded,
+                color: color,
+                size: 27,
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// ================================================================
+// SIN NIÑO
+// ================================================================
+
+class _NoChildState extends StatelessWidget {
+  final bool dark;
+
+  const _NoChildState({
+    required this.dark,
+  });
+
+  @override
+  Widget build(
+    BuildContext context,
+  ) {
+    return Center(
+      child: Padding(
+        padding:
+            const EdgeInsets.all(
+          25,
+        ),
+        child: Column(
+          mainAxisSize:
+              MainAxisSize.min,
+          children: [
+            Container(
+              width: 100,
+              height: 100,
+              decoration:
+                  BoxDecoration(
+                color:
+                    const Color(
+                  0xFF7B2CBF,
+                ).withValues(
+                  alpha: 0.10,
+                ),
+                shape:
+                    BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.child_care_rounded,
+                size: 58,
+                color:
+                    Color(
+                  0xFF7B2CBF,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 18,
+            ),
+            Text(
+              T.txt(
+                'healthProfileRequiredTitle',
+              ),
+              textAlign:
+                  TextAlign.center,
+              style: TextStyle(
+                fontFamily:
+                    'Fredoka',
+                fontSize: 22,
+                fontWeight:
+                    FontWeight.w800,
+                color: dark
+                    ? Colors.white
+                    : const Color(
+                        0xFF2D2D2D,
+                      ),
+              ),
+            ),
+            const SizedBox(
+              height: 7,
+            ),
+            Text(
+              T.txt(
+                'healthProfileRequiredSubtitle',
+              ),
+              textAlign:
+                  TextAlign.center,
+              style: TextStyle(
+                fontFamily:
+                    'Baloo2',
+                fontSize: 15,
+                color: dark
+                    ? Colors.white60
+                    : Colors.black54,
+              ),
+            ),
+          ],
         ),
       ),
     );

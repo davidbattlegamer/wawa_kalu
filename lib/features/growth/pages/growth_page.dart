@@ -7,6 +7,7 @@ import '../../children/data/child_repository.dart';
 import '../../children/models/child.dart';
 import '../../children/pages/child_form_page.dart';
 import '../../children/utils/child_display_utils.dart';
+import '../../children/widgets/child_avatar.dart';
 
 import '../data/growth_repository.dart';
 import '../models/growth_measurement.dart';
@@ -24,13 +25,14 @@ class GrowthPage extends StatefulWidget {
       _GrowthPageState();
 }
 
-class _GrowthPageState extends State<GrowthPage> {
+class _GrowthPageState
+    extends State<GrowthPage> {
   Future<List<GrowthMeasurement>>? _future;
 
   String? _loadedChildId;
 
   // ============================================================
-  // PREPARAR DATOS
+  // PREPARAR
   // ============================================================
 
   void _prepare(
@@ -119,7 +121,7 @@ class _GrowthPageState extends State<GrowthPage> {
   }
 
   // ============================================================
-  // CURVAS OMS
+  // CURVAS
   // ============================================================
 
   Future<void> _openCharts(
@@ -187,28 +189,23 @@ class _GrowthPageState extends State<GrowthPage> {
               : const Color(
                   0xFFFAF7F2,
                 ),
-
           appBar: AppBar(
             backgroundColor: dark
                 ? const Color(
                     0xFF211B2E,
                   )
                 : Colors.white,
-
             foregroundColor: dark
                 ? Colors.white
                 : const Color(
                     0xFF2D2D2D,
                   ),
-
             elevation: 0,
-
             title: Text(
               T.txt(
                 'growthPageTitle',
               ),
-              style:
-                  const TextStyle(
+              style: const TextStyle(
                 fontFamily:
                     'Fredoka',
                 fontWeight:
@@ -216,23 +213,16 @@ class _GrowthPageState extends State<GrowthPage> {
               ),
             ),
           ),
-
-          body: ValueListenableBuilder<
-              String?>(
+          body: ValueListenableBuilder<String?>(
             valueListenable:
                 ChildRepository
                     .instance
                     .selectedChildId,
-
             builder: (
               context,
               selectedId,
               _,
             ) {
-              // --------------------------------------------------
-              // SIN NIÑO SELECCIONADO
-              // --------------------------------------------------
-
               if (selectedId == null) {
                 return _NoChildState(
                   dark: dark,
@@ -241,8 +231,7 @@ class _GrowthPageState extends State<GrowthPage> {
               }
 
               final Child? child =
-                  ChildRepository
-                      .instance
+                  ChildRepository.instance
                       .findById(
                 selectedId,
               );
@@ -261,10 +250,6 @@ class _GrowthPageState extends State<GrowthPage> {
                 child,
               );
 
-              // --------------------------------------------------
-              // CONTROLES
-              // --------------------------------------------------
-
               return FutureBuilder<
                   List<GrowthMeasurement>>(
                 future: _future,
@@ -272,10 +257,8 @@ class _GrowthPageState extends State<GrowthPage> {
                   context,
                   snapshot,
                 ) {
-                  if (snapshot
-                          .connectionState ==
-                      ConnectionState
-                          .waiting) {
+                  if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
                     return const Center(
                       child:
                           CircularProgressIndicator(),
@@ -286,14 +269,12 @@ class _GrowthPageState extends State<GrowthPage> {
                     return Center(
                       child: Padding(
                         padding:
-                            const EdgeInsets
-                                .all(
+                            const EdgeInsets.all(
                           24,
                         ),
                         child: Column(
                           mainAxisSize:
-                              MainAxisSize
-                                  .min,
+                              MainAxisSize.min,
                           children: [
                             const Icon(
                               Icons
@@ -310,8 +291,7 @@ class _GrowthPageState extends State<GrowthPage> {
                                 'growthLoadError',
                               ),
                               textAlign:
-                                  TextAlign
-                                      .center,
+                                  TextAlign.center,
                             ),
                             const SizedBox(
                               height: 16,
@@ -322,8 +302,7 @@ class _GrowthPageState extends State<GrowthPage> {
                                   child,
                                 );
                               },
-                              icon:
-                                  const Icon(
+                              icon: const Icon(
                                 Icons
                                     .refresh_rounded,
                               ),
@@ -339,25 +318,21 @@ class _GrowthPageState extends State<GrowthPage> {
                     );
                   }
 
-                  final List<
-                          GrowthMeasurement>
+                  final List<GrowthMeasurement>
                       measurements =
                       snapshot.data ??
-                          <
-                              GrowthMeasurement>[];
+                          <GrowthMeasurement>[];
 
                   return _GrowthContent(
                     child: child,
                     measurements:
                         measurements,
                     dark: dark,
-
                     onAdd: () {
                       _addMeasurement(
                         child,
                       );
                     },
-
                     onEdit: (
                       measurement,
                     ) {
@@ -366,7 +341,6 @@ class _GrowthPageState extends State<GrowthPage> {
                         measurement,
                       );
                     },
-
                     onOpenCharts: () {
                       _openCharts(
                         child,
@@ -384,19 +358,17 @@ class _GrowthPageState extends State<GrowthPage> {
 }
 
 // ================================================================
-// CONTENIDO PRINCIPAL
+// CONTENIDO
 // ================================================================
 
 class _GrowthContent extends StatelessWidget {
   final Child child;
 
-  final List<GrowthMeasurement>
-      measurements;
+  final List<GrowthMeasurement> measurements;
 
   final bool dark;
 
   final VoidCallback onAdd;
-
   final VoidCallback onOpenCharts;
 
   final void Function(
@@ -451,20 +423,16 @@ class _GrowthContent extends StatelessWidget {
               17,
             ),
             decoration: BoxDecoration(
-              gradient:
-                  LinearGradient(
+              gradient: LinearGradient(
                 colors: [
                   dark
                       ? const Color(
                           0xFF211B2E,
                         )
                       : Colors.white,
-                  childColor
-                      .withValues(
+                  childColor.withValues(
                     alpha:
-                        dark
-                            ? 0.16
-                            : 0.07,
+                        dark ? 0.16 : 0.07,
                   ),
                 ],
               ),
@@ -473,37 +441,17 @@ class _GrowthContent extends StatelessWidget {
                 24,
               ),
               border: Border.all(
-                color: childColor
-                    .withValues(
+                color: childColor.withValues(
                   alpha: 0.12,
                 ),
               ),
             ),
             child: Row(
               children: [
-                Container(
-                  width: 55,
-                  height: 55,
-                  decoration:
-                      BoxDecoration(
-                    shape:
-                        BoxShape.circle,
-                    color: childColor
-                        .withValues(
-                      alpha: 0.14,
-                    ),
-                  ),
-                  child: Icon(
-                    child.sex ==
-                            ChildSex.girl
-                        ? Icons
-                            .face_3_rounded
-                        : Icons
-                            .face_6_rounded,
-                    color:
-                        childColor,
-                    size: 32,
-                  ),
+                ChildAvatar(
+                  child: child,
+                  size: 55,
+                  borderWidth: 2,
                 ),
 
                 const SizedBox(
@@ -513,19 +461,19 @@ class _GrowthContent extends StatelessWidget {
                 Expanded(
                   child: Column(
                     crossAxisAlignment:
-                        CrossAxisAlignment
-                            .start,
+                        CrossAxisAlignment.start,
                     children: [
                       Text(
                         child.name,
-                        style:
-                            TextStyle(
+                        maxLines: 1,
+                        overflow:
+                            TextOverflow.ellipsis,
+                        style: TextStyle(
                           fontFamily:
                               'Fredoka',
                           fontSize: 21,
                           fontWeight:
-                              FontWeight
-                                  .w800,
+                              FontWeight.w800,
                           color: dark
                               ? Colors.white
                               : const Color(
@@ -533,25 +481,20 @@ class _GrowthContent extends StatelessWidget {
                                 ),
                         ),
                       ),
-
                       const SizedBox(
                         height: 2,
                       ),
-
                       Text(
                         childAgeText(
                           child.birthDate,
                         ),
-                        style:
-                            TextStyle(
+                        style: TextStyle(
                           fontFamily:
                               'Baloo2',
                           fontSize: 15,
                           color: dark
-                              ? Colors
-                                  .white70
-                              : Colors
-                                  .black54,
+                              ? Colors.white70
+                              : Colors.black54,
                         ),
                       ),
                     ],
@@ -563,22 +506,17 @@ class _GrowthContent extends StatelessWidget {
                   height: 47,
                   decoration:
                       BoxDecoration(
-                    color: color
-                        .withValues(
+                    color: color.withValues(
                       alpha: 0.12,
                     ),
                     borderRadius:
-                        BorderRadius
-                            .circular(
+                        BorderRadius.circular(
                       15,
                     ),
                   ),
-                  child:
-                      const Icon(
-                    Icons
-                        .show_chart_rounded,
-                    color:
-                        color,
+                  child: const Icon(
+                    Icons.show_chart_rounded,
+                    color: color,
                     size: 29,
                   ),
                 ),
@@ -599,8 +537,7 @@ class _GrowthContent extends StatelessWidget {
               'latestGrowthControl',
             ),
             style: TextStyle(
-              fontFamily:
-                  'Fredoka',
+              fontFamily: 'Fredoka',
               fontSize: 22,
               fontWeight:
                   FontWeight.w800,
@@ -637,20 +574,17 @@ class _GrowthContent extends StatelessWidget {
           ),
 
           // ======================================================
-          // REGISTRAR CONTROL
+          // REGISTRAR
           // ======================================================
 
           SizedBox(
             width:
                 double.infinity,
             height: 55,
-            child:
-                FilledButton.icon(
+            child: FilledButton.icon(
               onPressed:
                   onAdd,
-              style:
-                  FilledButton
-                      .styleFrom(
+              style: FilledButton.styleFrom(
                 backgroundColor:
                     color,
                 foregroundColor:
@@ -658,28 +592,24 @@ class _GrowthContent extends StatelessWidget {
                 shape:
                     RoundedRectangleBorder(
                   borderRadius:
-                      BorderRadius
-                          .circular(
+                      BorderRadius.circular(
                     19,
                   ),
                 ),
               ),
-              icon:
-                  const Icon(
+              icon: const Icon(
                 Icons.add_rounded,
               ),
               label: Text(
                 T.txt(
                   'registerGrowthControl',
                 ),
-                style:
-                    const TextStyle(
+                style: const TextStyle(
                   fontFamily:
                       'Fredoka',
                   fontSize: 17,
                   fontWeight:
-                      FontWeight
-                          .w700,
+                      FontWeight.w700,
                 ),
               ),
             ),
@@ -690,7 +620,7 @@ class _GrowthContent extends StatelessWidget {
           ),
 
           // ======================================================
-          // VER CURVAS OMS
+          // CURVAS
           // ======================================================
 
           SizedBox(
@@ -704,29 +634,25 @@ class _GrowthContent extends StatelessWidget {
                       ? null
                       : onOpenCharts,
               style:
-                  OutlinedButton
-                      .styleFrom(
+                  OutlinedButton.styleFrom(
                 foregroundColor:
                     color,
                 disabledForegroundColor:
                     Colors.grey,
                 side: BorderSide(
-                  color:
-                      measurements
-                              .isEmpty
-                          ? Colors.grey
-                              .withValues(
-                              alpha:
-                                  0.30,
-                            )
-                          : color,
+                  color: measurements
+                          .isEmpty
+                      ? Colors.grey
+                          .withValues(
+                            alpha: 0.30,
+                          )
+                      : color,
                   width: 1.5,
                 ),
                 shape:
                     RoundedRectangleBorder(
                   borderRadius:
-                      BorderRadius
-                          .circular(
+                      BorderRadius.circular(
                     19,
                   ),
                 ),
@@ -739,14 +665,12 @@ class _GrowthContent extends StatelessWidget {
                 T.txt(
                   'viewGrowthCharts',
                 ),
-                style:
-                    const TextStyle(
+                style: const TextStyle(
                   fontFamily:
                       'Fredoka',
                   fontSize: 17,
                   fontWeight:
-                      FontWeight
-                          .w700,
+                      FontWeight.w700,
                 ),
               ),
             ),
@@ -774,11 +698,11 @@ class _GrowthContent extends StatelessWidget {
           ],
 
           const SizedBox(
-            height: 28,
+            height: 18,
           ),
 
           // ======================================================
-          // INFORMACIÓN CURVAS
+          // INFORMACIÓN OMS
           // ======================================================
 
           Container(
@@ -786,62 +710,50 @@ class _GrowthContent extends StatelessWidget {
                 const EdgeInsets.all(
               15,
             ),
-            decoration:
-                BoxDecoration(
+            decoration: BoxDecoration(
               color: color.withValues(
                 alpha:
-                    dark
-                        ? 0.13
-                        : 0.07,
+                    dark ? 0.11 : 0.06,
               ),
               borderRadius:
                   BorderRadius.circular(
                 20,
               ),
               border: Border.all(
-                color: color
-                    .withValues(
-                  alpha: 0.10,
+                color: color.withValues(
+                  alpha: 0.12,
                 ),
               ),
             ),
             child: Row(
               crossAxisAlignment:
-                  CrossAxisAlignment
-                      .start,
+                  CrossAxisAlignment.start,
               children: [
                 const Icon(
                   Icons
-                      .insert_chart_outlined_rounded,
-                  color:
-                      color,
+                      .info_outline_rounded,
+                  color: color,
                 ),
-
                 const SizedBox(
-                  width: 11,
+                  width: 10,
                 ),
-
                 Expanded(
                   child: Text(
-                    measurements
-                            .isEmpty
+                    measurements.isEmpty
                         ? T.txt(
                             'growthChartsNextStep',
                           )
                         : T.txt(
                             'whoGrowthReferenceNote',
                           ),
-                    style:
-                        TextStyle(
+                    style: TextStyle(
                       fontFamily:
                           'Baloo2',
-                      fontSize: 14,
+                      fontSize: 13.5,
                       height: 1.3,
                       color: dark
-                          ? Colors
-                              .white70
-                          : Colors
-                              .black87,
+                          ? Colors.white70
+                          : Colors.black87,
                     ),
                   ),
                 ),
@@ -850,156 +762,49 @@ class _GrowthContent extends StatelessWidget {
           ),
 
           const SizedBox(
-            height: 28,
+            height: 26,
           ),
 
           // ======================================================
           // HISTORIAL
           // ======================================================
 
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  T.txt(
-                    'growthHistory',
-                  ),
-                  style:
-                      TextStyle(
-                    fontFamily:
-                        'Fredoka',
-                    fontSize: 22,
-                    fontWeight:
-                        FontWeight
-                            .w800,
-                    color: dark
-                        ? Colors
-                            .white
-                        : const Color(
-                            0xFF4A2C82,
-                          ),
-                  ),
-                ),
-              ),
-
-              if (measurements
-                  .isNotEmpty)
-                Container(
-                  padding:
-                      const EdgeInsets
-                          .symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration:
-                      BoxDecoration(
-                    color: color
-                        .withValues(
-                      alpha: 0.12,
+          Text(
+            T.txt(
+              'growthHistory',
+            ),
+            style: TextStyle(
+              fontFamily: 'Fredoka',
+              fontSize: 22,
+              fontWeight:
+                  FontWeight.w800,
+              color: dark
+                  ? Colors.white
+                  : const Color(
+                      0xFF4A2C82,
                     ),
-                    borderRadius:
-                        BorderRadius
-                            .circular(
-                      20,
-                    ),
-                  ),
-                  child: Text(
-                    measurements
-                        .length
-                        .toString(),
-                    style:
-                        const TextStyle(
-                      fontFamily:
-                          'Fredoka',
-                      fontWeight:
-                          FontWeight
-                              .w700,
-                      color:
-                          color,
-                    ),
-                  ),
-                ),
-            ],
+            ),
           ),
 
           const SizedBox(
             height: 12,
           ),
 
-          // ======================================================
-          // SIN HISTORIAL
-          // ======================================================
-
           if (measurements.isEmpty)
-            Container(
-              padding:
-                  const EdgeInsets.all(
-                18,
-              ),
-              decoration:
-                  BoxDecoration(
-                color: dark
-                    ? const Color(
-                        0xFF211B2E,
-                      )
-                    : Colors.white,
-                borderRadius:
-                    BorderRadius
-                        .circular(
-                  20,
-                ),
-              ),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons
-                        .history_rounded,
-                    color:
-                        color,
-                  ),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  Expanded(
-                    child: Text(
-                      T.txt(
-                        'noGrowthControls',
-                      ),
-                      style:
-                          TextStyle(
-                        fontFamily:
-                            'Baloo2',
-                        fontSize: 15,
-                        color: dark
-                            ? Colors
-                                .white60
-                            : Colors
-                                .black54,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            _EmptyHistoryCard(
+              dark: dark,
             )
-
-          // ======================================================
-          // LISTA DEL HISTORIAL
-          // ======================================================
-
           else
             ...measurements.map(
               (
-                GrowthMeasurement
-                    measurement,
+                GrowthMeasurement measurement,
               ) {
                 return Padding(
                   padding:
-                      const EdgeInsets
-                          .only(
+                      const EdgeInsets.only(
                     bottom: 12,
                   ),
-                  child:
-                      _HistoryCard(
+                  child: _HistoryCard(
                     measurement:
                         measurement,
                     dark: dark,
@@ -1023,8 +828,7 @@ class _GrowthContent extends StatelessWidget {
 // ================================================================
 
 class _LatestControlCard extends StatelessWidget {
-  final GrowthMeasurement
-      measurement;
+  final GrowthMeasurement measurement;
 
   final bool dark;
 
@@ -1041,14 +845,12 @@ class _LatestControlCard extends StatelessWidget {
   ) {
     if (value ==
         value.roundToDouble()) {
-      return value
-          .toStringAsFixed(
+      return value.toStringAsFixed(
         0,
       );
     }
 
-    return value
-        .toStringAsFixed(
+    return value.toStringAsFixed(
       1,
     );
   }
@@ -1081,22 +883,17 @@ class _LatestControlCard extends StatelessWidget {
               const EdgeInsets.all(
             17,
           ),
-          decoration:
-              BoxDecoration(
-            gradient:
-                LinearGradient(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
               colors: [
                 dark
                     ? const Color(
                         0xFF211B2E,
                       )
                     : Colors.white,
-
                 color.withValues(
                   alpha:
-                      dark
-                          ? 0.16
-                          : 0.08,
+                      dark ? 0.16 : 0.08,
                 ),
               ],
             ),
@@ -1104,10 +901,8 @@ class _LatestControlCard extends StatelessWidget {
                 BorderRadius.circular(
               24,
             ),
-            border:
-                Border.all(
-              color: color
-                  .withValues(
+            border: Border.all(
+              color: color.withValues(
                 alpha: 0.12,
               ),
             ),
@@ -1117,32 +912,24 @@ class _LatestControlCard extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child:
-                        _ValueBox(
-                      icon:
-                          Icons
-                              .monitor_weight_outlined,
-                      label:
-                          T.txt(
+                    child: _ValueBox(
+                      icon: Icons
+                          .monitor_weight_outlined,
+                      label: T.txt(
                         'weight',
                       ),
                       value:
                           '${_format(measurement.weightKg)} kg',
-                      dark:
-                          dark,
+                      dark: dark,
                     ),
                   ),
-
                   const SizedBox(
                     width: 10,
                   ),
-
                   Expanded(
-                    child:
-                        _ValueBox(
-                      icon:
-                          Icons
-                              .straighten_rounded,
+                    child: _ValueBox(
+                      icon: Icons
+                          .straighten_rounded,
                       label: measurement
                                   .measurementType ==
                               GrowthMeasurementType
@@ -1155,8 +942,7 @@ class _LatestControlCard extends StatelessWidget {
                             ),
                       value:
                           '${_format(measurement.heightCm)} cm',
-                      dark:
-                          dark,
+                      dark: dark,
                     ),
                   ),
                 ],
@@ -1172,27 +958,21 @@ class _LatestControlCard extends StatelessWidget {
                     Icons
                         .calendar_month_rounded,
                     size: 19,
-                    color:
-                        color,
+                    color: color,
                   ),
-
                   const SizedBox(
                     width: 7,
                   ),
-
                   Text(
                     simpleDateText(
-                      measurement
-                          .measuredAt,
+                      measurement.measuredAt,
                     ),
-                    style:
-                        TextStyle(
+                    style: TextStyle(
                       fontFamily:
                           'Fredoka',
                       fontSize: 15,
                       fontWeight:
-                          FontWeight
-                              .w700,
+                          FontWeight.w700,
                       color: dark
                           ? Colors.white
                           : const Color(
@@ -1200,12 +980,9 @@ class _LatestControlCard extends StatelessWidget {
                             ),
                     ),
                   ),
-
                   const Spacer(),
-
                   Icon(
-                    Icons
-                        .edit_outlined,
+                    Icons.edit_outlined,
                     size: 20,
                     color: dark
                         ? Colors.white54
@@ -1222,7 +999,7 @@ class _LatestControlCard extends StatelessWidget {
 }
 
 // ================================================================
-// CAJA DE VALOR
+// VALOR
 // ================================================================
 
 class _ValueBox extends StatelessWidget {
@@ -1256,8 +1033,7 @@ class _ValueBox extends StatelessWidget {
       ),
       decoration:
           BoxDecoration(
-        color: color
-            .withValues(
+        color: color.withValues(
           alpha: 0.09,
         ),
         borderRadius:
@@ -1269,41 +1045,32 @@ class _ValueBox extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color:
-                color,
+            color: color,
           ),
-
           const SizedBox(
             height: 5,
           ),
-
           Text(
             label,
             textAlign:
                 TextAlign.center,
-            style:
-                TextStyle(
+            style: TextStyle(
               fontFamily:
                   'Baloo2',
               fontSize: 13,
               color: dark
-                  ? Colors
-                      .white60
-                  : Colors
-                      .black54,
+                  ? Colors.white60
+                  : Colors.black54,
             ),
           ),
-
           const SizedBox(
             height: 2,
           ),
-
           Text(
             value,
             textAlign:
                 TextAlign.center,
-            style:
-                TextStyle(
+            style: TextStyle(
               fontFamily:
                   'Fredoka',
               fontSize: 17,
@@ -1323,12 +1090,11 @@ class _ValueBox extends StatelessWidget {
 }
 
 // ================================================================
-// TARJETA HISTORIAL
+// HISTORIAL
 // ================================================================
 
 class _HistoryCard extends StatelessWidget {
-  final GrowthMeasurement
-      measurement;
+  final GrowthMeasurement measurement;
 
   final bool dark;
 
@@ -1345,14 +1111,12 @@ class _HistoryCard extends StatelessWidget {
   ) {
     if (value ==
         value.roundToDouble()) {
-      return value
-          .toStringAsFixed(
+      return value.toStringAsFixed(
         0,
       );
     }
 
-    return value
-        .toStringAsFixed(
+    return value.toStringAsFixed(
       1,
     );
   }
@@ -1385,8 +1149,7 @@ class _HistoryCard extends StatelessWidget {
               const EdgeInsets.all(
             15,
           ),
-          decoration:
-              BoxDecoration(
+          decoration: BoxDecoration(
             color: dark
                 ? const Color(
                     0xFF211B2E,
@@ -1396,10 +1159,8 @@ class _HistoryCard extends StatelessWidget {
                 BorderRadius.circular(
               20,
             ),
-            border:
-                Border.all(
-              color: color
-                  .withValues(
+            border: Border.all(
+              color: color.withValues(
                 alpha: 0.12,
               ),
             ),
@@ -1411,22 +1172,17 @@ class _HistoryCard extends StatelessWidget {
                 height: 45,
                 decoration:
                     BoxDecoration(
-                  color: color
-                      .withValues(
+                  color: color.withValues(
                     alpha: 0.12,
                   ),
                   borderRadius:
-                      BorderRadius
-                          .circular(
+                      BorderRadius.circular(
                     14,
                   ),
                 ),
-                child:
-                    const Icon(
-                  Icons
-                      .show_chart_rounded,
-                  color:
-                      color,
+                child: const Icon(
+                  Icons.show_chart_rounded,
+                  color: color,
                 ),
               ),
 
@@ -1437,22 +1193,18 @@ class _HistoryCard extends StatelessWidget {
               Expanded(
                 child: Column(
                   crossAxisAlignment:
-                      CrossAxisAlignment
-                          .start,
+                      CrossAxisAlignment.start,
                   children: [
                     Text(
                       simpleDateText(
-                        measurement
-                            .measuredAt,
+                        measurement.measuredAt,
                       ),
-                      style:
-                          TextStyle(
+                      style: TextStyle(
                         fontFamily:
                             'Fredoka',
                         fontSize: 16,
                         fontWeight:
-                            FontWeight
-                                .w700,
+                            FontWeight.w700,
                         color: dark
                             ? Colors.white
                             : const Color(
@@ -1460,34 +1212,26 @@ class _HistoryCard extends StatelessWidget {
                               ),
                       ),
                     ),
-
                     const SizedBox(
                       height: 2,
                     ),
-
                     Text(
                       '${_format(measurement.weightKg)} kg • '
                       '${_format(measurement.heightCm)} cm',
-                      style:
-                          TextStyle(
+                      style: TextStyle(
                         fontFamily:
                             'Baloo2',
                         fontSize: 14,
                         color: dark
-                            ? Colors
-                                .white70
-                            : Colors
-                                .black54,
+                            ? Colors.white70
+                            : Colors.black54,
                       ),
                     ),
-
                     const SizedBox(
                       height: 1,
                     ),
-
                     Text(
-                      measurement
-                                  .measurementType ==
+                      measurement.measurementType ==
                               GrowthMeasurementType
                                   .length
                           ? T.txt(
@@ -1496,46 +1240,35 @@ class _HistoryCard extends StatelessWidget {
                           : T.txt(
                               'standingHeight',
                             ),
-                      style:
-                          const TextStyle(
+                      style: const TextStyle(
                         fontFamily:
                             'Baloo2',
                         fontSize: 12.5,
-                        color:
-                            color,
+                        color: color,
                         fontWeight:
-                            FontWeight
-                                .w600,
+                            FontWeight.w600,
                       ),
                     ),
-
-                    if (measurement
-                                .notes !=
+                    if (measurement.notes !=
                             null &&
-                        measurement
-                            .notes!
+                        measurement.notes!
                             .trim()
                             .isNotEmpty) ...[
                       const SizedBox(
                         height: 4,
                       ),
                       Text(
-                        measurement
-                            .notes!,
+                        measurement.notes!,
                         maxLines: 2,
                         overflow:
-                            TextOverflow
-                                .ellipsis,
-                        style:
-                            TextStyle(
+                            TextOverflow.ellipsis,
+                        style: TextStyle(
                           fontFamily:
                               'Baloo2',
                           fontSize: 12,
                           color: dark
-                              ? Colors
-                                  .white54
-                              : Colors
-                                  .black45,
+                              ? Colors.white54
+                              : Colors.black45,
                         ),
                       ),
                     ],
@@ -1550,8 +1283,7 @@ class _HistoryCard extends StatelessWidget {
               const Icon(
                 Icons
                     .chevron_right_rounded,
-                color:
-                    color,
+                color: color,
               ),
             ],
           ),
@@ -1562,7 +1294,7 @@ class _HistoryCard extends StatelessWidget {
 }
 
 // ================================================================
-// SIN CONTROLES
+// SIN CONTROL
 // ================================================================
 
 class _EmptyGrowthCard extends StatelessWidget {
@@ -1601,8 +1333,7 @@ class _EmptyGrowthCard extends StatelessWidget {
         ),
         border:
             Border.all(
-          color: color
-              .withValues(
+          color: color.withValues(
             alpha: 0.10,
           ),
         ),
@@ -1614,35 +1345,29 @@ class _EmptyGrowthCard extends StatelessWidget {
             height: 70,
             decoration:
                 BoxDecoration(
-              color: color
-                  .withValues(
+              color: color.withValues(
                 alpha: 0.11,
               ),
               shape:
                   BoxShape.circle,
             ),
-            child:
-                const Icon(
+            child: const Icon(
               Icons
                   .monitor_weight_outlined,
               size: 38,
-              color:
-                  color,
+              color: color,
             ),
           ),
-
           const SizedBox(
             height: 13,
           ),
-
           Text(
             T.txt(
               'noGrowthControls',
             ),
             textAlign:
                 TextAlign.center,
-            style:
-                TextStyle(
+            style: TextStyle(
               fontFamily:
                   'Fredoka',
               fontSize: 18,
@@ -1655,19 +1380,16 @@ class _EmptyGrowthCard extends StatelessWidget {
                     ),
             ),
           ),
-
           const SizedBox(
             height: 6,
           ),
-
           Text(
             T.txt(
               'noGrowthControlsSubtitle',
             ),
             textAlign:
                 TextAlign.center,
-            style:
-                TextStyle(
+            style: TextStyle(
               fontFamily:
                   'Baloo2',
               fontSize: 14,
@@ -1678,6 +1400,60 @@ class _EmptyGrowthCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ================================================================
+// HISTORIAL VACÍO
+// ================================================================
+
+class _EmptyHistoryCard
+    extends StatelessWidget {
+  final bool dark;
+
+  const _EmptyHistoryCard({
+    required this.dark,
+  });
+
+  @override
+  Widget build(
+    BuildContext context,
+  ) {
+    return Container(
+      width:
+          double.infinity,
+      padding:
+          const EdgeInsets.all(
+        18,
+      ),
+      decoration:
+          BoxDecoration(
+        color: dark
+            ? const Color(
+                0xFF211B2E,
+              )
+            : Colors.white,
+        borderRadius:
+            BorderRadius.circular(
+          20,
+        ),
+      ),
+      child: Text(
+        T.txt(
+          'noGrowthControlsSubtitle',
+        ),
+        textAlign:
+            TextAlign.center,
+        style: TextStyle(
+          fontFamily:
+              'Baloo2',
+          fontSize: 14,
+          color: dark
+              ? Colors.white60
+              : Colors.black54,
+        ),
       ),
     );
   }
@@ -1702,7 +1478,8 @@ class _NoChildState extends StatelessWidget {
     BuildContext context,
   ) {
     return Center(
-      child: SingleChildScrollView(
+      child:
+          SingleChildScrollView(
         padding:
             const EdgeInsets.all(
           25,
@@ -1720,14 +1497,12 @@ class _NoChildState extends StatelessWidget {
                     const Color(
                   0xFF7B2CBF,
                 ).withValues(
-                  alpha:
-                      0.10,
+                  alpha: 0.10,
                 ),
                 shape:
                     BoxShape.circle,
               ),
-              child:
-                  const Icon(
+              child: const Icon(
                 Icons
                     .child_care_rounded,
                 size: 65,
@@ -1748,8 +1523,7 @@ class _NoChildState extends StatelessWidget {
               ),
               textAlign:
                   TextAlign.center,
-              style:
-                  TextStyle(
+              style: TextStyle(
                 fontFamily:
                     'Fredoka',
                 fontSize: 23,
@@ -1773,8 +1547,7 @@ class _NoChildState extends StatelessWidget {
               ),
               textAlign:
                   TextAlign.center,
-              style:
-                  TextStyle(
+              style: TextStyle(
                 fontFamily:
                     'Baloo2',
                 fontSize: 15,
@@ -1800,14 +1573,12 @@ class _NoChildState extends StatelessWidget {
                 foregroundColor:
                     Colors.white,
                 padding:
-                    const EdgeInsets
-                        .symmetric(
+                    const EdgeInsets.symmetric(
                   horizontal: 22,
                   vertical: 14,
                 ),
               ),
-              icon:
-                  const Icon(
+              icon: const Icon(
                 Icons.add_rounded,
               ),
               label: Text(
