@@ -5,10 +5,12 @@ import '../../../pages/app_texts.dart';
 import '../data/child_repository.dart';
 import '../models/child.dart';
 import '../utils/child_display_utils.dart';
+import '../widgets/child_avatar.dart';
 
 import 'child_form_page.dart';
 
-class ChildProfilePage extends StatelessWidget {
+class ChildProfilePage
+    extends StatelessWidget {
   final String childId;
 
   const ChildProfilePage({
@@ -17,36 +19,52 @@ class ChildProfilePage extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<List<Child>>(
-      valueListenable: ChildRepository.instance.children,
+  Widget build(
+    BuildContext context,
+  ) {
+    return ValueListenableBuilder<
+        List<Child>>(
+      valueListenable:
+          ChildRepository
+              .instance
+              .children,
       builder: (
         context,
         children,
         _,
       ) {
         final Child? child =
-            ChildRepository.instance.findById(childId);
+            ChildRepository
+                .instance
+                .findById(
+          childId,
+        );
 
         if (child == null) {
           return Scaffold(
-            body: Center(
-              child: Text(
-                T.txt('childNotFound'),
+            body:
+                Center(
+              child:
+                  Text(
+                T.txt(
+                  'childNotFound',
+                ),
               ),
             ),
           );
         }
 
         return _ChildProfileContent(
-          child: child,
+          child:
+              child,
         );
       },
     );
   }
 }
 
-class _ChildProfileContent extends StatelessWidget {
+class _ChildProfileContent
+    extends StatelessWidget {
   final Child child;
 
   const _ChildProfileContent({
@@ -59,8 +77,10 @@ class _ChildProfileContent extends StatelessWidget {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => ChildFormPage(
-          child: child,
+        builder: (_) =>
+            ChildFormPage(
+          child:
+              child,
         ),
       ),
     );
@@ -71,13 +91,21 @@ class _ChildProfileContent extends StatelessWidget {
   ) async {
     final bool? confirm =
         await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) {
+      context:
+          context,
+      builder:
+          (
+        dialogContext,
+      ) {
         return AlertDialog(
-          title: Text(
-            T.txt('deleteChild'),
+          title:
+              Text(
+            T.txt(
+              'deleteChild',
+            ),
           ),
-          content: Text(
+          content:
+              Text(
             T.txt(
               'deleteChildConfirmation',
             ).replaceAll(
@@ -87,31 +115,41 @@ class _ChildProfileContent extends StatelessWidget {
           ),
           actions: [
             TextButton(
-              onPressed: () {
+              onPressed:
+                  () {
                 Navigator.pop(
                   dialogContext,
                   false,
                 );
               },
-              child: Text(
-                T.txt('cancel'),
+              child:
+                  Text(
+                T.txt(
+                  'cancel',
+                ),
               ),
             ),
             FilledButton(
-              onPressed: () {
+              onPressed:
+                  () {
                 Navigator.pop(
                   dialogContext,
                   true,
                 );
               },
-              style: FilledButton.styleFrom(
+              style:
+                  FilledButton
+                      .styleFrom(
                 backgroundColor:
                     Colors.redAccent,
                 foregroundColor:
                     Colors.white,
               ),
-              child: Text(
-                T.txt('delete'),
+              child:
+                  Text(
+                T.txt(
+                  'delete',
+                ),
               ),
             ),
           ],
@@ -124,20 +162,28 @@ class _ChildProfileContent extends StatelessWidget {
       return;
     }
 
-    await ChildRepository.instance
-        .removeChild(child.id);
+    await ChildRepository
+        .instance
+        .removeChild(
+      child.id,
+    );
 
     if (!context.mounted) {
       return;
     }
 
-    Navigator.pop(context);
+    Navigator.pop(
+      context,
+    );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+  ) {
     final bool dark =
-        Theme.of(context).brightness ==
+        Theme.of(context)
+                .brightness ==
             Brightness.dark;
 
     final Color childColor =
@@ -147,51 +193,90 @@ class _ChildProfileContent extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: dark
-          ? const Color(0xFF15131A)
-          : const Color(0xFFFAF7F2),
+          ? const Color(
+              0xFF15131A,
+            )
+          : const Color(
+              0xFFFAF7F2,
+            ),
       appBar: AppBar(
         backgroundColor: dark
-            ? const Color(0xFF211B2E)
+            ? const Color(
+                0xFF211B2E,
+              )
             : Colors.white,
         foregroundColor: dark
             ? Colors.white
-            : const Color(0xFF2D2D2D),
-        elevation: 0,
-        title: Text(
-          T.txt('childProfile'),
-          style: const TextStyle(
-            fontFamily: 'Fredoka',
-            fontWeight: FontWeight.w700,
+            : const Color(
+                0xFF2D2D2D,
+              ),
+        elevation:
+            0,
+        title:
+            Text(
+          T.txt(
+            'childProfile',
+          ),
+          style:
+              const TextStyle(
+            fontFamily:
+                'Fredoka',
+            fontWeight:
+                FontWeight.w700,
           ),
         ),
         actions: [
           IconButton(
-            tooltip: T.txt('edit'),
-            onPressed: () {
-              _edit(context);
+            tooltip:
+                T.txt(
+              'edit',
+            ),
+            onPressed:
+                () {
+              _edit(
+                context,
+              );
             },
-            icon: const Icon(
-              Icons.edit_rounded,
+            icon:
+                const Icon(
+              Icons
+                  .edit_rounded,
             ),
           ),
           PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'delete') {
-                _delete(context);
+            onSelected:
+                (
+              value,
+            ) {
+              if (value ==
+                  'delete') {
+                _delete(
+                  context,
+                );
               }
             },
-            itemBuilder: (_) => [
+            itemBuilder:
+                (_) => [
               PopupMenuItem<String>(
-                value: 'delete',
-                child: Row(
+                value:
+                    'delete',
+                child:
+                    Row(
                   children: [
                     const Icon(
-                      Icons.delete_outline_rounded,
-                      color: Colors.redAccent,
+                      Icons
+                          .delete_outline_rounded,
+                      color:
+                          Colors.redAccent,
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(
+                      width:
+                          10,
+                    ),
                     Text(
-                      T.txt('deleteChild'),
+                      T.txt(
+                        'deleteChild',
+                      ),
                     ),
                   ],
                 ),
@@ -200,7 +285,9 @@ class _ChildProfileContent extends StatelessWidget {
           ),
         ],
       ),
-      body: ValueListenableBuilder<String?>(
+      body:
+          ValueListenableBuilder<
+              String?>(
         valueListenable:
             ChildRepository
                 .instance
@@ -211,63 +298,51 @@ class _ChildProfileContent extends StatelessWidget {
           _,
         ) {
           final bool selected =
-              selectedId == child.id;
+              selectedId ==
+                  child.id;
 
           return SafeArea(
-            child: SingleChildScrollView(
+            child:
+                SingleChildScrollView(
               padding:
-                  const EdgeInsets.fromLTRB(
+                  const EdgeInsets
+                      .fromLTRB(
                 20,
                 24,
                 20,
                 36,
               ),
-              child: Column(
+              child:
+                  Column(
                 children: [
-                  Container(
-                    width: 112,
-                    height: 112,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [
-                          childColor.withValues(
-                            alpha: 0.24,
-                          ),
-                          childColor.withValues(
-                            alpha: 0.08,
-                          ),
-                        ],
-                        begin:
-                            Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      border: Border.all(
-                        color:
-                            childColor.withValues(
-                          alpha: 0.30,
-                        ),
-                        width: 2,
-                      ),
-                    ),
-                    child: Icon(
-                      child.sex ==
-                              ChildSex.girl
-                          ? Icons.face_3_rounded
-                          : Icons.face_6_rounded,
-                      size: 60,
-                      color: childColor,
-                    ),
+                  // ==============================================
+                  // FOTO
+                  // ==============================================
+
+                  ChildAvatar(
+                    child:
+                        child,
+                    size:
+                        112,
+                    borderWidth:
+                        2.5,
                   ),
 
-                  const SizedBox(height: 14),
+                  const SizedBox(
+                    height:
+                        14,
+                  ),
 
                   Text(
                     child.name,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Fredoka',
-                      fontSize: 29,
+                    textAlign:
+                        TextAlign.center,
+                    style:
+                        TextStyle(
+                      fontFamily:
+                          'Fredoka',
+                      fontSize:
+                          29,
                       fontWeight:
                           FontWeight.w800,
                       color: dark
@@ -278,16 +353,23 @@ class _ChildProfileContent extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 4),
+                  const SizedBox(
+                    height:
+                        4,
+                  ),
 
                   Text(
                     childAgeText(
                       child.birthDate,
                     ),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Baloo2',
-                      fontSize: 17,
+                    textAlign:
+                        TextAlign.center,
+                    style:
+                        TextStyle(
+                      fontFamily:
+                          'Baloo2',
+                      fontSize:
+                          17,
                       fontWeight:
                           FontWeight.w500,
                       color: dark
@@ -296,14 +378,21 @@ class _ChildProfileContent extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(
+                    height:
+                        20,
+                  ),
 
                   if (!selected)
                     SizedBox(
-                      width: double.infinity,
-                      height: 52,
-                      child: OutlinedButton.icon(
-                        onPressed: () async {
+                      width:
+                          double.infinity,
+                      height:
+                          52,
+                      child:
+                          OutlinedButton.icon(
+                        onPressed:
+                            () async {
                           await ChildRepository
                               .instance
                               .selectChild(
@@ -311,30 +400,34 @@ class _ChildProfileContent extends StatelessWidget {
                           );
                         },
                         style:
-                            OutlinedButton.styleFrom(
+                            OutlinedButton
+                                .styleFrom(
                           foregroundColor:
                               const Color(
                             0xFF7B2CBF,
                           ),
-                          side: const BorderSide(
-                            color: Color(
+                          side:
+                              const BorderSide(
+                            color:
+                                Color(
                               0xFF7B2CBF,
                             ),
                           ),
                           shape:
                               RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius
-                                    .circular(
+                                BorderRadius.circular(
                               18,
                             ),
                           ),
                         ),
-                        icon: const Icon(
+                        icon:
+                            const Icon(
                           Icons
                               .check_circle_outline_rounded,
                         ),
-                        label: Text(
+                        label:
+                            Text(
                           T.txt(
                             'selectThisChild',
                           ),
@@ -350,44 +443,53 @@ class _ChildProfileContent extends StatelessWidget {
                     )
                   else
                     Container(
-                      width: double.infinity,
+                      width:
+                          double.infinity,
                       padding:
-                          const EdgeInsets.all(
+                          const EdgeInsets
+                              .all(
                         13,
                       ),
                       decoration:
                           BoxDecoration(
-                        color: const Color(
+                        color:
+                            const Color(
                           0xFF00A896,
                         ).withValues(
-                          alpha: 0.12,
+                          alpha:
+                              0.12,
                         ),
                         borderRadius:
                             BorderRadius.circular(
                           16,
                         ),
-                        border: Border.all(
-                          color: const Color(
+                        border:
+                            Border.all(
+                          color:
+                              const Color(
                             0xFF00A896,
                           ).withValues(
-                            alpha: 0.20,
+                            alpha:
+                                0.20,
                           ),
                         ),
                       ),
-                      child: Row(
+                      child:
+                          Row(
                         mainAxisAlignment:
-                            MainAxisAlignment
-                                .center,
+                            MainAxisAlignment.center,
                         children: [
                           const Icon(
                             Icons
                                 .check_circle_rounded,
-                            color: Color(
+                            color:
+                                Color(
                               0xFF00A896,
                             ),
                           ),
                           const SizedBox(
-                            width: 8,
+                            width:
+                                8,
                           ),
                           Text(
                             T.txt(
@@ -399,7 +501,8 @@ class _ChildProfileContent extends StatelessWidget {
                                   'Fredoka',
                               fontWeight:
                                   FontWeight.w700,
-                              color: Color(
+                              color:
+                                  Color(
                                 0xFF00A896,
                               ),
                             ),
@@ -408,46 +511,72 @@ class _ChildProfileContent extends StatelessWidget {
                       ),
                     ),
 
-                  const SizedBox(height: 22),
+                  const SizedBox(
+                    height:
+                        22,
+                  ),
 
                   _InfoCard(
                     icon:
-                        Icons.cake_outlined,
+                        Icons
+                            .cake_outlined,
                     title:
-                        T.txt('birthDate'),
-                    value: simpleDateText(
+                        T.txt(
+                      'birthDate',
+                    ),
+                    value:
+                        simpleDateText(
                       child.birthDate,
                     ),
-                    color: Colors.orange,
+                    color:
+                        Colors.orange,
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(
+                    height:
+                        12,
+                  ),
 
                   _InfoCard(
                     icon:
-                        Icons.child_care_rounded,
+                        Icons
+                            .child_care_rounded,
                     title:
-                        T.txt('sex'),
+                        T.txt(
+                      'sex',
+                    ),
                     value: child.sex ==
                             ChildSex.girl
-                        ? T.txt('girl')
-                        : T.txt('boy'),
-                    color: childColor,
+                        ? T.txt(
+                            'girl',
+                          )
+                        : T.txt(
+                            'boy',
+                          ),
+                    color:
+                        childColor,
                   ),
 
-                  const SizedBox(height: 26),
+                  const SizedBox(
+                    height:
+                        26,
+                  ),
 
                   Align(
                     alignment:
-                        Alignment.centerLeft,
-                    child: Text(
+                        Alignment
+                            .centerLeft,
+                    child:
+                        Text(
                       T.txt(
                         'childHealth',
                       ),
-                      style: TextStyle(
+                      style:
+                          TextStyle(
                         fontFamily:
                             'Fredoka',
-                        fontSize: 22,
+                        fontSize:
+                            22,
                         fontWeight:
                             FontWeight.w800,
                         color: dark
@@ -459,32 +588,46 @@ class _ChildProfileContent extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(
+                    height:
+                        12,
+                  ),
 
                   _ComingHealthCard(
                     icon:
-                        Icons.vaccines_rounded,
+                        Icons
+                            .vaccines_rounded,
                     title:
-                        T.txt('vaccines'),
+                        T.txt(
+                      'vaccines',
+                    ),
                     subtitle:
                         T.txt(
                       'vaccinesSubtitle',
                     ),
-                    color: Colors.blue,
+                    color:
+                        Colors.blue,
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(
+                    height:
+                        12,
+                  ),
 
                   _ComingHealthCard(
                     icon:
-                        Icons.show_chart_rounded,
+                        Icons
+                            .show_chart_rounded,
                     title:
-                        T.txt('growth'),
+                        T.txt(
+                      'growth',
+                    ),
                     subtitle:
                         T.txt(
                       'growthSubtitle',
                     ),
-                    color: const Color(
+                    color:
+                        const Color(
                       0xFF00A896,
                     ),
                   ),
@@ -498,7 +641,8 @@ class _ChildProfileContent extends StatelessWidget {
   }
 }
 
-class _InfoCard extends StatelessWidget {
+class _InfoCard
+    extends StatelessWidget {
   final IconData icon;
   final String title;
   final String value;
@@ -512,16 +656,25 @@ class _InfoCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+  ) {
     final bool dark =
-        Theme.of(context).brightness ==
+        Theme.of(context)
+                .brightness ==
             Brightness.dark;
 
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
+      width:
+          double.infinity,
+      padding:
+          const EdgeInsets.all(
+        16,
+      ),
+      decoration:
+          BoxDecoration(
+        gradient:
+            LinearGradient(
           colors: [
             dark
                 ? const Color(
@@ -529,58 +682,90 @@ class _InfoCard extends StatelessWidget {
                   )
                 : Colors.white,
             color.withValues(
-              alpha: dark ? 0.12 : 0.06,
+              alpha: dark
+                  ? 0.12
+                  : 0.06,
             ),
           ],
         ),
         borderRadius:
-            BorderRadius.circular(20),
-        border: Border.all(
-          color: color.withValues(
-            alpha: 0.12,
+            BorderRadius.circular(
+          20,
+        ),
+        border:
+            Border.all(
+          color:
+              color.withValues(
+            alpha:
+                0.12,
           ),
         ),
       ),
-      child: Row(
+      child:
+          Row(
         children: [
           Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: color.withValues(
-                alpha: 0.13,
+            width:
+                48,
+            height:
+                48,
+            decoration:
+                BoxDecoration(
+              color:
+                  color.withValues(
+                alpha:
+                    0.13,
               ),
               borderRadius:
-                  BorderRadius.circular(15),
+                  BorderRadius
+                      .circular(
+                15,
+              ),
             ),
-            child: Icon(
+            child:
+                Icon(
               icon,
-              color: color,
-              size: 27,
+              color:
+                  color,
+              size:
+                  27,
             ),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(
+            width:
+                14,
+          ),
           Expanded(
-            child: Column(
+            child:
+                Column(
               crossAxisAlignment:
                   CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                    fontFamily: 'Baloo2',
-                    fontSize: 14,
+                  style:
+                      TextStyle(
+                    fontFamily:
+                        'Baloo2',
+                    fontSize:
+                        14,
                     color: dark
                         ? Colors.white60
                         : Colors.black54,
                   ),
                 ),
-                const SizedBox(height: 1),
+                const SizedBox(
+                  height:
+                      1,
+                ),
                 Text(
                   value,
-                  style: TextStyle(
-                    fontFamily: 'Fredoka',
-                    fontSize: 17,
+                  style:
+                      TextStyle(
+                    fontFamily:
+                        'Fredoka',
+                    fontSize:
+                        17,
                     fontWeight:
                         FontWeight.w700,
                     color: dark
@@ -614,16 +799,25 @@ class _ComingHealthCard
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+  ) {
     final bool dark =
-        Theme.of(context).brightness ==
+        Theme.of(context)
+                .brightness ==
             Brightness.dark;
 
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
+      width:
+          double.infinity,
+      padding:
+          const EdgeInsets.all(
+        16,
+      ),
+      decoration:
+          BoxDecoration(
+        gradient:
+            LinearGradient(
           colors: [
             dark
                 ? const Color(
@@ -631,46 +825,73 @@ class _ComingHealthCard
                   )
                 : Colors.white,
             color.withValues(
-              alpha: dark ? 0.16 : 0.08,
+              alpha: dark
+                  ? 0.16
+                  : 0.08,
             ),
           ],
         ),
         borderRadius:
-            BorderRadius.circular(20),
-        border: Border.all(
+            BorderRadius.circular(
+          20,
+        ),
+        border:
+            Border.all(
           color:
-              color.withValues(alpha: 0.13),
+              color.withValues(
+            alpha:
+                0.13,
+          ),
         ),
       ),
-      child: Row(
+      child:
+          Row(
         children: [
           Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: color.withValues(
-                alpha: 0.14,
+            width:
+                50,
+            height:
+                50,
+            decoration:
+                BoxDecoration(
+              color:
+                  color.withValues(
+                alpha:
+                    0.14,
               ),
               borderRadius:
-                  BorderRadius.circular(16),
+                  BorderRadius
+                      .circular(
+                16,
+              ),
             ),
-            child: Icon(
+            child:
+                Icon(
               icon,
-              color: color,
-              size: 28,
+              color:
+                  color,
+              size:
+                  28,
             ),
           ),
-          const SizedBox(width: 13),
+          const SizedBox(
+            width:
+                13,
+          ),
           Expanded(
-            child: Column(
+            child:
+                Column(
               crossAxisAlignment:
                   CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                    fontFamily: 'Fredoka',
-                    fontSize: 17,
+                  style:
+                      TextStyle(
+                    fontFamily:
+                        'Fredoka',
+                    fontSize:
+                        17,
                     fontWeight:
                         FontWeight.w700,
                     color: dark
@@ -680,36 +901,56 @@ class _ComingHealthCard
                           ),
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(
+                  height:
+                      2,
+                ),
                 Text(
                   subtitle,
-                  style: TextStyle(
-                    fontFamily: 'Baloo2',
-                    fontSize: 14,
-                    height: 1.15,
+                  style:
+                      TextStyle(
+                    fontFamily:
+                        'Baloo2',
+                    fontSize:
+                        14,
+                    height:
+                        1.15,
                     color: dark
                         ? Colors.white60
                         : Colors.black54,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(
+                  height:
+                      2,
+                ),
                 Text(
-                  T.txt('comingSoon'),
-                  style: TextStyle(
-                    fontFamily: 'Baloo2',
-                    fontSize: 13,
+                  T.txt(
+                    'comingSoon',
+                  ),
+                  style:
+                      TextStyle(
+                    fontFamily:
+                        'Baloo2',
+                    fontSize:
+                        13,
                     fontWeight:
                         FontWeight.w700,
-                    color: color,
+                    color:
+                        color,
                   ),
                 ),
               ],
             ),
           ),
           Icon(
-            Icons.chevron_right_rounded,
+            Icons
+                .chevron_right_rounded,
             color:
-                color.withValues(alpha: 0.65),
+                color.withValues(
+              alpha:
+                  0.65,
+            ),
           ),
         ],
       ),

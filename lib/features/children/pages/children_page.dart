@@ -6,6 +6,7 @@ import '../../../pages/app_texts.dart';
 import '../data/child_repository.dart';
 import '../models/child.dart';
 import '../utils/child_display_utils.dart';
+import '../widgets/child_avatar.dart';
 
 import 'child_form_page.dart';
 import 'child_profile_page.dart';
@@ -32,7 +33,9 @@ class ChildrenPage extends StatelessWidget {
     Child child,
   ) async {
     await ChildRepository.instance
-        .selectChild(child.id);
+        .selectChild(
+      child.id,
+    );
 
     if (!context.mounted) {
       return;
@@ -43,14 +46,17 @@ class ChildrenPage extends StatelessWidget {
       MaterialPageRoute(
         builder: (_) =>
             ChildProfilePage(
-          childId: child.id,
+          childId:
+              child.id,
         ),
       ),
     );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+  ) {
     return ValueListenableBuilder<String>(
       valueListenable:
           AppConfig.idioma,
@@ -60,28 +66,43 @@ class ChildrenPage extends StatelessWidget {
         _,
       ) {
         final bool dark =
-            Theme.of(context).brightness ==
+            Theme.of(context)
+                    .brightness ==
                 Brightness.dark;
 
         return Scaffold(
           backgroundColor: dark
-              ? const Color(0xFF15131A)
-              : const Color(0xFFFAF7F2),
+              ? const Color(
+                  0xFF15131A,
+                )
+              : const Color(
+                  0xFFFAF7F2,
+                ),
           appBar: AppBar(
             automaticallyImplyLeading:
                 false,
             backgroundColor: dark
-                ? const Color(0xFF211B2E)
+                ? const Color(
+                    0xFF211B2E,
+                  )
                 : Colors.white,
             foregroundColor: dark
                 ? Colors.white
-                : const Color(0xFF2D2D2D),
-            elevation: 0,
+                : const Color(
+                    0xFF2D2D2D,
+                  ),
+            elevation:
+                0,
             title: Text(
-              T.txt('myChildren'),
-              style: TextStyle(
-                fontFamily: 'Fredoka',
-                fontSize: 24,
+              T.txt(
+                'myChildren',
+              ),
+              style:
+                  TextStyle(
+                fontFamily:
+                    'Fredoka',
+                fontSize:
+                    24,
                 fontWeight:
                     FontWeight.w700,
                 color: dark
@@ -94,12 +115,19 @@ class ChildrenPage extends StatelessWidget {
             actions: [
               IconButton(
                 tooltip:
-                    T.txt('addChild'),
-                onPressed: () {
-                  _addChild(context);
+                    T.txt(
+                  'addChild',
+                ),
+                onPressed:
+                    () {
+                  _addChild(
+                    context,
+                  );
                 },
-                icon: const Icon(
-                  Icons.add_rounded,
+                icon:
+                    const Icon(
+                  Icons
+                      .add_rounded,
                 ),
               ),
             ],
@@ -119,8 +147,10 @@ class ChildrenPage extends StatelessWidget {
               ) {
                 if (children.isEmpty) {
                   return _EmptyChildren(
-                    dark: dark,
-                    onAdd: () {
+                    dark:
+                        dark,
+                    onAdd:
+                        () {
                       _addChild(
                         context,
                       );
@@ -157,10 +187,10 @@ class ChildrenPage extends StatelessWidget {
                               TextStyle(
                             fontFamily:
                                 'Fredoka',
-                            fontSize: 25,
+                            fontSize:
+                                25,
                             fontWeight:
-                                FontWeight
-                                    .w800,
+                                FontWeight.w800,
                             color: dark
                                 ? Colors.white
                                 : const Color(
@@ -179,8 +209,10 @@ class ChildrenPage extends StatelessWidget {
                               TextStyle(
                             fontFamily:
                                 'Baloo2',
-                            fontSize: 15.5,
-                            height: 1.2,
+                            fontSize:
+                                15.5,
+                            height:
+                                1.2,
                             color: dark
                                 ? Colors.white70
                                 : Colors.black54,
@@ -190,12 +222,15 @@ class ChildrenPage extends StatelessWidget {
                           height: 20,
                         ),
                         ...children.map(
-                          (child) {
+                          (
+                            child,
+                          ) {
                             return Padding(
                               padding:
                                   const EdgeInsets
                                       .only(
-                                bottom: 13,
+                                bottom:
+                                    13,
                               ),
                               child:
                                   _ChildCard(
@@ -204,7 +239,8 @@ class ChildrenPage extends StatelessWidget {
                                 selected:
                                     child.id ==
                                         selectedId,
-                                onTap: () {
+                                onTap:
+                                    () {
                                   _openChild(
                                     context,
                                     child,
@@ -240,8 +276,11 @@ class ChildrenPage extends StatelessWidget {
 
               return FloatingActionButton
                   .extended(
-                onPressed: () {
-                  _addChild(context);
+                onPressed:
+                    () {
+                  _addChild(
+                    context,
+                  );
                 },
                 backgroundColor:
                     const Color(
@@ -249,11 +288,16 @@ class ChildrenPage extends StatelessWidget {
                 ),
                 foregroundColor:
                     Colors.white,
-                icon: const Icon(
-                  Icons.add_rounded,
+                icon:
+                    const Icon(
+                  Icons
+                      .add_rounded,
                 ),
-                label: Text(
-                  T.txt('addChild'),
+                label:
+                    Text(
+                  T.txt(
+                    'addChild',
+                  ),
                   style:
                       const TextStyle(
                     fontFamily:
@@ -282,32 +326,44 @@ class _EmptyChildren
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+  ) {
     return Center(
-      child: SingleChildScrollView(
+      child:
+          SingleChildScrollView(
         padding:
-            const EdgeInsets.all(24),
-        child: Column(
+            const EdgeInsets.all(
+          24,
+        ),
+        child:
+            Column(
           mainAxisAlignment:
               MainAxisAlignment.center,
           children: [
             Container(
-              width: 110,
-              height: 110,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
+              width:
+                  110,
+              height:
+                  110,
+              decoration:
+                  BoxDecoration(
+                shape:
+                    BoxShape.circle,
                 gradient:
                     LinearGradient(
                   colors: [
                     const Color(
                       0xFF7B2CBF,
                     ).withValues(
-                      alpha: 0.22,
+                      alpha:
+                          0.22,
                     ),
                     const Color(
                       0xFFFF006E,
                     ).withValues(
-                      alpha: 0.12,
+                      alpha:
+                          0.12,
                     ),
                   ],
                   begin:
@@ -316,16 +372,21 @@ class _EmptyChildren
                       Alignment.bottomRight,
                 ),
               ),
-              child: const Icon(
-                Icons.child_care_rounded,
-                size: 58,
-                color: Color(
+              child:
+                  const Icon(
+                Icons
+                    .child_care_rounded,
+                size:
+                    58,
+                color:
+                    Color(
                   0xFF7B2CBF,
                 ),
               ),
             ),
             const SizedBox(
-              height: 24,
+              height:
+                  24,
             ),
             Text(
               T.txt(
@@ -333,9 +394,12 @@ class _EmptyChildren
               ),
               textAlign:
                   TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Fredoka',
-                fontSize: 23,
+              style:
+                  TextStyle(
+                fontFamily:
+                    'Fredoka',
+                fontSize:
+                    23,
                 fontWeight:
                     FontWeight.w700,
                 color: dark
@@ -346,7 +410,8 @@ class _EmptyChildren
               ),
             ),
             const SizedBox(
-              height: 10,
+              height:
+                  10,
             ),
             Text(
               T.txt(
@@ -354,10 +419,14 @@ class _EmptyChildren
               ),
               textAlign:
                   TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Baloo2',
-                fontSize: 16,
-                height: 1.3,
+              style:
+                  TextStyle(
+                fontFamily:
+                    'Baloo2',
+                fontSize:
+                    16,
+                height:
+                    1.3,
                 fontWeight:
                     FontWeight.w500,
                 color: dark
@@ -366,16 +435,21 @@ class _EmptyChildren
               ),
             ),
             const SizedBox(
-              height: 28,
+              height:
+                  28,
             ),
             SizedBox(
-              width: double.infinity,
-              height: 56,
+              width:
+                  double.infinity,
+              height:
+                  56,
               child:
                   FilledButton.icon(
-                onPressed: onAdd,
+                onPressed:
+                    onAdd,
                 style:
-                    FilledButton.styleFrom(
+                    FilledButton
+                        .styleFrom(
                   backgroundColor:
                       const Color(
                     0xFF7B2CBF,
@@ -391,19 +465,24 @@ class _EmptyChildren
                     ),
                   ),
                 ),
-                icon: const Icon(
-                  Icons.add_rounded,
+                icon:
+                    const Icon(
+                  Icons
+                      .add_rounded,
                 ),
-                label: Text(
-                  T.txt('addChild'),
+                label:
+                    Text(
+                  T.txt(
+                    'addChild',
+                  ),
                   style:
                       const TextStyle(
                     fontFamily:
                         'Fredoka',
-                    fontSize: 18,
+                    fontSize:
+                        18,
                     fontWeight:
-                        FontWeight
-                            .w700,
+                        FontWeight.w700,
                   ),
                 ),
               ),
@@ -428,9 +507,12 @@ class _ChildCard
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+  ) {
     final bool dark =
-        Theme.of(context).brightness ==
+        Theme.of(context)
+                .brightness ==
             Brightness.dark;
 
     final Color color =
@@ -439,22 +521,34 @@ class _ChildCard
             : Colors.blue;
 
     return Material(
-      color: Colors.transparent,
+      color:
+          Colors.transparent,
       borderRadius:
-          BorderRadius.circular(24),
+          BorderRadius.circular(
+        24,
+      ),
       child: InkWell(
-        onTap: onTap,
+        onTap:
+            onTap,
         borderRadius:
-            BorderRadius.circular(24),
-        child: AnimatedContainer(
+            BorderRadius.circular(
+          24,
+        ),
+        child:
+            AnimatedContainer(
           duration:
               const Duration(
-            milliseconds: 200,
+            milliseconds:
+                200,
           ),
           padding:
-              const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
+              const EdgeInsets.all(
+            16,
+          ),
+          decoration:
+              BoxDecoration(
+            gradient:
+                LinearGradient(
               colors: [
                 dark
                     ? const Color(
@@ -462,8 +556,9 @@ class _ChildCard
                       )
                     : Colors.white,
                 color.withValues(
-                  alpha:
-                      dark ? 0.16 : 0.08,
+                  alpha: dark
+                      ? 0.16
+                      : 0.08,
                 ),
               ],
               begin:
@@ -472,81 +567,77 @@ class _ChildCard
                   Alignment.centerRight,
             ),
             borderRadius:
-                BorderRadius.circular(24),
-            border: Border.all(
+                BorderRadius.circular(
+              24,
+            ),
+            border:
+                Border.all(
               color: selected
                   ? const Color(
                       0xFF7B2CBF,
                     )
                   : color.withValues(
-                      alpha: 0.16,
+                      alpha:
+                          0.16,
                     ),
-              width:
-                  selected ? 2 : 1.2,
+              width: selected
+                  ? 2
+                  : 1.2,
             ),
             boxShadow: [
               BoxShadow(
                 color:
                     color.withValues(
-                  alpha: 0.07,
+                  alpha:
+                      0.07,
                 ),
-                blurRadius: 12,
+                blurRadius:
+                    12,
                 offset:
-                    const Offset(0, 5),
+                    const Offset(
+                  0,
+                  5,
+                ),
               ),
             ],
           ),
-          child: Row(
+          child:
+              Row(
             children: [
-              Container(
-                width: 61,
-                height: 61,
-                decoration:
-                    BoxDecoration(
-                  color:
-                      color.withValues(
-                    alpha: 0.14,
-                  ),
-                  shape:
-                      BoxShape.circle,
-                ),
-                child: Icon(
-                  child.sex ==
-                          ChildSex.girl
-                      ? Icons
-                          .face_3_rounded
-                      : Icons
-                          .face_6_rounded,
-                  size: 34,
-                  color: color,
-                ),
+              ChildAvatar(
+                child:
+                    child,
+                size:
+                    61,
               ),
               const SizedBox(
-                width: 14,
+                width:
+                    14,
               ),
               Expanded(
-                child: Column(
+                child:
+                    Column(
                   crossAxisAlignment:
-                      CrossAxisAlignment
-                          .start,
+                      CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
                         Flexible(
-                          child: Text(
+                          child:
+                              Text(
                             child.name,
                             overflow:
-                                TextOverflow
-                                    .ellipsis,
-                            maxLines: 1,
+                                TextOverflow.ellipsis,
+                            maxLines:
+                                1,
                             style:
                                 TextStyle(
                               fontFamily:
                                   'Fredoka',
-                              fontSize: 19,
+                              fontSize:
+                                  19,
                               fontWeight:
-                                  FontWeight
-                                      .w800,
+                                  FontWeight.w800,
                               color: dark
                                   ? Colors.white
                                   : const Color(
@@ -557,7 +648,8 @@ class _ChildCard
                         ),
                         if (selected) ...[
                           const SizedBox(
-                            width: 8,
+                            width:
+                                8,
                           ),
                           Container(
                             padding:
@@ -565,7 +657,8 @@ class _ChildCard
                                     .symmetric(
                               horizontal:
                                   8,
-                              vertical: 3,
+                              vertical:
+                                  3,
                             ),
                             decoration:
                                 BoxDecoration(
@@ -573,7 +666,8 @@ class _ChildCard
                                   const Color(
                                 0xFF00A896,
                               ).withValues(
-                                alpha: 0.13,
+                                alpha:
+                                    0.13,
                               ),
                               borderRadius:
                                   BorderRadius
@@ -581,7 +675,8 @@ class _ChildCard
                                 20,
                               ),
                             ),
-                            child: Text(
+                            child:
+                                Text(
                               T.txt(
                                 'active',
                               ),
@@ -592,8 +687,7 @@ class _ChildCard
                                 fontSize:
                                     11.5,
                                 fontWeight:
-                                    FontWeight
-                                        .w700,
+                                    FontWeight.w700,
                                 color:
                                     Color(
                                   0xFF00A896,
@@ -605,7 +699,8 @@ class _ChildCard
                       ],
                     ),
                     const SizedBox(
-                      height: 4,
+                      height:
+                          4,
                     ),
                     Text(
                       childAgeText(
@@ -615,26 +710,34 @@ class _ChildCard
                           TextStyle(
                         fontFamily:
                             'Baloo2',
-                        fontSize: 15,
+                        fontSize:
+                            15,
                         color: dark
                             ? Colors.white70
                             : Colors.black54,
                       ),
                     ),
                     const SizedBox(
-                      height: 2,
+                      height:
+                          2,
                     ),
                     Text(
                       child.sex ==
                               ChildSex.girl
-                          ? T.txt('girl')
-                          : T.txt('boy'),
+                          ? T.txt(
+                              'girl',
+                            )
+                          : T.txt(
+                              'boy',
+                            ),
                       style:
                           TextStyle(
                         fontFamily:
                             'Baloo2',
-                        fontSize: 13.5,
-                        color: color,
+                        fontSize:
+                            13.5,
+                        color:
+                            color,
                         fontWeight:
                             FontWeight.w700,
                       ),
@@ -643,16 +746,19 @@ class _ChildCard
                 ),
               ),
               const SizedBox(
-                width: 6,
+                width:
+                    6,
               ),
               Icon(
-                Icons.chevron_right_rounded,
+                Icons
+                    .chevron_right_rounded,
                 color: selected
                     ? const Color(
                         0xFF7B2CBF,
                       )
                     : color,
-                size: 28,
+                size:
+                    28,
               ),
             ],
           ),

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../../../core/database/app_database.dart';
 
 import '../models/child.dart';
+import '../services/child_photo_service.dart';
 
 class ChildRepository {
   ChildRepository._();
@@ -13,19 +14,20 @@ class ChildRepository {
   static const String _selectedChildKey =
       'selected_child_id';
 
-  final ValueNotifier<List<Child>>
-      children =
+  final ValueNotifier<List<Child>> children =
       ValueNotifier<List<Child>>(
     <Child>[],
   );
 
-  final ValueNotifier<String?>
-      selectedChildId =
-      ValueNotifier<String?>(null);
+  final ValueNotifier<String?> selectedChildId =
+      ValueNotifier<String?>(
+    null,
+  );
 
   bool _initialized = false;
 
-  bool get initialized => _initialized;
+  bool get initialized =>
+      _initialized;
 
   Child? get selectedChild {
     final String? id =
@@ -60,7 +62,8 @@ class ChildRepository {
         await AppDatabase.instance
             .getChildren();
 
-    children.value = storedChildren;
+    children.value =
+        storedChildren;
 
     final String? storedSelectedId =
         await AppDatabase.instance
@@ -73,7 +76,8 @@ class ChildRepository {
             null) {
       selectedChildId.value =
           storedSelectedId;
-    } else if (storedChildren.isNotEmpty) {
+    } else if (storedChildren
+        .isNotEmpty) {
       final String firstChildId =
           storedChildren.first.id;
 
@@ -86,7 +90,8 @@ class ChildRepository {
         firstChildId,
       );
     } else {
-      selectedChildId.value = null;
+      selectedChildId.value =
+          null;
 
       await AppDatabase.instance
           .deleteState(
@@ -101,26 +106,35 @@ class ChildRepository {
     Child child,
   ) async {
     await AppDatabase.instance
-        .insertChild(child);
+        .insertChild(
+      child,
+    );
 
     children.value = [
       ...children.value,
       child,
     ];
 
-    await selectChild(child.id);
+    await selectChild(
+      child.id,
+    );
   }
 
   Future<void> updateChild(
     Child child,
   ) async {
     await AppDatabase.instance
-        .updateChild(child);
+        .updateChild(
+      child,
+    );
 
     final List<Child> updated =
         children.value.map(
-      (current) {
-        if (current.id == child.id) {
+      (
+        current,
+      ) {
+        if (current.id ==
+            child.id) {
           return child;
         }
 
@@ -128,31 +142,47 @@ class ChildRepository {
       },
     ).toList();
 
-    children.value = updated;
+    children.value =
+        updated;
   }
 
   Future<void> removeChild(
     String id,
   ) async {
+    final Child? childToRemove =
+        findById(id);
+
     await AppDatabase.instance
-        .deleteChild(id);
+        .deleteChild(
+      id,
+    );
+
+    await ChildPhotoService.instance
+        .deletePhoto(
+      childToRemove?.photoPath,
+    );
 
     final List<Child> updated =
         children.value
             .where(
-              (child) =>
+              (
+                child,
+              ) =>
                   child.id != id,
             )
             .toList();
 
-    children.value = updated;
+    children.value =
+        updated;
 
-    if (selectedChildId.value != id) {
+    if (selectedChildId.value !=
+        id) {
       return;
     }
 
     if (updated.isEmpty) {
-      selectedChildId.value = null;
+      selectedChildId.value =
+          null;
 
       await AppDatabase.instance
           .deleteState(
@@ -182,7 +212,8 @@ class ChildRepository {
       return;
     }
 
-    selectedChildId.value = id;
+    selectedChildId.value =
+        id;
 
     await AppDatabase.instance
         .setState(

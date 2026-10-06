@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../../../pages/app_texts.dart';
@@ -6,6 +8,7 @@ import '../../vaccines/services/vaccine_notification_service.dart';
 
 import '../data/child_repository.dart';
 import '../models/child.dart';
+import '../services/child_photo_service.dart';
 import '../utils/child_display_utils.dart';
 
 class ChildFormPage extends StatefulWidget {
@@ -23,8 +26,7 @@ class ChildFormPage extends StatefulWidget {
 
 class _ChildFormPageState
     extends State<ChildFormPage> {
-  final GlobalKey<FormState>
-      _formKey =
+  final GlobalKey<FormState> _formKey =
       GlobalKey<FormState>();
 
   late final TextEditingController
@@ -34,10 +36,31 @@ class _ChildFormPageState
 
   ChildSex? _sex;
 
-  bool _saving = false;
+  String? _selectedPhotoPath;
+
+  bool _removeCurrentPhoto =
+      false;
+
+  bool _saving =
+      false;
 
   bool get _editing =>
       widget.child != null;
+
+  String? get _previewPhotoPath {
+    if (_removeCurrentPhoto) {
+      return null;
+    }
+
+    if (_selectedPhotoPath != null &&
+        _selectedPhotoPath!
+            .trim()
+            .isNotEmpty) {
+      return _selectedPhotoPath;
+    }
+
+    return widget.child?.photoPath;
+  }
 
   @override
   void initState() {
@@ -48,7 +71,8 @@ class _ChildFormPageState
 
     _nameController =
         TextEditingController(
-      text: child?.name ?? '',
+      text:
+          child?.name ?? '',
     );
 
     _birthDate =
@@ -65,9 +89,72 @@ class _ChildFormPageState
     super.dispose();
   }
 
-  // ------------------------------------------------------------
+  // ============================================================
+  // FOTO
+  // ============================================================
+
+  Future<void> _pickPhoto() async {
+    final String? path =
+        await ChildPhotoService
+            .instance
+            .pickPhoto();
+
+    if (path == null ||
+        !mounted) {
+      return;
+    }
+
+    setState(() {
+      _selectedPhotoPath =
+          path;
+
+      _removeCurrentPhoto =
+          false;
+    });
+  }
+
+  void _removePhoto() {
+    setState(() {
+      _selectedPhotoPath =
+          null;
+
+      _removeCurrentPhoto =
+          true;
+    });
+  }
+
+  Widget _defaultAvatar() {
+    final Color color =
+        _sex == ChildSex.girl
+            ? Colors.pink
+            : _sex == ChildSex.boy
+                ? Colors.blue
+                : const Color(
+                    0xFF7B2CBF,
+                  );
+
+    return Container(
+      color: color.withValues(
+        alpha: 0.10,
+      ),
+      child: Center(
+        child: Icon(
+          _sex == ChildSex.girl
+              ? Icons.face_3_rounded
+              : _sex == ChildSex.boy
+                  ? Icons.face_6_rounded
+                  : Icons
+                      .child_care_rounded,
+          color: color,
+          size: 55,
+        ),
+      ),
+    );
+  }
+
+  // ============================================================
   // FECHA DE NACIMIENTO
-  // ------------------------------------------------------------
+  // ============================================================
 
   Future<void>
       _pickBirthDate() async {
@@ -84,26 +171,24 @@ class _ChildFormPageState
     final DateTime? selected =
         await showDatePicker(
       context: context,
-
       initialDate:
           _birthDate ?? now,
-
       firstDate:
           firstDate,
-
       lastDate:
           now,
-
       helpText:
           T.txt(
         'selectBirthDate',
       ),
-
       cancelText:
-          T.txt('cancel'),
-
+          T.txt(
+        'cancel',
+      ),
       confirmText:
-          T.txt('accept'),
+          T.txt(
+        'accept',
+      ),
     );
 
     if (selected == null ||
@@ -112,13 +197,14 @@ class _ChildFormPageState
     }
 
     setState(() {
-      _birthDate = selected;
+      _birthDate =
+          selected;
     });
   }
 
-  // ------------------------------------------------------------
+  // ============================================================
   // GUARDAR
-  // ------------------------------------------------------------
+  // ============================================================
 
   Future<void> _save() async {
     if (_saving) {
@@ -158,66 +244,96 @@ class _ChildFormPageState
       _saving = true;
     });
 
+    String? newlySavedPhoto;
+
     try {
       final String name =
           _nameController.text
               .trim();
 
-      late final Child child;
+      final String childId =
+          widget.child?.id ??
+              DateTime.now()
+                  .microsecondsSinceEpoch
+                  .toString();
 
-      if (_editing) {
-        child =
-            widget.child!.copyWith(
-          name: name,
+      final String?
+          previousPhotoPath =
+          widget.child?.photoPath;
 
-          birthDate:
-              _birthDate,
+      String? finalPhotoPath =
+          previousPhotoPath;
 
-          sex:
-              _sex,
+      if (_removeCurrentPhoto) {
+        finalPhotoPath =
+            null;
+      } else if (_selectedPhotoPath !=
+          null) {
+        newlySavedPhoto =
+            await ChildPhotoService
+                .instance
+                .savePhoto(
+          childId:
+              childId,
+          sourcePath:
+              _selectedPhotoPath!,
         );
 
-        await ChildRepository.instance
+        finalPhotoPath =
+            newlySavedPhoto;
+      }
+
+      final Child child =
+          Child(
+        id: childId,
+        name: name,
+        birthDate:
+            _birthDate!,
+        sex:
+            _sex!,
+        photoPath:
+            finalPhotoPath,
+        createdAt:
+            widget.child
+                    ?.createdAt ??
+                DateTime.now(),
+      );
+
+      if (_editing) {
+        await ChildRepository
+            .instance
             .updateChild(
           child,
         );
-
-        // Si cambia la fecha de nacimiento,
-        // se recalculan todas las vacunas.
-        await VaccineNotificationService
-            .instance
-            .rescheduleForChild(
-          child,
-        );
       } else {
-        child = Child(
-          id: DateTime.now()
-              .microsecondsSinceEpoch
-              .toString(),
-
-          name: name,
-
-          birthDate:
-              _birthDate!,
-
-          sex:
-              _sex!,
-
-          createdAt:
-              DateTime.now(),
-        );
-
-        await ChildRepository.instance
+        await ChildRepository
+            .instance
             .addChild(
           child,
         );
+      }
 
-        // Si los recordatorios ya estaban activos,
-        // se programan también para este nuevo niño.
+      if (previousPhotoPath != null &&
+          previousPhotoPath !=
+              finalPhotoPath) {
+        await ChildPhotoService
+            .instance
+            .deletePhoto(
+          previousPhotoPath,
+        );
+      }
+
+      // Las notificaciones no deben impedir
+      // que el perfil sea guardado.
+      try {
         await VaccineNotificationService
             .instance
             .rescheduleForChild(
           child,
+        );
+      } catch (e) {
+        debugPrint(
+          'No se pudieron reprogramar las vacunas: $e',
         );
       }
 
@@ -229,10 +345,36 @@ class _ChildFormPageState
         context,
         child,
       );
+    } catch (e) {
+      // Si copiamos una foto nueva pero el perfil
+      // no pudo guardarse, eliminamos la copia.
+      if (newlySavedPhoto !=
+          null) {
+        await ChildPhotoService
+            .instance
+            .deletePhoto(
+          newlySavedPhoto,
+        );
+      }
+
+      if (!mounted) {
+        return;
+      }
+
+      _showMessage(
+        T.txt(
+          'childSaveError',
+        ),
+      );
+
+      debugPrint(
+        'Error guardando perfil: $e',
+      );
     } finally {
       if (mounted) {
         setState(() {
-          _saving = false;
+          _saving =
+              false;
         });
       }
     }
@@ -245,14 +387,16 @@ class _ChildFormPageState
         .showSnackBar(
       SnackBar(
         content:
-            Text(message),
+            Text(
+          message,
+        ),
       ),
     );
   }
 
-  // ------------------------------------------------------------
+  // ============================================================
   // INTERFAZ
-  // ------------------------------------------------------------
+  // ============================================================
 
   @override
   Widget build(
@@ -263,6 +407,15 @@ class _ChildFormPageState
                 .brightness ==
             Brightness.dark;
 
+    final Color avatarColor =
+        _sex == ChildSex.girl
+            ? Colors.pink
+            : _sex == ChildSex.boy
+                ? Colors.blue
+                : const Color(
+                    0xFF7B2CBF,
+                  );
+
     return Scaffold(
       backgroundColor: dark
           ? const Color(
@@ -271,22 +424,18 @@ class _ChildFormPageState
           : const Color(
               0xFFFAF7F2,
             ),
-
       appBar: AppBar(
         backgroundColor: dark
             ? const Color(
                 0xFF211B2E,
               )
             : Colors.white,
-
         foregroundColor: dark
             ? Colors.white
             : const Color(
                 0xFF2D2D2D,
               ),
-
         elevation: 0,
-
         title: Text(
           _editing
               ? T.txt(
@@ -295,18 +444,15 @@ class _ChildFormPageState
               : T.txt(
                   'addChild',
                 ),
-
           style:
               const TextStyle(
             fontFamily:
                 'Fredoka',
-
             fontWeight:
                 FontWeight.w700,
           ),
         ),
       ),
-
       body: SafeArea(
         child:
             SingleChildScrollView(
@@ -318,102 +464,236 @@ class _ChildFormPageState
             20,
             36,
           ),
-
           child: Form(
             key:
                 _formKey,
-
             child: Column(
               crossAxisAlignment:
                   CrossAxisAlignment
                       .start,
-
               children: [
-                // ------------------------------------------------
-                // AVATAR
-                // ------------------------------------------------
+                // ================================================
+                // FOTO
+                // ================================================
 
                 Center(
-                  child: AnimatedContainer(
-                    duration:
-                        const Duration(
-                      milliseconds:
-                          220,
-                    ),
-
-                    width: 105,
-                    height: 105,
-
-                    decoration:
-                        BoxDecoration(
-                      shape:
-                          BoxShape.circle,
-
-                      gradient:
-                          LinearGradient(
-                        colors: [
-                          (_sex ==
-                                      ChildSex
-                                          .girl
-                                  ? Colors
-                                      .pink
-                                  : _sex ==
-                                          ChildSex
-                                              .boy
-                                      ? Colors
-                                          .blue
-                                      : const Color(
-                                          0xFF7B2CBF,
-                                        ))
-                              .withValues(
-                            alpha:
-                                0.20,
+                  child: Column(
+                    children: [
+                      Stack(
+                        clipBehavior:
+                            Clip.none,
+                        children: [
+                          Material(
+                            color: Colors
+                                .transparent,
+                            shape:
+                                const CircleBorder(),
+                            child:
+                                InkWell(
+                              customBorder:
+                                  const CircleBorder(),
+                              onTap:
+                                  _pickPhoto,
+                              child:
+                                  Container(
+                                width:
+                                    115,
+                                height:
+                                    115,
+                                padding:
+                                    const EdgeInsets
+                                        .all(
+                                  3,
+                                ),
+                                decoration:
+                                    BoxDecoration(
+                                  shape:
+                                      BoxShape
+                                          .circle,
+                                  border:
+                                      Border.all(
+                                    color:
+                                        avatarColor
+                                            .withValues(
+                                      alpha:
+                                          0.40,
+                                    ),
+                                    width:
+                                        2,
+                                  ),
+                                ),
+                                child:
+                                    ClipOval(
+                                  child: _previewPhotoPath !=
+                                          null
+                                      ? Image.file(
+                                          File(
+                                            _previewPhotoPath!,
+                                          ),
+                                          width:
+                                              109,
+                                          height:
+                                              109,
+                                          fit:
+                                              BoxFit.cover,
+                                          errorBuilder:
+                                              (
+                                            context,
+                                            error,
+                                            stackTrace,
+                                          ) {
+                                            return _defaultAvatar();
+                                          },
+                                        )
+                                      : _defaultAvatar(),
+                                ),
+                              ),
+                            ),
                           ),
-
-                          const Color(
-                            0xFFFF006E,
-                          ).withValues(
-                            alpha:
-                                0.08,
+                          Positioned(
+                            right: -1,
+                            bottom: -1,
+                            child:
+                                Material(
+                              color:
+                                  const Color(
+                                0xFF7B2CBF,
+                              ),
+                              shape:
+                                  const CircleBorder(),
+                              child:
+                                  InkWell(
+                                customBorder:
+                                    const CircleBorder(),
+                                onTap:
+                                    _pickPhoto,
+                                child:
+                                    const Padding(
+                                  padding:
+                                      EdgeInsets.all(
+                                    10,
+                                  ),
+                                  child:
+                                      Icon(
+                                    Icons
+                                        .camera_alt_rounded,
+                                    color:
+                                        Colors.white,
+                                    size:
+                                        21,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                    ),
-
-                    child: Icon(
-                      _sex ==
-                              ChildSex.girl
-                          ? Icons
-                              .face_3_rounded
-                          : _sex ==
-                                  ChildSex.boy
-                              ? Icons
-                                  .face_6_rounded
-                              : Icons
-                                  .child_care_rounded,
-
-                      color: _sex ==
-                              ChildSex.girl
-                          ? Colors.pink
-                          : _sex ==
-                                  ChildSex.boy
-                              ? Colors.blue
-                              : const Color(
-                                  0xFF7B2CBF,
+                      const SizedBox(
+                        height: 13,
+                      ),
+                      Text(
+                        T.txt(
+                          'childPhoto',
+                        ),
+                        style:
+                            const TextStyle(
+                          fontFamily:
+                              'Fredoka',
+                          fontSize:
+                              16,
+                          fontWeight:
+                              FontWeight
+                                  .w700,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 3,
+                      ),
+                      Text(
+                        T.txt(
+                          'childPhotoOptional',
+                        ),
+                        textAlign:
+                            TextAlign
+                                .center,
+                        style:
+                            TextStyle(
+                          fontFamily:
+                              'Baloo2',
+                          fontSize:
+                              13,
+                          color: dark
+                              ? Colors
+                                  .white54
+                              : Colors
+                                  .black45,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      Wrap(
+                        alignment:
+                            WrapAlignment
+                                .center,
+                        children: [
+                          TextButton.icon(
+                            onPressed:
+                                _pickPhoto,
+                            icon:
+                                const Icon(
+                              Icons
+                                  .photo_library_outlined,
+                            ),
+                            label:
+                                Text(
+                              _previewPhotoPath ==
+                                      null
+                                  ? T.txt(
+                                      'addPhoto',
+                                    )
+                                  : T.txt(
+                                      'changePhoto',
+                                    ),
+                            ),
+                          ),
+                          if (_previewPhotoPath !=
+                              null)
+                            TextButton.icon(
+                              onPressed:
+                                  _removePhoto,
+                              style:
+                                  TextButton
+                                      .styleFrom(
+                                foregroundColor:
+                                    Colors
+                                        .redAccent,
+                              ),
+                              icon:
+                                  const Icon(
+                                Icons
+                                    .delete_outline_rounded,
+                              ),
+                              label:
+                                  Text(
+                                T.txt(
+                                  'removePhoto',
                                 ),
-
-                      size: 55,
-                    ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
 
                 const SizedBox(
-                  height: 28,
+                  height: 20,
                 ),
 
-                // ------------------------------------------------
+                // ================================================
                 // NOMBRE
-                // ------------------------------------------------
+                // ================================================
 
                 _SectionLabel(
                   text:
@@ -429,25 +709,20 @@ class _ChildFormPageState
                 TextFormField(
                   controller:
                       _nameController,
-
                   textCapitalization:
                       TextCapitalization
                           .words,
-
                   decoration:
                       _inputDecoration(
                     context,
-
                     hint:
                         T.txt(
                       'childNameHint',
                     ),
-
                     icon:
                         Icons
                             .badge_outlined,
                   ),
-
                   validator: (
                     value,
                   ) {
@@ -468,9 +743,9 @@ class _ChildFormPageState
                   height: 24,
                 ),
 
-                // ------------------------------------------------
+                // ================================================
                 // FECHA
-                // ------------------------------------------------
+                // ================================================
 
                 _SectionLabel(
                   text:
@@ -486,38 +761,36 @@ class _ChildFormPageState
                 Material(
                   color:
                       Colors.transparent,
-
                   borderRadius:
                       BorderRadius
                           .circular(
                     18,
                   ),
-
                   child: InkWell(
                     borderRadius:
                         BorderRadius
                             .circular(
                       18,
                     ),
-
                     onTap:
                         _pickBirthDate,
-
-                    child: InputDecorator(
+                    child:
+                        InputDecorator(
                       decoration:
                           _inputDecoration(
                         context,
-
-                        hint: '',
-
-                        icon: Icons
-                            .calendar_month_rounded,
+                        hint:
+                            '',
+                        icon:
+                            Icons
+                                .calendar_month_rounded,
                       ),
-
-                      child: Row(
+                      child:
+                          Row(
                         children: [
                           Expanded(
-                            child: Text(
+                            child:
+                                Text(
                               _birthDate ==
                                       null
                                   ? T.txt(
@@ -526,28 +799,23 @@ class _ChildFormPageState
                                   : simpleDateText(
                                       _birthDate!,
                                     ),
-
                               style:
                                   TextStyle(
                                 fontFamily:
                                     'Baloo2',
-
                                 fontSize:
                                     16,
-
                                 color: _birthDate ==
                                         null
                                     ? Colors.grey
                                     : dark
-                                        ? Colors
-                                            .white
+                                        ? Colors.white
                                         : const Color(
                                             0xFF2D2D2D,
                                           ),
                               ),
                             ),
                           ),
-
                           const Icon(
                             Icons
                                 .chevron_right_rounded,
@@ -562,9 +830,9 @@ class _ChildFormPageState
                   height: 24,
                 ),
 
-                // ------------------------------------------------
+                // ================================================
                 // SEXO
-                // ------------------------------------------------
+                // ================================================
 
                 _SectionLabel(
                   text:
@@ -581,16 +849,14 @@ class _ChildFormPageState
                   T.txt(
                     'sexForGrowthCurvesDescription',
                   ),
-
                   style:
                       TextStyle(
                     fontFamily:
                         'Baloo2',
-
-                    fontSize: 14,
-
-                    height: 1.25,
-
+                    fontSize:
+                        14,
+                    height:
+                        1.25,
                     color: dark
                         ? Colors.white60
                         : Colors.black54,
@@ -606,61 +872,59 @@ class _ChildFormPageState
                     Expanded(
                       child:
                           _SexCard(
-                        icon: Icons
-                            .face_6_rounded,
-
+                        icon:
+                            Icons
+                                .face_6_rounded,
                         label:
                             T.txt(
                           'boy',
                         ),
-
                         selected:
                             _sex ==
                                 ChildSex
                                     .boy,
-
                         color:
                             Colors.blue,
-
-                        onTap: () {
-                          setState(() {
-                            _sex =
-                                ChildSex
-                                    .boy;
-                          });
+                        onTap:
+                            () {
+                          setState(
+                            () {
+                              _sex =
+                                  ChildSex
+                                      .boy;
+                            },
+                          );
                         },
                       ),
                     ),
-
                     const SizedBox(
                       width: 12,
                     ),
-
                     Expanded(
                       child:
                           _SexCard(
-                        icon: Icons
-                            .face_3_rounded,
-
+                        icon:
+                            Icons
+                                .face_3_rounded,
                         label:
                             T.txt(
                           'girl',
                         ),
-
                         selected:
                             _sex ==
                                 ChildSex
                                     .girl,
-
                         color:
                             Colors.pink,
-
-                        onTap: () {
-                          setState(() {
-                            _sex =
-                                ChildSex
-                                    .girl;
-                          });
+                        onTap:
+                            () {
+                          setState(
+                            () {
+                              _sex =
+                                  ChildSex
+                                      .girl;
+                            },
+                          );
                         },
                       ),
                     ),
@@ -671,23 +935,21 @@ class _ChildFormPageState
                   height: 34,
                 ),
 
-                // ------------------------------------------------
+                // ================================================
                 // GUARDAR
-                // ------------------------------------------------
+                // ================================================
 
                 SizedBox(
                   width:
                       double.infinity,
-
-                  height: 58,
-
+                  height:
+                      58,
                   child:
                       FilledButton(
                     onPressed:
                         _saving
                             ? null
                             : _save,
-
                     style:
                         FilledButton
                             .styleFrom(
@@ -695,10 +957,8 @@ class _ChildFormPageState
                           const Color(
                         0xFF7B2CBF,
                       ),
-
                       foregroundColor:
                           Colors.white,
-
                       shape:
                           RoundedRectangleBorder(
                         borderRadius:
@@ -708,17 +968,16 @@ class _ChildFormPageState
                         ),
                       ),
                     ),
-
                     child: _saving
                         ? const SizedBox(
-                            width: 22,
-                            height: 22,
-
+                            width:
+                                22,
+                            height:
+                                22,
                             child:
                                 CircularProgressIndicator(
                               strokeWidth:
                                   2.4,
-
                               color:
                                   Colors.white,
                             ),
@@ -731,15 +990,12 @@ class _ChildFormPageState
                                 : T.txt(
                                     'saveChild',
                                   ),
-
                             style:
                                 const TextStyle(
                               fontFamily:
                                   'Fredoka',
-
                               fontSize:
                                   18,
-
                               fontWeight:
                                   FontWeight
                                       .w700,
@@ -766,62 +1022,58 @@ class _ChildFormPageState
             Brightness.dark;
 
     return InputDecoration(
-      hintText: hint,
-
+      hintText:
+          hint,
       prefixIcon:
-          Icon(icon),
-
-      filled: true,
-
+          Icon(
+        icon,
+      ),
+      filled:
+          true,
       fillColor: dark
           ? const Color(
               0xFF211B2E,
             )
           : Colors.white,
-
       border:
           OutlineInputBorder(
         borderRadius:
             BorderRadius.circular(
           18,
         ),
-
         borderSide:
             BorderSide.none,
       ),
-
       enabledBorder:
           OutlineInputBorder(
         borderRadius:
             BorderRadius.circular(
           18,
         ),
-
         borderSide:
             BorderSide(
-          color: Colors
-              .deepPurple
-              .withValues(
-            alpha: 0.12,
+          color:
+              Colors.deepPurple
+                  .withValues(
+            alpha:
+                0.12,
           ),
         ),
       ),
-
       focusedBorder:
           OutlineInputBorder(
         borderRadius:
             BorderRadius.circular(
           18,
         ),
-
         borderSide:
             const BorderSide(
           color:
               Color(
             0xFF7B2CBF,
           ),
-
-          width: 1.7,
+          width:
+              1.7,
         ),
       ),
     );
@@ -842,16 +1094,14 @@ class _SectionLabel
   ) {
     return Text(
       text,
-
-      style: TextStyle(
+      style:
+          TextStyle(
         fontFamily:
             'Fredoka',
-
-        fontSize: 17,
-
+        fontSize:
+            17,
         fontWeight:
             FontWeight.w700,
-
         color:
             Theme.of(context)
                         .brightness ==
@@ -893,16 +1143,13 @@ class _SexCard
     return Material(
       color:
           Colors.transparent,
-
       child: InkWell(
         onTap:
             onTap,
-
         borderRadius:
             BorderRadius.circular(
           20,
         ),
-
         child:
             AnimatedContainer(
           duration:
@@ -910,14 +1157,14 @@ class _SexCard
             milliseconds:
                 200,
           ),
-
           padding:
               const EdgeInsets
                   .symmetric(
-            vertical: 18,
-            horizontal: 10,
+            vertical:
+                18,
+            horizontal:
+                10,
           ),
-
           decoration:
               BoxDecoration(
             color: selected
@@ -931,12 +1178,10 @@ class _SexCard
                         0xFF211B2E,
                       )
                     : Colors.white,
-
             borderRadius:
                 BorderRadius.circular(
               20,
             ),
-
             border:
                 Border.all(
               color: selected
@@ -945,37 +1190,37 @@ class _SexCard
                       alpha:
                           0.15,
                     ),
-
-              width: selected
-                  ? 2
-                  : 1.2,
+              width:
+                  selected
+                      ? 2
+                      : 1.2,
             ),
           ),
-
-          child: Column(
+          child:
+              Column(
             children: [
               Icon(
                 icon,
-                color: color,
-                size: 37,
+                color:
+                    color,
+                size:
+                    37,
               ),
-
               const SizedBox(
-                height: 7,
+                height:
+                    7,
               ),
-
               Text(
                 label,
-
-                style: TextStyle(
+                style:
+                    TextStyle(
                   fontFamily:
                       'Fredoka',
-
-                  fontSize: 16,
-
+                  fontSize:
+                      16,
                   fontWeight:
-                      FontWeight.w700,
-
+                      FontWeight
+                          .w700,
                   color: dark
                       ? Colors.white
                       : const Color(

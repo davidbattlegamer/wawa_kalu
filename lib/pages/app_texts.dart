@@ -901,7 +901,10 @@ class T {
         'Reto general: cante una canción corta y acompañe con un gesto repetido. Pause un momento para que el niño intente continuar con sonido o movimiento.',
     'singMoveParent':
         'La repetición ayuda mucho. Es mejor una canción sencilla repetida varios días que muchas canciones distintas.',
-
+'childPhoto': 'Foto del niño',
+'addPhoto': 'Agregar foto',
+'changePhoto': 'Cambiar foto',
+'removePhoto': 'Quitar foto',
     'talkTitle': 'Conversar',
     'talkDesc':
         'Fortalece la intención de comunicarse.',
@@ -1577,7 +1580,10 @@ class T {
 
 'vaccineTomorrow':
     'Expected tomorrow',
-
+'childPhoto': 'Child photo',
+'addPhoto': 'Add photo',
+'changePhoto': 'Change photo',
+'removePhoto': 'Remove photo',
 'vaccineToday':
     'Review today',
 
