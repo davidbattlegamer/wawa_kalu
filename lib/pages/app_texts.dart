@@ -611,7 +611,17 @@ class T {
 
 'privacyTitle':
     'Tu información permanece bajo tu control',
+'lengthOrHeight':
+    'Longitud o talla',
 
+'headCircumference':
+    'Perímetro cefálico',
+
+'headCircumferenceOptional':
+    'Perímetro cefálico (opcional)',
+
+'headCircumferenceInvalid':
+    'Revisa el valor del perímetro cefálico ingresado.',
 'privacyDescription':
     'Wawa Kalú guarda los perfiles infantiles y sus controles en el dispositivo para que puedas utilizarlos sin depender de una conexión a internet.',
 
@@ -803,6 +813,23 @@ class T {
         'Sirve bajo supervisión. Las bolitas deben ser pequeñas, suaves y fáciles de aplastar.',
 'homeHealthLoading':
     'Actualizando información de salud...',
+'growthSelectorTitle':
+    'Selecciona una gráfica',
+
+'growthSelectorSubtitle':
+    'Elige el indicador que deseas visualizar.',
+
+'growthSelectorWeight':
+    'Peso',
+
+'growthSelectorHeight':
+    'Talla',
+
+'growthSelectorBmi':
+    'IMC',
+
+'growthSelectorHead':
+    'Cabeza',
 
 'homeHealthLoadError':
     'No se pudo actualizar esta información.',
@@ -810,7 +837,14 @@ class T {
 'developers': 'Desarrolladores',
 'homeVaccinesNoPending':
     'No hay dosis pendientes en el seguimiento actual.',
+'headCircumferenceForAgeChart':
+    'Perímetro cefálico para la edad',
 
+'headCircumferenceForAgeChartDescription':
+    'Compara el perímetro cefálico registrado con los patrones de crecimiento de la OMS según la edad y el sexo.',
+
+'headCmShort':
+    'Perímetro cefálico (cm)',
 'deleteChildError':
     'No se pudo eliminar el perfil. Inténtalo nuevamente.',
 
@@ -1565,7 +1599,17 @@ class T {
 
 'notificationPermissionDenied':
     'Notification permission was not granted.',
+'lengthOrHeight':
+    'Length or height',
 
+'headCircumference':
+    'Head circumference',
+
+'headCircumferenceOptional':
+    'Head circumference (optional)',
+
+'headCircumferenceInvalid':
+    'Check the entered head circumference value.',
 'testNotification':
     'Test notification',
 'homeHealthLoading':
@@ -1698,7 +1742,31 @@ class T {
     'preparation': 'Preparation',
     'recipeFinalNote':
         'These recipes are general ideas. Adjust texture, portion size, and ingredients according to age, tolerance, and pediatric guidance.',
+'growthSelectorTitle':
+    'Select a chart',
 
+'growthSelectorSubtitle':
+    'Choose the growth indicator you want to view.',
+
+'growthSelectorWeight':
+    'Weight',
+
+'growthSelectorHeight':
+    'Height',
+
+'growthSelectorBmi':
+    'BMI',
+
+'growthSelectorHead':
+    'Head',
+'headCircumferenceForAgeChart':
+    'Head circumference for age',
+
+'headCircumferenceForAgeChartDescription':
+    'Compares the recorded head circumference with WHO growth standards according to age and sex.',
+
+'headCmShort':
+    'Head circumference (cm)',
     'recipe1Title':
         'Pumpkin and chicken cream',
     'recipe1Age': 'From 6 months',

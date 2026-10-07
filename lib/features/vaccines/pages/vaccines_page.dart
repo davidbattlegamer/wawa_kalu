@@ -27,7 +27,8 @@ class VaccinesPage extends StatefulWidget {
       _VaccinesPageState();
 }
 
-class _VaccinesPageState extends State<VaccinesPage> {
+class _VaccinesPageState
+    extends State<VaccinesPage> {
   Future<List<VaccineEvaluation>>? _future;
 
   String? _loadedChildId;
@@ -105,7 +106,8 @@ class _VaccinesPageState extends State<VaccinesPage> {
       );
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
+    ScaffoldMessenger.of(context)
+        .showSnackBar(
       SnackBar(
         content: Text(
           message,
@@ -125,7 +127,8 @@ class _VaccinesPageState extends State<VaccinesPage> {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
         SnackBar(
           content: Text(
             T.txt(
@@ -175,18 +178,46 @@ class _VaccinesPageState extends State<VaccinesPage> {
     });
   }
 
+  // ============================================================
+  // ABRIR REGISTRO
+  // ============================================================
+
   Future<void> _openRecord(
     Child child,
     VaccineEvaluation evaluation,
   ) async {
+    // ----------------------------------------------------------
+    // SEGURIDAD:
+    // Si falta una dosis anterior, no se abre el formulario.
+    // ----------------------------------------------------------
+
+    if (evaluation.status ==
+        VaccineStatus.waitingPreviousDose) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+        SnackBar(
+          content: Text(
+            T.txt(
+              'vaccineWaitingPrevious',
+            ),
+          ),
+        ),
+      );
+
+      return;
+    }
+
     final bool? changed =
         await Navigator.push<bool>(
       context,
       MaterialPageRoute(
-        builder: (_) => VaccineFormPage(
+        builder: (_) =>
+            VaccineFormPage(
           child: child,
-          dose: evaluation.dose,
-          record: evaluation.record,
+          dose:
+              evaluation.dose,
+          record:
+              evaluation.record,
         ),
       ),
     );
@@ -208,14 +239,16 @@ class _VaccinesPageState extends State<VaccinesPage> {
     BuildContext context,
   ) {
     return ValueListenableBuilder<String>(
-      valueListenable: AppConfig.idioma,
+      valueListenable:
+          AppConfig.idioma,
       builder: (
         context,
         idioma,
         _,
       ) {
         final bool dark =
-            Theme.of(context).brightness ==
+            Theme.of(context)
+                    .brightness ==
                 Brightness.dark;
 
         return Scaffold(
@@ -242,13 +275,17 @@ class _VaccinesPageState extends State<VaccinesPage> {
               T.txt(
                 'vaccinesPageTitle',
               ),
-              style: const TextStyle(
-                fontFamily: 'Fredoka',
-                fontWeight: FontWeight.w700,
+              style:
+                  const TextStyle(
+                fontFamily:
+                    'Fredoka',
+                fontWeight:
+                    FontWeight.w700,
               ),
             ),
           ),
-          body: ValueListenableBuilder<String?>(
+          body:
+              ValueListenableBuilder<String?>(
             valueListenable:
                 ChildRepository
                     .instance
@@ -260,7 +297,8 @@ class _VaccinesPageState extends State<VaccinesPage> {
             ) {
               if (selectedId == null) {
                 return _NoChildState(
-                  dark: dark,
+                  dark:
+                      dark,
                 );
               }
 
@@ -286,12 +324,14 @@ class _VaccinesPageState extends State<VaccinesPage> {
 
               return FutureBuilder<
                   List<VaccineEvaluation>>(
-                future: _future,
+                future:
+                    _future,
                 builder: (
                   context,
                   snapshot,
                 ) {
-                  if (snapshot.connectionState ==
+                  if (snapshot
+                          .connectionState ==
                       ConnectionState.waiting) {
                     return const Center(
                       child:
@@ -336,7 +376,8 @@ class _VaccinesPageState extends State<VaccinesPage> {
                                   child,
                                 );
                               },
-                              icon: const Icon(
+                              icon:
+                                  const Icon(
                                 Icons
                                     .refresh_rounded,
                               ),
@@ -352,16 +393,19 @@ class _VaccinesPageState extends State<VaccinesPage> {
                     );
                   }
 
-                  final List<VaccineEvaluation>
+                  final List<
+                          VaccineEvaluation>
                       evaluations =
                       snapshot.data ??
                           <VaccineEvaluation>[];
 
                   return _VaccinesContent(
-                    child: child,
+                    child:
+                        child,
                     evaluations:
                         evaluations,
-                    dark: dark,
+                    dark:
+                        dark,
                     remindersEnabled:
                         _remindersEnabled,
                     loadingReminders:
@@ -394,7 +438,8 @@ class _VaccinesPageState extends State<VaccinesPage> {
 // CONTENIDO
 // ================================================================
 
-class _VaccinesContent extends StatelessWidget {
+class _VaccinesContent
+    extends StatelessWidget {
   final Child child;
 
   final List<VaccineEvaluation> evaluations;
@@ -453,8 +498,10 @@ class _VaccinesContent extends StatelessWidget {
                 const EdgeInsets.all(
               17,
             ),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
+            decoration:
+                BoxDecoration(
+              gradient:
+                  LinearGradient(
                 colors: [
                   dark
                       ? const Color(
@@ -463,7 +510,9 @@ class _VaccinesContent extends StatelessWidget {
                       : Colors.white,
                   childColor.withValues(
                     alpha:
-                        dark ? 0.16 : 0.07,
+                        dark
+                            ? 0.16
+                            : 0.07,
                   ),
                 ],
               ),
@@ -472,7 +521,8 @@ class _VaccinesContent extends StatelessWidget {
                 24,
               ),
               border: Border.all(
-                color: childColor.withValues(
+                color:
+                    childColor.withValues(
                   alpha: 0.16,
                 ),
               ),
@@ -480,9 +530,12 @@ class _VaccinesContent extends StatelessWidget {
             child: Row(
               children: [
                 ChildAvatar(
-                  child: child,
-                  size: 55,
-                  borderWidth: 2,
+                  child:
+                      child,
+                  size:
+                      55,
+                  borderWidth:
+                      2,
                 ),
 
                 const SizedBox(
@@ -492,19 +545,24 @@ class _VaccinesContent extends StatelessWidget {
                 Expanded(
                   child: Column(
                     crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                        CrossAxisAlignment
+                            .start,
                     children: [
                       Text(
                         child.name,
                         maxLines: 1,
                         overflow:
-                            TextOverflow.ellipsis,
-                        style: TextStyle(
+                            TextOverflow
+                                .ellipsis,
+                        style:
+                            TextStyle(
                           fontFamily:
                               'Fredoka',
-                          fontSize: 21,
+                          fontSize:
+                              21,
                           fontWeight:
-                              FontWeight.w800,
+                              FontWeight
+                                  .w800,
                           color: dark
                               ? Colors.white
                               : const Color(
@@ -512,17 +570,21 @@ class _VaccinesContent extends StatelessWidget {
                                 ),
                         ),
                       ),
+
                       const SizedBox(
                         height: 2,
                       ),
+
                       Text(
                         childAgeText(
                           child.birthDate,
                         ),
-                        style: TextStyle(
+                        style:
+                            TextStyle(
                           fontFamily:
                               'Baloo2',
-                          fontSize: 15,
+                          fontSize:
+                              15,
                           color: dark
                               ? Colors.white70
                               : Colors.black54,
@@ -533,9 +595,12 @@ class _VaccinesContent extends StatelessWidget {
                 ),
 
                 const Icon(
-                  Icons.vaccines_rounded,
-                  color: Colors.blue,
-                  size: 31,
+                  Icons
+                      .vaccines_rounded,
+                  color:
+                      Colors.blue,
+                  size:
+                      31,
                 ),
               ],
             ),
@@ -550,7 +615,8 @@ class _VaccinesContent extends StatelessWidget {
           // ======================================================
 
           _ReminderCard(
-            dark: dark,
+            dark:
+                dark,
             enabled:
                 remindersEnabled,
             loading:
@@ -574,8 +640,10 @@ class _VaccinesContent extends StatelessWidget {
               'vaccinesScheduleTitle',
             ),
             style: TextStyle(
-              fontFamily: 'Fredoka',
-              fontSize: 23,
+              fontFamily:
+                  'Fredoka',
+              fontSize:
+                  23,
               fontWeight:
                   FontWeight.w800,
               color: dark
@@ -595,8 +663,10 @@ class _VaccinesContent extends StatelessWidget {
               'vaccinesScheduleSubtitle',
             ),
             style: TextStyle(
-              fontFamily: 'Baloo2',
-              fontSize: 14.5,
+              fontFamily:
+                  'Baloo2',
+              fontSize:
+                  14.5,
               color: dark
                   ? Colors.white60
                   : Colors.black54,
@@ -608,27 +678,41 @@ class _VaccinesContent extends StatelessWidget {
           ),
 
           // ======================================================
-          // VACUNAS
+          // LISTA DE VACUNAS
           // ======================================================
 
           ...evaluations.map(
             (
               VaccineEvaluation evaluation,
             ) {
+              final bool locked =
+                  evaluation.status ==
+                      VaccineStatus
+                          .waitingPreviousDose;
+
               return Padding(
                 padding:
                     const EdgeInsets.only(
-                  bottom: 13,
+                  bottom:
+                      13,
                 ),
                 child: _VaccineCard(
                   evaluation:
                       evaluation,
-                  dark: dark,
-                  onTap: () {
-                    onOpenRecord(
-                      evaluation,
-                    );
-                  },
+                  dark:
+                      dark,
+
+                  // ------------------------------------------------
+                  // SI ESTÁ BLOQUEADA, onTap ES NULL
+                  // ------------------------------------------------
+
+                  onTap: locked
+                      ? null
+                      : () {
+                          onOpenRecord(
+                            evaluation,
+                          );
+                        },
                 ),
               );
             },
@@ -647,10 +731,14 @@ class _VaccinesContent extends StatelessWidget {
                 const EdgeInsets.all(
               16,
             ),
-            decoration: BoxDecoration(
-              color: Colors.blue.withValues(
+            decoration:
+                BoxDecoration(
+              color:
+                  Colors.blue.withValues(
                 alpha:
-                    dark ? 0.13 : 0.07,
+                    dark
+                        ? 0.13
+                        : 0.07,
               ),
               borderRadius:
                   BorderRadius.circular(
@@ -659,32 +747,41 @@ class _VaccinesContent extends StatelessWidget {
               border: Border.all(
                 color:
                     Colors.blue.withValues(
-                  alpha: 0.13,
+                  alpha:
+                      0.13,
                 ),
               ),
             ),
             child: Row(
               crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                  CrossAxisAlignment
+                      .start,
               children: [
                 const Icon(
                   Icons
                       .health_and_safety_outlined,
-                  color: Colors.blue,
+                  color:
+                      Colors.blue,
                 ),
+
                 const SizedBox(
-                  width: 11,
+                  width:
+                      11,
                 ),
+
                 Expanded(
                   child: Text(
                     T.txt(
                       'vaccinesDisclaimer',
                     ),
-                    style: TextStyle(
+                    style:
+                        TextStyle(
                       fontFamily:
                           'Baloo2',
-                      fontSize: 14,
-                      height: 1.3,
+                      fontSize:
+                          14,
+                      height:
+                          1.3,
                       color: dark
                           ? Colors.white70
                           : Colors.black87,
@@ -704,7 +801,8 @@ class _VaccinesContent extends StatelessWidget {
 // RECORDATORIOS
 // ================================================================
 
-class _ReminderCard extends StatelessWidget {
+class _ReminderCard
+    extends StatelessWidget {
   final bool dark;
   final bool enabled;
   final bool loading;
@@ -730,13 +828,16 @@ class _ReminderCard extends StatelessWidget {
     );
 
     return Container(
-      width: double.infinity,
+      width:
+          double.infinity,
       padding:
           const EdgeInsets.all(
         16,
       ),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
+      decoration:
+          BoxDecoration(
+        gradient:
+            LinearGradient(
           colors: [
             dark
                 ? const Color(
@@ -745,7 +846,9 @@ class _ReminderCard extends StatelessWidget {
                 : Colors.white,
             color.withValues(
               alpha:
-                  dark ? 0.16 : 0.07,
+                  dark
+                      ? 0.16
+                      : 0.07,
             ),
           ],
         ),
@@ -753,9 +856,12 @@ class _ReminderCard extends StatelessWidget {
             BorderRadius.circular(
           24,
         ),
-        border: Border.all(
-          color: color.withValues(
-            alpha: 0.14,
+        border:
+            Border.all(
+          color:
+              color.withValues(
+            alpha:
+                0.14,
           ),
         ),
       ),
@@ -764,42 +870,56 @@ class _ReminderCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: 48,
-                height: 48,
+                width:
+                    48,
+                height:
+                    48,
                 decoration:
                     BoxDecoration(
-                  color: color.withValues(
-                    alpha: 0.13,
+                  color:
+                      color.withValues(
+                    alpha:
+                        0.13,
                   ),
                   borderRadius:
-                      BorderRadius.circular(
+                      BorderRadius
+                          .circular(
                     15,
                   ),
                 ),
-                child: const Icon(
+                child:
+                    const Icon(
                   Icons
                       .notifications_active_rounded,
-                  color: color,
+                  color:
+                      color,
                 ),
               ),
+
               const SizedBox(
-                width: 12,
+                width:
+                    12,
               ),
+
               Expanded(
                 child: Column(
                   crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                      CrossAxisAlignment
+                          .start,
                   children: [
                     Text(
                       T.txt(
                         'vaccineRemindersTitle',
                       ),
-                      style: TextStyle(
+                      style:
+                          TextStyle(
                         fontFamily:
                             'Fredoka',
-                        fontSize: 17,
+                        fontSize:
+                            17,
                         fontWeight:
-                            FontWeight.w800,
+                            FontWeight
+                                .w800,
                         color: dark
                             ? Colors.white
                             : const Color(
@@ -807,18 +927,24 @@ class _ReminderCard extends StatelessWidget {
                               ),
                       ),
                     ),
+
                     const SizedBox(
-                      height: 2,
+                      height:
+                          2,
                     ),
+
                     Text(
                       T.txt(
                         'vaccineRemindersSubtitle',
                       ),
-                      style: TextStyle(
+                      style:
+                          TextStyle(
                         fontFamily:
                             'Baloo2',
-                        fontSize: 13.5,
-                        height: 1.15,
+                        fontSize:
+                            13.5,
+                        height:
+                            1.15,
                         color: dark
                             ? Colors.white60
                             : Colors.black54,
@@ -827,18 +953,23 @@ class _ReminderCard extends StatelessWidget {
                   ],
                 ),
               ),
+
               if (loading)
                 const SizedBox(
-                  width: 24,
-                  height: 24,
+                  width:
+                      24,
+                  height:
+                      24,
                   child:
                       CircularProgressIndicator(
-                    strokeWidth: 2.2,
+                    strokeWidth:
+                        2.2,
                   ),
                 )
               else
                 Switch.adaptive(
-                  value: enabled,
+                  value:
+                      enabled,
                   onChanged:
                       onChanged,
                 ),
@@ -846,7 +977,8 @@ class _ReminderCard extends StatelessWidget {
           ),
 
           const SizedBox(
-            height: 12,
+            height:
+                12,
           ),
 
           Container(
@@ -860,7 +992,8 @@ class _ReminderCard extends StatelessWidget {
                 BoxDecoration(
               color:
                   color.withValues(
-                alpha: 0.08,
+                alpha:
+                    0.08,
               ),
               borderRadius:
                   BorderRadius.circular(
@@ -870,24 +1003,33 @@ class _ReminderCard extends StatelessWidget {
             child: Row(
               children: [
                 const Icon(
-                  Icons.schedule_rounded,
-                  size: 20,
-                  color: color,
+                  Icons
+                      .schedule_rounded,
+                  size:
+                      20,
+                  color:
+                      color,
                 ),
+
                 const SizedBox(
-                  width: 9,
+                  width:
+                      9,
                 ),
+
                 Expanded(
                   child: Text(
                     T.txt(
                       'vaccineRemindersSchedule',
                     ),
-                    style: TextStyle(
+                    style:
+                        TextStyle(
                       fontFamily:
                           'Baloo2',
-                      fontSize: 13.5,
+                      fontSize:
+                          13.5,
                       fontWeight:
-                          FontWeight.w600,
+                          FontWeight
+                              .w600,
                       color: dark
                           ? Colors.white70
                           : Colors.black87,
@@ -900,7 +1042,8 @@ class _ReminderCard extends StatelessWidget {
 
           if (enabled) ...[
             const SizedBox(
-              height: 12,
+              height:
+                  12,
             ),
             SizedBox(
               width:
@@ -909,7 +1052,8 @@ class _ReminderCard extends StatelessWidget {
                   OutlinedButton.icon(
                 onPressed:
                     onTest,
-                icon: const Icon(
+                icon:
+                    const Icon(
                   Icons
                       .notifications_none_rounded,
                 ),
@@ -931,12 +1075,13 @@ class _ReminderCard extends StatelessWidget {
 // TARJETA DE VACUNA
 // ================================================================
 
-class _VaccineCard extends StatelessWidget {
+class _VaccineCard
+    extends StatelessWidget {
   final VaccineEvaluation evaluation;
 
   final bool dark;
 
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const _VaccineCard({
     required this.evaluation,
@@ -1044,6 +1189,15 @@ class _VaccineCard extends StatelessWidget {
   }
 
   String? _remainingText() {
+    // ----------------------------------------------------------
+    // SI ESTÁ BLOQUEADA, NO MOSTRAMOS CONTEO DE DÍAS.
+    // ----------------------------------------------------------
+
+    if (evaluation.status ==
+        VaccineStatus.waitingPreviousDose) {
+      return null;
+    }
+
     final DateTime? date =
         evaluation.expectedDate;
 
@@ -1088,6 +1242,11 @@ class _VaccineCard extends StatelessWidget {
   Widget build(
     BuildContext context,
   ) {
+    final bool locked =
+        evaluation.status ==
+            VaccineStatus
+                .waitingPreviousDose;
+
     final Color color =
         _statusColor();
 
@@ -1109,314 +1268,487 @@ class _VaccineCard extends StatelessWidget {
         24,
       ),
       child: InkWell(
+        // --------------------------------------------------------
+        // null = no se puede pulsar
+        // --------------------------------------------------------
+
         onTap:
             onTap,
+
         borderRadius:
             BorderRadius.circular(
           24,
         ),
-        child: Container(
-          width: double.infinity,
-          padding:
-              const EdgeInsets.all(
-            16,
-          ),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                dark
-                    ? const Color(
-                        0xFF211B2E,
-                      )
-                    : Colors.white,
-                color.withValues(
+
+        child: Opacity(
+          opacity:
+              locked
+                  ? 0.58
+                  : 1.0,
+
+          child: Container(
+            width:
+                double.infinity,
+            padding:
+                const EdgeInsets.all(
+              16,
+            ),
+            decoration:
+                BoxDecoration(
+              gradient:
+                  LinearGradient(
+                colors: [
+                  dark
+                      ? const Color(
+                          0xFF211B2E,
+                        )
+                      : Colors.white,
+                  color.withValues(
+                    alpha:
+                        dark
+                            ? 0.14
+                            : 0.065,
+                  ),
+                ],
+              ),
+              borderRadius:
+                  BorderRadius.circular(
+                24,
+              ),
+              border: Border.all(
+                color:
+                    color.withValues(
                   alpha:
-                      dark ? 0.14 : 0.065,
+                      locked
+                          ? 0.35
+                          : 0.18,
                 ),
-              ],
-            ),
-            borderRadius:
-                BorderRadius.circular(
-              24,
-            ),
-            border: Border.all(
-              color: color.withValues(
-                alpha: 0.18,
+                width:
+                    1.2,
               ),
-              width: 1.2,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: color.withValues(
-                  alpha: 0.06,
-                ),
-                blurRadius: 10,
-                offset:
-                    const Offset(
-                  0,
-                  4,
-                ),
-              ),
-            ],
-          ),
-          child: Row(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 52,
-                height: 52,
-                decoration:
-                    BoxDecoration(
-                  color: color.withValues(
-                    alpha: 0.13,
-                  ),
-                  borderRadius:
-                      BorderRadius.circular(
-                    16,
-                  ),
-                ),
-                child: Icon(
-                  evaluation.status ==
-                          VaccineStatus.applied
-                      ? Icons
-                          .check_circle_rounded
-                      : Icons
-                          .vaccines_rounded,
-                  color: color,
-                  size: 29,
-                ),
-              ),
-
-              const SizedBox(
-                width: 14,
-              ),
-
-              Expanded(
-                child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      T.txt(
-                        evaluation
-                            .dose
-                            .nameKey,
-                      ),
-                      style: TextStyle(
-                        fontFamily:
-                            'Fredoka',
-                        fontSize: 18,
-                        fontWeight:
-                            FontWeight.w800,
-                        color: dark
-                            ? Colors.white
-                            : const Color(
-                                0xFF2D2D2D,
-                              ),
-                      ),
-                    ),
-
-                    const SizedBox(
-                      height: 2,
-                    ),
-
-                    Text(
-                      T.txt(
-                        evaluation
-                            .dose
-                            .doseLabelKey,
-                      ),
-                      style: TextStyle(
-                        fontFamily:
-                            'Baloo2',
-                        fontSize: 14,
-                        color: dark
-                            ? Colors.white60
-                            : Colors.black54,
-                      ),
-                    ),
-
-                    const SizedBox(
-                      height: 6,
-                    ),
-
-                    Text(
-                      T.txt(
-                        evaluation
-                            .dose
-                            .preventsKey,
-                      ),
-                      style: TextStyle(
-                        fontFamily:
-                            'Baloo2',
-                        fontSize: 13,
-                        height: 1.2,
-                        color: dark
-                            ? Colors.white54
-                            : Colors.black54,
-                      ),
-                    ),
-
-                    const SizedBox(
-                      height: 9,
-                    ),
-
-                    Container(
-                      padding:
-                          const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
-                      decoration:
-                          BoxDecoration(
-                        color: color.withValues(
-                          alpha: 0.13,
+              boxShadow: locked
+                  ? const []
+                  : [
+                      BoxShadow(
+                        color:
+                            color.withValues(
+                          alpha:
+                              0.06,
                         ),
-                        borderRadius:
-                            BorderRadius.circular(
-                          20,
+                        blurRadius:
+                            10,
+                        offset:
+                            const Offset(
+                          0,
+                          4,
                         ),
-                      ),
-                      child: Text(
-                        _statusText(),
-                        style: TextStyle(
-                          fontFamily:
-                              'Fredoka',
-                          fontSize: 12,
-                          fontWeight:
-                              FontWeight.w800,
-                          color: color,
-                        ),
-                      ),
-                    ),
-
-                    if (visibleDate != null) ...[
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      Text(
-                        _dateLabel(),
-                        style: TextStyle(
-                          fontFamily:
-                              'Baloo2',
-                          fontSize: 12.5,
-                          color: dark
-                              ? Colors.white54
-                              : Colors.black45,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 2,
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons
-                                .calendar_month_rounded,
-                            size: 18,
-                            color: color,
-                          ),
-                          const SizedBox(
-                            width: 6,
-                          ),
-                          Text(
-                            simpleDateText(
-                              visibleDate,
-                            ),
-                            style: TextStyle(
-                              fontFamily:
-                                  'Fredoka',
-                              fontSize: 16,
-                              fontWeight:
-                                  FontWeight.w800,
-                              color: dark
-                                  ? Colors.white
-                                  : const Color(
-                                      0xFF2D2D2D,
-                                    ),
-                            ),
-                          ),
-                        ],
                       ),
                     ],
+            ),
 
-                    if (remainingText != null) ...[
-                      const SizedBox(
-                        height: 7,
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            evaluation.status ==
-                                    VaccineStatus.review
-                                ? Icons
-                                    .info_outline_rounded
-                                : Icons
-                                    .schedule_rounded,
-                            size: 17,
-                            color: color,
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                            child: Text(
-                              remainingText,
-                              style: TextStyle(
-                                fontFamily:
-                                    'Baloo2',
-                                fontSize: 13.5,
-                                fontWeight:
-                                    FontWeight.w700,
-                                color: color,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+            child: Row(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
+              children: [
+                // =================================================
+                // ICONO
+                // =================================================
 
-                    if (evaluation
-                                .dose
-                                .notesKey !=
-                            null &&
-                        evaluation.status !=
-                            VaccineStatus.applied) ...[
-                      const SizedBox(
-                        height: 8,
-                      ),
+                Container(
+                  width:
+                      52,
+                  height:
+                      52,
+                  decoration:
+                      BoxDecoration(
+                    color:
+                        color.withValues(
+                      alpha:
+                          0.13,
+                    ),
+                    borderRadius:
+                        BorderRadius.circular(
+                      16,
+                    ),
+                  ),
+                  child: Icon(
+                    locked
+                        ? Icons
+                            .lock_rounded
+                        : evaluation.status ==
+                                VaccineStatus
+                                    .applied
+                            ? Icons
+                                .check_circle_rounded
+                            : Icons
+                                .vaccines_rounded,
+                    color:
+                        color,
+                    size:
+                        29,
+                  ),
+                ),
+
+                const SizedBox(
+                  width:
+                      14,
+                ),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment:
+                        CrossAxisAlignment
+                            .start,
+                    children: [
+                      // =============================================
+                      // NOMBRE
+                      // =============================================
+
                       Text(
                         T.txt(
                           evaluation
                               .dose
-                              .notesKey!,
+                              .nameKey,
                         ),
-                        style: TextStyle(
+                        style:
+                            TextStyle(
                           fontFamily:
-                              'Baloo2',
-                          fontSize: 12.5,
-                          height: 1.2,
-                          color: dark
-                              ? Colors.white54
-                              : Colors.black54,
+                              'Fredoka',
+                          fontSize:
+                              18,
+                          fontWeight:
+                              FontWeight
+                                  .w800,
+                          color: locked
+                              ? Colors.grey
+                              : dark
+                                  ? Colors.white
+                                  : const Color(
+                                      0xFF2D2D2D,
+                                    ),
                         ),
                       ),
+
+                      const SizedBox(
+                        height:
+                            2,
+                      ),
+
+                      // =============================================
+                      // DOSIS
+                      // =============================================
+
+                      Text(
+                        T.txt(
+                          evaluation
+                              .dose
+                              .doseLabelKey,
+                        ),
+                        style:
+                            TextStyle(
+                          fontFamily:
+                              'Baloo2',
+                          fontSize:
+                              14,
+                          color: locked
+                              ? Colors.grey
+                              : dark
+                                  ? Colors.white60
+                                  : Colors.black54,
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height:
+                            6,
+                      ),
+
+                      // =============================================
+                      // PREVIENE
+                      // =============================================
+
+                      Text(
+                        T.txt(
+                          evaluation
+                              .dose
+                              .preventsKey,
+                        ),
+                        style:
+                            TextStyle(
+                          fontFamily:
+                              'Baloo2',
+                          fontSize:
+                              13,
+                          height:
+                              1.2,
+                          color: locked
+                              ? Colors.grey
+                              : dark
+                                  ? Colors.white54
+                                  : Colors.black54,
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height:
+                            9,
+                      ),
+
+                      // =============================================
+                      // ESTADO
+                      // =============================================
+
+                      Container(
+                        padding:
+                            const EdgeInsets.symmetric(
+                          horizontal:
+                              10,
+                          vertical:
+                              4,
+                        ),
+                        decoration:
+                            BoxDecoration(
+                          color:
+                              color.withValues(
+                            alpha:
+                                0.13,
+                          ),
+                          borderRadius:
+                              BorderRadius.circular(
+                            20,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize:
+                              MainAxisSize.min,
+                          children: [
+                            if (locked) ...[
+                              Icon(
+                                Icons
+                                    .lock_outline_rounded,
+                                size:
+                                    14,
+                                color:
+                                    color,
+                              ),
+
+                              const SizedBox(
+                                width:
+                                    4,
+                              ),
+                            ],
+
+                            Flexible(
+                              child: Text(
+                                _statusText(),
+                                style:
+                                    TextStyle(
+                                  fontFamily:
+                                      'Fredoka',
+                                  fontSize:
+                                      12,
+                                  fontWeight:
+                                      FontWeight
+                                          .w800,
+                                  color:
+                                      color,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // =============================================
+                      // FECHA
+                      // =============================================
+
+                      if (visibleDate != null) ...[
+                        const SizedBox(
+                          height:
+                              12,
+                        ),
+
+                        Text(
+                          _dateLabel(),
+                          style:
+                              TextStyle(
+                            fontFamily:
+                                'Baloo2',
+                            fontSize:
+                                12.5,
+                            color: locked
+                                ? Colors.grey
+                                : dark
+                                    ? Colors.white54
+                                    : Colors.black45,
+                          ),
+                        ),
+
+                        const SizedBox(
+                          height:
+                              2,
+                        ),
+
+                        Row(
+                          children: [
+                            Icon(
+                              Icons
+                                  .calendar_month_rounded,
+                              size:
+                                  18,
+                              color:
+                                  color,
+                            ),
+
+                            const SizedBox(
+                              width:
+                                  6,
+                            ),
+
+                            Text(
+                              simpleDateText(
+                                visibleDate,
+                              ),
+                              style:
+                                  TextStyle(
+                                fontFamily:
+                                    'Fredoka',
+                                fontSize:
+                                    16,
+                                fontWeight:
+                                    FontWeight
+                                        .w800,
+                                color: locked
+                                    ? Colors.grey
+                                    : dark
+                                        ? Colors.white
+                                        : const Color(
+                                            0xFF2D2D2D,
+                                          ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+
+                      // =============================================
+                      // DÍAS RESTANTES
+                      // =============================================
+
+                      if (remainingText != null) ...[
+                        const SizedBox(
+                          height:
+                              7,
+                        ),
+
+                        Row(
+                          children: [
+                            Icon(
+                              evaluation.status ==
+                                      VaccineStatus
+                                          .review
+                                  ? Icons
+                                      .info_outline_rounded
+                                  : Icons
+                                      .schedule_rounded,
+                              size:
+                                  17,
+                              color:
+                                  color,
+                            ),
+
+                            const SizedBox(
+                              width:
+                                  5,
+                            ),
+
+                            Expanded(
+                              child: Text(
+                                remainingText,
+                                style:
+                                    TextStyle(
+                                  fontFamily:
+                                      'Baloo2',
+                                  fontSize:
+                                      13.5,
+                                  fontWeight:
+                                      FontWeight
+                                          .w700,
+                                  color:
+                                      color,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+
+                      // =============================================
+                      // NOTA
+                      // =============================================
+
+                      if (evaluation
+                                  .dose
+                                  .notesKey !=
+                              null &&
+                          evaluation.status !=
+                              VaccineStatus.applied) ...[
+                        const SizedBox(
+                          height:
+                              8,
+                        ),
+
+                        Text(
+                          T.txt(
+                            evaluation
+                                .dose
+                                .notesKey!,
+                          ),
+                          style:
+                              TextStyle(
+                            fontFamily:
+                                'Baloo2',
+                            fontSize:
+                                12.5,
+                            height:
+                                1.2,
+                            color: locked
+                                ? Colors.grey
+                                : dark
+                                    ? Colors.white54
+                                    : Colors.black54,
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
-              ),
 
-              const SizedBox(
-                width: 5,
-              ),
+                const SizedBox(
+                  width:
+                      5,
+                ),
 
-              Icon(
-                Icons.chevron_right_rounded,
-                color: color,
-                size: 27,
-              ),
-            ],
+                // =================================================
+                // ICONO DERECHO
+                // =================================================
+
+                Icon(
+                  locked
+                      ? Icons
+                          .lock_outline_rounded
+                      : Icons
+                          .chevron_right_rounded,
+                  color:
+                      color,
+                  size:
+                      locked
+                          ? 23
+                          : 27,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -1428,7 +1760,8 @@ class _VaccineCard extends StatelessWidget {
 // SIN NIÑO
 // ================================================================
 
-class _NoChildState extends StatelessWidget {
+class _NoChildState
+    extends StatelessWidget {
   final bool dark;
 
   const _NoChildState({
@@ -1450,41 +1783,52 @@ class _NoChildState extends StatelessWidget {
               MainAxisSize.min,
           children: [
             Container(
-              width: 100,
-              height: 100,
+              width:
+                  100,
+              height:
+                  100,
               decoration:
                   BoxDecoration(
                 color:
                     const Color(
                   0xFF7B2CBF,
                 ).withValues(
-                  alpha: 0.10,
+                  alpha:
+                      0.10,
                 ),
                 shape:
                     BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.child_care_rounded,
-                size: 58,
+              child:
+                  const Icon(
+                Icons
+                    .child_care_rounded,
+                size:
+                    58,
                 color:
                     Color(
                   0xFF7B2CBF,
                 ),
               ),
             ),
+
             const SizedBox(
-              height: 18,
+              height:
+                  18,
             ),
+
             Text(
               T.txt(
                 'healthProfileRequiredTitle',
               ),
               textAlign:
                   TextAlign.center,
-              style: TextStyle(
+              style:
+                  TextStyle(
                 fontFamily:
                     'Fredoka',
-                fontSize: 22,
+                fontSize:
+                    22,
                 fontWeight:
                     FontWeight.w800,
                 color: dark
@@ -1494,19 +1838,24 @@ class _NoChildState extends StatelessWidget {
                       ),
               ),
             ),
+
             const SizedBox(
-              height: 7,
+              height:
+                  7,
             ),
+
             Text(
               T.txt(
                 'healthProfileRequiredSubtitle',
               ),
               textAlign:
                   TextAlign.center,
-              style: TextStyle(
+              style:
+                  TextStyle(
                 fontFamily:
                     'Baloo2',
-                fontSize: 15,
+                fontSize:
+                    15,
                 color: dark
                     ? Colors.white60
                     : Colors.black54,

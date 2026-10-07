@@ -11,9 +11,18 @@ class GrowthMeasurement {
 
   final DateTime measuredAt;
 
+  // Siempre se almacena en kilogramos.
   final double weightKg;
+
+  // Siempre se almacena en centímetros.
   final double heightCm;
 
+  // Siempre se almacena en centímetros.
+  // Es opcional.
+  final double? headCircumferenceCm;
+
+  // Se mantiene internamente para los cálculos OMS.
+  // Ya no será seleccionado manualmente por el usuario.
   final GrowthMeasurementType measurementType;
 
   final String? notes;
@@ -26,6 +35,7 @@ class GrowthMeasurement {
     required this.measuredAt,
     required this.weightKg,
     required this.heightCm,
+    this.headCircumferenceCm,
     required this.measurementType,
     this.notes,
     required this.createdAt,
@@ -35,6 +45,7 @@ class GrowthMeasurement {
     DateTime? measuredAt,
     double? weightKg,
     double? heightCm,
+    Object? headCircumferenceCm = _unset,
     GrowthMeasurementType? measurementType,
     Object? notes = _unset,
   }) {
@@ -47,18 +58,23 @@ class GrowthMeasurement {
           weightKg ?? this.weightKg,
       heightCm:
           heightCm ?? this.heightCm,
+      headCircumferenceCm:
+          identical(
+        headCircumferenceCm,
+        _unset,
+      )
+              ? this.headCircumferenceCm
+              : headCircumferenceCm
+                  as double?,
       measurementType:
           measurementType ??
               this.measurementType,
-
-      // Ahora notes: null realmente elimina la nota.
       notes: identical(
         notes,
         _unset,
       )
           ? this.notes
           : notes as String?,
-
       createdAt: createdAt,
     );
   }
@@ -71,6 +87,8 @@ class GrowthMeasurement {
           measuredAt.toIso8601String(),
       'weight_kg': weightKg,
       'height_cm': heightCm,
+      'head_circumference_cm':
+          headCircumferenceCm,
       'measurement_type':
           measurementType.name,
       'notes': notes,
@@ -102,6 +120,10 @@ class GrowthMeasurement {
       heightCm:
           (map['height_cm'] as num)
               .toDouble(),
+      headCircumferenceCm:
+          (map['head_circumference_cm']
+                  as num?)
+              ?.toDouble(),
       measurementType:
           type ==
                   GrowthMeasurementType

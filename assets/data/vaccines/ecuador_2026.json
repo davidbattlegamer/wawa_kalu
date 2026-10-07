@@ -63,7 +63,8 @@
       "preventsKey": "vaccineRotavirusPrevents",
       "doseLabelKey": "vaccineDose2",
       "scheduleType": "fixed_age",
-      "targetMonths": 4
+      "targetMonths": 4,
+      "previousDoseId": "rotavirus_2m"
     },
     {
       "id": "hexavalent_4m",
@@ -72,7 +73,8 @@
       "preventsKey": "vaccineHexavalentPrevents",
       "doseLabelKey": "vaccineDose2",
       "scheduleType": "fixed_age",
-      "targetMonths": 4
+      "targetMonths": 4,
+      "previousDoseId": "hexavalent_2m"
     },
     {
       "id": "pneumococcal_4m",
@@ -81,7 +83,8 @@
       "preventsKey": "vaccinePneumococcalPrevents",
       "doseLabelKey": "vaccineDose2",
       "scheduleType": "fixed_age",
-      "targetMonths": 4
+      "targetMonths": 4,
+      "previousDoseId": "pneumococcal_2m"
     },
 
     {
@@ -100,7 +103,8 @@
       "preventsKey": "vaccineHexavalentPrevents",
       "doseLabelKey": "vaccineDose3",
       "scheduleType": "fixed_age",
-      "targetMonths": 6
+      "targetMonths": 6,
+      "previousDoseId": "hexavalent_4m"
     },
     {
       "id": "pneumococcal_6m",
@@ -109,7 +113,8 @@
       "preventsKey": "vaccinePneumococcalPrevents",
       "doseLabelKey": "vaccineDose3",
       "scheduleType": "fixed_age",
-      "targetMonths": 6
+      "targetMonths": 6,
+      "previousDoseId": "pneumococcal_4m"
     },
 
     {
@@ -172,7 +177,8 @@
       "preventsKey": "vaccineHexavalentPrevents",
       "doseLabelKey": "vaccineDose18Months",
       "scheduleType": "fixed_age",
-      "targetMonths": 18
+      "targetMonths": 18,
+      "previousDoseId": "hexavalent_6m"
     },
     {
       "id": "bopv_18m",
@@ -181,7 +187,8 @@
       "preventsKey": "vaccinePolioPrevents",
       "doseLabelKey": "vaccineDose18Months",
       "scheduleType": "fixed_age",
-      "targetMonths": 18
+      "targetMonths": 18,
+      "previousDoseId": "bopv_6m"
     },
     {
       "id": "mmr_18m",
@@ -190,7 +197,8 @@
       "preventsKey": "vaccineMMRPrevents",
       "doseLabelKey": "vaccineDose2",
       "scheduleType": "fixed_age",
-      "targetMonths": 18
+      "targetMonths": 18,
+      "previousDoseId": "mmr_12m"
     },
 
     {
@@ -223,7 +231,8 @@
       "preventsKey": "vaccineDPTPrevents",
       "doseLabelKey": "vaccineDose5Years",
       "scheduleType": "fixed_age",
-      "targetMonths": 60
+      "targetMonths": 60,
+      "previousDoseId": "hexavalent_18m"
     },
     {
       "id": "bopv_60m",
@@ -232,7 +241,8 @@
       "preventsKey": "vaccinePolioPrevents",
       "doseLabelKey": "vaccineDose5Years",
       "scheduleType": "fixed_age",
-      "targetMonths": 60
+      "targetMonths": 60,
+      "previousDoseId": "bopv_18m"
     },
     {
       "id": "varicella_60m",
@@ -241,7 +251,8 @@
       "preventsKey": "vaccineVaricellaPrevents",
       "doseLabelKey": "vaccineDose5Years",
       "scheduleType": "fixed_age",
-      "targetMonths": 60
+      "targetMonths": 60,
+      "previousDoseId": "varicella_15m"
     }
   ]
 }

@@ -41,6 +41,7 @@ flutter:
     - assets/sonidos/es/
     - assets/sonidos/en/
     - assets/data/vaccines/
+    - assets/data/growth/who/
   fonts:
     - family: Fredoka
       fonts:

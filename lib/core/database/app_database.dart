@@ -16,7 +16,16 @@ class AppDatabase {
   static const String _databaseName =
       'wawa_kalu.db';
 
-  static const int _databaseVersion = 3;
+  // ==========================================================================
+  // VERSIÓN DE BASE DE DATOS
+  //
+  // v1 = perfiles
+  // v2 = vacunas
+  // v3 = crecimiento
+  // v4 = perímetro cefálico
+  // ==========================================================================
+
+  static const int _databaseVersion = 4;
 
   Database? _database;
 
@@ -43,84 +52,139 @@ class AppDatabase {
 
     return openDatabase(
       path,
-      version: _databaseVersion,
+      version:
+          _databaseVersion,
 
-      onConfigure: (db) async {
+      // ----------------------------------------------------------------------
+      // ACTIVAR FOREIGN KEYS
+      // ----------------------------------------------------------------------
+
+      onConfigure: (
+        db,
+      ) async {
         await db.execute(
           'PRAGMA foreign_keys = ON',
         );
       },
 
-      onCreate: _onCreate,
+      onCreate:
+          _onCreate,
 
-      onUpgrade: _onUpgrade,
+      onUpgrade:
+          _onUpgrade,
     );
   }
 
-  // ============================================================
+  // ==========================================================================
   // CREATE
-  // ============================================================
+  // ==========================================================================
 
   Future<void> _onCreate(
     Database db,
     int version,
   ) async {
+    // ------------------------------------------------------------------------
+    // CHILDREN
+    // ------------------------------------------------------------------------
+
     await db.execute(
       '''
       CREATE TABLE children (
         id TEXT PRIMARY KEY,
+
         name TEXT NOT NULL,
+
         birth_date TEXT NOT NULL,
+
         sex TEXT NOT NULL,
+
         photo_path TEXT,
+
         created_at TEXT NOT NULL
       )
       ''',
     );
 
+    // ------------------------------------------------------------------------
+    // APP STATE
+    // ------------------------------------------------------------------------
+
     await db.execute(
       '''
       CREATE TABLE app_state (
         key TEXT PRIMARY KEY,
+
         value TEXT
       )
       ''',
     );
 
+    // ------------------------------------------------------------------------
+    // VACUNAS
+    // ------------------------------------------------------------------------
+
     await _createVaccineRecordsTable(
       db,
     );
+
+    // ------------------------------------------------------------------------
+    // CRECIMIENTO
+    // ------------------------------------------------------------------------
 
     await _createGrowthMeasurementsTable(
       db,
     );
   }
 
-  // ============================================================
+  // ==========================================================================
   // MIGRACIONES
-  // ============================================================
+  // ==========================================================================
 
   Future<void> _onUpgrade(
     Database db,
     int oldVersion,
     int newVersion,
   ) async {
+    // ------------------------------------------------------------------------
+    // VERSIONES ANTERIORES A VACUNAS
+    // ------------------------------------------------------------------------
+
     if (oldVersion < 2) {
       await _createVaccineRecordsTable(
         db,
       );
     }
 
+    // ------------------------------------------------------------------------
+    // VERSIONES ANTERIORES A CRECIMIENTO
+    // ------------------------------------------------------------------------
+
     if (oldVersion < 3) {
       await _createGrowthMeasurementsTable(
         db,
       );
     }
+
+    // ------------------------------------------------------------------------
+    // V3 -> V4
+    //
+    // Agrega perímetro cefálico sin borrar controles existentes.
+    // ------------------------------------------------------------------------
+
+    if (oldVersion >= 3 &&
+        oldVersion < 4) {
+      await db.execute(
+        '''
+        ALTER TABLE growth_measurements
+        ADD COLUMN head_circumference_cm REAL
+        ''',
+      );
+    }
   }
 
-  // ============================================================
+  // ==========================================================================
   // TABLA VACUNAS
-  // ============================================================
+  // ==========================================================================
 
   Future<void>
       _createVaccineRecordsTable(
@@ -158,14 +222,16 @@ class AppDatabase {
       '''
       CREATE INDEX IF NOT EXISTS
       idx_vaccine_records_child
-      ON vaccine_records(child_id)
+      ON vaccine_records(
+        child_id
+      )
       ''',
     );
   }
 
-  // ============================================================
+  // ==========================================================================
   // TABLA CRECIMIENTO
-  // ============================================================
+  // ==========================================================================
 
   Future<void>
       _createGrowthMeasurementsTable(
@@ -183,6 +249,8 @@ class AppDatabase {
         weight_kg REAL NOT NULL,
 
         height_cm REAL NOT NULL,
+
+        head_circumference_cm REAL,
 
         measurement_type TEXT NOT NULL,
 
@@ -209,9 +277,9 @@ class AppDatabase {
     );
   }
 
-  // ============================================================
+  // ==========================================================================
   // CHILDREN
-  // ============================================================
+  // ==========================================================================
 
   Future<List<Child>>
       getChildren() async {
@@ -221,13 +289,16 @@ class AppDatabase {
     final result =
         await db.query(
       'children',
+
       orderBy:
           'created_at ASC',
     );
 
     return result
         .map(
-          (map) =>
+          (
+            map,
+          ) =>
               Child.fromMap(
             map,
           ),
@@ -243,7 +314,9 @@ class AppDatabase {
 
     await db.insert(
       'children',
+
       child.toMap(),
+
       conflictAlgorithm:
           ConflictAlgorithm.replace,
     );
@@ -257,6 +330,7 @@ class AppDatabase {
 
     await db.update(
       'children',
+
       child.toMap(),
 
       where:
@@ -286,9 +360,9 @@ class AppDatabase {
     );
   }
 
-  // ============================================================
+  // ==========================================================================
   // VACCINES
-  // ============================================================
+  // ==========================================================================
 
   Future<List<VaccineRecord>>
       getVaccineRecords(
@@ -314,7 +388,9 @@ class AppDatabase {
 
     return result
         .map(
-          (map) =>
+          (
+            map,
+          ) =>
               VaccineRecord.fromMap(
             map,
           ),
@@ -358,9 +434,9 @@ class AppDatabase {
     );
   }
 
-  // ============================================================
+  // ==========================================================================
   // GROWTH
-  // ============================================================
+  // ==========================================================================
 
   Future<List<GrowthMeasurement>>
       getGrowthMeasurements(
@@ -386,7 +462,9 @@ class AppDatabase {
 
     return result
         .map(
-          (map) =>
+          (
+            map,
+          ) =>
               GrowthMeasurement.fromMap(
             map,
           ),
@@ -415,7 +493,8 @@ class AppDatabase {
       orderBy:
           'measured_at DESC, created_at DESC',
 
-      limit: 1,
+      limit:
+          1,
     );
 
     if (result.isEmpty) {
@@ -484,9 +563,9 @@ class AppDatabase {
     );
   }
 
-  // ============================================================
+  // ==========================================================================
   // APP STATE
-  // ============================================================
+  // ==========================================================================
 
   Future<String?> getState(
     String key,
@@ -509,15 +588,16 @@ class AppDatabase {
         key,
       ],
 
-      limit: 1,
+      limit:
+          1,
     );
 
     if (result.isEmpty) {
       return null;
     }
 
-    return result.first['value']
-        as String?;
+    return result.first[
+        'value'] as String?;
   }
 
   Future<void> setState(
@@ -531,8 +611,10 @@ class AppDatabase {
       'app_state',
 
       {
-        'key': key,
-        'value': value,
+        'key':
+            key,
+        'value':
+            value,
       },
 
       conflictAlgorithm:
@@ -558,9 +640,9 @@ class AppDatabase {
     );
   }
 
-  // ============================================================
+  // ==========================================================================
   // CLOSE
-  // ============================================================
+  // ==========================================================================
 
   Future<void> close() async {
     final Database? db =
