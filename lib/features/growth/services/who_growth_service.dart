@@ -1,7 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:growth_standards/growth_standards.dart';
-
 import '../../children/models/child.dart';
 
 import '../data/who_growth_table_loader.dart';
@@ -10,32 +8,31 @@ import '../models/growth_measurement.dart';
 import '../models/who_growth_table.dart';
 
 // ============================================================================
-// SISTEMA NUEVO
-// DATOS CALCULADOS DIRECTAMENTE DESDE LAS TABLAS OMS DE ASSETS
+// PUNTO CALCULADO CON LAS TABLAS OMS
 // ============================================================================
 
 class OfficialWhoGrowthPoint {
   final GrowthMeasurement measurement;
 
-  // Eje X de la gráfica.
+  // Eje X:
   //
-  // Por edad:
+  // Indicadores por edad:
   // días de vida.
   //
-  // Peso/longitud:
+  // Peso / longitud:
   // longitud en cm.
   //
-  // Peso/talla:
+  // Peso / talla:
   // talla en cm.
   final double x;
 
-  // Valor real registrado/calculado del niño.
+  // Valor real del niño.
   final double value;
 
-  // Z-score calculado con los parámetros LMS OMS.
+  // Z-score calculado con LMS OMS.
   final double zScore;
 
-  // Fila OMS usada como referencia.
+  // Referencia OMS utilizada.
   final WhoGrowthRow reference;
 
   const OfficialWhoGrowthPoint({
@@ -48,7 +45,7 @@ class OfficialWhoGrowthPoint {
 }
 
 // ============================================================================
-// CONJUNTO COMPLETO DE DATOS OMS
+// DATOS COMPLETOS PARA LAS GRÁFICAS
 // ============================================================================
 
 class OfficialWhoGrowthChartData {
@@ -64,14 +61,15 @@ class OfficialWhoGrowthChartData {
 
   final WhoGrowthTable bmiForAgeTable;
 
-  final WhoGrowthTable headCircumferenceForAgeTable;
+  final WhoGrowthTable
+      headCircumferenceForAgeTable;
 
   final WhoGrowthTable weightForLengthTable;
 
   final WhoGrowthTable weightForHeightTable;
 
   // --------------------------------------------------------------------------
-  // PUNTOS DEL NIÑO
+  // MEDICIONES DEL NIÑO
   // --------------------------------------------------------------------------
 
   final List<OfficialWhoGrowthPoint>
@@ -142,66 +140,7 @@ class OfficialWhoGrowthChartData {
 }
 
 // ============================================================================
-// SISTEMA ANTIGUO
-//
-// SE MANTIENE TEMPORALMENTE.
-//
-// growth_charts_page.dart todavía usa growth_standards.
-// En la Parte 2 cambiaremos la página y después podremos eliminar
-// todo este bloque antiguo.
-// ============================================================================
-
-class WhoGrowthChartData {
-  final Sex sex;
-
-  final List<Result>
-      weightForAge;
-
-  final List<Result>
-      lengthHeightForAge;
-
-  final List<Result>
-      weightForLength;
-
-  final List<Result>
-      weightForHeight;
-
-  final List<Result>
-      bmiForAge;
-
-  final List<Result>
-      headCircumferenceForAge;
-
-  final int processedMeasurements;
-
-  final int skippedMeasurements;
-
-  const WhoGrowthChartData({
-    required this.sex,
-    required this.weightForAge,
-    required this.lengthHeightForAge,
-    required this.weightForLength,
-    required this.weightForHeight,
-    required this.bmiForAge,
-    required this.headCircumferenceForAge,
-    required this.processedMeasurements,
-    required this.skippedMeasurements,
-  });
-
-  bool get hasAnyData =>
-      weightForAge.isNotEmpty ||
-      lengthHeightForAge.isNotEmpty ||
-      weightForLength.isNotEmpty ||
-      weightForHeight.isNotEmpty ||
-      bmiForAge.isNotEmpty ||
-      headCircumferenceForAge.isNotEmpty;
-
-  bool get hasHeadCircumferenceData =>
-      headCircumferenceForAge.isNotEmpty;
-}
-
-// ============================================================================
-// SERVICIO
+// SERVICIO OMS
 // ============================================================================
 
 class WhoGrowthService {
@@ -211,10 +150,9 @@ class WhoGrowthService {
       WhoGrowthService._();
 
   // ==========================================================================
-  // RANGO OMS
+  // RANGO DE LAS TABLAS OMS
   //
-  // Los JSON actuales contienen:
-  // día 0 hasta día 1856.
+  // 0 a 1856 días.
   // ==========================================================================
 
   static const int _minimumWhoAgeDays =
@@ -226,30 +164,29 @@ class WhoGrowthService {
   // ==========================================================================
   // CAMBIO LONGITUD -> TALLA
   //
-  // OMS:
-  // < 731 días  = longitud recostado
-  // >= 731 días = talla de pie
+  // Menor de 731 días:
+  // longitud acostado.
+  //
+  // Desde 731 días:
+  // talla de pie.
   // ==========================================================================
 
   static const int _standingHeightFromDay =
       731;
 
-  // Diferencia OMS aproximada entre
-  // longitud recostado y talla de pie.
+  // ==========================================================================
+  // AJUSTE LONGITUD / TALLA
+  //
+  // Diferencia usada cuando la posición de medición
+  // no coincide con la referencia esperada.
+  // ==========================================================================
+
   static const double
       _lengthHeightAdjustmentCm =
       0.7;
 
   // ==========================================================================
-  // NUEVO SISTEMA OFICIAL
-  //
-  // ESTE ES EL MÉTODO QUE USAREMOS EN LA PARTE 2.
-  //
-  // Lee directamente:
-  //
-  // assets/data/growth/who/
-  //
-  // y NO utiliza growth_standards.
+  // CONSTRUIR DATOS
   // ==========================================================================
 
   Future<OfficialWhoGrowthChartData>
@@ -259,81 +196,59 @@ class WhoGrowthService {
         measurements,
   }) async {
     final WhoGrowthSex sex =
-        _convertOfficialSex(
+        _convertSex(
       child.sex,
     );
 
     // ------------------------------------------------------------------------
-    // CARGAR LAS 6 TABLAS DEL SEXO DEL NIÑO
+    // CARGAR LAS 6 TABLAS PARA EL SEXO DEL NIÑO
     // ------------------------------------------------------------------------
-
-    final Future<WhoGrowthTable>
-        weightForAgeFuture =
-        WhoGrowthTableLoader.instance.load(
-      indicator:
-          WhoGrowthIndicator.weightForAge,
-      sex:
-          sex,
-    );
-
-    final Future<WhoGrowthTable>
-        lengthHeightForAgeFuture =
-        WhoGrowthTableLoader.instance.load(
-      indicator:
-          WhoGrowthIndicator
-              .lengthHeightForAge,
-      sex:
-          sex,
-    );
-
-    final Future<WhoGrowthTable>
-        bmiForAgeFuture =
-        WhoGrowthTableLoader.instance.load(
-      indicator:
-          WhoGrowthIndicator.bmiForAge,
-      sex:
-          sex,
-    );
-
-    final Future<WhoGrowthTable>
-        headForAgeFuture =
-        WhoGrowthTableLoader.instance.load(
-      indicator:
-          WhoGrowthIndicator
-              .headCircumferenceForAge,
-      sex:
-          sex,
-    );
-
-    final Future<WhoGrowthTable>
-        weightForLengthFuture =
-        WhoGrowthTableLoader.instance.load(
-      indicator:
-          WhoGrowthIndicator
-              .weightForLength,
-      sex:
-          sex,
-    );
-
-    final Future<WhoGrowthTable>
-        weightForHeightFuture =
-        WhoGrowthTableLoader.instance.load(
-      indicator:
-          WhoGrowthIndicator
-              .weightForHeight,
-      sex:
-          sex,
-    );
 
     final List<WhoGrowthTable> tables =
         await Future.wait(
       <Future<WhoGrowthTable>>[
-        weightForAgeFuture,
-        lengthHeightForAgeFuture,
-        bmiForAgeFuture,
-        headForAgeFuture,
-        weightForLengthFuture,
-        weightForHeightFuture,
+        WhoGrowthTableLoader.instance.load(
+          indicator:
+              WhoGrowthIndicator
+                  .weightForAge,
+          sex:
+              sex,
+        ),
+        WhoGrowthTableLoader.instance.load(
+          indicator:
+              WhoGrowthIndicator
+                  .lengthHeightForAge,
+          sex:
+              sex,
+        ),
+        WhoGrowthTableLoader.instance.load(
+          indicator:
+              WhoGrowthIndicator
+                  .bmiForAge,
+          sex:
+              sex,
+        ),
+        WhoGrowthTableLoader.instance.load(
+          indicator:
+              WhoGrowthIndicator
+                  .headCircumferenceForAge,
+          sex:
+              sex,
+        ),
+        WhoGrowthTableLoader.instance.load(
+          indicator:
+              WhoGrowthIndicator
+                  .weightForLength,
+          sex:
+              sex,
+        ),
+        WhoGrowthTableLoader.instance.load(
+          indicator:
+              WhoGrowthIndicator
+                  .weightForHeight,
+          sex:
+              sex,
+        ),
       ],
     );
 
@@ -362,7 +277,7 @@ class WhoGrowthService {
         tables[5];
 
     // ------------------------------------------------------------------------
-    // LISTAS DE PUNTOS DEL NIÑO
+    // LISTAS DE RESULTADOS
     // ------------------------------------------------------------------------
 
     final List<OfficialWhoGrowthPoint>
@@ -396,7 +311,7 @@ class WhoGrowthService {
         0;
 
     // ------------------------------------------------------------------------
-    // ORDEN CRONOLÓGICO
+    // ORDENAR CONTROLES CRONOLÓGICAMENTE
     // ------------------------------------------------------------------------
 
     final List<GrowthMeasurement> ordered =
@@ -433,7 +348,7 @@ class WhoGrowthService {
       );
 
       // ----------------------------------------------------------------------
-      // SOLO RANGO OMS DISPONIBLE
+      // CONTROL FUERA DEL RANGO OMS
       // ----------------------------------------------------------------------
 
       if (ageDays <
@@ -441,31 +356,34 @@ class WhoGrowthService {
           ageDays >
               _maximumWhoAgeDays) {
         skipped++;
+
         continue;
       }
 
       // ----------------------------------------------------------------------
-      // VALIDACIÓN BÁSICA
+      // VALIDACIÓN PESO
       // ----------------------------------------------------------------------
 
-      if (!measurement
-              .weightKg.isFinite ||
-          measurement.weightKg <=
-              0 ||
-          !measurement
-              .heightCm.isFinite ||
-          measurement.heightCm <=
-              0) {
+      if (!measurement.weightKg.isFinite ||
+          measurement.weightKg <= 0) {
         skipped++;
+
         continue;
       }
 
       // ----------------------------------------------------------------------
-      // CORREGIR LONGITUD / TALLA SI FUERA NECESARIO
-      //
-      // Esto es especialmente útil para controles antiguos.
-      //
-      // Actualmente el formulario asigna el tipo automáticamente.
+      // VALIDACIÓN LONGITUD / TALLA
+      // ----------------------------------------------------------------------
+
+      if (!measurement.heightCm.isFinite ||
+          measurement.heightCm <= 0) {
+        skipped++;
+
+        continue;
+      }
+
+      // ----------------------------------------------------------------------
+      // NORMALIZAR LONGITUD / TALLA
       // ----------------------------------------------------------------------
 
       final double
@@ -479,9 +397,9 @@ class WhoGrowthService {
 
       if (!standardizedLengthHeightCm
               .isFinite ||
-          standardizedLengthHeightCm <=
-              0) {
+          standardizedLengthHeightCm <= 0) {
         skipped++;
+
         continue;
       }
 
@@ -492,8 +410,7 @@ class WhoGrowthService {
       // 1. PESO PARA LA EDAD
       // ======================================================================
 
-      final WhoGrowthRow?
-          weightAgeRow =
+      final WhoGrowthRow? weightAgeRow =
           weightForAgeTable.rowAtExactX(
         ageX,
       );
@@ -501,7 +418,7 @@ class WhoGrowthService {
       if (weightAgeRow != null) {
         final OfficialWhoGrowthPoint?
             point =
-            _createOfficialPoint(
+            _createPoint(
           measurement:
               measurement,
           x:
@@ -530,11 +447,10 @@ class WhoGrowthService {
         ageX,
       );
 
-      if (lengthHeightAgeRow !=
-          null) {
+      if (lengthHeightAgeRow != null) {
         final OfficialWhoGrowthPoint?
             point =
-            _createOfficialPoint(
+            _createPoint(
           measurement:
               measurement,
           x:
@@ -554,9 +470,6 @@ class WhoGrowthService {
 
       // ======================================================================
       // 3. IMC PARA LA EDAD
-      //
-      // La talla/longitud usada aquí ya está normalizada según la posición
-      // esperada por OMS para la edad.
       // ======================================================================
 
       final double heightMeters =
@@ -578,7 +491,7 @@ class WhoGrowthService {
           bmi > 0) {
         final OfficialWhoGrowthPoint?
             point =
-            _createOfficialPoint(
+            _createPoint(
           measurement:
               measurement,
           x:
@@ -598,8 +511,6 @@ class WhoGrowthService {
 
       // ======================================================================
       // 4. PERÍMETRO CEFÁLICO PARA LA EDAD
-      //
-      // OPCIONAL.
       // ======================================================================
 
       final double? headCm =
@@ -618,7 +529,7 @@ class WhoGrowthService {
         if (headRow != null) {
           final OfficialWhoGrowthPoint?
               point =
-              _createOfficialPoint(
+              _createPoint(
             measurement:
                 measurement,
             x:
@@ -640,7 +551,7 @@ class WhoGrowthService {
       // ======================================================================
       // 5. PESO PARA LONGITUD
       //
-      // Menores de 731 días.
+      // Antes de 731 días.
       // ======================================================================
 
       if (ageDays <
@@ -654,7 +565,7 @@ class WhoGrowthService {
         if (row != null) {
           final OfficialWhoGrowthPoint?
               point =
-              _createOfficialPoint(
+              _createPoint(
             measurement:
                 measurement,
             x:
@@ -689,7 +600,7 @@ class WhoGrowthService {
         if (row != null) {
           final OfficialWhoGrowthPoint?
               point =
-              _createOfficialPoint(
+              _createPoint(
             measurement:
                 measurement,
             x:
@@ -750,11 +661,10 @@ class WhoGrowthService {
   }
 
   // ==========================================================================
-  // CREAR PUNTO OFICIAL
+  // CREAR PUNTO
   // ==========================================================================
 
-  OfficialWhoGrowthPoint?
-      _createOfficialPoint({
+  OfficialWhoGrowthPoint? _createPoint({
     required GrowthMeasurement measurement,
     required double x,
     required double value,
@@ -787,13 +697,19 @@ class WhoGrowthService {
   }
 
   // ==========================================================================
-  // Z-SCORE OMS
+  // CALCULAR Z-SCORE
   //
-  // Dentro de -3 a +3:
-  // fórmula LMS.
+  // Fórmula LMS:
   //
-  // Fuera de -3 / +3:
-  // extensión lineal usando la distancia entre 2 DE y 3 DE.
+  // ((X / M)^L - 1) / (L * S)
+  //
+  // Si L = 0:
+  //
+  // ln(X / M) / S
+  //
+  // Para valores fuera de ±3 DE usamos
+  // extensión lineal con el espacio entre
+  // ±2 y ±3 DE de las tablas.
   // ==========================================================================
 
   double _calculateWhoZScore({
@@ -848,7 +764,8 @@ class WhoGrowthService {
               .toDouble();
 
       rawZ =
-          (powered - 1.0) /
+          (powered -
+                  1.0) /
               (row.l *
                   row.s);
     }
@@ -861,16 +778,17 @@ class WhoGrowthService {
     // MÁS DE +3 DE
     // ------------------------------------------------------------------------
 
-    if (rawZ > 3) {
-      final double sd23 =
+    if (rawZ >
+        3.0) {
+      final double distance =
           row.sd3 -
               row.sd2;
 
-      if (sd23 > 0) {
+      if (distance > 0) {
         return 3.0 +
             ((value -
                     row.sd3) /
-                sd23);
+                distance);
       }
     }
 
@@ -878,16 +796,17 @@ class WhoGrowthService {
     // MENOS DE -3 DE
     // ------------------------------------------------------------------------
 
-    if (rawZ < -3) {
-      final double sd23 =
+    if (rawZ <
+        -3.0) {
+      final double distance =
           row.sd2Negative -
               row.sd3Negative;
 
-      if (sd23 > 0) {
+      if (distance > 0) {
         return -3.0 +
             ((value -
                     row.sd3Negative) /
-                sd23);
+                distance);
       }
     }
 
@@ -897,15 +816,13 @@ class WhoGrowthService {
   // ==========================================================================
   // NORMALIZAR LONGITUD / TALLA
   //
-  // OMS:
-  //
-  // < 731 días:
+  // Menor de 731 días:
   // se espera longitud recostado.
   //
   // Si se midió de pie:
   // +0.7 cm.
   //
-  // >= 731 días:
+  // Desde 731 días:
   // se espera talla de pie.
   //
   // Si se midió acostado:
@@ -919,6 +836,10 @@ class WhoGrowthService {
     final double value =
         measurement.heightCm;
 
+    // ------------------------------------------------------------------------
+    // MENOR DE 731 DÍAS
+    // ------------------------------------------------------------------------
+
     if (ageDays <
         _standingHeightFromDay) {
       if (measurement.measurementType ==
@@ -929,6 +850,10 @@ class WhoGrowthService {
 
       return value;
     }
+
+    // ------------------------------------------------------------------------
+    // DESDE 731 DÍAS
+    // ------------------------------------------------------------------------
 
     if (measurement.measurementType ==
         GrowthMeasurementType.length) {
@@ -969,10 +894,10 @@ class WhoGrowthService {
   }
 
   // ==========================================================================
-  // SEXO PARA NUEVAS TABLAS
+  // SEXO
   // ==========================================================================
 
-  WhoGrowthSex _convertOfficialSex(
+  WhoGrowthSex _convertSex(
     ChildSex sex,
   ) {
     if (sex ==
@@ -981,330 +906,5 @@ class WhoGrowthService {
     }
 
     return WhoGrowthSex.boys;
-  }
-
-  // ==========================================================================
-  // ==========================================================================
-  //
-  // SISTEMA ANTIGUO
-  //
-  // LO DEJAMOS TEMPORALMENTE PARA QUE
-  // growth_charts_page.dart ACTUAL SIGA COMPILANDO.
-  //
-  // EN LA PARTE 2 LO ELIMINAREMOS.
-  //
-  // ==========================================================================
-  // ==========================================================================
-
-  WhoGrowthChartData build({
-    required Child child,
-    required List<GrowthMeasurement>
-        measurements,
-  }) {
-    final Sex sex =
-        _convertLegacySex(
-      child.sex,
-    );
-
-    final List<Result> weightForAge =
-        <Result>[];
-
-    final List<Result>
-        lengthHeightForAge =
-        <Result>[];
-
-    final List<Result> weightForLength =
-        <Result>[];
-
-    final List<Result> weightForHeight =
-        <Result>[];
-
-    final List<Result> bmiForAge =
-        <Result>[];
-
-    final List<Result>
-        headCircumferenceForAge =
-        <Result>[];
-
-    int processed =
-        0;
-
-    int skipped =
-        0;
-
-    final List<GrowthMeasurement> ordered =
-        List<GrowthMeasurement>.from(
-      measurements,
-    )
-          ..sort(
-            (
-              GrowthMeasurement a,
-              GrowthMeasurement b,
-            ) {
-              return a.measuredAt.compareTo(
-                b.measuredAt,
-              );
-            },
-          );
-
-    final Date birthDate =
-        Date.fromDateTime(
-      child.birthDate,
-    );
-
-    for (final GrowthMeasurement measurement
-        in ordered) {
-      try {
-        final Date observedDate =
-            Date.fromDateTime(
-          measurement.measuredAt,
-        );
-
-        final Age age =
-            Age(
-          birthDate,
-          observedDate:
-              observedDate,
-        );
-
-        final int ageDays =
-            age.ageInTotalDaysByNow;
-
-        if (ageDays <
-                _minimumWhoAgeDays ||
-            ageDays >
-                _maximumWhoAgeDays) {
-          skipped++;
-          continue;
-        }
-
-        final Mass weight =
-            Mass$Kilogram(
-          measurement.weightKg,
-        );
-
-        final Length lengthHeight =
-            Length$Centimeter(
-          measurement.heightCm,
-        );
-
-        final LengthHeightMeasurementPosition
-            measurementPosition =
-            _convertLegacyMeasurementPosition(
-          measurement.measurementType,
-        );
-
-        // --------------------------------------------------------------------
-        // PESO / EDAD
-        // --------------------------------------------------------------------
-
-        final WHOGrowthStandardsWeightForAge
-            weightAgeResult =
-            WHOGrowthStandardsWeightForAge(
-          sex:
-              sex,
-          age:
-              age,
-          weight:
-              weight,
-        );
-
-        weightForAge.add(
-          weightAgeResult,
-        );
-
-        // --------------------------------------------------------------------
-        // LONGITUD-TALLA / EDAD
-        // --------------------------------------------------------------------
-
-        final WHOGrowthStandardsLengthForAge
-            lengthAgeResult =
-            WHOGrowthStandardsLengthForAge(
-          sex:
-              sex,
-          age:
-              age,
-          lengthHeight:
-              lengthHeight,
-          measure:
-              measurementPosition,
-        );
-
-        lengthHeightForAge.add(
-          lengthAgeResult,
-        );
-
-        // --------------------------------------------------------------------
-        // PESO / LONGITUD O PESO / TALLA
-        // --------------------------------------------------------------------
-
-        if (ageDays <
-            _standingHeightFromDay) {
-          final WHOGrowthStandardsWeightForLength
-              result =
-              WHOGrowthStandardsWeightForLength(
-            sex:
-                sex,
-            age:
-                age,
-            length:
-                lengthHeight,
-            weight:
-                weight,
-            measure:
-                measurementPosition,
-          );
-
-          weightForLength.add(
-            result,
-          );
-        } else {
-          final WHOGrowthStandardsWeightForHeight
-              result =
-              WHOGrowthStandardsWeightForHeight(
-            sex:
-                sex,
-            age:
-                age,
-            height:
-                lengthHeight,
-            weight:
-                weight,
-            measure:
-                measurementPosition,
-          );
-
-          weightForHeight.add(
-            result,
-          );
-        }
-
-        // --------------------------------------------------------------------
-        // IMC / EDAD
-        // --------------------------------------------------------------------
-
-        final WHOGrowthStandardsBodyMassIndexMeasurement
-            bmiMeasurement =
-            WHOGrowthStandardsBodyMassIndexMeasurement
-                .fromMeasurement(
-          lengthHeight:
-              lengthHeight,
-          weight:
-              weight,
-          measure:
-              measurementPosition,
-          age:
-              age,
-        );
-
-        final WHOGrowthStandardsBodyMassIndexForAge
-            bmiResult =
-            WHOGrowthStandardsBodyMassIndexForAge(
-          sex:
-              sex,
-          bodyMassIndexMeasurement:
-              bmiMeasurement,
-        );
-
-        bmiForAge.add(
-          bmiResult,
-        );
-
-        // --------------------------------------------------------------------
-        // CABEZA / EDAD
-        // --------------------------------------------------------------------
-
-        final double? headCm =
-            measurement
-                .headCircumferenceCm;
-
-        if (headCm != null &&
-            headCm > 0) {
-          try {
-            final Length headCircumference =
-                Length$Centimeter(
-              headCm,
-            );
-
-            final WHOGrowthStandardsHeadCircumferenceForAge
-                headResult =
-                WHOGrowthStandardsHeadCircumferenceForAge(
-              sex:
-                  sex,
-              age:
-                  age,
-              measurementResult:
-                  headCircumference,
-            );
-
-            headCircumferenceForAge.add(
-              headResult,
-            );
-          } catch (_) {
-            // No se elimina el resto del control
-            // si únicamente falla cabeza.
-          }
-        }
-
-        processed++;
-      } catch (_) {
-        skipped++;
-      }
-    }
-
-    return WhoGrowthChartData(
-      sex:
-          sex,
-      weightForAge:
-          weightForAge,
-      lengthHeightForAge:
-          lengthHeightForAge,
-      weightForLength:
-          weightForLength,
-      weightForHeight:
-          weightForHeight,
-      bmiForAge:
-          bmiForAge,
-      headCircumferenceForAge:
-          headCircumferenceForAge,
-      processedMeasurements:
-          processed,
-      skippedMeasurements:
-          skipped,
-    );
-  }
-
-  // ==========================================================================
-  // LEGACY - SEXO
-  // ==========================================================================
-
-  Sex _convertLegacySex(
-    ChildSex sex,
-  ) {
-    if (sex ==
-        ChildSex.girl) {
-      return Sex.female;
-    }
-
-    return Sex.male;
-  }
-
-  // ==========================================================================
-  // LEGACY - POSICIÓN
-  // ==========================================================================
-
-  LengthHeightMeasurementPosition
-      _convertLegacyMeasurementPosition(
-    GrowthMeasurementType type,
-  ) {
-    switch (type) {
-      case GrowthMeasurementType.length:
-        return LengthHeightMeasurementPosition
-            .recumbent;
-
-      case GrowthMeasurementType.height:
-        return LengthHeightMeasurementPosition
-            .standing;
-    }
   }
 }

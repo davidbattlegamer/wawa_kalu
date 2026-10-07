@@ -23,8 +23,15 @@ enum _GrowthChartType {
   heightAge,
   bmiAge,
   headAge,
-  weightLength,
-  weightHeight,
+
+  // Un solo recuadro.
+  //
+  // < 731 días:
+  // Peso / Longitud
+  //
+  // >= 731 días:
+  // Peso / Talla
+  weightLengthHeight,
 }
 
 // ============================================================================
@@ -54,6 +61,10 @@ class _GrowthChartsPageState
 
   String? _officialSignature;
 
+  // ==========================================================================
+  // INIT
+  // ==========================================================================
+
   @override
   void initState() {
     super.initState();
@@ -72,6 +83,7 @@ class _GrowthChartsPageState
   Future<void> _reload() async {
     setState(() {
       _officialFuture = null;
+
       _officialSignature = null;
 
       _measurementsFuture =
@@ -83,7 +95,7 @@ class _GrowthChartsPageState
   }
 
   // ==========================================================================
-  // PREPARAR CÁLCULO OMS
+  // PREPARAR DATOS OMS
   // ==========================================================================
 
   Future<OfficialWhoGrowthChartData>
@@ -103,17 +115,22 @@ class _GrowthChartsPageState
                   '${item.headCircumferenceCm}|'
                   '${item.measurementType.name}',
             )
-            .join('||');
+            .join(
+              '||',
+            );
 
     if (_officialFuture == null ||
         _officialSignature != signature) {
-      _officialSignature = signature;
+      _officialSignature =
+          signature;
 
       _officialFuture =
           WhoGrowthService.instance
               .buildOfficial(
-        child: widget.child,
-        measurements: measurements,
+        child:
+            widget.child,
+        measurements:
+            measurements,
       );
     }
 
@@ -141,31 +158,37 @@ class _GrowthChartsPageState
                 Brightness.dark;
 
         return Scaffold(
-          backgroundColor: dark
-              ? const Color(
-                  0xFF15131A,
-                )
-              : const Color(
-                  0xFFFAF7F2,
-                ),
+          backgroundColor:
+              dark
+                  ? const Color(
+                      0xFF15131A,
+                    )
+                  : const Color(
+                      0xFFFAF7F2,
+                    ),
 
           // ==================================================================
           // APP BAR
           // ==================================================================
 
-          appBar: AppBar(
-            backgroundColor: dark
-                ? const Color(
-                    0xFF211B2E,
-                  )
-                : Colors.white,
-            foregroundColor: dark
-                ? Colors.white
-                : const Color(
-                    0xFF2D2D2D,
-                  ),
-            elevation: 0,
-            title: Text(
+          appBar:
+              AppBar(
+            backgroundColor:
+                dark
+                    ? const Color(
+                        0xFF211B2E,
+                      )
+                    : Colors.white,
+            foregroundColor:
+                dark
+                    ? Colors.white
+                    : const Color(
+                        0xFF2D2D2D,
+                      ),
+            elevation:
+                0,
+            title:
+                Text(
               T.txt(
                 'growthChartsTitle',
               ),
@@ -187,8 +210,7 @@ class _GrowthChartsPageState
                     _reload,
                 icon:
                     const Icon(
-                  Icons
-                      .refresh_rounded,
+                  Icons.refresh_rounded,
                 ),
               ),
             ],
@@ -198,8 +220,9 @@ class _GrowthChartsPageState
           // CONTENIDO
           // ==================================================================
 
-          body: FutureBuilder<
-              List<GrowthMeasurement>>(
+          body:
+              FutureBuilder<
+                  List<GrowthMeasurement>>(
             future:
                 _measurementsFuture,
             builder: (
@@ -207,10 +230,11 @@ class _GrowthChartsPageState
               snapshot,
             ) {
               // --------------------------------------------------------------
-              // CARGANDO CONTROLES
+              // CARGANDO
               // --------------------------------------------------------------
 
-              if (snapshot.connectionState ==
+              if (snapshot
+                      .connectionState ==
                   ConnectionState.waiting) {
                 return const Center(
                   child:
@@ -231,8 +255,7 @@ class _GrowthChartsPageState
                 );
               }
 
-              final List<
-                      GrowthMeasurement>
+              final List<GrowthMeasurement>
                   measurements =
                   snapshot.data ??
                       <GrowthMeasurement>[];
@@ -249,7 +272,7 @@ class _GrowthChartsPageState
               }
 
               // --------------------------------------------------------------
-              // CARGAR TABLAS OMS + CALCULAR PUNTOS
+              // DATOS OMS
               // --------------------------------------------------------------
 
               return FutureBuilder<
@@ -338,8 +361,61 @@ class _GrowthChartsContent
 
 class _GrowthChartsContentState
     extends State<_GrowthChartsContent> {
+  // ==========================================================================
+  // SELECCIÓN
+  // ==========================================================================
+
   _GrowthChartType _selected =
       _GrowthChartType.weightAge;
+
+  // ==========================================================================
+  // CAMBIO AUTOMÁTICO PESO/LONGITUD -> PESO/TALLA
+  // ==========================================================================
+
+  static const int
+      _standingHeightFromDay =
+      731;
+
+  // ==========================================================================
+  // EDAD ACTUAL DEL NIÑO EN DÍAS
+  // ==========================================================================
+
+  int get _childAgeDays {
+    final DateTime birth =
+        DateTime(
+      widget.child.birthDate.year,
+      widget.child.birthDate.month,
+      widget.child.birthDate.day,
+    );
+
+    final DateTime now =
+        DateTime.now();
+
+    final DateTime today =
+        DateTime(
+      now.year,
+      now.month,
+      now.day,
+    );
+
+    return today
+        .difference(
+          birth,
+        )
+        .inDays;
+  }
+
+  // ==========================================================================
+  // ¿USA PESO PARA TALLA?
+  // ==========================================================================
+
+  bool get _usesWeightForHeight =>
+      _childAgeDays >=
+      _standingHeightFromDay;
+
+  // ==========================================================================
+  // INIT
+  // ==========================================================================
 
   @override
   void initState() {
@@ -347,6 +423,10 @@ class _GrowthChartsContentState
 
     _ensureValidSelection();
   }
+
+  // ==========================================================================
+  // ACTUALIZACIÓN
+  // ==========================================================================
 
   @override
   void didUpdateWidget(
@@ -375,7 +455,9 @@ class _GrowthChartsContentState
       if (_isAvailable(
         type,
       )) {
-        _selected = type;
+        _selected =
+            type;
+
         return;
       }
     }
@@ -389,11 +471,19 @@ class _GrowthChartsContentState
     _GrowthChartType type,
   ) {
     switch (type) {
+      // ----------------------------------------------------------------------
+      // PESO / EDAD
+      // ----------------------------------------------------------------------
+
       case _GrowthChartType.weightAge:
         return widget
             .data
             .weightForAge
             .isNotEmpty;
+
+      // ----------------------------------------------------------------------
+      // TALLA / EDAD
+      // ----------------------------------------------------------------------
 
       case _GrowthChartType.heightAge:
         return widget
@@ -401,11 +491,19 @@ class _GrowthChartsContentState
             .lengthHeightForAge
             .isNotEmpty;
 
+      // ----------------------------------------------------------------------
+      // IMC / EDAD
+      // ----------------------------------------------------------------------
+
       case _GrowthChartType.bmiAge:
         return widget
             .data
             .bmiForAge
             .isNotEmpty;
+
+      // ----------------------------------------------------------------------
+      // CABEZA / EDAD
+      // ----------------------------------------------------------------------
 
       case _GrowthChartType.headAge:
         return widget
@@ -413,22 +511,20 @@ class _GrowthChartsContentState
             .headCircumferenceForAge
             .isNotEmpty;
 
-      case _GrowthChartType.weightLength:
-        return widget
-            .data
-            .weightForLength
-            .isNotEmpty;
+      // ----------------------------------------------------------------------
+      // PESO / LONGITUD O PESO / TALLA
+      //
+      // NUNCA SE BLOQUEA.
+      // ----------------------------------------------------------------------
 
-      case _GrowthChartType.weightHeight:
-        return widget
-            .data
-            .weightForHeight
-            .isNotEmpty;
+      case _GrowthChartType
+            .weightLengthHeight:
+        return true;
     }
   }
 
   // ==========================================================================
-  // LABEL
+  // LABEL DEL SELECTOR
   // ==========================================================================
 
   String _selectorLabel(
@@ -455,20 +551,22 @@ class _GrowthChartsContentState
           'growthSelectorHead',
         );
 
-      case _GrowthChartType.weightLength:
+      case _GrowthChartType
+            .weightLengthHeight:
+        if (_usesWeightForHeight) {
+          return T.txt(
+            'growthSelectorWeightHeight',
+          );
+        }
+
         return T.txt(
           'growthSelectorWeightLength',
-        );
-
-      case _GrowthChartType.weightHeight:
-        return T.txt(
-          'growthSelectorWeightHeight',
         );
     }
   }
 
   // ==========================================================================
-  // ICONO
+  // ICONO DEL SELECTOR
   // ==========================================================================
 
   IconData _selectorIcon(
@@ -491,18 +589,20 @@ class _GrowthChartsContentState
         return Icons
             .radio_button_unchecked_rounded;
 
-      case _GrowthChartType.weightLength:
+      case _GrowthChartType
+            .weightLengthHeight:
+        if (_usesWeightForHeight) {
+          return Icons
+              .height_rounded;
+        }
+
         return Icons
             .swap_horiz_rounded;
-
-      case _GrowthChartType.weightHeight:
-        return Icons
-            .height_rounded;
     }
   }
 
   // ==========================================================================
-  // ESPECIFICACIÓN DE GRÁFICA
+  // ESPECIFICACIÓN DE LA GRÁFICA
   // ==========================================================================
 
   _GrowthChartSpec _chartSpec() {
@@ -540,7 +640,7 @@ class _GrowthChartsContentState
         );
 
       // ----------------------------------------------------------------------
-      // LONGITUD / TALLA / EDAD
+      // LONGITUD / TALLA PARA LA EDAD
       // ----------------------------------------------------------------------
 
       case _GrowthChartType.heightAge:
@@ -604,7 +704,7 @@ class _GrowthChartsContentState
         );
 
       // ----------------------------------------------------------------------
-      // CABEZA / EDAD
+      // PERÍMETRO CEFÁLICO / EDAD
       // ----------------------------------------------------------------------
 
       case _GrowthChartType.headAge:
@@ -636,10 +736,52 @@ class _GrowthChartsContentState
         );
 
       // ----------------------------------------------------------------------
-      // PESO / LONGITUD
+      // PESO / LONGITUD O PESO / TALLA
+      //
+      // CAMBIA AUTOMÁTICAMENTE DEPENDIENDO DE LA EDAD ACTUAL DEL NIÑO.
       // ----------------------------------------------------------------------
 
-      case _GrowthChartType.weightLength:
+      case _GrowthChartType
+            .weightLengthHeight:
+        // --------------------------------------------------------------------
+        // DESDE 731 DÍAS:
+        // PESO PARA TALLA
+        // --------------------------------------------------------------------
+
+        if (_usesWeightForHeight) {
+          return _GrowthChartSpec(
+            title:
+                T.txt(
+              'weightForHeightChart',
+            ),
+            description:
+                T.txt(
+              'weightForHeightChartDescription',
+            ),
+            table:
+                widget
+                    .data
+                    .weightForHeightTable,
+            points:
+                widget
+                    .data
+                    .weightForHeight,
+            xLabel:
+                T.txt(
+              'heightCmShort',
+            ),
+            yLabel:
+                T.txt(
+              'weightKgShort',
+            ),
+          );
+        }
+
+        // --------------------------------------------------------------------
+        // MENOR DE 731 DÍAS:
+        // PESO PARA LONGITUD
+        // --------------------------------------------------------------------
+
         return _GrowthChartSpec(
           title:
               T.txt(
@@ -660,38 +802,6 @@ class _GrowthChartsContentState
           xLabel:
               T.txt(
             'lengthCmShort',
-          ),
-          yLabel:
-              T.txt(
-            'weightKgShort',
-          ),
-        );
-
-      // ----------------------------------------------------------------------
-      // PESO / TALLA
-      // ----------------------------------------------------------------------
-
-      case _GrowthChartType.weightHeight:
-        return _GrowthChartSpec(
-          title:
-              T.txt(
-            'weightForHeightChart',
-          ),
-          description:
-              T.txt(
-            'weightForHeightChartDescription',
-          ),
-          table:
-              widget
-                  .data
-                  .weightForHeightTable,
-          points:
-              widget
-                  .data
-                  .weightForHeight,
-          xLabel:
-              T.txt(
-            'heightCmShort',
           ),
           yLabel:
               T.txt(
@@ -724,7 +834,8 @@ class _GrowthChartsContentState
         _chartSpec();
 
     return SafeArea(
-      child: ListView(
+      child:
+          ListView(
         padding:
             const EdgeInsets.fromLTRB(
           18,
@@ -773,7 +884,8 @@ class _GrowthChartsContentState
                 ),
               ),
             ),
-            child: Row(
+            child:
+                Row(
               children: [
                 ChildAvatar(
                   child:
@@ -790,7 +902,8 @@ class _GrowthChartsContentState
                 ),
 
                 Expanded(
-                  child: Column(
+                  child:
+                      Column(
                     crossAxisAlignment:
                         CrossAxisAlignment.start,
                     children: [
@@ -808,11 +921,12 @@ class _GrowthChartsContentState
                               20,
                           fontWeight:
                               FontWeight.w800,
-                          color: widget.dark
-                              ? Colors.white
-                              : const Color(
-                                  0xFF2D2D2D,
-                                ),
+                          color:
+                              widget.dark
+                                  ? Colors.white
+                                  : const Color(
+                                      0xFF2D2D2D,
+                                    ),
                         ),
                       ),
 
@@ -823,9 +937,7 @@ class _GrowthChartsContentState
 
                       Text(
                         childAgeText(
-                          widget
-                              .child
-                              .birthDate,
+                          widget.child.birthDate,
                         ),
                         style:
                             TextStyle(
@@ -833,9 +945,10 @@ class _GrowthChartsContentState
                               'Baloo2',
                           fontSize:
                               14,
-                          color: widget.dark
-                              ? Colors.white60
-                              : Colors.black54,
+                          color:
+                              widget.dark
+                                  ? Colors.white60
+                                  : Colors.black54,
                         ),
                       ),
                     ],
@@ -850,8 +963,7 @@ class _GrowthChartsContentState
                   decoration:
                       BoxDecoration(
                     color:
-                        growthColor
-                            .withValues(
+                        growthColor.withValues(
                       alpha:
                           0.12,
                     ),
@@ -862,8 +974,7 @@ class _GrowthChartsContentState
                   ),
                   child:
                       const Icon(
-                    Icons
-                        .insert_chart_rounded,
+                    Icons.insert_chart_rounded,
                     color:
                         growthColor,
                     size:
@@ -880,7 +991,7 @@ class _GrowthChartsContentState
           ),
 
           // ==================================================================
-          // REFERENCIA OMS
+          // NOTA OMS
           // ==================================================================
 
           Container(
@@ -902,13 +1013,13 @@ class _GrowthChartsContentState
                 19,
               ),
             ),
-            child: Row(
+            child:
+                Row(
               crossAxisAlignment:
                   CrossAxisAlignment.start,
               children: [
                 const Icon(
-                  Icons
-                      .health_and_safety_outlined,
+                  Icons.health_and_safety_outlined,
                   color:
                       growthColor,
                 ),
@@ -919,7 +1030,8 @@ class _GrowthChartsContentState
                 ),
 
                 Expanded(
-                  child: Text(
+                  child:
+                      Text(
                     T.txt(
                       'whoGrowthReferenceNote',
                     ),
@@ -931,9 +1043,10 @@ class _GrowthChartsContentState
                           13.5,
                       height:
                           1.3,
-                      color: widget.dark
-                          ? Colors.white70
-                          : Colors.black87,
+                      color:
+                          widget.dark
+                              ? Colors.white70
+                              : Colors.black87,
                     ),
                   ),
                 ),
@@ -947,7 +1060,7 @@ class _GrowthChartsContentState
           ),
 
           // ==================================================================
-          // SELECTOR
+          // TÍTULO SELECTOR
           // ==================================================================
 
           Text(
@@ -962,11 +1075,12 @@ class _GrowthChartsContentState
                   21,
               fontWeight:
                   FontWeight.w800,
-              color: widget.dark
-                  ? Colors.white
-                  : const Color(
-                      0xFF4A2C82,
-                    ),
+              color:
+                  widget.dark
+                      ? Colors.white
+                      : const Color(
+                          0xFF4A2C82,
+                        ),
             ),
           ),
 
@@ -985,9 +1099,10 @@ class _GrowthChartsContentState
                   'Baloo2',
               fontSize:
                   14,
-              color: widget.dark
-                  ? Colors.white60
-                  : Colors.black54,
+              color:
+                  widget.dark
+                      ? Colors.white60
+                      : Colors.black54,
             ),
           ),
 
@@ -995,6 +1110,10 @@ class _GrowthChartsContentState
             height:
                 13,
           ),
+
+          // ==================================================================
+          // SELECTOR DE 5 GRÁFICAS
+          // ==================================================================
 
           SizedBox(
             height:
@@ -1025,6 +1144,11 @@ class _GrowthChartsContentState
                     _GrowthChartType
                         .values[index];
 
+                final bool available =
+                    _isAvailable(
+                  type,
+                );
+
                 return _ChartSelectorCard(
                   label:
                       _selectorLabel(
@@ -1038,15 +1162,11 @@ class _GrowthChartsContentState
                       _selected ==
                           type,
                   available:
-                      _isAvailable(
-                    type,
-                  ),
+                      available,
                   dark:
                       widget.dark,
                   onTap:
-                      _isAvailable(
-                    type,
-                  )
+                      available
                           ? () {
                               setState(
                                 () {
@@ -1067,7 +1187,7 @@ class _GrowthChartsContentState
           ),
 
           // ==================================================================
-          // UNA SOLA GRÁFICA
+          // SOLO UNA GRÁFICA A LA VEZ
           // ==================================================================
 
           AnimatedSwitcher(
@@ -1110,9 +1230,9 @@ class _GrowthChartsContentState
             child:
                 _OfficialGrowthChartCard(
               key:
-                  ValueKey<
-                      _GrowthChartType>(
-                _selected,
+                  ValueKey<String>(
+                '${_selected.name}-'
+                '${_usesWeightForHeight ? 'height' : 'length'}',
               ),
               spec:
                   spec,
@@ -1143,8 +1263,7 @@ class _GrowthChartsContentState
               decoration:
                   BoxDecoration(
                 color:
-                    Colors.orange
-                        .withValues(
+                    Colors.orange.withValues(
                   alpha:
                       0.09,
                 ),
@@ -1153,13 +1272,13 @@ class _GrowthChartsContentState
                   18,
                 ),
               ),
-              child: Row(
+              child:
+                  Row(
                 crossAxisAlignment:
                     CrossAxisAlignment.start,
                 children: [
                   const Icon(
-                    Icons
-                        .info_outline_rounded,
+                    Icons.info_outline_rounded,
                     color:
                         Colors.orange,
                   ),
@@ -1170,7 +1289,8 @@ class _GrowthChartsContentState
                   ),
 
                   Expanded(
-                    child: Text(
+                    child:
+                        Text(
                       T.txt(
                         'growthSkippedMeasurements',
                       ).replaceAll(
@@ -1184,9 +1304,10 @@ class _GrowthChartsContentState
                           TextStyle(
                         fontFamily:
                             'Baloo2',
-                        color: widget.dark
-                            ? Colors.white70
-                            : Colors.black87,
+                        color:
+                            widget.dark
+                                ? Colors.white70
+                                : Colors.black87,
                       ),
                     ),
                   ),
@@ -1218,9 +1339,10 @@ class _GrowthChartsContentState
                   13,
               height:
                   1.35,
-              color: widget.dark
-                  ? Colors.white54
-                  : Colors.black54,
+              color:
+                  widget.dark
+                      ? Colors.white54
+                      : Colors.black54,
             ),
           ),
         ],
@@ -1230,7 +1352,7 @@ class _GrowthChartsContentState
 }
 
 // ============================================================================
-// ESPECIFICACIÓN
+// ESPECIFICACIÓN DE GRÁFICA
 // ============================================================================
 
 class _GrowthChartSpec {
@@ -1258,7 +1380,7 @@ class _GrowthChartSpec {
 }
 
 // ============================================================================
-// SELECTOR
+// TARJETA DEL SELECTOR
 // ============================================================================
 
 class _ChartSelectorCard
@@ -1316,7 +1438,8 @@ class _ChartSelectorCard
           available,
       label:
           label,
-      child: AnimatedOpacity(
+      child:
+          AnimatedOpacity(
         duration:
             const Duration(
           milliseconds:
@@ -1326,14 +1449,16 @@ class _ChartSelectorCard
             available
                 ? 1
                 : 0.42,
-        child: Material(
+        child:
+            Material(
           color:
               Colors.transparent,
           borderRadius:
               BorderRadius.circular(
             21,
           ),
-          child: InkWell(
+          child:
+              InkWell(
             onTap:
                 onTap,
             borderRadius:
@@ -1358,66 +1483,67 @@ class _ChartSelectorCard
               ),
               decoration:
                   BoxDecoration(
-                color: selected
-                    ? selectedColor
-                    : dark
-                        ? const Color(
-                            0xFF211B2E,
-                          )
-                        : Colors.white,
+                color:
+                    selected
+                        ? selectedColor
+                        : dark
+                            ? const Color(
+                                0xFF211B2E,
+                              )
+                            : Colors.white,
                 borderRadius:
                     BorderRadius.circular(
                   21,
                 ),
                 border:
                     Border.all(
-                  color: selected
-                      ? selectedColor
-                      : available
+                  color:
+                      selected
                           ? selectedColor
-                              .withValues(
-                              alpha:
-                                  0.18,
-                            )
-                          : Colors.grey
-                              .withValues(
-                              alpha:
-                                  0.20,
-                            ),
+                          : available
+                              ? selectedColor.withValues(
+                                  alpha:
+                                      0.18,
+                                )
+                              : Colors.grey.withValues(
+                                  alpha:
+                                      0.20,
+                                ),
                   width:
                       selected
                           ? 1.8
                           : 1,
                 ),
-                boxShadow: selected
-                    ? [
-                        BoxShadow(
-                          color:
-                              selectedColor
-                                  .withValues(
-                            alpha:
-                                0.20,
-                          ),
-                          blurRadius:
-                              13,
-                          offset:
-                              const Offset(
-                            0,
-                            5,
-                          ),
-                        ),
-                      ]
-                    : const [],
+                boxShadow:
+                    selected
+                        ? [
+                            BoxShadow(
+                              color:
+                                  selectedColor
+                                      .withValues(
+                                alpha:
+                                    0.20,
+                              ),
+                              blurRadius:
+                                  13,
+                              offset:
+                                  const Offset(
+                                0,
+                                5,
+                              ),
+                            ),
+                          ]
+                        : const [],
               ),
-              child: Column(
+              child:
+                  Column(
                 mainAxisAlignment:
                     MainAxisAlignment.center,
                 children: [
                   Icon(
                     available
                         ? icon
-                        : Icons
-                            .lock_outline_rounded,
+                        : Icons.lock_outline_rounded,
                     size:
                         28,
                     color:
@@ -1480,6 +1606,10 @@ class _OfficialGrowthChartCard
     required this.pointColor,
   });
 
+  // ==========================================================================
+  // FORMATEAR VALOR
+  // ==========================================================================
+
   String _formatValue(
     double value,
   ) {
@@ -1495,6 +1625,10 @@ class _OfficialGrowthChartCard
     );
   }
 
+  // ==========================================================================
+  // FORMATEAR Z
+  // ==========================================================================
+
   String _formatZ(
     double value,
   ) {
@@ -1507,10 +1641,18 @@ class _OfficialGrowthChartCard
     );
   }
 
+  // ==========================================================================
+  // BUILD
+  // ==========================================================================
+
   @override
   Widget build(
     BuildContext context,
   ) {
+    // ------------------------------------------------------------------------
+    // SIN DATOS
+    // ------------------------------------------------------------------------
+
     if (spec.points.isEmpty) {
       return _EmptyChartCard(
         title:
@@ -1536,11 +1678,12 @@ class _OfficialGrowthChartCard
       ),
       decoration:
           BoxDecoration(
-        color: dark
-            ? const Color(
-                0xFF211B2E,
-              )
-            : Colors.white,
+        color:
+            dark
+                ? const Color(
+                    0xFF211B2E,
+                  )
+                : Colors.white,
         borderRadius:
             BorderRadius.circular(
           24,
@@ -1556,7 +1699,8 @@ class _OfficialGrowthChartCard
           ),
         ),
       ),
-      child: Column(
+      child:
+          Column(
         crossAxisAlignment:
             CrossAxisAlignment.start,
         children: [
@@ -1574,11 +1718,12 @@ class _OfficialGrowthChartCard
                   20,
               fontWeight:
                   FontWeight.w800,
-              color: dark
-                  ? Colors.white
-                  : const Color(
-                      0xFF2D2D2D,
-                    ),
+              color:
+                  dark
+                      ? Colors.white
+                      : const Color(
+                          0xFF2D2D2D,
+                        ),
             ),
           ),
 
@@ -1586,6 +1731,10 @@ class _OfficialGrowthChartCard
             height:
                 4,
           ),
+
+          // ==================================================================
+          // DESCRIPCIÓN
+          // ==================================================================
 
           Text(
             spec.description,
@@ -1597,9 +1746,10 @@ class _OfficialGrowthChartCard
                   14,
               height:
                   1.25,
-              color: dark
-                  ? Colors.white60
-                  : Colors.black54,
+              color:
+                  dark
+                      ? Colors.white60
+                      : Colors.black54,
             ),
           ),
 
@@ -1609,7 +1759,7 @@ class _OfficialGrowthChartCard
           ),
 
           // ==================================================================
-          // ÚLTIMO PUNTO
+          // INFORMACIÓN DEL ÚLTIMO CONTROL
           // ==================================================================
 
           Wrap(
@@ -1620,10 +1770,10 @@ class _OfficialGrowthChartCard
             children: [
               _InfoChip(
                 icon:
-                    Icons
-                        .fiber_manual_record_rounded,
+                    Icons.fiber_manual_record_rounded,
                 text:
-                    '${_formatValue(latest.value)} ${spec.table.unit}',
+                    '${_formatValue(latest.value)} '
+                    '${spec.table.unit}',
                 dark:
                     dark,
                 color:
@@ -1631,8 +1781,7 @@ class _OfficialGrowthChartCard
               ),
               _InfoChip(
                 icon:
-                    Icons
-                        .analytics_outlined,
+                    Icons.analytics_outlined,
                 text:
                     'Z ${_formatZ(latest.zScore)}',
                 dark:
@@ -1644,8 +1793,7 @@ class _OfficialGrowthChartCard
               ),
               _InfoChip(
                 icon:
-                    Icons
-                        .calendar_month_rounded,
+                    Icons.calendar_month_rounded,
                 text:
                     simpleDateText(
                   latest
@@ -1680,30 +1828,30 @@ class _OfficialGrowthChartCard
                 Clip.antiAlias,
             decoration:
                 BoxDecoration(
-              color: dark
-                  ? const Color(
-                      0xFF17141C,
-                    )
-                  : const Color(
-                      0xFFFEFEFE,
-                    ),
+              color:
+                  dark
+                      ? const Color(
+                          0xFF17141C,
+                        )
+                      : const Color(
+                          0xFFFEFEFE,
+                        ),
               borderRadius:
                   BorderRadius.circular(
                 18,
               ),
               border:
                   Border.all(
-                color: dark
-                    ? Colors.white
-                        .withValues(
-                          alpha:
-                              0.06,
-                        )
-                    : Colors.black
-                        .withValues(
-                          alpha:
-                              0.06,
-                        ),
+                color:
+                    dark
+                        ? Colors.white.withValues(
+                            alpha:
+                                0.06,
+                          )
+                        : Colors.black.withValues(
+                            alpha:
+                                0.06,
+                          ),
               ),
             ),
             child:
@@ -1718,7 +1866,8 @@ class _OfficialGrowthChartCard
               ),
               constrained:
                   false,
-              child: SizedBox(
+              child:
+                  SizedBox(
                 width:
                     900,
                 height:
@@ -1763,11 +1912,14 @@ class _OfficialGrowthChartCard
                 10,
           ),
 
+          // ==================================================================
+          // ZOOM
+          // ==================================================================
+
           Row(
             children: [
               const Icon(
-                Icons
-                    .zoom_in_rounded,
+                Icons.zoom_in_rounded,
                 size:
                     18,
                 color:
@@ -1782,7 +1934,8 @@ class _OfficialGrowthChartCard
               ),
 
               Expanded(
-                child: Text(
+                child:
+                    Text(
                   T.txt(
                     'growthChartZoomHint',
                   ),
@@ -1792,9 +1945,10 @@ class _OfficialGrowthChartCard
                         'Baloo2',
                     fontSize:
                         13,
-                    color: dark
-                        ? Colors.white54
-                        : Colors.black54,
+                    color:
+                        dark
+                            ? Colors.white54
+                            : Colors.black54,
                   ),
                 ),
               ),
@@ -1852,7 +2006,8 @@ class _InfoChip extends StatelessWidget {
           14,
         ),
       ),
-      child: Row(
+      child:
+          Row(
         mainAxisSize:
             MainAxisSize.min,
         children: [
@@ -1879,11 +2034,12 @@ class _InfoChip extends StatelessWidget {
                   12.5,
               fontWeight:
                   FontWeight.w700,
-              color: dark
-                  ? Colors.white
-                  : const Color(
-                      0xFF333333,
-                    ),
+              color:
+                  dark
+                      ? Colors.white
+                      : const Color(
+                          0xFF333333,
+                        ),
             ),
           ),
         ],
@@ -1893,7 +2049,7 @@ class _InfoChip extends StatelessWidget {
 }
 
 // ============================================================================
-// LEYENDA Z
+// LEYENDA Z-SCORE
 // ============================================================================
 
 class _ZScoreLegend
@@ -1989,6 +2145,10 @@ class _ZScoreLegend
   }
 }
 
+// ============================================================================
+// ELEMENTO DE LEYENDA
+// ============================================================================
+
 class _LegendItem
     extends StatelessWidget {
   final String text;
@@ -2040,9 +2200,10 @@ class _LegendItem
                 'Baloo2',
             fontSize:
                 11.5,
-            color: dark
-                ? Colors.white60
-                : Colors.black54,
+            color:
+                dark
+                    ? Colors.white60
+                    : Colors.black54,
           ),
         ),
       ],
@@ -2051,7 +2212,7 @@ class _LegendItem
 }
 
 // ============================================================================
-// CUSTOM PAINTER OMS
+// PAINTER OMS
 // ============================================================================
 
 class _WhoGrowthChartPainter
@@ -2080,6 +2241,10 @@ class _WhoGrowthChartPainter
     required this.xLabel,
     required this.yLabel,
   });
+
+  // ==========================================================================
+  // MÁRGENES
+  // ==========================================================================
 
   static const double _left =
       68;
@@ -2147,43 +2312,43 @@ class _WhoGrowthChartPainter
     final double yMax =
         yRange.max;
 
+    // ========================================================================
+    // MAP X
+    // ========================================================================
+
     double mapX(
       double x,
     ) {
       final double fraction =
           (x - xMin) /
-              (xMax - xMin);
+              (xMax -
+                  xMin);
 
       return plot.left +
-          (fraction *
-              plot.width);
+          fraction *
+              plot.width;
     }
+
+    // ========================================================================
+    // MAP Y
+    // ========================================================================
 
     double mapY(
       double y,
     ) {
       final double fraction =
           (y - yMin) /
-              (yMax - yMin);
+              (yMax -
+                  yMin);
 
       return plot.bottom -
-          (fraction *
-              plot.height);
+          fraction *
+              plot.height;
     }
 
     // ========================================================================
     // FONDO
     // ========================================================================
-
-    final Paint plotBackground =
-        Paint()
-          ..color = dark
-              ? const Color(
-                  0xFF1E1A25,
-                )
-              : const Color(
-                  0xFFFFFFFF,
-                );
 
     canvas.drawRRect(
       RRect.fromRectAndRadius(
@@ -2192,7 +2357,13 @@ class _WhoGrowthChartPainter
           10,
         ),
       ),
-      plotBackground,
+      Paint()
+        ..color =
+            dark
+                ? const Color(
+                    0xFF1E1A25,
+                  )
+                : Colors.white,
     );
 
     // ========================================================================
@@ -2211,20 +2382,14 @@ class _WhoGrowthChartPainter
 
       final double value =
           yMin +
-              ((yMax - yMin) *
-                  fraction);
+              (yMax -
+                      yMin) *
+                  fraction;
 
       final double y =
           mapY(
         value,
       );
-
-      final Paint grid =
-          Paint()
-            ..color =
-                gridColor
-            ..strokeWidth =
-                1;
 
       canvas.drawLine(
         Offset(
@@ -2235,7 +2400,11 @@ class _WhoGrowthChartPainter
           plot.right,
           y,
         ),
-        grid,
+        Paint()
+          ..color =
+              gridColor
+          ..strokeWidth =
+              1,
       );
 
       _drawText(
@@ -2247,15 +2416,14 @@ class _WhoGrowthChartPainter
         ),
         offset:
             Offset(
-          plot.left - 9,
+          plot.left -
+              9,
           y,
         ),
         color:
             axisColor,
         fontSize:
             11,
-        align:
-            TextAlign.right,
         anchorRight:
             true,
         centerVertical:
@@ -2264,153 +2432,48 @@ class _WhoGrowthChartPainter
     }
 
     // ========================================================================
-    // GRID VERTICAL + ETIQUETAS
+    // EJE X
     // ========================================================================
 
     if (table.xUnit ==
         'age_days') {
-      final List<double> yearDays =
-          <double>[
-        0,
-        365.25,
-        730.5,
-        1095.75,
-        1461,
-        1826.25,
-      ];
-
-      for (int i = 0;
-          i < yearDays.length;
-          i++) {
-        final double xValue =
-            yearDays[i];
-
-        if (xValue <
-                xMin ||
-            xValue >
-                xMax) {
-          continue;
-        }
-
-        final double x =
-            mapX(
-          xValue,
-        );
-
-        canvas.drawLine(
-          Offset(
-            x,
-            plot.top,
-          ),
-          Offset(
-            x,
-            plot.bottom,
-          ),
-          Paint()
-            ..color =
-                gridColor
-            ..strokeWidth =
-                1,
-        );
-
-        final String text;
-
-        if (i == 0) {
-          text =
-              '0';
-        } else {
-          text =
-              spanish
-                  ? '${i}a'
-                  : '${i}y';
-        }
-
-        _drawText(
-          canvas:
-              canvas,
-          text:
-              text,
-          offset:
-              Offset(
-            x,
-            plot.bottom +
-                12,
-          ),
-          color:
-              axisColor,
-          fontSize:
-              11,
-          align:
-              TextAlign.center,
-          centerHorizontal:
-              true,
-        );
-      }
+      _drawAgeAxis(
+        canvas:
+            canvas,
+        plot:
+            plot,
+        mapX:
+            mapX,
+        xMin:
+            xMin,
+        xMax:
+            xMax,
+        gridColor:
+            gridColor,
+        axisColor:
+            axisColor,
+      );
     } else {
-      const int xTicks =
-          6;
-
-      for (int i = 0;
-          i <= xTicks;
-          i++) {
-        final double fraction =
-            i /
-                xTicks;
-
-        final double value =
-            xMin +
-                ((xMax -
-                        xMin) *
-                    fraction);
-
-        final double x =
-            mapX(
-          value,
-        );
-
-        canvas.drawLine(
-          Offset(
-            x,
-            plot.top,
-          ),
-          Offset(
-            x,
-            plot.bottom,
-          ),
-          Paint()
-            ..color =
-                gridColor
-            ..strokeWidth =
-                1,
-        );
-
-        _drawText(
-          canvas:
-              canvas,
-          text:
-              value.toStringAsFixed(
-            0,
-          ),
-          offset:
-              Offset(
-            x,
-            plot.bottom +
-                12,
-          ),
-          color:
-              axisColor,
-          fontSize:
-              11,
-          align:
-              TextAlign.center,
-          centerHorizontal:
-              true,
-        );
-      }
+      _drawMeasurementAxis(
+        canvas:
+            canvas,
+        plot:
+            plot,
+        mapX:
+            mapX,
+        xMin:
+            xMin,
+        xMax:
+            xMax,
+        gridColor:
+            gridColor,
+        axisColor:
+            axisColor,
+      );
     }
 
     // ========================================================================
-    // EJES
+    // EJES PRINCIPALES
     // ========================================================================
 
     final Paint axisPaint =
@@ -2445,7 +2508,7 @@ class _WhoGrowthChartPainter
     );
 
     // ========================================================================
-    // LABEL DE EJES
+    // LABEL EJE X
     // ========================================================================
 
     _drawText(
@@ -2470,6 +2533,10 @@ class _WhoGrowthChartPainter
       centerVertical:
           true,
     );
+
+    // ========================================================================
+    // LABEL EJE Y
+    // ========================================================================
 
     _drawText(
       canvas:
@@ -2743,6 +2810,10 @@ class _WhoGrowthChartPainter
               points.length -
                   1;
 
+      // ----------------------------------------------------------------------
+      // HALO DEL ÚLTIMO PUNTO
+      // ----------------------------------------------------------------------
+
       if (latest) {
         canvas.drawCircle(
           position,
@@ -2756,6 +2827,10 @@ class _WhoGrowthChartPainter
         );
       }
 
+      // ----------------------------------------------------------------------
+      // PUNTO
+      // ----------------------------------------------------------------------
+
       canvas.drawCircle(
         position,
         latest
@@ -2767,6 +2842,10 @@ class _WhoGrowthChartPainter
           ..style =
               PaintingStyle.fill,
       );
+
+      // ----------------------------------------------------------------------
+      // BORDE BLANCO
+      // ----------------------------------------------------------------------
 
       canvas.drawCircle(
         position,
@@ -2785,6 +2864,173 @@ class _WhoGrowthChartPainter
   }
 
   // ==========================================================================
+  // EJE DE EDAD
+  // ==========================================================================
+
+  void _drawAgeAxis({
+    required Canvas canvas,
+    required Rect plot,
+    required double Function(
+      double,
+    ) mapX,
+    required double xMin,
+    required double xMax,
+    required Color gridColor,
+    required Color axisColor,
+  }) {
+    const List<double> yearDays =
+        <double>[
+      0,
+      365.25,
+      730.5,
+      1095.75,
+      1461,
+      1826.25,
+    ];
+
+    for (int i = 0;
+        i < yearDays.length;
+        i++) {
+      final double value =
+          yearDays[i];
+
+      if (value <
+              xMin ||
+          value >
+              xMax) {
+        continue;
+      }
+
+      final double x =
+          mapX(
+        value,
+      );
+
+      canvas.drawLine(
+        Offset(
+          x,
+          plot.top,
+        ),
+        Offset(
+          x,
+          plot.bottom,
+        ),
+        Paint()
+          ..color =
+              gridColor
+          ..strokeWidth =
+              1,
+      );
+
+      final String text;
+
+      if (i == 0) {
+        text =
+            '0';
+      } else {
+        text =
+            spanish
+                ? '${i}a'
+                : '${i}y';
+      }
+
+      _drawText(
+        canvas:
+            canvas,
+        text:
+            text,
+        offset:
+            Offset(
+          x,
+          plot.bottom +
+              12,
+        ),
+        color:
+            axisColor,
+        fontSize:
+            11,
+        centerHorizontal:
+            true,
+      );
+    }
+  }
+
+  // ==========================================================================
+  // EJE DE LONGITUD / TALLA
+  // ==========================================================================
+
+  void _drawMeasurementAxis({
+    required Canvas canvas,
+    required Rect plot,
+    required double Function(
+      double,
+    ) mapX,
+    required double xMin,
+    required double xMax,
+    required Color gridColor,
+    required Color axisColor,
+  }) {
+    const int ticks =
+        6;
+
+    for (int i = 0;
+        i <= ticks;
+        i++) {
+      final double fraction =
+          i /
+              ticks;
+
+      final double value =
+          xMin +
+              (xMax -
+                      xMin) *
+                  fraction;
+
+      final double x =
+          mapX(
+        value,
+      );
+
+      canvas.drawLine(
+        Offset(
+          x,
+          plot.top,
+        ),
+        Offset(
+          x,
+          plot.bottom,
+        ),
+        Paint()
+          ..color =
+              gridColor
+          ..strokeWidth =
+              1,
+      );
+
+      _drawText(
+        canvas:
+            canvas,
+        text:
+            value.toStringAsFixed(
+          0,
+        ),
+        offset:
+            Offset(
+          x,
+          plot.bottom +
+              12,
+        ),
+        color:
+            axisColor,
+        fontSize:
+            11,
+        centerHorizontal:
+            true,
+      );
+    }
+  }
+
+  // ==========================================================================
   // RANGO Y
   // ==========================================================================
 
@@ -2794,6 +3040,10 @@ class _WhoGrowthChartPainter
 
     double maximum =
         double.negativeInfinity;
+
+    // ------------------------------------------------------------------------
+    // CURVAS OMS
+    // ------------------------------------------------------------------------
 
     for (final WhoGrowthRow row
         in table.rows) {
@@ -2810,6 +3060,10 @@ class _WhoGrowthChartPainter
       );
     }
 
+    // ------------------------------------------------------------------------
+    // MEDICIONES DEL NIÑO
+    // ------------------------------------------------------------------------
+
     for (final OfficialWhoGrowthPoint point
         in points) {
       minimum =
@@ -2825,6 +3079,10 @@ class _WhoGrowthChartPainter
       );
     }
 
+    // ------------------------------------------------------------------------
+    // FALLBACK
+    // ------------------------------------------------------------------------
+
     if (!minimum.isFinite ||
         !maximum.isFinite) {
       return const _YRange(
@@ -2834,6 +3092,10 @@ class _WhoGrowthChartPainter
             1,
       );
     }
+
+    // ------------------------------------------------------------------------
+    // EVITAR RANGO CERO
+    // ------------------------------------------------------------------------
 
     if ((maximum -
             minimum)
@@ -2845,6 +3107,10 @@ class _WhoGrowthChartPainter
       maximum +=
           1;
     }
+
+    // ------------------------------------------------------------------------
+    // MARGEN VISUAL
+    // ------------------------------------------------------------------------
 
     final double padding =
         (maximum -
@@ -2862,7 +3128,7 @@ class _WhoGrowthChartPainter
   }
 
   // ==========================================================================
-  // DIBUJAR CURVA
+  // DIBUJAR CURVA OMS
   // ==========================================================================
 
   void _drawReferenceCurve({
@@ -2883,6 +3149,10 @@ class _WhoGrowthChartPainter
   }) {
     final Path path =
         Path();
+
+    // ------------------------------------------------------------------------
+    // REDUCIR PUNTOS DE DIBUJO SIN ALTERAR LA TABLA ORIGINAL
+    // ------------------------------------------------------------------------
 
     final int sampleStep =
         math.max(
@@ -2919,7 +3189,8 @@ class _WhoGrowthChartPainter
           y,
         );
 
-        started = true;
+        started =
+            true;
       } else {
         path.lineTo(
           x,
@@ -2928,7 +3199,10 @@ class _WhoGrowthChartPainter
       }
     }
 
-    // Siempre incluir último punto.
+    // ------------------------------------------------------------------------
+    // INCLUIR SIEMPRE EL ÚLTIMO PUNTO
+    // ------------------------------------------------------------------------
+
     final WhoGrowthRow last =
         table.rows.last;
 
@@ -2959,7 +3233,7 @@ class _WhoGrowthChartPainter
     );
 
     // ------------------------------------------------------------------------
-    // ETIQUETA Z AL FINAL
+    // LABEL AL FINAL
     // ------------------------------------------------------------------------
 
     final double lastY =
@@ -2997,7 +3271,7 @@ class _WhoGrowthChartPainter
   }
 
   // ==========================================================================
-  // FORMATO EJE
+  // FORMATO NÚMEROS
   // ==========================================================================
 
   String _formatAxisNumber(
@@ -3025,7 +3299,7 @@ class _WhoGrowthChartPainter
   }
 
   // ==========================================================================
-  // TEXTO
+  // TEXTO DEL CANVAS
   // ==========================================================================
 
   void _drawText({
@@ -3036,8 +3310,6 @@ class _WhoGrowthChartPainter
     required double fontSize,
     FontWeight fontWeight =
         FontWeight.w400,
-    TextAlign align =
-        TextAlign.left,
     bool anchorRight =
         false,
     bool centerHorizontal =
@@ -3065,8 +3337,6 @@ class _WhoGrowthChartPainter
       ),
       textDirection:
           TextDirection.ltr,
-      textAlign:
-          align,
     )
           ..layout();
 
@@ -3169,21 +3439,32 @@ class _EmptyChartCard
       ),
       decoration:
           BoxDecoration(
-        color: dark
-            ? const Color(
-                0xFF211B2E,
-              )
-            : Colors.white,
+        color:
+            dark
+                ? const Color(
+                    0xFF211B2E,
+                  )
+                : Colors.white,
         borderRadius:
             BorderRadius.circular(
           22,
         ),
+        border:
+            Border.all(
+          color:
+              const Color(
+            0xFF00A896,
+          ).withValues(
+            alpha:
+                0.10,
+          ),
+        ),
       ),
-      child: Row(
+      child:
+          Row(
         children: [
           const Icon(
-            Icons
-                .insert_chart_outlined_rounded,
+            Icons.insert_chart_outlined_rounded,
             color:
                 Color(
               0xFF00A896,
@@ -3196,18 +3477,25 @@ class _EmptyChartCard
           ),
 
           Expanded(
-            child: Column(
+            child:
+                Column(
               crossAxisAlignment:
                   CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
                   style:
-                      const TextStyle(
+                      TextStyle(
                     fontFamily:
                         'Fredoka',
                     fontWeight:
                         FontWeight.w700,
+                    color:
+                        dark
+                            ? Colors.white
+                            : const Color(
+                                0xFF2D2D2D,
+                              ),
                   ),
                 ),
 
@@ -3224,9 +3512,10 @@ class _EmptyChartCard
                       TextStyle(
                     fontFamily:
                         'Baloo2',
-                    color: dark
-                        ? Colors.white60
-                        : Colors.black54,
+                    color:
+                        dark
+                            ? Colors.white60
+                            : Colors.black54,
                   ),
                 ),
               ],
@@ -3239,11 +3528,10 @@ class _EmptyChartCard
 }
 
 // ============================================================================
-// ERROR DE CARGA
+// ERROR
 // ============================================================================
 
-class _LoadError
-    extends StatelessWidget {
+class _LoadError extends StatelessWidget {
   final bool dark;
 
   final VoidCallback onRetry;
@@ -3258,18 +3546,19 @@ class _LoadError
     BuildContext context,
   ) {
     return Center(
-      child: Padding(
+      child:
+          Padding(
         padding:
             const EdgeInsets.all(
           28,
         ),
-        child: Column(
+        child:
+            Column(
           mainAxisSize:
               MainAxisSize.min,
           children: [
             const Icon(
-              Icons
-                  .warning_amber_rounded,
+              Icons.warning_amber_rounded,
               size:
                   55,
               color:
@@ -3293,9 +3582,10 @@ class _LoadError
                     'Baloo2',
                 fontSize:
                     15,
-                color: dark
-                    ? Colors.white70
-                    : Colors.black87,
+                color:
+                    dark
+                        ? Colors.white70
+                        : Colors.black87,
               ),
             ),
 
@@ -3309,10 +3599,10 @@ class _LoadError
                   onRetry,
               icon:
                   const Icon(
-                Icons
-                    .refresh_rounded,
+                Icons.refresh_rounded,
               ),
-              label: Text(
+              label:
+                  Text(
                 T.txt(
                   'refresh',
                 ),
@@ -3342,18 +3632,19 @@ class _NoMeasurements
     BuildContext context,
   ) {
     return Center(
-      child: Padding(
+      child:
+          Padding(
         padding:
             const EdgeInsets.all(
           28,
         ),
-        child: Column(
+        child:
+            Column(
           mainAxisAlignment:
               MainAxisAlignment.center,
           children: [
             const Icon(
-              Icons
-                  .insert_chart_outlined_rounded,
+              Icons.insert_chart_outlined_rounded,
               size:
                   70,
               color:
@@ -3381,11 +3672,12 @@ class _NoMeasurements
                     23,
                 fontWeight:
                     FontWeight.w800,
-                color: dark
-                    ? Colors.white
-                    : const Color(
-                        0xFF2D2D2D,
-                      ),
+                color:
+                    dark
+                        ? Colors.white
+                        : const Color(
+                            0xFF2D2D2D,
+                          ),
               ),
             ),
 
@@ -3404,9 +3696,10 @@ class _NoMeasurements
                   TextStyle(
                 fontFamily:
                     'Baloo2',
-                color: dark
-                    ? Colors.white60
-                    : Colors.black54,
+                color:
+                    dark
+                        ? Colors.white60
+                        : Colors.black54,
               ),
             ),
           ],
@@ -3417,7 +3710,7 @@ class _NoMeasurements
 }
 
 // ============================================================================
-// SIN MEDICIONES VÁLIDAS
+// SIN MEDICIONES OMS VÁLIDAS
 // ============================================================================
 
 class _NoValidMeasurements
@@ -3433,18 +3726,19 @@ class _NoValidMeasurements
     BuildContext context,
   ) {
     return Center(
-      child: Padding(
+      child:
+          Padding(
         padding:
             const EdgeInsets.all(
           28,
         ),
-        child: Column(
+        child:
+            Column(
           mainAxisSize:
               MainAxisSize.min,
           children: [
             const Icon(
-              Icons
-                  .query_stats_rounded,
+              Icons.query_stats_rounded,
               size:
                   60,
               color:
@@ -3470,9 +3764,10 @@ class _NoValidMeasurements
                     'Baloo2',
                 fontSize:
                     16,
-                color: dark
-                    ? Colors.white70
-                    : Colors.black87,
+                color:
+                    dark
+                        ? Colors.white70
+                        : Colors.black87,
               ),
             ),
           ],
