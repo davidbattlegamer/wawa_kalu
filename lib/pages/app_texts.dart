@@ -842,7 +842,11 @@ class T {
 
 'headCircumferenceForAgeChartDescription':
     'Compara el perímetro cefálico registrado con los patrones de crecimiento de la OMS según la edad y el sexo.',
+'growthSelectorWeightLength':
+    'Peso/Longitud',
 
+'growthSelectorWeightHeight':
+    'Peso/Talla',
 'headCmShort':
     'Perímetro cefálico (cm)',
 'deleteChildError':
@@ -1843,7 +1847,11 @@ class T {
         'Serve with purée or soft vegetables.',
     'recipe3Rec':
         'The egg must be fully cooked. If there is a history of allergies, consult the pediatrician first.',
+'growthSelectorWeightLength':
+    'Weight/Length',
 
+'growthSelectorWeightHeight':
+    'Weight/Height',
     'recipe4Title':
         'Soft rice and lentil balls',
     'recipe4Age':
