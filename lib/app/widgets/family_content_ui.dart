@@ -37,7 +37,10 @@ class FamilyHero extends StatelessWidget {
     width: double.infinity,
     decoration: BoxDecoration(
       gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight,
-        colors: [color, Color.lerp(color, accent, .78)!]),
+        colors: [
+          Color.lerp(color, Colors.black, .27)!,
+          Color.lerp(Color.lerp(color, accent, .52)!, Colors.black, .27)!,
+        ]),
       borderRadius: BorderRadius.circular(30),
       boxShadow: [BoxShadow(color: color.withValues(alpha: .20),
         blurRadius: 24, offset: const Offset(0, 12))],
