@@ -34,6 +34,13 @@ class T {
   static Set<String> get kichwaKeys => Set<String>.unmodifiable(_kichwa.keys);
 
   static final Map<String, String> _spanish = <String, String>{
+    'nutritionCookTodayTitle': 'Algo rico para preparar hoy',
+    'nutritionCookTodaySubtitle': 'Primero aparecen las recetas que mejor encajan con la etapa seleccionada, para que no tengas que buscarlas al final.',
+    'nutritionSuggestedRecipe': 'SUGERIDA PARA ESTA ETAPA',
+    'nutritionMoreIdeasTitle': 'Más ideas de nuestra cocina',
+    'nutritionOpenRecipe': 'Ver receta paso a paso',
+    'nutritionJourneyBridgeTitle': 'Cocinar también es acompañar',
+    'nutritionJourneyBridgeText': 'Después de elegir una receta, revisa abajo los hábitos que ayudan a que la comida sea segura, tranquila y agradable.',
     'learningEverydayTitle': 'Conversar, jugar y cuidar en lo cotidiano',
     'learningEverydaySubtitle': 'Lenguaje y protección ahora forman parte del recorrido de Aprender: una idea para comunicarse y otra para cuidar, entrelazadas en la misma guía.',
     'nutritionGuideTag': 'NUTRIR · COMPARTIR · CRECER',
@@ -786,6 +793,13 @@ class T {
   };
 
   static final Map<String, String> _english = <String, String>{
+    'nutritionCookTodayTitle': 'Something tasty to make today',
+    'nutritionCookTodaySubtitle': 'Recipes that best fit the selected stage now appear first, so you do not have to search for them at the bottom.',
+    'nutritionSuggestedRecipe': 'SUGGESTED FOR THIS STAGE',
+    'nutritionMoreIdeasTitle': 'More ideas from our cuisine',
+    'nutritionOpenRecipe': 'See the recipe step by step',
+    'nutritionJourneyBridgeTitle': 'Cooking is also part of caring',
+    'nutritionJourneyBridgeText': 'After choosing a recipe, review the habits below that help make meals safe, calm, and enjoyable.',
     'learningEverydayTitle': 'Talk, play, and care in everyday moments',
     'learningEverydaySubtitle': 'Language and protection are now part of the Learning journey: communication and care ideas are woven into the same guide.',
     'nutritionGuideTag': 'NOURISH · SHARE · GROW',
