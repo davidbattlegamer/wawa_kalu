@@ -526,7 +526,6 @@ class _Dashboard extends StatelessWidget {
 
   const _Dashboard({
     required this.child,
-    required this.dark,
     required this.onChangeChild,
     required this.onOpenProfile,
     required this.onVaccines,
@@ -649,7 +648,6 @@ class _Dashboard extends StatelessWidget {
                         title: T.txt('nextVaccine'),
                         subtitle: T.txt('homeHealthLoading'),
                         actionText: T.txt('viewVaccines'),
-                        dark: dark,
                         onTap: onVaccines,
                       ),
 
@@ -661,7 +659,6 @@ class _Dashboard extends StatelessWidget {
                         title: T.txt('lastGrowthCheck'),
                         subtitle: T.txt('homeHealthLoading'),
                         actionText: T.txt('viewGrowth'),
-                        dark: dark,
                         onTap: onGrowth,
                       ),
                     ],
@@ -677,7 +674,6 @@ class _Dashboard extends StatelessWidget {
                         title: T.txt('nextVaccine'),
                         subtitle: T.txt('homeHealthLoadError'),
                         actionText: T.txt('viewVaccines'),
-                        dark: dark,
                         onTap: onVaccines,
                       ),
 
@@ -689,7 +685,6 @@ class _Dashboard extends StatelessWidget {
                         title: T.txt('lastGrowthCheck'),
                         subtitle: T.txt('homeHealthLoadError'),
                         actionText: T.txt('viewGrowth'),
-                        dark: dark,
                         onTap: onGrowth,
                       ),
                     ],
@@ -708,7 +703,6 @@ class _Dashboard extends StatelessWidget {
                       title: T.txt('nextVaccine'),
                       subtitle: _vaccineSubtitle(data.vaccine),
                       actionText: T.txt('viewVaccines'),
-                      dark: dark,
                       onTap: onVaccines,
                     ),
 
@@ -720,7 +714,6 @@ class _Dashboard extends StatelessWidget {
                       title: T.txt('lastGrowthCheck'),
                       subtitle: _growthSubtitle(data.growth),
                       actionText: T.txt('viewGrowth'),
-                      dark: dark,
                       onTap: onGrowth,
                     ),
                   ],
@@ -1052,7 +1045,6 @@ class _DashboardHealthCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final String actionText;
-  final bool dark;
   final VoidCallback onTap;
 
   @override
