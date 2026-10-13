@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../pages/app_config.dart';
 import '../../../pages/app_texts.dart';
+import '../../../app/widgets/family_content_ui.dart';
 import '../../../pages/nutricion_page.dart';
 import '../../../pages/recetas_page.dart';
 
@@ -60,29 +61,16 @@ class HealthPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    T.txt('healthHeaderTitle'),
-                    style: TextStyle(
-                      fontFamily: 'Fredoka',
-                      fontSize: 26,
-                      fontWeight: FontWeight.w800,
-                      color: dark ? Colors.white : const Color(0xFF4A2C82),
-                    ),
+                  FamilyHero(
+                    eyebrow: T.txt('health'),
+                    title: T.txt('healthHeaderTitle'),
+                    subtitle: T.txt('healthHeaderSubtitle'),
+                    icon: Icons.favorite_rounded,
+                    color: const Color(0xFFBE567C),
+                    accent: const Color(0xFFEF9A72),
                   ),
 
-                  const SizedBox(height: 5),
-
-                  Text(
-                    T.txt('healthHeaderSubtitle'),
-                    style: TextStyle(
-                      fontFamily: 'Baloo2',
-                      fontSize: 16,
-                      height: 1.25,
-                      color: dark ? Colors.white70 : Colors.black54,
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 23),
 
                   _SelectedChildCard(
                     dark: dark,
@@ -147,7 +135,7 @@ class HealthPage extends StatelessWidget {
                     icon: Icons.restaurant_menu_rounded,
                     title: T.txt('nutrition'),
                     subtitle: T.txt('healthNutritionSubtitle'),
-                    color: Colors.green,
+                    color: const Color(0xFF269B90),
                     dark: dark,
                     onTap: () {
                       _openPage(context, const NutricionPage());
@@ -160,7 +148,7 @@ class HealthPage extends StatelessWidget {
                     icon: Icons.menu_book_rounded,
                     title: T.txt('recipes'),
                     subtitle: T.txt('healthRecipesSubtitle'),
-                    color: Colors.orange,
+                    color: const Color(0xFFDB7A45),
                     dark: dark,
                     onTap: () {
                       _openPage(context, const RecetasPage());
@@ -310,14 +298,8 @@ class _SelectedChildCard extends StatelessWidget {
   }
 }
 
+/// The same navigation tile style is used across Aprender and Salud.
 class HealthOptionCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final Color color;
-  final bool dark;
-  final VoidCallback onTap;
-
   const HealthOptionCard({
     super.key,
     required this.icon,
@@ -328,77 +310,19 @@ class HealthOptionCard extends StatelessWidget {
     required this.onTap,
   });
 
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color color;
+  final bool dark;
+  final VoidCallback onTap;
+
   @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(24),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(24),
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(17),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                dark ? const Color(0xFF211B2E) : Colors.white,
-                color.withValues(alpha: dark ? 0.17 : 0.08),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: color.withValues(alpha: 0.17)),
-            boxShadow: [
-              BoxShadow(
-                color: color.withValues(alpha: 0.07),
-                blurRadius: 12,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 58,
-                height: 58,
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.14),
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Icon(icon, color: color, size: 31),
-              ),
-              const SizedBox(width: 15),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontFamily: 'Fredoka',
-                        fontSize: 19,
-                        fontWeight: FontWeight.w700,
-                        color: dark ? Colors.white : const Color(0xFF2D2D2D),
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontFamily: 'Baloo2',
-                        fontSize: 14.5,
-                        height: 1.2,
-                        color: dark ? Colors.white70 : Colors.black54,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(Icons.chevron_right_rounded, color: color, size: 28),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => FamilyTopicCard(
+    title: title,
+    subtitle: subtitle,
+    icon: icon,
+    color: color,
+    onTap: onTap,
+  );
 }
