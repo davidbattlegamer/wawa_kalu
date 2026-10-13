@@ -4,125 +4,350 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppConfig {
-  static ValueNotifier<bool> sonidosActivos = ValueNotifier<bool>(true);
-  static ValueNotifier<bool> vibracionActiva = ValueNotifier<bool>(true);
+  AppConfig._();
 
-  static ValueNotifier<String> idioma = ValueNotifier<String>('es');
-  static ValueNotifier<bool> idiomaAuto = ValueNotifier<bool>(true);
+  static final ValueNotifier<bool> sonidosActivos =
+      ValueNotifier<bool>(true);
 
-  static ValueNotifier<bool> bienvenidaVista = ValueNotifier<bool>(false);
+  static final ValueNotifier<bool> vibracionActiva =
+      ValueNotifier<bool>(true);
 
-  static ValueNotifier<ThemeMode> temaApp = ValueNotifier<ThemeMode>(
+  static final ValueNotifier<String> idioma =
+      ValueNotifier<String>('es');
+
+  static final ValueNotifier<bool> idiomaAuto =
+      ValueNotifier<bool>(true);
+
+  static final ValueNotifier<bool> bienvenidaVista =
+      ValueNotifier<bool>(false);
+
+  static final ValueNotifier<ThemeMode> temaApp =
+      ValueNotifier<ThemeMode>(
     ThemeMode.system,
   );
 
+  static const Set<String> idiomasSoportados =
+      <String>{
+    'es',
+    'en',
+    'qu',
+  };
+
+  // ==========================================================================
+  // CARGAR CONFIGURACIÓN
+  // ==========================================================================
+
   static Future<void> cargarConfiguracion() async {
-    final prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs =
+        await SharedPreferences.getInstance();
 
-    sonidosActivos.value = prefs.getBool('sonidosActivos') ?? true;
-    vibracionActiva.value = prefs.getBool('vibracionActiva') ?? true;
-    bienvenidaVista.value = prefs.getBool('bienvenidaVista') ?? false;
+    sonidosActivos.value =
+        prefs.getBool(
+          'sonidosActivos',
+        ) ??
+        true;
 
-    final String? idiomaGuardado = prefs.getString('idioma');
+    vibracionActiva.value =
+        prefs.getBool(
+          'vibracionActiva',
+        ) ??
+        true;
 
-    if (idiomaGuardado != null) {
-      idiomaAuto.value = false;
-      idioma.value = idiomaGuardado;
+    bienvenidaVista.value =
+        prefs.getBool(
+          'bienvenidaVista',
+        ) ??
+        false;
+
+    // ------------------------------------------------------------------------
+    // IDIOMA
+    //
+    // Si existe la clave "idioma", el usuario eligió un idioma manualmente.
+    // Si no existe, se usa el idioma del dispositivo.
+    // ------------------------------------------------------------------------
+
+    final String? idiomaGuardado =
+        prefs.getString(
+      'idioma',
+    );
+
+    if (idiomaGuardado != null &&
+        idiomasSoportados.contains(
+          idiomaGuardado,
+        )) {
+      idiomaAuto.value =
+          false;
+
+      idioma.value =
+          idiomaGuardado;
     } else {
-      idiomaAuto.value = true;
+      // Limpia valores antiguos o inválidos.
+      if (idiomaGuardado != null) {
+        await prefs.remove(
+          'idioma',
+        );
+      }
+
+      idiomaAuto.value =
+          true;
+
       detectarIdiomaDelCelular();
     }
 
-    final String temaGuardado = prefs.getString('temaApp') ?? 'system';
+    // ------------------------------------------------------------------------
+    // TEMA
+    // ------------------------------------------------------------------------
 
-    if (temaGuardado == 'light') {
-      temaApp.value = ThemeMode.light;
-    } else if (temaGuardado == 'dark') {
-      temaApp.value = ThemeMode.dark;
-    } else {
-      temaApp.value = ThemeMode.system;
+    final String temaGuardado =
+        prefs.getString(
+          'temaApp',
+        ) ??
+        'system';
+
+    switch (temaGuardado) {
+      case 'light':
+        temaApp.value =
+            ThemeMode.light;
+        break;
+
+      case 'dark':
+        temaApp.value =
+            ThemeMode.dark;
+        break;
+
+      case 'system':
+      default:
+        temaApp.value =
+            ThemeMode.system;
+        break;
     }
   }
+
+  // ==========================================================================
+  // IDIOMA DEL DISPOSITIVO
+  // ==========================================================================
 
   static void detectarIdiomaDelCelular() {
-    final String idiomaCelular =
-        PlatformDispatcher.instance.locale.languageCode;
+    final Locale locale =
+        PlatformDispatcher
+            .instance
+            .locale;
 
-    if (idiomaCelular == 'en') {
-      idioma.value = 'en';
-    } else {
-      idioma.value = 'es';
+    final String languageCode =
+        locale.languageCode
+            .toLowerCase();
+
+    switch (languageCode) {
+      case 'en':
+        idioma.value =
+            'en';
+        break;
+
+      // BCP-47 / ISO 639:
+      // "qu" corresponde a Quechua.
+      // Para Wawa Kalú esta opción se presenta al usuario como
+      // Kichwa del Ecuador.
+      case 'qu':
+      case 'quz':
+        idioma.value =
+            'qu';
+        break;
+
+      case 'es':
+      default:
+        idioma.value =
+            'es';
+        break;
     }
   }
 
-  static Future<void> cambiarSonidos(bool valor) async {
-    sonidosActivos.value = valor;
+  // ==========================================================================
+  // SONIDOS
+  // ==========================================================================
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('sonidosActivos', valor);
+  static Future<void> cambiarSonidos(
+    bool valor,
+  ) async {
+    sonidosActivos.value =
+        valor;
+
+    final SharedPreferences prefs =
+        await SharedPreferences.getInstance();
+
+    await prefs.setBool(
+      'sonidosActivos',
+      valor,
+    );
   }
 
-  static Future<void> cambiarVibracion(bool valor) async {
-    vibracionActiva.value = valor;
+  // ==========================================================================
+  // VIBRACIÓN
+  // ==========================================================================
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('vibracionActiva', valor);
+  static Future<void> cambiarVibracion(
+    bool valor,
+  ) async {
+    vibracionActiva.value =
+        valor;
+
+    final SharedPreferences prefs =
+        await SharedPreferences.getInstance();
+
+    await prefs.setBool(
+      'vibracionActiva',
+      valor,
+    );
   }
 
-  static Future<void> cambiarIdioma(String nuevoIdioma) async {
-    idiomaAuto.value = false;
-    idioma.value = nuevoIdioma;
+  // ==========================================================================
+  // IDIOMA MANUAL
+  // ==========================================================================
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('idioma', nuevoIdioma);
+  static Future<void> cambiarIdioma(
+    String nuevoIdioma,
+  ) async {
+    if (!idiomasSoportados.contains(
+      nuevoIdioma,
+    )) {
+      throw ArgumentError.value(
+        nuevoIdioma,
+        'nuevoIdioma',
+        'Idioma no soportado.',
+      );
+    }
+
+    idiomaAuto.value =
+        false;
+
+    idioma.value =
+        nuevoIdioma;
+
+    final SharedPreferences prefs =
+        await SharedPreferences.getInstance();
+
+    await prefs.setString(
+      'idioma',
+      nuevoIdioma,
+    );
   }
 
-  static Future<void> cambiarIdiomaAutomatico() async {
-    idiomaAuto.value = true;
+  // ==========================================================================
+  // IDIOMA AUTOMÁTICO
+  // ==========================================================================
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('idioma');
+  static Future<void>
+      cambiarIdiomaAutomatico() async {
+    idiomaAuto.value =
+        true;
+
+    final SharedPreferences prefs =
+        await SharedPreferences.getInstance();
+
+    // Sin clave guardada = modo automático.
+    await prefs.remove(
+      'idioma',
+    );
 
     detectarIdiomaDelCelular();
   }
 
-  static Future<void> cambiarTema(ThemeMode nuevoTema) async {
-    temaApp.value = nuevoTema;
+  // ==========================================================================
+  // TEMA
+  // ==========================================================================
 
-    final prefs = await SharedPreferences.getInstance();
+  static Future<void> cambiarTema(
+    ThemeMode nuevoTema,
+  ) async {
+    temaApp.value =
+        nuevoTema;
 
-    if (nuevoTema == ThemeMode.light) {
-      await prefs.setString('temaApp', 'light');
-    } else if (nuevoTema == ThemeMode.dark) {
-      await prefs.setString('temaApp', 'dark');
-    } else {
-      await prefs.setString('temaApp', 'system');
+    final SharedPreferences prefs =
+        await SharedPreferences.getInstance();
+
+    switch (nuevoTema) {
+      case ThemeMode.light:
+        await prefs.setString(
+          'temaApp',
+          'light',
+        );
+        break;
+
+      case ThemeMode.dark:
+        await prefs.setString(
+          'temaApp',
+          'dark',
+        );
+        break;
+
+      case ThemeMode.system:
+        await prefs.setString(
+          'temaApp',
+          'system',
+        );
+        break;
     }
   }
 
-  static Future<void> marcarBienvenidaVista() async {
-    bienvenidaVista.value = true;
+  // ==========================================================================
+  // BIENVENIDA
+  // ==========================================================================
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('bienvenidaVista', true);
+  static Future<void>
+      marcarBienvenidaVista() async {
+    bienvenidaVista.value =
+        true;
+
+    final SharedPreferences prefs =
+        await SharedPreferences.getInstance();
+
+    await prefs.setBool(
+      'bienvenidaVista',
+      true,
+    );
   }
 
-  static Future<void> reiniciarBienvenida() async {
-    bienvenidaVista.value = false;
+  static Future<void>
+      reiniciarBienvenida() async {
+    bienvenidaVista.value =
+        false;
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('bienvenidaVista', false);
+    final SharedPreferences prefs =
+        await SharedPreferences.getInstance();
+
+    await prefs.setBool(
+      'bienvenidaVista',
+      false,
+    );
   }
 
-  static bool get sonidosEncendidos => sonidosActivos.value;
+  // ==========================================================================
+  // GETTERS
+  // ==========================================================================
 
-  static bool get vibracionEncendida => vibracionActiva.value;
+  static bool get sonidosEncendidos =>
+      sonidosActivos.value;
 
-  static bool get idiomaEspanol => idioma.value == 'es';
+  static bool get vibracionEncendida =>
+      vibracionActiva.value;
 
-  static bool get temaAutomatico => temaApp.value == ThemeMode.system;
+  static bool get idiomaEspanol =>
+      idioma.value == 'es';
 
-  static bool get temaClaro => temaApp.value == ThemeMode.light;
+  static bool get idiomaIngles =>
+      idioma.value == 'en';
 
-  static bool get temaOscuro => temaApp.value == ThemeMode.dark;
+  static bool get idiomaKichwa =>
+      idioma.value == 'qu';
+
+  static bool get temaAutomatico =>
+      temaApp.value ==
+      ThemeMode.system;
+
+  static bool get temaClaro =>
+      temaApp.value ==
+      ThemeMode.light;
+
+  static bool get temaOscuro =>
+      temaApp.value ==
+      ThemeMode.dark;
 }
