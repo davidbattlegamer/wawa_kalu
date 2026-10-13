@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '../app/widgets/family_content_ui.dart';
 import 'app_config.dart';
 import 'app_texts.dart';
 
-class RecetasPage extends StatelessWidget {
+class RecetasPage extends StatefulWidget {
   const RecetasPage({super.key});
+
+  @override
+  State<RecetasPage> createState() => _RecetasPageState();
+}
+
+class _RecetasPageState extends State<RecetasPage> {
+  int? _openIndex;
 
   List<RecetaItem> _recetas() {
     return [
@@ -111,443 +119,97 @@ class RecetasPage extends StatelessWidget {
     ];
   }
 
-  Widget _encabezado(bool modoOscuro) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 26),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-            const Color(0xFF7B2CBF).withValues(alpha: modoOscuro ? 0.22 : 0.10),
-            const Color(0xFFFF6B6B).withValues(alpha: modoOscuro ? 0.18 : 0.08),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(
-          color: const Color(
-            0xFF7B2CBF,
-          ).withValues(alpha: modoOscuro ? 0.32 : 0.18),
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(
-              0xFF7B2CBF,
-            ).withValues(alpha: modoOscuro ? 0.18 : 0.10),
-            blurRadius: 16,
-            offset: const Offset(0, 7),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Container(
-            width: 92,
-            height: 92,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  const Color(0xFF7B2CBF).withValues(alpha: 0.24),
-                  const Color(0xFFFF6B6B).withValues(alpha: 0.14),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              shape: BoxShape.circle,
-            ),
-            child: const Center(
-              child: Text('🧸', style: TextStyle(fontSize: 48)),
-            ),
-          ),
-          const SizedBox(height: 14),
-          Text(
-            T.txt('recipesHeaderTitle'),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Fredoka',
-              fontSize: 34,
-              fontWeight: FontWeight.w700,
-              color: modoOscuro ? Colors.white : const Color(0xFF7B2CBF),
-              height: 1.05,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            T.txt('recipesHeaderSubtitle'),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Baloo2',
-              fontSize: 19,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFFFF6B6B),
-              height: 1.15,
-            ),
-          ),
-          const SizedBox(height: 14),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
-            decoration: BoxDecoration(
-              color: const Color(
-                0xFF7B2CBF,
-              ).withValues(alpha: modoOscuro ? 0.18 : 0.10),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              T.txt('recipesHeaderNote'),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Baloo2',
-                fontSize: 16.5,
-                fontWeight: FontWeight.w700,
-                color: modoOscuro ? Colors.white : const Color(0xFF7B2CBF),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _recetaCard(RecetaItem receta, bool modoOscuro) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 18),
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-            receta.color.withValues(alpha: modoOscuro ? 0.18 : 0.10),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(
-          color: receta.color.withValues(alpha: modoOscuro ? 0.32 : 0.23),
-          width: 1.6,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: receta.color.withValues(alpha: modoOscuro ? 0.16 : 0.10),
-            blurRadius: 14,
-            offset: const Offset(0, 7),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Container(
-            width: 82,
-            height: 82,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  receta.color.withValues(alpha: 0.25),
-                  receta.color.withValues(alpha: 0.08),
-                ],
-              ),
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Text(receta.emoji, style: const TextStyle(fontSize: 43)),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            T.txt(receta.tituloKey),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Fredoka',
-              fontSize: 25,
-              fontWeight: FontWeight.w700,
-              color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            T.txt(receta.descripcionKey),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Baloo2',
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: modoOscuro ? Colors.white70 : Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 14),
-          Wrap(
-            alignment: WrapAlignment.center,
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              _etiqueta(
-                texto: T.txt(receta.edadKey),
-                color: receta.color,
-                icono: Icons.child_care_rounded,
-                modoOscuro: modoOscuro,
-              ),
-              _etiqueta(
-                texto: T.txt(receta.momentoKey),
-                color: receta.color,
-                icono: Icons.schedule_rounded,
-                modoOscuro: modoOscuro,
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          _bloque(
-            titulo: T.txt('ingredients'),
-            datos: receta.ingredientesKeys.map((key) => T.txt(key)).toList(),
-            icono: Icons.shopping_basket_rounded,
-            color: receta.color,
-            modoOscuro: modoOscuro,
-          ),
-          _bloque(
-            titulo: T.txt('preparation'),
-            datos: receta.preparacionKeys.map((key) => T.txt(key)).toList(),
-            icono: Icons.soup_kitchen_rounded,
-            color: receta.color,
-            modoOscuro: modoOscuro,
-          ),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: receta.color.withValues(alpha: modoOscuro ? 0.18 : 0.10),
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(
-                color: receta.color.withValues(alpha: modoOscuro ? 0.24 : 0.14),
-              ),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+  @override
+  Widget build(BuildContext context) => ValueListenableBuilder<String>(
+    valueListenable: AppConfig.idioma,
+    builder: (context, language, _) {
+      final recipes = _recetas();
+      return Scaffold(
+        backgroundColor: FamilyUi.dark(context)
+            ? FamilyUi.canvasDark : FamilyUi.canvasLight,
+        appBar: FamilyUi.appBar(context, T.txt('recipesAppBar')),
+        body: SafeArea(child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 38),
+          child: Center(child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 720),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.tips_and_updates_rounded, color: receta.color),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    T.txt(receta.recomendacionKey),
-                    style: TextStyle(
-                      fontFamily: 'Baloo2',
-                      fontSize: 15.5,
-                      fontWeight: FontWeight.w600,
-                      color: modoOscuro ? Colors.white70 : Colors.black87,
+                FamilyHero(
+                  eyebrow: T.txt('recipesForChildren'),
+                  title: T.txt('recipesHeaderTitle'),
+                  subtitle: T.txt('recipesHeaderSubtitle'),
+                  icon: Icons.ramen_dining_rounded,
+                  color: const Color(0xFFDB784B),
+                  accent: const Color(0xFFE9B75B),
+                ),
+                const SizedBox(height: 26),
+                FamilySectionHeading(
+                  title: T.txt('recipesIdeasTitle'),
+                  subtitle: T.txt('recipesHeaderNote'),
+                  icon: Icons.restaurant_menu_rounded,
+                ),
+                for (var i = 0; i < recipes.length; i++)
+                  FamilyTopicCard(
+                    title: T.txt(recipes[i].tituloKey),
+                    subtitle: T.txt(recipes[i].descripcionKey),
+                    icon: Icons.soup_kitchen_rounded,
+                    color: recipes[i].color,
+                    badge: '${recipes[i].emoji}   ${T.txt(recipes[i].edadKey)}',
+                    expanded: _openIndex == i,
+                    onTap: () => setState(
+                      () => _openIndex = _openIndex == i ? null : i),
+                    content: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FamilyInfoPanel(
+                          title: T.txt(recipes[i].momentoKey),
+                          text: T.txt(recipes[i].descripcionKey),
+                          icon: Icons.schedule_rounded,
+                          color: recipes[i].color,
+                        ),
+                        const SizedBox(height: 19),
+                        FamilySectionHeading(
+                          title: T.txt('ingredients'),
+                          icon: Icons.shopping_basket_rounded,
+                        ),
+                        FamilyBulletList(
+                          items: recipes[i].ingredientesKeys
+                              .map((key) => T.txt(key)).toList(),
+                          color: recipes[i].color,
+                        ),
+                        const SizedBox(height: 8),
+                        FamilySectionHeading(
+                          title: T.txt('preparation'),
+                          icon: Icons.format_list_numbered_rounded,
+                        ),
+                        FamilyBulletList(
+                          items: recipes[i].preparacionKeys
+                              .map((key) => T.txt(key)).toList(),
+                          color: recipes[i].color,
+                          numbered: true,
+                        ),
+                        FamilyNotice(
+                          text: T.txt(recipes[i].recomendacionKey),
+                          color: recipes[i].color,
+                          icon: Icons.tips_and_updates_rounded,
+                        ),
+                      ],
                     ),
                   ),
+                const SizedBox(height: 9),
+                FamilyNotice(
+                  text: T.txt('recipeFinalNote'),
+                  color: const Color(0xFFE38B52),
+                  icon: Icons.health_and_safety_rounded,
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _etiqueta({
-    required String texto,
-    required Color color,
-    required IconData icono,
-    required bool modoOscuro,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: modoOscuro ? 0.18 : 0.11),
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icono, color: color, size: 20),
-          const SizedBox(width: 8),
-          Text(
-            texto,
-            style: TextStyle(
-              fontFamily: 'Baloo2',
-              fontSize: 15.5,
-              fontWeight: FontWeight.w700,
-              color: modoOscuro ? Colors.white : color,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _bloque({
-    required String titulo,
-    required List<String> datos,
-    required IconData icono,
-    required Color color,
-    required bool modoOscuro,
-  }) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 14),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: modoOscuro
-            ? const Color(0xFF15131A).withValues(alpha: 0.82)
-            : Colors.white.withValues(alpha: 0.82),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: color.withValues(alpha: modoOscuro ? 0.24 : 0.12),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icono, color: color, size: 24),
-              const SizedBox(width: 8),
-              Text(
-                titulo,
-                style: TextStyle(
-                  fontFamily: 'Fredoka',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: modoOscuro ? Colors.white : color,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          ...datos.map(
-            (dato) => Padding(
-              padding: const EdgeInsets.only(bottom: 7),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '• ',
-                    style: TextStyle(
-                      fontFamily: 'Baloo2',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: color,
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      dato,
-                      style: TextStyle(
-                        fontFamily: 'Baloo2',
-                        fontSize: 15.5,
-                        fontWeight: FontWeight.w500,
-                        color: modoOscuro ? Colors.white70 : Colors.black87,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _notaFinal(bool modoOscuro) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-            Colors.redAccent.withValues(alpha: modoOscuro ? 0.16 : 0.08),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: Colors.redAccent.withValues(alpha: modoOscuro ? 0.28 : 0.16),
-        ),
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.info_outline_rounded,
-            color: Colors.redAccent,
-            size: 32,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              T.txt('recipeFinalNote'),
-              style: TextStyle(
-                fontFamily: 'Baloo2',
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: modoOscuro ? Colors.white70 : Colors.black87,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<String>(
-      valueListenable: AppConfig.idioma,
-      builder: (context, idioma, _) {
-        return ValueListenableBuilder<ThemeMode>(
-          valueListenable: AppConfig.temaApp,
-          builder: (context, temaActual, _) {
-            final bool modoOscuro =
-                Theme.of(context).brightness == Brightness.dark;
-            final listaRecetas = _recetas();
-
-            return Scaffold(
-              backgroundColor: modoOscuro
-                  ? const Color(0xFF15131A)
-                  : const Color(0xFFFAF7F2),
-              appBar: AppBar(
-                title: Text(
-                  T.txt('recipesAppBar'),
-                  style: TextStyle(
-                    fontFamily: 'Fredoka',
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
-                  ),
-                ),
-                centerTitle: true,
-                backgroundColor: modoOscuro
-                    ? const Color(0xFF211B2E)
-                    : Colors.white,
-                foregroundColor: modoOscuro
-                    ? Colors.white
-                    : const Color(0xFF2D2D2D),
-                elevation: 0,
-              ),
-              body: SafeArea(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(18),
-                  child: Column(
-                    children: [
-                      _encabezado(modoOscuro),
-                      const SizedBox(height: 20),
-                      ...listaRecetas.map(
-                        (receta) => _recetaCard(receta, modoOscuro),
-                      ),
-                      _notaFinal(modoOscuro),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
+          )),
+        )),
+      );
+    },
+  );
 }
 
 class RecetaItem {
