@@ -37,7 +37,7 @@ class LearningHubPage extends StatelessWidget {
         return Scaffold(
           backgroundColor: dark ? FamilyUi.canvasDark : FamilyUi.canvasLight,
           appBar: AppBar(
-            automaticallyImplyLeading: false,
+            automaticallyImplyLeading: Navigator.of(context).canPop(),
             elevation: 0,
             scrolledUnderElevation: 0,
             backgroundColor: dark ? FamilyUi.surfaceDark : Colors.white,
