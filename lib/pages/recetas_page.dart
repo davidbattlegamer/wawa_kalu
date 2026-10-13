@@ -137,7 +137,7 @@ class _RecetasPageState extends State<RecetasPage> {
               children: [
                 FamilyHero(
                   eyebrow: T.txt('recipesForChildren'),
-                  title: T.txt('recipesHeaderTitle'),
+                  title: T.txt('recipes'),
                   subtitle: T.txt('recipesHeaderSubtitle'),
                   icon: Icons.ramen_dining_rounded,
                   color: const Color(0xFFDB784B),
@@ -162,9 +162,8 @@ class _RecetasPageState extends State<RecetasPage> {
                     content: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        FamilyInfoPanel(
-                          title: T.txt(recipes[i].momentoKey),
-                          text: T.txt(recipes[i].descripcionKey),
+                        FamilyNotice(
+                          text: T.txt(recipes[i].momentoKey),
                           icon: Icons.schedule_rounded,
                           color: recipes[i].color,
                         ),
