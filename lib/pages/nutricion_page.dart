@@ -369,10 +369,6 @@ class _NutricionPageState extends State<NutricionPage> {
             child: LayoutBuilder(
               builder: (context, constraints) {
                 final side = constraints.maxWidth < 380 ? 16.0 : 20.0;
-                final inner = constraints.maxWidth - side * 2;
-                final twoColumns = inner >= 650;
-                final cardWidth = twoColumns ? (inner - 14) / 2 : inner;
-
                 return SingleChildScrollView(
                   padding: EdgeInsets.fromLTRB(side, 20, side, 38),
                   child: Center(
@@ -417,7 +413,76 @@ class _NutricionPageState extends State<NutricionPage> {
                             stage: stage,
                             dark: dark,
                           ),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 28),
+
+                          FamilySectionHeading(
+                            title: T.txt('nutritionCookTodayTitle'),
+                            subtitle: T.txt('nutritionCookTodaySubtitle'),
+                            icon: Icons.soup_kitchen_rounded,
+                          ),
+
+                          if (_ageGroup == 0)
+                            FamilyNotice(
+                              text: T.txt('nutritionNoRecipesUnder6'),
+                              icon: Icons.favorite_rounded,
+                              color: const Color(0xFFEC5F7A),
+                            )
+                          else if (recipes.isNotEmpty) ...[
+                            _RecipeSpotlight(
+                              recipe: recipes.first,
+                              regionLabel:
+                                  _regionLabel(recipes.first.region),
+                              color: _regionColor(recipes.first.region),
+                              dark: dark,
+                              onTap: () => _openRecipe(recipes.first),
+                            ),
+                            if (recipes.length > 1) ...[
+                              const SizedBox(height: 13),
+                              Text(
+                                T.txt('nutritionMoreIdeasTitle'),
+                                style: TextStyle(
+                                  fontFamily: 'Fredoka',
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w800,
+                                  color: FamilyUi.ink(context),
+                                ),
+                              ),
+                              const SizedBox(height: 9),
+                              SizedBox(
+                                height: 154,
+                                child: ListView.separated(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: recipes.length - 1,
+                                  separatorBuilder: (_, __) =>
+                                      const SizedBox(width: 10),
+                                  itemBuilder: (context, index) {
+                                    final recipe = recipes[index + 1];
+                                    return SizedBox(
+                                      width: 225,
+                                      child: _RecipeQuickPick(
+                                        recipe: recipe,
+                                        regionLabel:
+                                            _regionLabel(recipe.region),
+                                        color:
+                                            _regionColor(recipe.region),
+                                        dark: dark,
+                                        onTap: () => _openRecipe(recipe),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ],
+
+                          const SizedBox(height: 28),
+                          _NutritionBridge(
+                            dark: dark,
+                            title: T.txt('nutritionJourneyBridgeTitle'),
+                            text: T.txt('nutritionJourneyBridgeText'),
+                          ),
+
+                          const SizedBox(height: 28),
                           FamilySectionHeading(
                             title: T.txt('nutritionHabitsTitle'),
                             subtitle: T.txt('nutritionHabitsSubtitle'),
@@ -443,64 +508,7 @@ class _NutricionPageState extends State<NutricionPage> {
                                 dark: dark,
                               ),
                             ),
-                          const SizedBox(height: 32),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: FamilySectionHeading(
-                                  title: T.txt('nutritionRecipesEcuadorTitle'),
-                                  subtitle:
-                                      T.txt('nutritionRecipesEcuadorSubtitle'),
-                                  icon: Icons.menu_book_rounded,
-                                ),
-                              ),
-                              if (_ageGroup != 0)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 6),
-                                  child: Text(
-                                    T
-                                        .txt('nutritionRecipesCount')
-                                        .replaceAll(
-                                          '{count}',
-                                          recipes.length.toString(),
-                                        ),
-                                    style: TextStyle(
-                                      fontFamily: 'Baloo2',
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w700,
-                                      color:
-                                          dark ? Colors.white60 : Colors.black54,
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                          if (_ageGroup == 0)
-                            FamilyNotice(
-                              text: T.txt('nutritionNoRecipesUnder6'),
-                              icon: Icons.favorite_rounded,
-                              color: const Color(0xFFEC5F7A),
-                            )
-                          else
-                            Wrap(
-                              spacing: 14,
-                              runSpacing: 14,
-                              children: [
-                                for (final recipe in recipes)
-                                  SizedBox(
-                                    width: cardWidth,
-                                    child: _EcuadorRecipeCard(
-                                      recipe: recipe,
-                                      regionLabel:
-                                          _regionLabel(recipe.region),
-                                      color: _regionColor(recipe.region),
-                                      dark: dark,
-                                      onTap: () => _openRecipe(recipe),
-                                    ),
-                                  ),
-                              ],
-                            ),
+
                           const SizedBox(height: 26),
                           FamilyNotice(
                             text: T.txt('nutritionSourceNote'),
@@ -869,8 +877,8 @@ class _NutritionBulletList extends StatelessWidget {
   }
 }
 
-class _EcuadorRecipeCard extends StatelessWidget {
-  const _EcuadorRecipeCard({
+class _RecipeSpotlight extends StatelessWidget {
+  const _RecipeSpotlight({
     required this.recipe,
     required this.regionLabel,
     required this.color,
@@ -890,55 +898,68 @@ class _EcuadorRecipeCard extends StatelessWidget {
 
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(25),
+      borderRadius: BorderRadius.circular(28),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(28),
         child: Container(
-          padding: const EdgeInsets.all(17),
+          width: double.infinity,
+          clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
+                color.withValues(alpha: dark ? 0.34 : 0.18),
                 dark ? const Color(0xFF211D2B) : Colors.white,
-                color.withValues(alpha: dark ? 0.18 : 0.09),
               ],
             ),
-            borderRadius: BorderRadius.circular(25),
-            border: Border.all(color: color.withValues(alpha: 0.25)),
+            borderRadius: BorderRadius.circular(28),
+            border: Border.all(
+              color: color.withValues(alpha: 0.30),
+              width: 1.2,
+            ),
             boxShadow: [
               BoxShadow(
-                color: color.withValues(alpha: dark ? 0.05 : 0.09),
-                blurRadius: 15,
-                offset: const Offset(0, 6),
+                color: color.withValues(alpha: dark ? 0.06 : 0.12),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
               ),
             ],
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: 49,
-                    height: 49,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: color.withValues(alpha: dark ? 0.18 : 0.10),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Text(
-                      recipe.emoji,
-                      style: const TextStyle(fontSize: 25),
-                    ),
+              Positioned(
+                top: -38,
+                right: -18,
+                child: Container(
+                  width: 130,
+                  height: 130,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: color.withValues(alpha: 0.09),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Wrap(
-                      spacing: 6,
-                      runSpacing: 5,
+                  child: Text(
+                    recipe.emoji,
+                    style: const TextStyle(fontSize: 52),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 19, 20, 19),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Wrap(
+                      spacing: 7,
+                      runSpacing: 6,
                       children: [
+                        _RecipeBadge(
+                          text: T.txt('nutritionSuggestedRecipe'),
+                          color: color,
+                          dark: dark,
+                        ),
                         _RecipeBadge(
                           text: regionLabel,
                           color: color,
@@ -952,55 +973,254 @@ class _EcuadorRecipeCard extends StatelessWidget {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 76),
+                      child: Text(
+                        copy.title,
+                        style: TextStyle(
+                          fontFamily: 'Fredoka',
+                          fontSize: 23,
+                          height: 1.08,
+                          fontWeight: FontWeight.w800,
+                          color: FamilyUi.ink(context),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 48),
+                      child: Text(
+                        copy.summary,
+                        style: TextStyle(
+                          fontFamily: 'Baloo2',
+                          fontSize: 14.5,
+                          height: 1.35,
+                          color: FamilyUi.muted(context),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.restaurant_menu_rounded,
+                          color: color,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 7),
+                        Text(
+                          T.txt('nutritionOpenRecipe'),
+                          style: TextStyle(
+                            fontFamily: 'Fredoka',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                            color: color,
+                          ),
+                        ),
+                        const Spacer(),
+                        Container(
+                          width: 38,
+                          height: 38,
+                          decoration: BoxDecoration(
+                            color: color.withValues(
+                              alpha: dark ? 0.20 : 0.11,
+                            ),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.arrow_forward_rounded,
+                            color: color,
+                            size: 21,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RecipeQuickPick extends StatelessWidget {
+  const _RecipeQuickPick({
+    required this.recipe,
+    required this.regionLabel,
+    required this.color,
+    required this.dark,
+    required this.onTap,
+  });
+
+  final EcuadorRecipe recipe;
+  final String regionLabel;
+  final Color color;
+  final bool dark;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final copy = recipe.copy;
+
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(22),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(22),
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                dark ? const Color(0xFF211D2B) : Colors.white,
+                color.withValues(alpha: dark ? 0.16 : 0.08),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(
+              color: color.withValues(alpha: 0.22),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    recipe.emoji,
+                    style: const TextStyle(fontSize: 25),
+                  ),
+                  const Spacer(),
+                  _RecipeBadge(
+                    text: regionLabel,
+                    color: color,
+                    dark: dark,
                   ),
                 ],
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 9),
               Text(
                 copy.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontFamily: 'Fredoka',
-                  fontSize: 19,
+                  fontSize: 16,
                   height: 1.08,
                   fontWeight: FontWeight.w800,
                   color: FamilyUi.ink(context),
                 ),
               ),
-              const SizedBox(height: 7),
-              Text(
-                copy.summary,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: 'Baloo2',
-                  fontSize: 14,
-                  height: 1.3,
-                  color: FamilyUi.muted(context),
-                ),
-              ),
-              const SizedBox(height: 13),
+              const Spacer(),
               Row(
                 children: [
+                  Icon(
+                    Icons.schedule_rounded,
+                    size: 15,
+                    color: color,
+                  ),
+                  const SizedBox(width: 5),
                   Text(
-                    T.txt('guideActivityCta'),
+                    '${recipe.minutes} ${T.txt('nutritionMinutes')}',
                     style: TextStyle(
                       fontFamily: 'Baloo2',
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
                       color: color,
                     ),
                   ),
                   const Spacer(),
                   Icon(
                     Icons.arrow_forward_rounded,
+                    size: 18,
                     color: color,
-                    size: 21,
                   ),
                 ],
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _NutritionBridge extends StatelessWidget {
+  const _NutritionBridge({
+    required this.dark,
+    required this.title,
+    required this.text,
+  });
+
+  final bool dark;
+  final String title;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    const color = Color(0xFF7B61C9);
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(17),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: dark ? 0.10 : 0.055),
+        borderRadius: BorderRadius.circular(21),
+        border: Border.all(
+          color: color.withValues(alpha: 0.17),
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 43,
+            height: 43,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: dark ? 0.18 : 0.10),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: const Icon(
+              Icons.family_restroom_rounded,
+              color: color,
+              size: 23,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontFamily: 'Fredoka',
+                    fontSize: 16.5,
+                    fontWeight: FontWeight.w800,
+                    color: FamilyUi.ink(context),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  text,
+                  style: TextStyle(
+                    fontFamily: 'Baloo2',
+                    fontSize: 14,
+                    height: 1.3,
+                    color: FamilyUi.muted(context),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
