@@ -10,11 +10,8 @@ import '../pages/entorno_page.dart';
 import '../features/children/pages/children_page.dart';
 import '../features/health/pages/health_page.dart';
 
-<<<<<<< HEAD
 import 'widgets/liquid_glass_bottom_bar.dart';
 
-=======
->>>>>>> d42e6593c7d4d9d74eac64e4c8325b69a5b0566e
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
 
@@ -40,10 +37,7 @@ class _AppShellState extends State<AppShell> {
 
   void _cambiarPagina(int index) {
     if (_paginaActual == index) return;
-<<<<<<< HEAD
 
-=======
->>>>>>> d42e6593c7d4d9d74eac64e4c8325b69a5b0566e
     HapticFeedback.selectionClick();
     setState(() => _paginaActual = index);
   }
@@ -58,18 +52,12 @@ class _AppShellState extends State<AppShell> {
       backgroundColor: modoOscuro
           ? const Color(0xFF15131A)
           : const Color(0xFFFAF7F2),
-<<<<<<< HEAD
 
-=======
->>>>>>> d42e6593c7d4d9d74eac64e4c8325b69a5b0566e
       body: IndexedStack(
         index: _paginaActual,
         children: _paginas,
       ),
-<<<<<<< HEAD
 
-=======
->>>>>>> d42e6593c7d4d9d74eac64e4c8325b69a5b0566e
       bottomNavigationBar: ValueListenableBuilder<String>(
         valueListenable: AppConfig.idioma,
         builder: (context, idiomaActual, _) {
@@ -113,10 +101,7 @@ class _AppShellState extends State<AppShell> {
   }
 }
 
-<<<<<<< HEAD
 // ============================================================================
-=======
->>>>>>> d42e6593c7d4d9d74eac64e4c8325b69a5b0566e
 // APRENDER
 class _LearningPage extends StatelessWidget {
   const _LearningPage();
@@ -205,15 +190,6 @@ class _LearningPage extends StatelessWidget {
                   const SizedBox(height: 24),
 
                   _LearningCard(
-<<<<<<< HEAD
-                    icon: Icons
-                        .videogame_asset_rounded,
-                    title: T.txt('games'),
-                    subtitle: T.txt(
-                      'learningGamesSubtitle',
-                    ),
-                    color: Colors.orange,
-=======
                     icon: Icons.menu_book_rounded,
 
                     title: T.txt('familyGuide'),
@@ -222,20 +198,12 @@ class _LearningPage extends StatelessWidget {
 
                     color: const Color(0xFF8054D7),
 
->>>>>>> d42e6593c7d4d9d74eac64e4c8325b69a5b0566e
                     modoOscuro: modoOscuro,
                     onTap: () {
                       Navigator.push(
                         context,
-<<<<<<< HEAD
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              const JuegoPage(),
-                        ),
-=======
 
                         MaterialPageRoute(builder: (_) => const GuiaFamiliasPage()),
->>>>>>> 7e524784389ca322ffcb0898c87b4ed69cd47c35
                       );
                     },
                   ),
