@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../pages/app_texts.dart';
+import '../../../app/widgets/family_content_ui.dart';
 import '../../../pages/nutricion_page.dart';
 import '../../learning/pages/learning_hub_page.dart';
 
@@ -701,30 +702,10 @@ class _ChildProfileContent extends StatelessWidget {
                   // SALUD
                   // ===============================================
 
-                  Align(
-                    alignment:
-                        Alignment.centerLeft,
-                    child: Text(
-                      T.txt(
-                        'childHealth',
-                      ),
-                      style: TextStyle(
-                        fontFamily:
-                            'Fredoka',
-                        fontSize: 22,
-                        fontWeight:
-                            FontWeight.w800,
-                        color: dark
-                            ? Colors.white
-                            : const Color(
-                                0xFF4A2C82,
-                              ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(
-                    height: 12,
+                  FamilySectionHeading(
+                    title: T.txt('childHealth'),
+                    subtitle: T.txt('childHealthSubtitle'),
+                    icon: Icons.monitor_heart_rounded,
                   ),
 
                   // ===============================================
@@ -787,40 +768,10 @@ class _ChildProfileContent extends StatelessWidget {
                     height: 28,
                   ),
 
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      T.txt('childPersonalizedForAge'),
-                      style: TextStyle(
-                        fontFamily: 'Fredoka',
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                        color: dark
-                            ? Colors.white
-                            : const Color(0xFF4A2C82),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(
-                    height: 5,
-                  ),
-
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      T.txt('childPersonalizedSubtitle'),
-                      style: TextStyle(
-                        fontFamily: 'Baloo2',
-                        fontSize: 15,
-                        height: 1.25,
-                        color: dark ? Colors.white70 : Colors.black54,
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(
-                    height: 12,
+                  FamilySectionHeading(
+                    title: T.txt('childPersonalizedForAge'),
+                    subtitle: T.txt('childPersonalizedSubtitle'),
+                    icon: Icons.auto_awesome_rounded,
                   ),
 
                   _HealthCard(
@@ -983,12 +934,6 @@ class _InfoCard extends StatelessWidget {
 // =================================================================
 
 class _HealthCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final Color color;
-  final VoidCallback onTap;
-
   const _HealthCard({
     required this.icon,
     required this.title,
@@ -997,147 +942,20 @@ class _HealthCard extends StatelessWidget {
     required this.onTap,
   });
 
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color color;
+  final VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
-    final bool dark =
-        Theme.of(context).brightness ==
-            Brightness.dark;
-
-    return Material(
-      color:
-          Colors.transparent,
-      borderRadius:
-          BorderRadius.circular(
-        20,
-      ),
-      child: InkWell(
-        onTap:
-            onTap,
-        borderRadius:
-            BorderRadius.circular(
-          20,
-        ),
-        child: Container(
-          width:
-              double.infinity,
-          padding:
-              const EdgeInsets.all(
-            16,
-          ),
-          decoration:
-              BoxDecoration(
-            gradient:
-                LinearGradient(
-              colors: [
-                dark
-                    ? const Color(
-                        0xFF211B2E,
-                      )
-                    : Colors.white,
-                color.withValues(
-                  alpha:
-                      dark
-                          ? 0.16
-                          : 0.08,
-                ),
-              ],
-            ),
-            borderRadius:
-                BorderRadius.circular(
-              20,
-            ),
-            border:
-                Border.all(
-              color:
-                  color.withValues(
-                alpha:
-                    0.13,
-              ),
-            ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 50,
-                height: 50,
-                decoration:
-                    BoxDecoration(
-                  color:
-                      color.withValues(
-                    alpha: 0.14,
-                  ),
-                  borderRadius:
-                      BorderRadius
-                          .circular(
-                    16,
-                  ),
-                ),
-                child: Icon(
-                  icon,
-                  color:
-                      color,
-                  size: 28,
-                ),
-              ),
-
-              const SizedBox(
-                width: 13,
-              ),
-
-              Expanded(
-                child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment
-                          .start,
-                  children: [
-                    Text(
-                      title,
-                      style:
-                          TextStyle(
-                        fontFamily:
-                            'Fredoka',
-                        fontSize:
-                            17,
-                        fontWeight:
-                            FontWeight.w700,
-                        color: dark
-                            ? Colors.white
-                            : const Color(
-                                0xFF2D2D2D,
-                              ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 2,
-                    ),
-                    Text(
-                      subtitle,
-                      style:
-                          TextStyle(
-                        fontFamily:
-                            'Baloo2',
-                        fontSize:
-                            14,
-                        height:
-                            1.15,
-                        color: dark
-                            ? Colors.white60
-                            : Colors.black54,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              Icon(
-                Icons
-                    .chevron_right_rounded,
-                color: color,
-              ),
-            ],
-          ),
-        ),
-      ),
+    return FamilyTopicCard(
+      title: title,
+      subtitle: subtitle,
+      icon: icon,
+      color: color,
+      onTap: onTap,
     );
   }
 }
