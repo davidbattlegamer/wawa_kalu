@@ -9,6 +9,7 @@ import '../pages/entorno_page.dart';
 
 import '../features/children/pages/children_page.dart';
 import '../features/health/pages/health_page.dart';
+import 'widgets/liquid_glass_bottom_bar.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -58,112 +59,43 @@ class _AppShellState
         index: _paginaActual,
         children: _paginas,
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: modoOscuro
-              ? const Color(0xFF211B2E)
-              : Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(
-                alpha:
-                    modoOscuro ? 0.25 : 0.08,
+      extendBody: true,
+      bottomNavigationBar: ValueListenableBuilder<String>(
+        valueListenable: AppConfig.idioma,
+        builder: (context, idiomaActual, _) {
+          return LiquidGlassBottomBar(
+            selectedIndex: _paginaActual,
+            onSelected: _cambiarPagina,
+            darkMode: modoOscuro,
+            items: [
+              LiquidGlassNavItem(
+                icon: Icons.home_outlined,
+                selectedIcon: Icons.home_rounded,
+                label: T.txt('navHome'),
+                color: const Color(0xFF7B2CBF),
               ),
-              blurRadius: 18,
-              offset: const Offset(0, -4),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          top: false,
-          child:
-              ValueListenableBuilder<String>(
-            valueListenable:
-                AppConfig.idioma,
-            builder:
-                (context, idiomaActual, _) {
-              return NavigationBar(
-                selectedIndex:
-                    _paginaActual,
-                onDestinationSelected:
-                    _cambiarPagina,
-                height: 70,
-                elevation: 0,
-                backgroundColor:
-                    modoOscuro
-                        ? const Color(
-                            0xFF211B2E,
-                          )
-                        : Colors.white,
-                indicatorColor:
-                    const Color(0xFF7B2CBF)
-                        .withValues(
-                  alpha: 0.15,
-                ),
-                destinations: [
-                  NavigationDestination(
-                    icon: const Icon(
-                      Icons.home_outlined,
-                    ),
-                    selectedIcon:
-                        const Icon(
-                      Icons.home_rounded,
-                      color:
-                          Color(0xFF7B2CBF),
-                    ),
-                    label:
-                        T.txt('navHome'),
-                  ),
-                  NavigationDestination(
-                    icon: const Icon(
-                      Icons
-                          .child_care_outlined,
-                    ),
-                    selectedIcon:
-                        const Icon(
-                      Icons
-                          .child_care_rounded,
-                      color:
-                          Color(0xFF7B2CBF),
-                    ),
-                    label:
-                        T.txt('navChildren'),
-                  ),
-                  NavigationDestination(
-                    icon: const Icon(
-                      Icons
-                          .favorite_border_rounded,
-                    ),
-                    selectedIcon:
-                        const Icon(
-                      Icons
-                          .favorite_rounded,
-                      color:
-                          Color(0xFFEF476F),
-                    ),
-                    label:
-                        T.txt('navHealth'),
-                  ),
-                  NavigationDestination(
-                    icon: const Icon(
-                      Icons
-                          .auto_stories_outlined,
-                    ),
-                    selectedIcon:
-                        const Icon(
-                      Icons
-                          .auto_stories_rounded,
-                      color:
-                          Color(0xFFFF9F1C),
-                    ),
-                    label:
-                        T.txt('navLearning'),
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
+              LiquidGlassNavItem(
+                icon: Icons.child_care_outlined,
+                selectedIcon: Icons.child_care_rounded,
+                label: T.txt('navChildren'),
+                color: const Color(0xFF8E44AD),
+              ),
+              LiquidGlassNavItem(
+                icon: Icons.favorite_border_rounded,
+                selectedIcon: Icons.favorite_rounded,
+                label: T.txt('navHealth'),
+                color: const Color(0xFFEF476F),
+              ),
+              LiquidGlassNavItem(
+                icon: Icons.auto_stories_outlined,
+                selectedIcon: Icons.auto_stories_rounded,
+                label: T.txt('navLearning'),
+                color: const Color(0xFFFF9F1C),
+              ),
+            ],
+          );
+        },
+      ),
       ),
     );
   }
