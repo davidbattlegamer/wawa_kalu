@@ -14,7 +14,12 @@ import 'guia_familias_page.dart';
 /// - Lenguaje: orientación específica de comunicación.
 /// - Entornos protectores: orientación de seguridad y cuidado.
 class LearningHubPage extends StatelessWidget {
-  const LearningHubPage({super.key});
+  const LearningHubPage({
+    super.key,
+    this.initialAgeGroup = -1,
+  });
+
+  final int initialAgeGroup;
 
   void _open(BuildContext context, Widget page) {
     Navigator.of(context).push(
@@ -78,7 +83,7 @@ class LearningHubPage extends StatelessWidget {
                         featured: true,
                         onTap: () => _open(
                           context,
-                          const GuiaFamiliasPage(),
+                          GuiaFamiliasPage(initialAgeGroup: initialAgeGroup),
                         ),
                       ),
                       FamilyTopicCard(
