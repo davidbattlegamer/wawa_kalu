@@ -66,8 +66,8 @@ class HealthPage extends StatelessWidget {
                     title: T.txt('healthHeaderTitle'),
                     subtitle: T.txt('healthHeaderSubtitle'),
                     icon: Icons.favorite_rounded,
-                    color: const Color(0xFFBE567C),
-                    accent: const Color(0xFFEF9A72),
+                    color: const Color(0xFFEC5F7A),
+                    accent: const Color(0xFFF59E83),
                   ),
 
                   const SizedBox(height: 23),
@@ -90,7 +90,7 @@ class HealthPage extends StatelessWidget {
                     icon: Icons.vaccines_rounded,
                     title: T.txt('vaccines'),
                     subtitle: T.txt('vaccinesSubtitle'),
-                    color: Colors.blue,
+                    color: const Color(0xFF06A6A6),
                     onTap: () {
                       _openPage(context, const VaccinesPage());
                     },
@@ -120,7 +120,7 @@ class HealthPage extends StatelessWidget {
                     icon: Icons.restaurant_menu_rounded,
                     title: T.txt('nutrition'),
                     subtitle: T.txt('healthNutritionIntegratedSubtitle'),
-                    color: const Color(0xFF269B90),
+                    color: const Color(0xFFF59E55),
                     onTap: () {
                       _openPage(context, const NutricionPage());
                     },
