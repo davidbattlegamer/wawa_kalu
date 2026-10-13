@@ -117,8 +117,8 @@ class VaccineNotificationService {
         in evaluations) {
       // No mandar recordatorios de vacunas
       // que ya fueron registradas.
-      if (evaluation.status ==
-          VaccineStatus.applied) {
+      if (evaluation.status == VaccineStatus.applied ||
+          evaluation.status == VaccineStatus.notApplied) {
         continue;
       }
 
