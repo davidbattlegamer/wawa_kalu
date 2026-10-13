@@ -4,16 +4,15 @@ import 'app_config.dart';
 import 'app_texts.dart';
 import '../features/learning/data/parent_activity_catalog.dart';
 
-// Conserva el nombre de la clase para no romper la navegación existente.
-// Esta pantalla ahora es una guía para familias, no un catálogo de videojuegos.
-class JuegoPage extends StatefulWidget {
-  const JuegoPage({super.key});
+// Guía de actividades con materiales cotidianos para madres, padres y cuidadores.
+class GuiaFamiliasPage extends StatefulWidget {
+  const GuiaFamiliasPage({super.key});
 
   @override
-  State<JuegoPage> createState() => _JuegoPageState();
+  State<GuiaFamiliasPage> createState() => _GuiaFamiliasPageState();
 }
 
-class _JuegoPageState extends State<JuegoPage> {
+class _GuiaFamiliasPageState extends State<GuiaFamiliasPage> {
   int _age = -1;
   ActivityArea? _area;
 

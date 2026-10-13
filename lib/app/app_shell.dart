@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import '../pages/app_config.dart';
 import '../pages/app_texts.dart';
 import '../pages/home_page.dart';
-import '../pages/juego_page.dart';
+import '../features/learning/pages/guia_familias_page.dart';
 import '../pages/lenguaje_page.dart';
 import '../pages/entorno_page.dart';
 import '../features/children/pages/children_page.dart';
@@ -216,9 +216,9 @@ class _LearningPage extends StatelessWidget {
 =======
                     icon: Icons.menu_book_rounded,
 
-                    title: T.txt('games'),
+                    title: T.txt('familyGuide'),
 
-                    subtitle: T.txt('learningGamesSubtitle'),
+                    subtitle: T.txt('learningGuideSubtitle'),
 
                     color: const Color(0xFF8054D7),
 
@@ -227,10 +227,15 @@ class _LearningPage extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
+<<<<<<< HEAD
                         MaterialPageRoute(
                           builder: (_) =>
                               const JuegoPage(),
                         ),
+=======
+
+                        MaterialPageRoute(builder: (_) => const GuiaFamiliasPage()),
+>>>>>>> 7e524784389ca322ffcb0898c87b4ed69cd47c35
                       );
                     },
                   ),
