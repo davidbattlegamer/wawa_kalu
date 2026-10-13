@@ -34,6 +34,19 @@ class T {
   static Set<String> get kichwaKeys => Set<String>.unmodifiable(_kichwa.keys);
 
   static final Map<String, String> _spanish = <String, String>{
+    'homeHeroEyebrow': 'TU DÍA EN WAWA KALÚ',
+    'homeHeroTitle': 'Hola, {name}',
+    'homeHeroSubtitle': 'Un vistazo claro a lo importante para acompañar su bienestar y crecimiento hoy.',
+    'homeTodayTitle': 'Hoy para {name}',
+    'homeTodaySubtitle': 'Revisa lo más importante sin perderte entre pantallas.',
+    'homeQuickSummarySubtitle': 'Datos básicos del perfil que estás acompañando.',
+    'homeChildContextText': 'Este es el perfil activo. Puedes cambiarlo o abrir su información completa.',
+    'learningUnifiedTag': 'APRENDER EN FAMILIA',
+    'learningUnifiedTitle': 'Descubrir, conversar y cuidar',
+    'learningUnifiedSubtitle': 'Una sola guía para acompañar actividades, lenguaje, emociones y entornos seguros de 1 a 5 años.',
+    'learningLanguageUnifiedSubtitle': 'Momentos sencillos para conversar, escuchar, cantar, nombrar y comprender juntos.',
+    'learningEnvironmentUnifiedSubtitle': 'Acciones cotidianas para crear espacios seguros, afectivos y saludables.',
+    'learningUnifiedClosing': 'Aprender también ocurre cuando conversan, cuidan, juegan y comparten las rutinas de cada día.',
     'childHealthSubtitle': 'Vacunas y crecimiento usan este mismo perfil, sin crear registros duplicados.',
     'learningHeroEyebrow': 'ACOMPAÑAR · DESCUBRIR · CUIDAR',
     'learningHubTitle': 'Acompaña cada descubrimiento',
@@ -745,6 +758,19 @@ class T {
   };
 
   static final Map<String, String> _english = <String, String>{
+    'homeHeroEyebrow': 'YOUR DAY IN WAWA KALÚ',
+    'homeHeroTitle': 'Hello, {name}',
+    'homeHeroSubtitle': 'A clear view of what matters today for wellbeing and growth.',
+    'homeTodayTitle': 'Today for {name}',
+    'homeTodaySubtitle': 'Review what matters most without getting lost between screens.',
+    'homeQuickSummarySubtitle': 'Basic information for the profile you are supporting.',
+    'homeChildContextText': 'This is the active profile. You can switch children or open the full profile.',
+    'learningUnifiedTag': 'LEARNING TOGETHER',
+    'learningUnifiedTitle': 'Discover, communicate, and care',
+    'learningUnifiedSubtitle': 'One guide for activities, language, emotions, and safe environments from ages 1 to 5.',
+    'learningLanguageUnifiedSubtitle': 'Simple moments to talk, listen, sing, name, and understand together.',
+    'learningEnvironmentUnifiedSubtitle': 'Everyday actions that help create safe, caring, and healthy spaces.',
+    'learningUnifiedClosing': 'Learning also happens while you talk, care, play, and share everyday routines.',
     'childHealthSubtitle': 'Vaccines and growth use this same profile, without creating duplicate records.',
     'learningHeroEyebrow': 'SUPPORT · DISCOVER · CARE',
     'learningHubTitle': 'Support every discovery',
