@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../pages/app_texts.dart';
 import '../../../app/widgets/family_content_ui.dart';
 import '../../../pages/nutricion_page.dart';
-import '../../learning/pages/learning_hub_page.dart';
+import '../../learning/pages/guia_familias_page.dart';
 
 import '../../growth/pages/growth_page.dart';
 import '../../vaccines/pages/vaccines_page.dart';
@@ -159,7 +159,7 @@ class _ChildProfileContent extends StatelessWidget {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => LearningHubPage(
+        builder: (_) => GuiaFamiliasPage(
           initialAgeGroup: _guideAgeGroup(child.birthDate),
         ),
       ),
