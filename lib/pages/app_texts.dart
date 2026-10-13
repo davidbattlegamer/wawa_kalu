@@ -34,6 +34,17 @@ class T {
   static Set<String> get kichwaKeys => Set<String>.unmodifiable(_kichwa.keys);
 
   static final Map<String, String> _spanish = <String, String>{
+    'learningExploreTitle': 'Explora a su lado',
+    'learningExploreSubtitle': 'Tres espacios para descubrir, conversar y cuidar con cariño.',
+    'learningFeatured': 'DESTACADO · 1 A 5 AÑOS',
+    'learningFamilyNotice': 'Cada niño tiene su propio ritmo. Acompaña sus descubrimientos con juego, escucha y afecto.',
+    'languageIdeasTitle': 'Ideas para conversar y conectar',
+    'languageRecommendationTitle': '¿Cómo acompañar?',
+    'environmentActionsTitle': 'Acciones que protegen',
+    'environmentWhatToKnow': '¿Por qué es importante?',
+    'nutritionAdviceTitle': 'Pequeños hábitos, grandes cuidados',
+    'nutritionPracticalTips': 'Consejos para poner en práctica',
+    'recipesIdeasTitle': 'Ideas para cocinar en familia',
     'guideAreaExplore': "Exploración sensorial",
     'guideAreaMove': "Movimiento",
     'guideAreaLanguage': "Lenguaje",
@@ -712,6 +723,17 @@ class T {
   };
 
   static final Map<String, String> _english = <String, String>{
+    'learningExploreTitle': 'Explore together',
+    'learningExploreSubtitle': 'Three spaces to discover, communicate, and care with kindness.',
+    'learningFeatured': 'FEATURED · AGES 1–5',
+    'learningFamilyNotice': 'Every child develops at their own pace. Support their discoveries with play, listening, and affection.',
+    'languageIdeasTitle': 'Ideas to talk and connect',
+    'languageRecommendationTitle': 'How can you help?',
+    'environmentActionsTitle': 'Actions that protect',
+    'environmentWhatToKnow': 'Why does it matter?',
+    'nutritionAdviceTitle': 'Small habits, lasting care',
+    'nutritionPracticalTips': 'Practical tips',
+    'recipesIdeasTitle': 'Ideas for cooking together',
     'guideAreaExplore': "Sensory exploration",
     'guideAreaMove': "Movement",
     'guideAreaLanguage': "Language",
