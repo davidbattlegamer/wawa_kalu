@@ -95,7 +95,7 @@ class ChildrenPage extends StatelessWidget {
                           title: T.txt('childrenHubTitle'),
                           subtitle: T.txt('childrenHubSubtitle'),
                           icon: Icons.family_restroom_rounded,
-                          color: const Color(0xFF6E56C6),
+                          color: const Color(0xFF7B61C9),
                           accent: const Color(0xFFDF7E9F),
                         ),
                         const SizedBox(height: 26),
