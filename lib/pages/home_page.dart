@@ -962,91 +962,66 @@ class _HomeChildSpotlight extends StatelessWidget {
 // =================================================================
 
 class _EmptyHome extends StatelessWidget {
+  const _EmptyHome({
+    required this.dark,
+    required this.onAdd,
+  });
+
   final bool dark;
-
   final VoidCallback onAdd;
-
-  const _EmptyHome({required this.dark, required this.onAdd});
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            children: [
-              Container(
-                width: 125,
-                height: 125,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    colors: [
-                      const Color(0xFF7B2CBF).withValues(alpha: 0.20),
-                      const Color(0xFFFF006E).withValues(alpha: 0.10),
-                    ],
-                  ),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 110),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 720),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FamilyHero(
+                  eyebrow: T.txt('homeHeroEyebrow'),
+                  title: T.txt('homeNoChildTitle'),
+                  subtitle: T.txt('homeNoChildSubtitle'),
+                  icon: Icons.family_restroom_rounded,
+                  color: const Color(0xFF6C4CCF),
+                  accent: const Color(0xFFE77B9F),
                 ),
-                child: const Icon(
-                  Icons.family_restroom_rounded,
-                  size: 65,
-                  color: Color(0xFF7B2CBF),
+                const SizedBox(height: 24),
+                FamilyNotice(
+                  text: T.txt('childrenEmptyDescription'),
+                  color: const Color(0xFF7B61C9),
+                  icon: Icons.auto_awesome_rounded,
                 ),
-              ),
-
-              const SizedBox(height: 24),
-
-              Text(
-                T.txt('homeNoChildTitle'),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'Fredoka',
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                  color: dark ? Colors.white : const Color(0xFF2D2D2D),
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              Text(
-                T.txt('homeNoChildSubtitle'),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'Baloo2',
-                  fontSize: 16,
-                  height: 1.3,
-                  color: dark ? Colors.white70 : Colors.black54,
-                ),
-              ),
-
-              const SizedBox(height: 28),
-
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: FilledButton.icon(
-                  onPressed: onAdd,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: const Color(0xFF7B2CBF),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                const SizedBox(height: 18),
+                SizedBox(
+                  width: double.infinity,
+                  height: 58,
+                  child: FilledButton.icon(
+                    onPressed: onAdd,
+                    style: FilledButton.styleFrom(
+                      backgroundColor: const Color(0xFF7B61C9),
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(21),
+                      ),
                     ),
-                  ),
-                  icon: const Icon(Icons.add_rounded),
-                  label: Text(
-                    T.txt('addFirstChild'),
-                    style: const TextStyle(
-                      fontFamily: 'Fredoka',
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
+                    icon: const Icon(Icons.person_add_alt_1_rounded),
+                    label: Text(
+                      T.txt('addFirstChild'),
+                      style: const TextStyle(
+                        fontFamily: 'Fredoka',
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
