@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'app_config.dart';
-import 'app_texts.dart';
-import '../features/learning/data/parent_activity_catalog.dart';
+import '../../../pages/app_config.dart';
+import '../../../pages/app_texts.dart';
+import '../data/parent_activity_catalog.dart';
 
 // Guía de actividades con materiales cotidianos para madres, padres y cuidadores.
 class GuiaFamiliasPage extends StatefulWidget {
@@ -644,7 +644,7 @@ class _ActivityCard extends StatelessWidget {
                           color: color, dark: dark,
                         ),
                         _SmallTag(
-                          text: activity.minutes.toString() + ' ' + T.txt('guideMinutes'),
+                          text: '${activity.minutes} ${T.txt('guideMinutes')}',
                           color: color, dark: dark,
                         ),
                       ],
@@ -829,8 +829,7 @@ class _ActivityDetailPageState extends State<_ActivityDetailPage> {
                               children: [
                                 _WhiteTag(text: _ageLabel(activity.ageGroup)),
                                 _WhiteTag(
-                                  text: activity.minutes.toString() +
-                                      ' ' + T.txt('guideMinutes'),
+                                  text: '${activity.minutes} ${T.txt('guideMinutes')}',
                                 ),
                               ],
                             ),
