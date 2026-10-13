@@ -130,30 +130,6 @@ class ChildrenPage extends StatelessWidget {
               },
             ),
           ),
-          floatingActionButton: ValueListenableBuilder<List<Child>>(
-            valueListenable: ChildRepository.instance.children,
-            builder: (context, children, _) {
-              if (children.isEmpty) {
-                return const SizedBox.shrink();
-              }
-
-              return FloatingActionButton.extended(
-                onPressed: () {
-                  _addChild(context);
-                },
-                backgroundColor: const Color(0xFF7B2CBF),
-                foregroundColor: Colors.white,
-                icon: const Icon(Icons.add_rounded),
-                label: Text(
-                  T.txt('addChild'),
-                  style: const TextStyle(
-                    fontFamily: 'Fredoka',
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              );
-            },
-          ),
         );
       },
     );
