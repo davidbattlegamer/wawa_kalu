@@ -6,14 +6,20 @@ Su propuesta combina seguimiento infantil, orientaciones para las familias y exp
 
 ## ✨ Funciones principales
 
-- 👨‍👩‍👧 **Mis niños:** registro y administración de perfiles infantiles.
+- 📚 **Aprender:** un hub con actividades por edad, lenguaje y entornos protectores, cada uno con una función distinta.
+- ❤️ **Salud:** vacunas, crecimiento y nutrición sin destinos repetidos.
+- 👨‍👩‍👧 **Mis niños:** perfiles individuales que reutilizan las mismas herramientas de Salud y Aprender.
 - 💉 **Vacunación:** consulta del esquema, registro de dosis y estados de seguimiento.
 - 📈 **Crecimiento:** mediciones y curvas de referencia de la OMS.
 - 📖 **Guía para familias:** 12 propuestas de aprendizaje para niñas y niños de 1 a 5 años.
-- 🗣️ **Lenguaje:** recomendaciones para la comunicación y la estimulación.
-- 🏡 **Entornos protectores:** orientación sobre cuidado y bienestar infantil.
-- 🥗 **Nutrición y recetas:** contenidos para acompañar la alimentación.
+- 🗣️ **Lenguaje:** orientación específica para conversación, cuentos, canciones y rutinas.
+- 🛡️ **Entornos protectores:** seguridad, afecto, rutinas y protección infantil.
+- 🥗 **Nutrición:** orientación y recetas integradas en dos pestañas del mismo módulo.
 - 🎨 **Personalización:** modo claro, oscuro o automático; opciones de idioma, sonido y vibración.
+
+## 🧭 Navegación actual
+
+La barra principal está organizada como **Inicio → Aprender → Salud → Mis niños**. Las recetas ya no aparecen como una sección independiente: están integradas dentro de **Salud → Nutrición → Recetas**. Desde un perfil infantil se abren las mismas pantallas canónicas de vacunas, crecimiento, aprendizaje y nutrición, evitando registros o interfaces duplicadas.
 
 ## 📖 Guía para familias (1 a 5 años)
 
@@ -43,7 +49,8 @@ lib/
 ├── app/
 │   ├── app_shell.dart
 │   └── widgets/
-│       └── liquid_glass_bottom_bar.dart
+│       ├── liquid_glass_bottom_bar.dart
+│       └── family_content_ui.dart
 ├── core/
 │   ├── database/
 │   ├── notifications/
@@ -56,6 +63,7 @@ lib/
 │   │   ├── data/
 │   │   │   └── parent_activity_catalog.dart
 │   │   └── pages/
+│   │       ├── learning_hub_page.dart
 │   │       └── guia_familias_page.dart
 │   ├── privacy/
 │   └── vaccines/
