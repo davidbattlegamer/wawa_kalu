@@ -1,5 +1,5 @@
 name: wawa_kalu
-description: "Aplicación educativa infantil Wawa Kalú."
+description: "Aplicación de acompañamiento familiar Wawa Kalú."
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -36,8 +36,6 @@ flutter:
   assets:
     - assets/images/
     - assets/sonidos/
-    - assets/sonidos/es/
-    - assets/sonidos/en/
     - assets/data/vaccines/
     - assets/data/growth/who/
 
