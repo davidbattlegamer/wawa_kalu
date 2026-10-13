@@ -238,162 +238,390 @@ void _mostrarAcercaDe(
   bool modoOscuro,
 ) {
   showDialog<void>(
-    context:
-        context,
-    builder:
-        (
-      BuildContext dialogContext,
-    ) {
-      return AlertDialog(
-        backgroundColor:
-            modoOscuro
-                ? const Color(
-                    0xFF211B2E,
-                  )
-                : Colors.white,
-        shape:
-            RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.circular(
-            24,
-          ),
+    context: context,
+    barrierColor: Colors.black.withValues(alpha: 0.48),
+    builder: (BuildContext dialogContext) {
+      final Color fondo = modoOscuro
+          ? const Color(0xFF17131E)
+          : const Color(0xFFFFFCF8);
+
+      final Color textoPrincipal = modoOscuro
+          ? Colors.white
+          : const Color(0xFF30243A);
+
+      final Color textoSecundario = modoOscuro
+          ? Colors.white70
+          : const Color(0xFF6F6577);
+
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(
+          horizontal: 18,
+          vertical: 24,
         ),
-        title:
-            Row(
-          children: [
-            Container(
-              width:
-                  44,
-              height:
-                  44,
-              decoration:
-                  BoxDecoration(
-                color:
-                    Colors.deepPurple
-                        .withValues(
-                  alpha:
-                      0.12,
-                ),
-                borderRadius:
-                    BorderRadius.circular(
-                  14,
-                ),
-              ),
-              child:
-                  const Icon(
-                Icons
-                    .info_outline_rounded,
-                color:
-                    Colors.deepPurple,
-              ),
-            ),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 520,
+            maxHeight: 690,
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(30),
+            child: Material(
+              color: fondo,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // ==========================================================
+                  // CABECERA
+                  // ==========================================================
 
-            const SizedBox(
-              width:
-                  12,
-            ),
-
-            Expanded(
-              child:
-                  Text(
-                T.txt(
-                  'aboutApp',
-                ),
-                style:
-                    TextStyle(
-                  fontFamily:
-                      'Fredoka',
-                  fontWeight:
-                      FontWeight.w700,
-                  color:
-                      modoOscuro
-                          ? Colors.white
-                          : const Color(
-                              0xFF4A2C82,
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.fromLTRB(20, 18, 14, 22),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: modoOscuro
+                            ? const <Color>[
+                                Color(0xFF4A2C82),
+                                Color(0xFF7B2CBF),
+                                Color(0xFFB5179E),
+                              ]
+                            : const <Color>[
+                                Color(0xFFF4E8FF),
+                                Color(0xFFFFE8F3),
+                                Color(0xFFFFF0D9),
+                              ],
+                      ),
+                    ),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          top: -30,
+                          right: -18,
+                          child: Container(
+                            width: 110,
+                            height: 110,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white.withValues(
+                                alpha: modoOscuro ? 0.08 : 0.32,
+                              ),
                             ),
-                ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: -48,
+                          left: -34,
+                          child: Container(
+                            width: 130,
+                            height: 130,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: const Color(0xFFFFC300).withValues(
+                                alpha: modoOscuro ? 0.10 : 0.18,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: IconButton(
+                                tooltip: T.txt('close'),
+                                onPressed: () => Navigator.pop(dialogContext),
+                                icon: Icon(
+                                  Icons.close_rounded,
+                                  color: modoOscuro
+                                      ? Colors.white
+                                      : const Color(0xFF4A2C82),
+                                ),
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Colors.white.withValues(
+                                    alpha: modoOscuro ? 0.12 : 0.72,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 92,
+                              height: 92,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: const LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: <Color>[
+                                    Color(0xFFFFC300),
+                                    Color(0xFFFF7B00),
+                                    Color(0xFFFF006E),
+                                  ],
+                                ),
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.92),
+                                  width: 4,
+                                ),
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.14),
+                                    blurRadius: 18,
+                                    offset: const Offset(0, 7),
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(
+                                Icons.child_care_rounded,
+                                size: 50,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              'Wawa Kalú',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Fredoka',
+                                fontSize: 29,
+                                fontWeight: FontWeight.w900,
+                                color: modoOscuro
+                                    ? Colors.white
+                                    : const Color(0xFF4A2C82),
+                              ),
+                            ),
+                            const SizedBox(height: 7),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(
+                                  alpha: modoOscuro ? 0.12 : 0.78,
+                                ),
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(
+                                  color: Colors.white.withValues(
+                                    alpha: modoOscuro ? 0.16 : 0.75,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                '${T.txt('appVersion')} $_appVersion',
+                                style: TextStyle(
+                                  fontFamily: 'Fredoka',
+                                  fontSize: 13.5,
+                                  fontWeight: FontWeight.w700,
+                                  color: modoOscuro
+                                      ? Colors.white
+                                      : const Color(0xFF6C3BAA),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // ==========================================================
+                  // CONTENIDO
+                  // ==========================================================
+
+                  Flexible(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 22),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            T.txt('aboutApp'),
+                            style: TextStyle(
+                              fontFamily: 'Fredoka',
+                              fontSize: 21,
+                              fontWeight: FontWeight.w800,
+                              color: textoPrincipal,
+                            ),
+                          ),
+                          const SizedBox(height: 7),
+                          Text(
+                            T.txt('aboutAppSubtitle'),
+                            style: TextStyle(
+                              fontFamily: 'Baloo2',
+                              fontSize: 15.5,
+                              height: 1.42,
+                              color: textoSecundario,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _AboutSectionCard(
+                                  modoOscuro: modoOscuro,
+                                  icon: Icons.health_and_safety_rounded,
+                                  color: const Color(0xFF00A896),
+                                  title: T.txt('health'),
+                                  description: T.txt('healthHeaderSubtitle'),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: _AboutSectionCard(
+                                  modoOscuro: modoOscuro,
+                                  icon: Icons.auto_stories_rounded,
+                                  color: const Color(0xFF7B2CBF),
+                                  title: T.txt('learning'),
+                                  description: T.txt('learningHeaderSubtitle'),
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 20),
+
+                          Text(
+                            T.txt('projectFeatures'),
+                            style: TextStyle(
+                              fontFamily: 'Fredoka',
+                              fontSize: 17,
+                              fontWeight: FontWeight.w800,
+                              color: textoPrincipal,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              _AboutFeatureChip(
+                                icon: Icons.vaccines_rounded,
+                                text: T.txt('vaccines'),
+                                color: const Color(0xFFEF476F),
+                                modoOscuro: modoOscuro,
+                              ),
+                              _AboutFeatureChip(
+                                icon: Icons.show_chart_rounded,
+                                text: T.txt('growth'),
+                                color: const Color(0xFF118AB2),
+                                modoOscuro: modoOscuro,
+                              ),
+                              _AboutFeatureChip(
+                                icon: Icons.restaurant_menu_rounded,
+                                text: T.txt('nutrition'),
+                                color: const Color(0xFF06A77D),
+                                modoOscuro: modoOscuro,
+                              ),
+                              _AboutFeatureChip(
+                                icon: Icons.sports_esports_rounded,
+                                text: T.txt('games'),
+                                color: const Color(0xFFFF9F1C),
+                                modoOscuro: modoOscuro,
+                              ),
+                              _AboutFeatureChip(
+                                icon: Icons.record_voice_over_rounded,
+                                text: T.txt('languageMenu'),
+                                color: const Color(0xFFFF006E),
+                                modoOscuro: modoOscuro,
+                              ),
+                              _AboutFeatureChip(
+                                icon: Icons.home_rounded,
+                                text: T.txt('protectiveEnvironments'),
+                                color: const Color(0xFF7B2CBF),
+                                modoOscuro: modoOscuro,
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 22),
+
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              color: modoOscuro
+                                  ? Colors.white.withValues(alpha: 0.055)
+                                  : const Color(0xFFF8F3FC),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: const Color(0xFF7B2CBF).withValues(
+                                  alpha: modoOscuro ? 0.18 : 0.11,
+                                ),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 46,
+                                  height: 46,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF7B2CBF).withValues(
+                                      alpha: modoOscuro ? 0.22 : 0.11,
+                                    ),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: const Icon(
+                                    Icons.code_rounded,
+                                    color: Color(0xFF7B2CBF),
+                                  ),
+                                ),
+                                const SizedBox(width: 13),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        T.txt('developers'),
+                                        style: TextStyle(
+                                          fontFamily: 'Fredoka',
+                                          fontSize: 14.5,
+                                          fontWeight: FontWeight.w700,
+                                          color: textoSecundario,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        _developers,
+                                        style: TextStyle(
+                                          fontFamily: 'Fredoka',
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w800,
+                                          color: textoPrincipal,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 16),
+
+                          Center(
+                            child: Text(
+                              'Wawa Kalú • Ecuador',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Baloo2',
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w600,
+                                color: textoSecundario,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-        content:
-            SingleChildScrollView(
-          child:
-              Column(
-            mainAxisSize:
-                MainAxisSize.min,
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
-            children: [
-              Text(
-                T.txt(
-                  'aboutAppSubtitle',
-                ),
-                style:
-                    TextStyle(
-                  fontFamily:
-                      'Baloo2',
-                  fontSize:
-                      15,
-                  height:
-                      1.4,
-                  color:
-                      modoOscuro
-                          ? Colors.white70
-                          : Colors.black87,
-                ),
-              ),
-
-              const SizedBox(
-                height:
-                    18,
-              ),
-
-              _AboutRow(
-                label:
-                    T.txt(
-                  'appVersion',
-                ),
-                value:
-                    _appVersion,
-                modoOscuro:
-                    modoOscuro,
-              ),
-
-              const SizedBox(
-                height:
-                    10,
-              ),
-
-              _AboutRow(
-                label:
-                    T.txt(
-                  'developers',
-                ),
-                value:
-                    _developers,
-                modoOscuro:
-                    modoOscuro,
-              ),
-            ],
           ),
         ),
-        actions: [
-          TextButton(
-            onPressed:
-                () {
-              Navigator.pop(
-                dialogContext,
-              );
-            },
-            child:
-                Text(
-              T.txt(
-                'close',
-              ),
-            ),
-          ),
-        ],
       );
     },
   );
@@ -1024,64 +1252,129 @@ void showConfigSheet(
 }
 
 // ============================================================================
-// FILA ACERCA DE
+// TARJETAS DEL MODAL "ACERCA DE"
 // ============================================================================
 
-class _AboutRow extends StatelessWidget {
-  final String label;
-  final String value;
+class _AboutSectionCard extends StatelessWidget {
+  final bool modoOscuro;
+  final IconData icon;
+  final Color color;
+  final String title;
+  final String description;
+
+  const _AboutSectionCard({
+    required this.modoOscuro,
+    required this.icon,
+    required this.color,
+    required this.title,
+    required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: const BoxConstraints(minHeight: 150),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: modoOscuro
+            ? color.withValues(alpha: 0.12)
+            : color.withValues(alpha: 0.075),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: color.withValues(alpha: modoOscuro ? 0.24 : 0.14),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 43,
+            height: 43,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: modoOscuro ? 0.22 : 0.13),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Icon(
+              icon,
+              color: color,
+              size: 25,
+            ),
+          ),
+          const SizedBox(height: 11),
+          Text(
+            title,
+            style: TextStyle(
+              fontFamily: 'Fredoka',
+              fontSize: 16.5,
+              fontWeight: FontWeight.w800,
+              color: modoOscuro ? Colors.white : const Color(0xFF30243A),
+            ),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            description,
+            maxLines: 4,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontFamily: 'Baloo2',
+              fontSize: 13.5,
+              height: 1.28,
+              color: modoOscuro ? Colors.white70 : const Color(0xFF6F6577),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AboutFeatureChip extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final Color color;
   final bool modoOscuro;
 
-  const _AboutRow({
-    required this.label,
-    required this.value,
+  const _AboutFeatureChip({
+    required this.icon,
+    required this.text,
+    required this.color,
     required this.modoOscuro,
   });
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
-    return Row(
-      children: [
-        Expanded(
-          child:
-              Text(
-            label,
-            style:
-                TextStyle(
-              fontFamily:
-                  'Fredoka',
-              fontWeight:
-                  FontWeight.w600,
-              color:
-                  modoOscuro
-                      ? Colors.white70
-                      : Colors.black54,
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 11,
+        vertical: 8,
+      ),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: modoOscuro ? 0.15 : 0.08),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(
+          color: color.withValues(alpha: modoOscuro ? 0.25 : 0.15),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 17,
+            color: color,
+          ),
+          const SizedBox(width: 6),
+          Text(
+            text,
+            style: TextStyle(
+              fontFamily: 'Fredoka',
+              fontSize: 13.5,
+              fontWeight: FontWeight.w700,
+              color: modoOscuro ? Colors.white : const Color(0xFF413449),
             ),
           ),
-        ),
-        const SizedBox(
-          width:
-              12,
-        ),
-        Text(
-          value,
-          style:
-              TextStyle(
-            fontFamily:
-                'Fredoka',
-            fontWeight:
-                FontWeight.w700,
-            color:
-                modoOscuro
-                    ? Colors.white
-                    : const Color(
-                        0xFF2D2D2D,
-                      ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
