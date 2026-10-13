@@ -437,7 +437,11 @@ Future<_HomeHealthData> _loadHomeHealthData(Child child) async {
 
 VaccineEvaluation? _selectHomeVaccine(List<VaccineEvaluation> evaluations) {
   final List<VaccineEvaluation> pending = evaluations
-      .where((evaluation) => evaluation.status != VaccineStatus.applied)
+      .where(
+        (evaluation) =>
+            evaluation.status != VaccineStatus.applied &&
+            evaluation.status != VaccineStatus.notApplied,
+      )
       .toList();
 
   if (pending.isEmpty) {
@@ -540,6 +544,9 @@ class _Dashboard extends StatelessWidget {
     switch (evaluation.status) {
       case VaccineStatus.applied:
         return T.txt('vaccineApplied');
+
+      case VaccineStatus.notApplied:
+        return T.txt('vaccineNotApplied');
 
       case VaccineStatus.upcoming:
         return T.txt('vaccineUpcoming');
