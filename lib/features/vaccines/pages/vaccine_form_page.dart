@@ -100,7 +100,7 @@ class _VaccineFormPageState extends State<VaccineFormPage> {
 
       final VaccineRecord record = VaccineRecord(
         id: widget.record?.id ??
-            (widget.child.id + '_' + widget.dose.id),
+            '${widget.child.id}_${widget.dose.id}',
         childId: widget.child.id,
         scheduleId: widget.dose.id,
         vaccineCode: widget.dose.vaccineCode,
