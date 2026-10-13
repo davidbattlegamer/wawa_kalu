@@ -1075,12 +1075,9 @@ class _ReminderCard
 // TARJETA DE VACUNA
 // ================================================================
 
-class _VaccineCard
-    extends StatelessWidget {
+class _VaccineCard extends StatelessWidget {
   final VaccineEvaluation evaluation;
-
   final bool dark;
-
   final VoidCallback? onTap;
 
   const _VaccineCard({
@@ -1092,395 +1089,321 @@ class _VaccineCard
   String _statusText() {
     switch (evaluation.status) {
       case VaccineStatus.applied:
-        return T.txt(
-          'vaccineApplied',
-        );
-
+        return T.txt('vaccineApplied');
+      case VaccineStatus.notApplied:
+        return T.txt('vaccineNotApplied');
       case VaccineStatus.upcoming:
-        return T.txt(
-          'vaccineUpcoming',
-        );
-
+        return T.txt('vaccineUpcoming');
       case VaccineStatus.review:
-        return T.txt(
-          'vaccineReview',
-        );
-
+        return T.txt('vaccineReview');
       case VaccineStatus.seasonalReview:
-        return T.txt(
-          'vaccineSeasonalReview',
-        );
-
-      case VaccineStatus
-            .waitingPreviousDose:
-        return T.txt(
-          'vaccineWaitingPrevious',
-        );
+        return T.txt('vaccineSeasonalReview');
+      case VaccineStatus.waitingPreviousDose:
+        return T.txt('vaccineWaitingPrevious');
     }
   }
 
   Color _statusColor() {
     switch (evaluation.status) {
       case VaccineStatus.applied:
-        return const Color(
-          0xFF00A896,
-        );
-
+        return const Color(0xFF00A896);
+      case VaccineStatus.notApplied:
+        return const Color(0xFFE76F51);
       case VaccineStatus.upcoming:
-        return Colors.blue;
-
+        return const Color(0xFF3A86FF);
       case VaccineStatus.review:
-        return Colors.orange;
-
+        return const Color(0xFFF59E0B);
       case VaccineStatus.seasonalReview:
-        return Colors.deepPurple;
-
-      case VaccineStatus
-            .waitingPreviousDose:
+        return const Color(0xFF8E44AD);
+      case VaccineStatus.waitingPreviousDose:
         return Colors.grey;
     }
   }
 
-  int _daysUntil(
-    DateTime date,
-  ) {
-    final DateTime now =
-        DateTime.now();
+  IconData _statusIcon() {
+    switch (evaluation.status) {
+      case VaccineStatus.applied:
+        return Icons.check_circle_rounded;
+      case VaccineStatus.notApplied:
+        return Icons.remove_circle_rounded;
+      case VaccineStatus.upcoming:
+        return Icons.schedule_rounded;
+      case VaccineStatus.review:
+        return Icons.info_rounded;
+      case VaccineStatus.seasonalReview:
+        return Icons.event_repeat_rounded;
+      case VaccineStatus.waitingPreviousDose:
+        return Icons.lock_rounded;
+    }
+  }
 
-    final DateTime today =
-        DateTime(
-      now.year,
-      now.month,
-      now.day,
-    );
-
-    final DateTime target =
-        DateTime(
-      date.year,
-      date.month,
-      date.day,
-    );
-
-    return target
-        .difference(
-          today,
-        )
-        .inDays;
+  int _daysUntil(DateTime date) {
+    final DateTime now = DateTime.now();
+    final DateTime today = DateTime(now.year, now.month, now.day);
+    final DateTime target = DateTime(date.year, date.month, date.day);
+    return target.difference(today).inDays;
   }
 
   String _dateLabel() {
-    if (evaluation.status ==
-        VaccineStatus.applied) {
-      return T.txt(
-        'vaccineAppliedDate',
-      );
+    if (evaluation.status == VaccineStatus.applied) {
+      return T.txt('vaccineAppliedDate');
     }
 
-    if (evaluation.status ==
-        VaccineStatus.review) {
-      return T.txt(
-        'vaccineReferenceDate',
-      );
+    if (evaluation.status == VaccineStatus.review) {
+      return T.txt('vaccineReferenceDate');
     }
 
-    return T.txt(
-      'vaccineExpectedDate',
-    );
+    return T.txt('vaccineExpectedDate');
   }
 
   String? _remainingText() {
-    // ----------------------------------------------------------
-    // SI ESTÁ BLOQUEADA, NO MOSTRAMOS CONTEO DE DÍAS.
-    // ----------------------------------------------------------
-
-    if (evaluation.status ==
-        VaccineStatus.waitingPreviousDose) {
+    if (evaluation.status == VaccineStatus.waitingPreviousDose ||
+        evaluation.status == VaccineStatus.applied ||
+        evaluation.status == VaccineStatus.notApplied) {
       return null;
     }
 
-    final DateTime? date =
-        evaluation.expectedDate;
-
-    if (date == null ||
-        evaluation.status ==
-            VaccineStatus.applied) {
+    final DateTime? date = evaluation.expectedDate;
+    if (date == null) {
       return null;
     }
 
-    final int days =
-        _daysUntil(
-      date,
-    );
+    final int days = _daysUntil(date);
 
     if (days > 1) {
-      return T.txt(
-        'vaccineDaysRemaining',
-      ).replaceAll(
+      return T.txt('vaccineDaysRemaining').replaceAll(
         '{days}',
         days.toString(),
       );
     }
 
     if (days == 1) {
-      return T.txt(
-        'vaccineTomorrow',
-      );
+      return T.txt('vaccineTomorrow');
     }
 
     if (days == 0) {
-      return T.txt(
-        'vaccineToday',
-      );
+      return T.txt('vaccineToday');
     }
 
-    return T.txt(
-      'vaccineDatePassed',
-    );
+    return T.txt('vaccineDatePassed');
   }
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     final bool locked =
-        evaluation.status ==
-            VaccineStatus
-                .waitingPreviousDose;
+        evaluation.status == VaccineStatus.waitingPreviousDose;
 
-    final Color color =
-        _statusColor();
-
-    final VaccineRecord? record =
-        evaluation.record;
+    final Color color = _statusColor();
+    final VaccineRecord? record = evaluation.record;
 
     final DateTime? visibleDate =
-        record?.appliedDate ??
-            evaluation.expectedDate;
+        evaluation.status == VaccineStatus.applied
+            ? record?.appliedDate
+            : evaluation.status == VaccineStatus.notApplied
+                ? null
+                : evaluation.expectedDate;
 
-    final String? remainingText =
-        _remainingText();
+    final String? remainingText = _remainingText();
 
     return Material(
-      color:
-          Colors.transparent,
-      borderRadius:
-          BorderRadius.circular(
-        24,
-      ),
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(24),
       child: InkWell(
-        // --------------------------------------------------------
-        // null = no se puede pulsar
-        // --------------------------------------------------------
-
-        onTap:
-            onTap,
-
-        borderRadius:
-            BorderRadius.circular(
-          24,
-        ),
-
-        child: Opacity(
-          opacity:
-              locked
-                  ? 0.58
-                  : 1.0,
-
-          child: Container(
-            width:
-                double.infinity,
-            padding:
-                const EdgeInsets.all(
-              16,
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(24),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 220),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: dark ? const Color(0xFF211B2E) : Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: color.withValues(alpha: locked ? 0.10 : 0.18),
+              width: 1.2,
             ),
-            decoration:
-                BoxDecoration(
-              gradient:
-                  LinearGradient(
-                colors: [
-                  dark
-                      ? const Color(
-                          0xFF211B2E,
-                        )
-                      : Colors.white,
-                  color.withValues(
-                    alpha:
-                        dark
-                            ? 0.14
-                            : 0.065,
+            boxShadow: [
+              BoxShadow(
+                color: color.withValues(alpha: locked ? 0.02 : 0.07),
+                blurRadius: 14,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  color: color.withValues(
+                    alpha: locked ? 0.08 : 0.12,
                   ),
-                ],
-              ),
-              borderRadius:
-                  BorderRadius.circular(
-                24,
-              ),
-              border: Border.all(
-                color:
-                    color.withValues(
-                  alpha:
-                      locked
-                          ? 0.35
-                          : 0.18,
+                  borderRadius: BorderRadius.circular(17),
                 ),
-                width:
-                    1.2,
+                child: Icon(
+                  _statusIcon(),
+                  color: color,
+                  size: 28,
+                ),
               ),
-              boxShadow: locked
-                  ? const []
-                  : [
-                      BoxShadow(
-                        color:
-                            color.withValues(
-                          alpha:
-                              0.06,
+              const SizedBox(width: 13),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            T.txt(evaluation.dose.nameKey),
+                            style: TextStyle(
+                              fontFamily: 'Fredoka',
+                              fontSize: 18.5,
+                              fontWeight: FontWeight.w800,
+                              color: locked
+                                  ? Colors.grey
+                                  : dark
+                                      ? Colors.white
+                                      : const Color(0xFF2D2D2D),
+                            ),
+                          ),
                         ),
-                        blurRadius:
-                            10,
-                        offset:
-                            const Offset(
-                          0,
-                          4,
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 9,
+                            vertical: 5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: color.withValues(alpha: 0.11),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            _statusText(),
+                            style: TextStyle(
+                              fontFamily: 'Baloo2',
+                              fontSize: 10.5,
+                              fontWeight: FontWeight.w800,
+                              color: color,
+                            ),
+                          ),
                         ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      T.txt(evaluation.dose.doseLabelKey),
+                      style: TextStyle(
+                        fontFamily: 'Baloo2',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: locked
+                            ? Colors.grey
+                            : dark
+                                ? Colors.white60
+                                : Colors.black54,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    if (evaluation.status == VaccineStatus.notApplied)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 11,
+                          vertical: 9,
+                        ),
+                        decoration: BoxDecoration(
+                          color: color.withValues(alpha: 0.07),
+                          borderRadius: BorderRadius.circular(13),
+                        ),
+                        child: Text(
+                          T.txt('vaccineNotAppliedOptionHelp'),
+                          style: TextStyle(
+                            fontFamily: 'Baloo2',
+                            fontSize: 13,
+                            height: 1.2,
+                            fontWeight: FontWeight.w600,
+                            color: dark ? Colors.white70 : color,
+                          ),
+                        ),
+                      ),
+                    if (visibleDate != null) ...[
+                      Text(
+                        _dateLabel(),
+                        style: TextStyle(
+                          fontFamily: 'Baloo2',
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w600,
+                          color: locked
+                              ? Colors.grey
+                              : dark
+                                  ? Colors.white54
+                                  : Colors.black45,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.calendar_month_rounded,
+                            size: 18,
+                            color: color,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            simpleDateText(visibleDate),
+                            style: TextStyle(
+                              fontFamily: 'Fredoka',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: locked
+                                  ? Colors.grey
+                                  : dark
+                                      ? Colors.white
+                                      : const Color(0xFF2D2D2D),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
-            ),
-
-            child: Row(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
-              children: [
-                // =================================================
-                // ICONO
-                // =================================================
-
-                Container(
-                  width:
-                      52,
-                  height:
-                      52,
-                  decoration:
-                      BoxDecoration(
-                    color:
-                        color.withValues(
-                      alpha:
-                          0.13,
-                    ),
-                    borderRadius:
-                        BorderRadius.circular(
-                      16,
-                    ),
-                  ),
-                  child: Icon(
-                    locked
-                        ? Icons
-                            .lock_rounded
-                        : evaluation.status ==
-                                VaccineStatus
-                                    .applied
-                            ? Icons
-                                .check_circle_rounded
-                            : Icons
-                                .vaccines_rounded,
-                    color:
-                        color,
-                    size:
-                        29,
-                  ),
-                ),
-
-                const SizedBox(
-                  width:
-                      14,
-                ),
-
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment
-                            .start,
-                    children: [
-                      // =============================================
-                      // NOMBRE
-                      // =============================================
-
+                    if (remainingText != null) ...[
+                      const SizedBox(height: 7),
+                      Row(
+                        children: [
+                          Icon(
+                            evaluation.status == VaccineStatus.review
+                                ? Icons.info_outline_rounded
+                                : Icons.schedule_rounded,
+                            size: 17,
+                            color: color,
+                          ),
+                          const SizedBox(width: 5),
+                          Expanded(
+                            child: Text(
+                              remainingText,
+                              style: TextStyle(
+                                fontFamily: 'Baloo2',
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w700,
+                                color: color,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                    if (evaluation.dose.notesKey != null &&
+                        evaluation.status != VaccineStatus.applied &&
+                        evaluation.status != VaccineStatus.notApplied) ...[
+                      const SizedBox(height: 8),
                       Text(
-                        T.txt(
-                          evaluation
-                              .dose
-                              .nameKey,
-                        ),
-                        style:
-                            TextStyle(
-                          fontFamily:
-                              'Fredoka',
-                          fontSize:
-                              18,
-                          fontWeight:
-                              FontWeight
-                                  .w800,
-                          color: locked
-                              ? Colors.grey
-                              : dark
-                                  ? Colors.white
-                                  : const Color(
-                                      0xFF2D2D2D,
-                                    ),
-                        ),
-                      ),
-
-                      const SizedBox(
-                        height:
-                            2,
-                      ),
-
-                      // =============================================
-                      // DOSIS
-                      // =============================================
-
-                      Text(
-                        T.txt(
-                          evaluation
-                              .dose
-                              .doseLabelKey,
-                        ),
-                        style:
-                            TextStyle(
-                          fontFamily:
-                              'Baloo2',
-                          fontSize:
-                              14,
-                          color: locked
-                              ? Colors.grey
-                              : dark
-                                  ? Colors.white60
-                                  : Colors.black54,
-                        ),
-                      ),
-
-                      const SizedBox(
-                        height:
-                            6,
-                      ),
-
-                      // =============================================
-                      // PREVIENE
-                      // =============================================
-
-                      Text(
-                        T.txt(
-                          evaluation
-                              .dose
-                              .preventsKey,
-                        ),
-                        style:
-                            TextStyle(
-                          fontFamily:
-                              'Baloo2',
-                          fontSize:
-                              13,
-                          height:
-                              1.2,
+                        T.txt(evaluation.dose.notesKey!),
+                        style: TextStyle(
+                          fontFamily: 'Baloo2',
+                          fontSize: 12.5,
+                          height: 1.2,
                           color: locked
                               ? Colors.grey
                               : dark
@@ -1488,277 +1411,28 @@ class _VaccineCard
                                   : Colors.black54,
                         ),
                       ),
-
-                      const SizedBox(
-                        height:
-                            9,
-                      ),
-
-                      // =============================================
-                      // ESTADO
-                      // =============================================
-
-                      Container(
-                        padding:
-                            const EdgeInsets.symmetric(
-                          horizontal:
-                              10,
-                          vertical:
-                              4,
-                        ),
-                        decoration:
-                            BoxDecoration(
-                          color:
-                              color.withValues(
-                            alpha:
-                                0.13,
-                          ),
-                          borderRadius:
-                              BorderRadius.circular(
-                            20,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize:
-                              MainAxisSize.min,
-                          children: [
-                            if (locked) ...[
-                              Icon(
-                                Icons
-                                    .lock_outline_rounded,
-                                size:
-                                    14,
-                                color:
-                                    color,
-                              ),
-
-                              const SizedBox(
-                                width:
-                                    4,
-                              ),
-                            ],
-
-                            Flexible(
-                              child: Text(
-                                _statusText(),
-                                style:
-                                    TextStyle(
-                                  fontFamily:
-                                      'Fredoka',
-                                  fontSize:
-                                      12,
-                                  fontWeight:
-                                      FontWeight
-                                          .w800,
-                                  color:
-                                      color,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // =============================================
-                      // FECHA
-                      // =============================================
-
-                      if (visibleDate != null) ...[
-                        const SizedBox(
-                          height:
-                              12,
-                        ),
-
-                        Text(
-                          _dateLabel(),
-                          style:
-                              TextStyle(
-                            fontFamily:
-                                'Baloo2',
-                            fontSize:
-                                12.5,
-                            color: locked
-                                ? Colors.grey
-                                : dark
-                                    ? Colors.white54
-                                    : Colors.black45,
-                          ),
-                        ),
-
-                        const SizedBox(
-                          height:
-                              2,
-                        ),
-
-                        Row(
-                          children: [
-                            Icon(
-                              Icons
-                                  .calendar_month_rounded,
-                              size:
-                                  18,
-                              color:
-                                  color,
-                            ),
-
-                            const SizedBox(
-                              width:
-                                  6,
-                            ),
-
-                            Text(
-                              simpleDateText(
-                                visibleDate,
-                              ),
-                              style:
-                                  TextStyle(
-                                fontFamily:
-                                    'Fredoka',
-                                fontSize:
-                                    16,
-                                fontWeight:
-                                    FontWeight
-                                        .w800,
-                                color: locked
-                                    ? Colors.grey
-                                    : dark
-                                        ? Colors.white
-                                        : const Color(
-                                            0xFF2D2D2D,
-                                          ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-
-                      // =============================================
-                      // DÍAS RESTANTES
-                      // =============================================
-
-                      if (remainingText != null) ...[
-                        const SizedBox(
-                          height:
-                              7,
-                        ),
-
-                        Row(
-                          children: [
-                            Icon(
-                              evaluation.status ==
-                                      VaccineStatus
-                                          .review
-                                  ? Icons
-                                      .info_outline_rounded
-                                  : Icons
-                                      .schedule_rounded,
-                              size:
-                                  17,
-                              color:
-                                  color,
-                            ),
-
-                            const SizedBox(
-                              width:
-                                  5,
-                            ),
-
-                            Expanded(
-                              child: Text(
-                                remainingText,
-                                style:
-                                    TextStyle(
-                                  fontFamily:
-                                      'Baloo2',
-                                  fontSize:
-                                      13.5,
-                                  fontWeight:
-                                      FontWeight
-                                          .w700,
-                                  color:
-                                      color,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-
-                      // =============================================
-                      // NOTA
-                      // =============================================
-
-                      if (evaluation
-                                  .dose
-                                  .notesKey !=
-                              null &&
-                          evaluation.status !=
-                              VaccineStatus.applied) ...[
-                        const SizedBox(
-                          height:
-                              8,
-                        ),
-
-                        Text(
-                          T.txt(
-                            evaluation
-                                .dose
-                                .notesKey!,
-                          ),
-                          style:
-                              TextStyle(
-                            fontFamily:
-                                'Baloo2',
-                            fontSize:
-                                12.5,
-                            height:
-                                1.2,
-                            color: locked
-                                ? Colors.grey
-                                : dark
-                                    ? Colors.white54
-                                    : Colors.black54,
-                          ),
-                        ),
-                      ],
                     ],
-                  ),
+                  ],
                 ),
-
-                const SizedBox(
-                  width:
-                      5,
-                ),
-
-                // =================================================
-                // ICONO DERECHO
-                // =================================================
-
-                Icon(
+              ),
+              const SizedBox(width: 5),
+              Padding(
+                padding: const EdgeInsets.only(top: 14),
+                child: Icon(
                   locked
-                      ? Icons
-                          .lock_outline_rounded
-                      : Icons
-                          .chevron_right_rounded,
-                  color:
-                      color,
-                  size:
-                      locked
-                          ? 23
-                          : 27,
+                      ? Icons.lock_outline_rounded
+                      : Icons.chevron_right_rounded,
+                  color: color,
+                  size: locked ? 23 : 27,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 }
-
-// ================================================================
-// SIN NIÑO
-// ================================================================
 
 class _NoChildState
     extends StatelessWidget {
