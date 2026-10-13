@@ -117,77 +117,282 @@ class FamilySectionHeading extends StatelessWidget {
 
 /// Navigable or expandable topic tile, with accessible InkWell feedback.
 class FamilyTopicCard extends StatelessWidget {
-  const FamilyTopicCard({super.key, required this.title, required this.subtitle,
-    required this.icon, required this.color, required this.onTap,
-    this.expanded = false, this.content, this.badge, this.featured = false});
-  final String title, subtitle;
+  const FamilyTopicCard({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+    this.expanded = false,
+    this.content,
+    this.badge,
+    this.featured = false,
+  });
+
+  final String title;
+  final String subtitle;
   final IconData icon;
   final Color color;
   final VoidCallback onTap;
-  final bool expanded, featured;
+  final bool expanded;
+  final bool featured;
   final Widget? content;
   final String? badge;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = FamilyUi.dark(context);
+    final bool isDark = FamilyUi.dark(context);
+    final Color surface = isDark ? const Color(0xFF211D2B) : Colors.white;
+    final Color borderColor = color.withValues(
+      alpha: expanded ? 0.55 : (featured ? 0.38 : 0.27),
+    );
+
     return Semantics(
       button: true,
       label: '$title. $subtitle',
-      child: Padding(padding: const EdgeInsets.only(bottom: 13),
-      child: Material(color: isDark ? FamilyUi.surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(25), clipBehavior: Clip.antiAlias,
-        child: AnimatedContainer(duration: const Duration(milliseconds: 240),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(25),
-            border: Border.all(color: color.withValues(alpha: expanded ? .52 : .18),
-              width: expanded ? 1.7 : 1),
-            gradient: featured || expanded ? LinearGradient(colors: [
-              color.withValues(alpha: isDark ? .21 : .09),
-              color.withValues(alpha: isDark ? .07 : .02),
-            ]) : null),
-          child: Column(children: [
-            InkWell(onTap: onTap, child: Padding(padding: const EdgeInsets.all(17),
-              child: Row(children: [
-                Container(width: 56, height: 56,
-                  decoration: BoxDecoration(color: color.withValues(alpha: isDark ? .24 : .13),
-                    borderRadius: BorderRadius.circular(19)),
-                  child: Icon(icon, color: color, size: 28)),
-                const SizedBox(width: 14),
-                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (badge != null) ...[
-                      Text(badge!, style: TextStyle(fontFamily: 'Baloo2',
-                        fontSize: 12, fontWeight: FontWeight.w800,
-                        color: isDark ? Colors.white70 : color)),
-                      const SizedBox(height: 3),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(28),
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(28),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 230),
+              curve: Curves.easeOutCubic,
+              constraints: const BoxConstraints(minHeight: 102),
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    surface,
+                    color.withValues(alpha: isDark ? 0.19 : 0.12),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(28),
+                border: Border.all(
+                  color: borderColor,
+                  width: expanded ? 1.8 : 1.25,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: color.withValues(alpha: isDark ? 0.07 : 0.13),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: -38,
+                    right: -28,
+                    child: Container(
+                      width: 118,
+                      height: 118,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: color.withValues(
+                          alpha: isDark ? 0.08 : 0.055,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: 0,
+                    top: 18,
+                    bottom: 18,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 230),
+                      width: featured || expanded ? 5 : 3,
+                      decoration: BoxDecoration(
+                        color: color.withValues(
+                          alpha: featured || expanded ? 0.92 : 0.55,
+                        ),
+                        borderRadius: const BorderRadius.horizontal(
+                          right: Radius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(19, 18, 17, 18),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 64,
+                              height: 64,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    color.withValues(
+                                      alpha: isDark ? 0.31 : 0.22,
+                                    ),
+                                    color.withValues(
+                                      alpha: isDark ? 0.16 : 0.09,
+                                    ),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(21),
+                                border: Border.all(
+                                  color: color.withValues(alpha: 0.23),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: color.withValues(alpha: 0.14),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Icon(icon, color: color, size: 31),
+                                  if (featured)
+                                    Positioned(
+                                      top: 7,
+                                      right: 7,
+                                      child: Icon(
+                                        Icons.auto_awesome_rounded,
+                                        size: 13,
+                                        color: color,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 15),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (badge != null) ...[
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: color.withValues(
+                                          alpha: isDark ? 0.18 : 0.10,
+                                        ),
+                                        borderRadius: BorderRadius.circular(30),
+                                        border: Border.all(
+                                          color: color.withValues(alpha: 0.18),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        badge!,
+                                        style: TextStyle(
+                                          fontFamily: 'Baloo2',
+                                          fontSize: 11.5,
+                                          height: 1,
+                                          fontWeight: FontWeight.w800,
+                                          letterSpacing: 0.25,
+                                          color: isDark ? Colors.white70 : color,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 7),
+                                  ],
+                                  Text(
+                                    title,
+                                    style: TextStyle(
+                                      fontFamily: 'Fredoka',
+                                      fontSize: 20,
+                                      height: 1.08,
+                                      fontWeight: FontWeight.w800,
+                                      color: FamilyUi.ink(context),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    subtitle,
+                                    maxLines: expanded ? null : 3,
+                                    overflow: expanded
+                                        ? TextOverflow.visible
+                                        : TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontFamily: 'Baloo2',
+                                      fontSize: 14.5,
+                                      height: 1.28,
+                                      fontWeight: FontWeight.w500,
+                                      color: FamilyUi.muted(context),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 230),
+                              width: 42,
+                              height: 42,
+                              decoration: BoxDecoration(
+                                color: color.withValues(
+                                  alpha: isDark ? 0.21 : 0.11,
+                                ),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: color.withValues(alpha: 0.16),
+                                ),
+                              ),
+                              child: AnimatedRotation(
+                                duration: const Duration(milliseconds: 230),
+                                turns: content == null
+                                    ? 0
+                                    : (expanded ? 0.5 : 0),
+                                child: Icon(
+                                  content == null
+                                      ? Icons.arrow_forward_rounded
+                                      : Icons.keyboard_arrow_down_rounded,
+                                  color: color,
+                                  size: content == null ? 21 : 27,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (content != null)
+                        AnimatedSize(
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeInOut,
+                          alignment: Alignment.topCenter,
+                          child: expanded
+                              ? Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(19, 0, 19, 19),
+                                  child: Column(
+                                    children: [
+                                      Divider(
+                                        color: color.withValues(alpha: 0.22),
+                                        height: 1,
+                                      ),
+                                      const SizedBox(height: 17),
+                                      content!,
+                                    ],
+                                  ),
+                                )
+                              : const SizedBox(width: double.infinity),
+                        ),
                     ],
-                    Text(title, style: TextStyle(fontFamily: 'Fredoka',
-                      fontSize: 19, fontWeight: FontWeight.w800,
-                      color: FamilyUi.ink(context))),
-                    const SizedBox(height: 4),
-                    Text(subtitle, style: TextStyle(fontFamily: 'Baloo2',
-                      fontSize: 14, height: 1.25, color: FamilyUi.muted(context))),
-                  ])),
-                const SizedBox(width: 8),
-                AnimatedRotation(duration: const Duration(milliseconds: 240),
-                  turns: content == null ? 0 : (expanded ? .5 : 0),
-                  child: Icon(content == null ? Icons.arrow_forward_ios_rounded :
-                    Icons.keyboard_arrow_down_rounded, color: color,
-                    size: content == null ? 18 : 27)),
-              ]))),
-            if (content != null) AnimatedSize(
-              duration: const Duration(milliseconds: 250),
-              curve: Curves.easeInOut, alignment: Alignment.topCenter,
-              child: expanded ? Padding(padding: const EdgeInsets.fromLTRB(17, 0, 17, 18),
-                child: Column(children: [
-                  Divider(color: color.withValues(alpha: .23), height: 12),
-                  const SizedBox(height: 10),
-                  content!,
-                ])) : const SizedBox(width: double.infinity)),
-          ]),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
-    ),
     );
   }
 }
@@ -203,9 +408,23 @@ class FamilyInfoPanel extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     width: double.infinity, padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
-      color: color.withValues(alpha: FamilyUi.dark(context) ? .17 : .075),
-      borderRadius: BorderRadius.circular(19),
-      border: Border.all(color: color.withValues(alpha: .18))),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          color.withValues(alpha: FamilyUi.dark(context) ? .18 : .10),
+          color.withValues(alpha: FamilyUi.dark(context) ? .08 : .035),
+        ],
+      ),
+      borderRadius: BorderRadius.circular(21),
+      border: Border.all(color: color.withValues(alpha: .23)),
+      boxShadow: [
+        BoxShadow(
+          color: color.withValues(alpha: FamilyUi.dark(context) ? .04 : .07),
+          blurRadius: 12,
+          offset: const Offset(0, 5),
+        ),
+      ]),
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
         Icon(icon, size: 22, color: color), const SizedBox(width: 9),
@@ -257,9 +476,23 @@ class FamilyNotice extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     width: double.infinity, padding: const EdgeInsets.all(17),
     decoration: BoxDecoration(
-      color: FamilyUi.dark(context) ? FamilyUi.surfaceDark : Colors.white,
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          FamilyUi.dark(context) ? FamilyUi.surfaceDark : Colors.white,
+          color.withValues(alpha: FamilyUi.dark(context) ? .13 : .07),
+        ],
+      ),
       borderRadius: BorderRadius.circular(22),
-      border: Border.all(color: color.withValues(alpha: .22))),
+      border: Border.all(color: color.withValues(alpha: .25)),
+      boxShadow: [
+        BoxShadow(
+          color: color.withValues(alpha: FamilyUi.dark(context) ? .035 : .06),
+          blurRadius: 12,
+          offset: const Offset(0, 5),
+        ),
+      ]),
     child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Icon(icon, color: color, size: 25), const SizedBox(width: 12),
       Expanded(child: Text(text, style: TextStyle(fontFamily: 'Baloo2',
