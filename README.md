@@ -6,24 +6,23 @@ Su propuesta combina seguimiento infantil, orientaciones para las familias y exp
 
 ## ✨ Funciones principales
 
-- 📚 **Aprender:** un hub con actividades por edad, lenguaje y entornos protectores, cada uno con una función distinta.
+- 📚 **Aprender:** una sola guía continua que reúne actividades por edad, lenguaje y entornos protectores sin menús intermedios.
 - ❤️ **Salud:** vacunas, crecimiento y nutrición sin destinos repetidos.
 - 👨‍👩‍👧 **Mis niños:** perfiles individuales que reutilizan las mismas herramientas de Salud y Aprender.
 - 💉 **Vacunación:** consulta del esquema, registro de dosis y estados de seguimiento.
 - 📈 **Crecimiento:** mediciones y curvas de referencia de la OMS.
 - 📖 **Guía para familias:** 12 propuestas de aprendizaje para niñas y niños de 1 a 5 años.
-- 🗣️ **Lenguaje:** orientación específica para conversación, cuentos, canciones y rutinas.
-- 🛡️ **Entornos protectores:** seguridad, afecto, rutinas y protección infantil.
+- 🗣️ **Lenguaje y entornos protectores:** integrados directamente dentro de Aprender como secciones de la misma experiencia.
 - 🥗 **Nutrición:** orientación y recetas integradas en dos pestañas del mismo módulo.
 - 🎨 **Personalización:** modo claro, oscuro o automático; opciones de idioma, sonido y vibración.
 
 ## 🧭 Navegación actual
 
-La barra principal está organizada como **Inicio → Aprender → Salud → Mis niños**. Las recetas ya no aparecen como una sección independiente: están integradas dentro de **Salud → Nutrición → Recetas**. Desde un perfil infantil se abren las mismas pantallas canónicas de vacunas, crecimiento, aprendizaje y nutrición, evitando registros o interfaces duplicadas.
+La barra principal está organizada como **Inicio → Aprender → Salud → Mis niños**. **Aprender ya no tiene tarjetas de navegación**: abre directamente una guía única con actividades por edad, lenguaje y entornos protectores. Las recetas están integradas dentro de **Salud → Nutrición → Recetas**. Desde un perfil infantil se abren las mismas pantallas canónicas de vacunas, crecimiento, aprendizaje y nutrición.
 
 ## 📖 Guía para familias (1 a 5 años)
 
-La sección **Aprender → Guía para familias** presenta actividades organizadas por etapas orientativas:
+La sección **Aprender** abre directamente una guía integral. Su bloque de actividades se organiza por etapas orientativas:
 
 - **1–2 años:** exploración de texturas, construcción con cajas y canciones con gestos.
 - **2–3 años:** clasificación de ropa, movimiento con cojines y juego simbólico de cuidados.
@@ -63,7 +62,6 @@ lib/
 │   │   ├── data/
 │   │   │   └── parent_activity_catalog.dart
 │   │   └── pages/
-│   │       ├── learning_hub_page.dart
 │   │       └── guia_familias_page.dart
 │   ├── privacy/
 │   └── vaccines/
@@ -71,8 +69,6 @@ lib/
     ├── app_config.dart
     ├── app_texts.dart
     ├── home_page.dart
-    ├── lenguaje_page.dart
-    ├── entorno_page.dart
     ├── nutricion_page.dart
     ├── recetas_page.dart
     └── widgets/
