@@ -17,6 +17,7 @@ import '../features/growth/pages/growth_page.dart';
 
 import '../features/vaccines/pages/vaccines_page.dart';
 import '../features/vaccines/services/vaccine_service.dart';
+import '../app/widgets/family_content_ui.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -605,136 +606,36 @@ class _Dashboard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // =====================================================
-            // SALUDO
-            // =====================================================
-            Text(
-              T.txt('homeGreeting'),
-              style: TextStyle(
-                fontFamily: 'Fredoka',
-                fontSize: 28,
-                fontWeight: FontWeight.w800,
-                color: dark ? Colors.white : const Color(0xFF2D2D2D),
-              ),
+            FamilyHero(
+              eyebrow: T.txt('homeHeroEyebrow'),
+              title: T.txt('homeHeroTitle').replaceAll('{name}', child.name),
+              subtitle: T.txt('homeHeroSubtitle'),
+              icon: Icons.waving_hand_rounded,
+              color: const Color(0xFF6C4CCF),
+              accent: const Color(0xFFE77B9F),
             ),
 
-            const SizedBox(height: 4),
+            const SizedBox(height: 22),
 
-            Text(
-              T.txt('homeGreetingSubtitle'),
-              style: TextStyle(
-                fontFamily: 'Baloo2',
-                fontSize: 16,
-                color: dark ? Colors.white60 : Colors.black54,
-              ),
+            _HomeChildSpotlight(
+              child: child,
+              dark: dark,
+              onChangeChild: onChangeChild,
+              onOpenProfile: onOpenProfile,
             ),
 
-            const SizedBox(height: 20),
-
-            // =====================================================
-            // NIÑO ACTIVO
-            // =====================================================
-            Material(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(26),
-              child: InkWell(
-                onTap: onChangeChild,
-                borderRadius: BorderRadius.circular(26),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        dark ? const Color(0xFF211B2E) : Colors.white,
-                        childColor.withValues(alpha: dark ? 0.18 : 0.08),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(26),
-                    border: Border.all(
-                      color: childColor.withValues(alpha: 0.18),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      ChildAvatar(child: child, size: 68, borderWidth: 2.2),
-
-                      const SizedBox(width: 15),
-
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              child.name,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontFamily: 'Fredoka',
-                                fontSize: 23,
-                                fontWeight: FontWeight.w800,
-                                color: dark
-                                    ? Colors.white
-                                    : const Color(0xFF2D2D2D),
-                              ),
-                            ),
-
-                            const SizedBox(height: 3),
-
-                            Text(
-                              childAgeText(child.birthDate),
-                              style: TextStyle(
-                                fontFamily: 'Baloo2',
-                                fontSize: 16,
-                                color: dark ? Colors.white70 : Colors.black54,
-                              ),
-                            ),
-
-                            const SizedBox(height: 5),
-
-                            Text(
-                              T.txt('tapToChangeChild'),
-                              style: const TextStyle(
-                                fontFamily: 'Baloo2',
-                                fontSize: 12.5,
-                                color: Color(0xFF7B2CBF),
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: Color(0xFF7B2CBF),
-                        size: 30,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton.icon(
-                onPressed: onOpenProfile,
-                icon: const Icon(Icons.person_outline_rounded),
-                label: Text(T.txt('viewProfile')),
-              ),
-            ),
-
-            const SizedBox(height: 12),
+            const SizedBox(height: 27),
 
             // =====================================================
             // RESUMEN DE SALUD
             // =====================================================
-            _SectionTitle(title: T.txt('healthSummary'), dark: dark),
+            FamilySectionHeading(
+              title: T.txt('homeTodayTitle').replaceAll('{name}', child.name),
+              subtitle: T.txt('homeTodaySubtitle'),
+              icon: Icons.favorite_rounded,
+            ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 2),
 
             FutureBuilder<_HomeHealthData>(
               future: healthFuture,
@@ -832,9 +733,13 @@ class _Dashboard extends StatelessWidget {
             // =====================================================
             // DATOS PRINCIPALES
             // =====================================================
-            _SectionTitle(title: T.txt('quickSummary'), dark: dark),
+            FamilySectionHeading(
+              title: T.txt('quickSummary'),
+              subtitle: T.txt('homeQuickSummarySubtitle'),
+              icon: Icons.auto_awesome_rounded,
+            ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 2),
 
             Row(
               children: [
@@ -869,6 +774,188 @@ class _Dashboard extends StatelessWidget {
     );
   }
 }
+
+class _HomeChildSpotlight extends StatelessWidget {
+  const _HomeChildSpotlight({
+    required this.child,
+    required this.dark,
+    required this.onChangeChild,
+    required this.onOpenProfile,
+  });
+
+  final Child child;
+  final bool dark;
+  final VoidCallback onChangeChild;
+  final VoidCallback onOpenProfile;
+
+  @override
+  Widget build(BuildContext context) {
+    final Color color = child.sex == ChildSex.girl
+        ? const Color(0xFFE85D9C)
+        : const Color(0xFF4F7CFF);
+
+    return Container(
+      width: double.infinity,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            dark ? const Color(0xFF211D2B) : Colors.white,
+            color.withValues(alpha: dark ? 0.21 : 0.10),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: color.withValues(alpha: 0.28), width: 1.2),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: dark ? 0.06 : 0.12),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            top: -42,
+            right: -30,
+            child: Container(
+              width: 130,
+              height: 130,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.06),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(18, 18, 16, 17),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 76,
+                      height: 76,
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            color.withValues(alpha: 0.31),
+                            color.withValues(alpha: 0.10),
+                          ],
+                        ),
+                        border: Border.all(
+                          color: color.withValues(alpha: 0.28),
+                        ),
+                      ),
+                      child: ChildAvatar(child: child, size: 66),
+                    ),
+                    const SizedBox(width: 15),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            child.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontFamily: 'Fredoka',
+                              fontSize: 22,
+                              height: 1.05,
+                              fontWeight: FontWeight.w800,
+                              color: dark
+                                  ? Colors.white
+                                  : const Color(0xFF302942),
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.cake_outlined,
+                                size: 16,
+                                color: color,
+                              ),
+                              const SizedBox(width: 6),
+                              Expanded(
+                                child: Text(
+                                  childAgeText(child.birthDate),
+                                  style: TextStyle(
+                                    fontFamily: 'Baloo2',
+                                    fontSize: 14.5,
+                                    fontWeight: FontWeight.w600,
+                                    color: dark
+                                        ? Colors.white70
+                                        : const Color(0xFF6C6476),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      tooltip: T.txt('tapToChangeChild'),
+                      onPressed: onChangeChild,
+                      style: IconButton.styleFrom(
+                        backgroundColor:
+                            color.withValues(alpha: dark ? 0.19 : 0.10),
+                        foregroundColor: color,
+                      ),
+                      icon: const Icon(Icons.swap_horiz_rounded),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                Divider(
+                  height: 1,
+                  color: dark ? Colors.white10 : Colors.black12,
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        T.txt('homeChildContextText'),
+                        style: TextStyle(
+                          fontFamily: 'Baloo2',
+                          fontSize: 13.5,
+                          height: 1.25,
+                          color:
+                              dark ? Colors.white60 : const Color(0xFF6C6476),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    TextButton.icon(
+                      onPressed: onOpenProfile,
+                      style: TextButton.styleFrom(foregroundColor: color),
+                      icon: const Icon(Icons.person_outline_rounded, size: 19),
+                      label: Text(
+                        T.txt('viewProfile'),
+                        style: const TextStyle(
+                          fontFamily: 'Fredoka',
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 
 // =================================================================
 // HOME SIN NIÑO
@@ -996,17 +1083,6 @@ class _SectionTitle extends StatelessWidget {
 // =================================================================
 
 class _DashboardHealthCard extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-
-  final String title;
-  final String subtitle;
-  final String actionText;
-
-  final bool dark;
-
-  final VoidCallback onTap;
-
   const _DashboardHealthCard({
     required this.icon,
     required this.color,
@@ -1017,87 +1093,23 @@ class _DashboardHealthCard extends StatelessWidget {
     required this.onTap,
   });
 
+  final IconData icon;
+  final Color color;
+  final String title;
+  final String subtitle;
+  final String actionText;
+  final bool dark;
+  final VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(24),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(24),
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(17),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                dark ? const Color(0xFF211B2E) : Colors.white,
-                color.withValues(alpha: dark ? 0.16 : 0.08),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: color.withValues(alpha: 0.15)),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 58,
-                height: 58,
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.14),
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Icon(icon, color: color, size: 31),
-              ),
-
-              const SizedBox(width: 14),
-
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontFamily: 'Fredoka',
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: dark ? Colors.white : const Color(0xFF2D2D2D),
-                      ),
-                    ),
-
-                    const SizedBox(height: 3),
-
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontFamily: 'Baloo2',
-                        fontSize: 14,
-                        height: 1.25,
-                        color: dark ? Colors.white60 : Colors.black54,
-                      ),
-                    ),
-
-                    const SizedBox(height: 4),
-
-                    Text(
-                      actionText,
-                      style: TextStyle(
-                        fontFamily: 'Baloo2',
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: color,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              Icon(Icons.chevron_right_rounded, color: color, size: 28),
-            ],
-          ),
-        ),
-      ),
+    return FamilyTopicCard(
+      title: title,
+      subtitle: subtitle,
+      icon: icon,
+      color: color,
+      badge: actionText,
+      onTap: onTap,
     );
   }
 }
@@ -1107,12 +1119,6 @@ class _DashboardHealthCard extends StatelessWidget {
 // =================================================================
 
 class _SmallInfoCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String value;
-  final Color color;
-  final bool dark;
-
   const _SmallInfoCard({
     required this.icon,
     required this.title,
@@ -1121,44 +1127,69 @@ class _SmallInfoCard extends StatelessWidget {
     required this.dark,
   });
 
+  final IconData icon;
+  final String title;
+  final String value;
+  final Color color;
+  final bool dark;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: dark ? const Color(0xFF211B2E) : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withValues(alpha: 0.12)),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            dark ? const Color(0xFF211D2B) : Colors.white,
+            color.withValues(alpha: dark ? 0.16 : 0.08),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: color.withValues(alpha: 0.20)),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: dark ? 0.04 : 0.07),
+            blurRadius: 12,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: color),
-
-          const SizedBox(height: 10),
-
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: dark ? 0.18 : 0.10),
+              borderRadius: BorderRadius.circular(13),
+            ),
+            child: Icon(icon, color: color, size: 22),
+          ),
+          const SizedBox(height: 11),
           Text(
             title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontFamily: 'Baloo2',
-              fontSize: 13,
+              fontSize: 12.5,
+              fontWeight: FontWeight.w600,
               color: dark ? Colors.white60 : Colors.black54,
             ),
           ),
-
-          const SizedBox(height: 2),
-
+          const SizedBox(height: 3),
           Text(
             value,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontFamily: 'Fredoka',
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: dark ? Colors.white : const Color(0xFF2D2D2D),
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+              color: dark ? Colors.white : const Color(0xFF302942),
             ),
           ),
         ],
