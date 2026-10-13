@@ -13,12 +13,12 @@ Su propuesta combina seguimiento infantil, orientaciones para las familias y exp
 - 📈 **Crecimiento:** mediciones y curvas de referencia de la OMS.
 - 📖 **Guía para familias:** 12 propuestas de aprendizaje para niñas y niños de 1 a 5 años.
 - 🗣️ **Lenguaje y entornos protectores:** integrados directamente dentro de Aprender como secciones de la misma experiencia.
-- 🥗 **Nutrición:** orientación y recetas integradas en dos pestañas del mismo módulo.
+- 🥗 **Nutrición:** una guía continua por edad con hábitos, seguridad alimentaria y recetas ecuatorianas adaptadas a la primera infancia.
 - 🎨 **Personalización:** modo claro, oscuro o automático; opciones de idioma, sonido y vibración.
 
 ## 🧭 Navegación actual
 
-La barra principal está organizada como **Inicio → Aprender → Salud → Mis niños**. **Aprender ya no tiene tarjetas de navegación**: abre directamente una guía única con actividades por edad, lenguaje y entornos protectores. Las recetas están integradas dentro de **Salud → Nutrición → Recetas**. Desde un perfil infantil se abren las mismas pantallas canónicas de vacunas, crecimiento, aprendizaje y nutrición.
+La barra principal está organizada como **Inicio → Aprender → Salud → Mis niños**. **Aprender ya no tiene tarjetas de navegación**: abre directamente una guía única con actividades por edad, lenguaje y entornos protectores. **Nutrición tampoco usa pestañas ni una página de Recetas separada**: es una sola guía continua con selector de edad, orientaciones y recetas ecuatorianas filtradas por etapa. Desde un perfil infantil se abren las mismas pantallas canónicas de vacunas, crecimiento, aprendizaje y nutrición.
 
 ## 📖 Guía para familias (1 a 5 años)
 
@@ -101,6 +101,15 @@ Para generar una versión Android:
 ```bash
 flutter build apk --release
 ```
+
+
+## 🥗 Nutrición por edad y recetas ecuatorianas
+
+La sección **Salud → Nutrición** funciona como una guía familiar continua. Si existe un niño seleccionado, la aplicación utiliza su fecha de nacimiento para abrir la etapa correspondiente; también se puede cambiar manualmente entre **0–5 meses, 6–8 meses, 9–11 meses, 1–2 años, 2–3 años y 3–5 años**.
+
+La guía combina hábitos cotidianos con un catálogo de recetas de identidad ecuatoriana. Incluye preparaciones con **quinua, papa, plátano verde, pescado, coco, yuca, maíz y aguacate**, organizadas por edad, región, textura y recomendaciones de seguridad.
+
+Las referencias editoriales principales son materiales de **UNICEF Ecuador** sobre alimentación complementaria por edad y el **Recetario saludable para niños** del Ministerio de Educación del Ecuador. Las versiones incluidas en la app son adaptaciones propias para primera infancia y no sustituyen la valoración profesional individual.
 
 ## 🌐 Idiomas y apariencia
 
