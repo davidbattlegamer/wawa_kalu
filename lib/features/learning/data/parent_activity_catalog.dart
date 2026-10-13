@@ -1,0 +1,361 @@
+// Actividades originales para el acompañamiento familiar de 1 a 5 años.
+// Las edades son orientativas: adaptar a intereses y capacidades de cada niño.
+enum ActivityArea { exploration, movement, language, thinking, creativity, life, feelings }
+
+class ActivityCopy {
+  final String title;
+  final String subtitle;
+  final String goal;
+  final List<String> materials;
+  final List<String> steps;
+  final String observe;
+  final String adapt;
+  final String safety;
+
+  const ActivityCopy({
+    required this.title,
+    required this.subtitle,
+    required this.goal,
+    required this.materials,
+    required this.steps,
+    required this.observe,
+    required this.adapt,
+    required this.safety,
+  });
+}
+
+class ParentActivity {
+  final String id;
+  // 0 = 12-23 meses, 1 = 24-35, 2 = 36-47, 3 = 48-59.
+  final int ageGroup;
+  final ActivityArea area;
+  final int minutes;
+  final ActivityCopy es;
+  final ActivityCopy en;
+
+  const ParentActivity({
+    required this.id,
+    required this.ageGroup,
+    required this.area,
+    required this.minutes,
+    required this.es,
+    required this.en,
+  });
+
+  ActivityCopy copyFor(String language) => language == 'en' ? en : es;
+}
+
+const List<ParentActivity> parentActivityCatalog = [
+  ParentActivity(
+    id: "texturas",
+    ageGroup: 0,
+    area: ActivityArea.exploration,
+    minutes: 10,
+    es: ActivityCopy(
+      title: "Un mundo de texturas",
+      subtitle: "Explorar con las manos y descubrir diferencias.",
+      goal: "Favorecer la exploración sensorial, la atención y las primeras palabras.",
+      materials: ["Paños grandes de algodón y toalla limpia","Una cesta ancha sin bordes filosos"],
+      steps: ["Coloca los paños extendidos dentro de la cesta.","Invita a tocar uno a la vez y describe: suave, tibio, áspero.","Deja que el niño elija, saque y vuelva a guardar los paños."],
+      observe: "Observa qué textura busca y cómo expresa curiosidad o rechazo.",
+      adapt: "Si no desea tocar, deja que mire o que lo hagas tú primero.",
+      safety: "Usa telas grandes, limpias y sin hilos sueltos. Acompaña toda la actividad.",
+    ),
+    en: ActivityCopy(
+      title: "A world of textures",
+      subtitle: "Explore with little hands and notice differences.",
+      goal: "Encourage sensory exploration, attention and early vocabulary.",
+      materials: ["Large clean cotton cloths and a towel","A wide basket with smooth edges"],
+      steps: ["Spread the cloths inside the basket.","Invite your child to touch one at a time; name the textures.","Let your child choose, take out and put back the cloths."],
+      observe: "Notice which texture your child chooses and how they show interest.",
+      adapt: "If touching feels uncomfortable, start by looking or modeling.",
+      safety: "Use large clean fabrics with no loose threads. Stay close throughout.",
+    ),
+  ),
+  ParentActivity(
+    id: "torres",
+    ageGroup: 0,
+    area: ActivityArea.thinking,
+    minutes: 10,
+    es: ActivityCopy(
+      title: "Torres que crecen",
+      subtitle: "Apilar, probar y volver a empezar.",
+      goal: "Ejercitar la coordinación de manos y la comprensión de causa y efecto.",
+      materials: ["Cajas pequeñas pero grandes para no caber en la boca, firmes y sin grapas","Piso despejado"],
+      steps: ["Muestra cómo colocar una caja encima de otra.","Invita al niño a añadir una caja o a derribar la torre.","Celebra el intento y vuelve a construir sin exigir un resultado."],
+      observe: "Fíjate si intenta equilibrar, repetir o cambiar la posición.",
+      adapt: "Empieza con dos cajas grandes y estables.",
+      safety: "Revisa que no haya grapas, cinta desprendible ni bordes cortantes.",
+    ),
+    en: ActivityCopy(
+      title: "Growing towers",
+      subtitle: "Stack, test and start again.",
+      goal: "Practice hand coordination and discover cause and effect.",
+      materials: ["Large sturdy boxes with no staples","A clear floor space"],
+      steps: ["Show how to place one box on another.","Invite your child to add a box or knock the tower down.","Enjoy trying again without expecting a perfect tower."],
+      observe: "Watch for balancing, repeating and changing positions.",
+      adapt: "Begin with just two large, stable boxes.",
+      safety: "Check for staples, loose tape and sharp edges.",
+    ),
+  ),
+  ParentActivity(
+    id: "canciones",
+    ageGroup: 0,
+    area: ActivityArea.language,
+    minutes: 8,
+    es: ActivityCopy(
+      title: "Canciones con gestos",
+      subtitle: "La voz y el cuerpo cuentan historias.",
+      goal: "Fortalecer la comunicación, la imitación y el vínculo afectivo.",
+      materials: ["Tu voz","Una canción familiar en español, kichwa u otra lengua del hogar"],
+      steps: ["Canta una canción corta con gestos sencillos.","Repite despacio y espera una respuesta: mirada, sonido o movimiento.","Permite que el niño proponga un gesto y acompáñalo."],
+      observe: "Escucha sus sonidos y nota qué gesto quiere repetir.",
+      adapt: "Si hay sensibilidad al sonido, canta suavemente o usa solo gestos.",
+      safety: "Evita música a volumen alto y respeta si el niño necesita descansar.",
+    ),
+    en: ActivityCopy(
+      title: "Songs with gestures",
+      subtitle: "Tell stories with your voice and body.",
+      goal: "Support communication, imitation and a warm connection.",
+      materials: ["Your voice","A familiar song in any language spoken at home"],
+      steps: ["Sing a short song with simple gestures.","Repeat slowly and pause for a look, sound or movement.","Follow any gesture your child invents."],
+      observe: "Listen for sounds and notice which gestures they repeat.",
+      adapt: "Sing softly or use gestures only if sounds are overwhelming.",
+      safety: "Avoid loud music and allow breaks.",
+    ),
+  ),
+  ParentActivity(
+    id: "ropa",
+    ageGroup: 1,
+    area: ActivityArea.life,
+    minutes: 12,
+    es: ActivityCopy(
+      title: "Pequeños ayudantes",
+      subtitle: "Clasificar ropa también es descubrir.",
+      goal: "Promover autonomía, vocabulario y agrupación de objetos.",
+      materials: ["Prendas limpias y grandes: camisetas, toallas, pantalones","Dos cestas anchas"],
+      steps: ["Pon algunas prendas en el suelo limpio.","Invita a separar por tipo o color sin corregir cada elección.","Pide ayuda para llevarlas a una cesta y agradece su participación."],
+      observe: "Observa si reconoce semejanzas o inventa otra forma de agrupar.",
+      adapt: "Ofrece solo dos prendas al principio o permite señalar.",
+      safety: "Evita bolsas plásticas, cordones largos y botones desprendidos.",
+    ),
+    en: ActivityCopy(
+      title: "Little helpers",
+      subtitle: "Sorting laundry can be discovery.",
+      goal: "Encourage independence, vocabulary and grouping.",
+      materials: ["Large clean clothes: shirts, towels, trousers","Two wide baskets"],
+      steps: ["Place a few items on a clean floor.","Invite sorting by type or colour without correcting every choice.","Ask for help putting clothes away and thank your child."],
+      observe: "Notice whether they spot similarities or invent a new grouping.",
+      adapt: "Offer just two items or let your child point.",
+      safety: "Avoid plastic bags, long cords and loose buttons.",
+    ),
+  ),
+  ParentActivity(
+    id: "cojines",
+    ageGroup: 1,
+    area: ActivityArea.movement,
+    minutes: 10,
+    es: ActivityCopy(
+      title: "Camino de cojines",
+      subtitle: "Un recorrido suave para mover el cuerpo.",
+      goal: "Practicar equilibrio, coordinación y confianza al desplazarse.",
+      materials: ["Cojines grandes y firmes","Una alfombra antideslizante"],
+      steps: ["Coloca dos o tres cojines sobre el suelo, sin apilarlos.","Muestra cómo pasar de uno a otro caminando o gateando.","Deja que el niño elija el recorrido y ofrécele tu mano."],
+      observe: "Mira cómo ajusta sus pasos y cuándo pide apoyo.",
+      adapt: "Puede recorrerlo sentado, gateando o tocando los cojines con las manos.",
+      safety: "Hazlo a nivel del suelo, lejos de muebles y escaleras; nunca saltes desde alturas.",
+    ),
+    en: ActivityCopy(
+      title: "Cushion pathway",
+      subtitle: "A gentle path for moving together.",
+      goal: "Practice balance, coordination and confidence in movement.",
+      materials: ["Large firm cushions","A non-slip rug"],
+      steps: ["Place two or three cushions flat on the floor.","Show how to move between them by walking or crawling.","Let your child choose the route and offer a hand."],
+      observe: "Notice how they adjust their steps and ask for support.",
+      adapt: "They may sit, crawl or explore with their hands.",
+      safety: "Stay at floor level, away from furniture and stairs; no jumping from heights.",
+    ),
+  ),
+  ParentActivity(
+    id: "casita",
+    ageGroup: 1,
+    area: ActivityArea.feelings,
+    minutes: 12,
+    es: ActivityCopy(
+      title: "La casita de los cuidados",
+      subtitle: "Acompañar y cuidar a un muñeco.",
+      goal: "Favorecer el juego simbólico, la empatía y el lenguaje cotidiano.",
+      materials: ["Muñeco grande sin piezas pequeñas","Manta pequeña de tela"],
+      steps: ["Propón que el muñeco tiene sueño o necesita cariño.","Pregúntale al niño qué podría hacer para cuidarlo.","Imiten juntos acciones como abrazar, tapar y saludar."],
+      observe: "Escucha las palabras o gestos que usa para expresar cuidado.",
+      adapt: "Usa un peluche grande si le resulta más familiar.",
+      safety: "No uses accesorios pequeños ni telas que cubran la cara del niño.",
+    ),
+    en: ActivityCopy(
+      title: "The caring little home",
+      subtitle: "Care for a doll together.",
+      goal: "Support pretend play, empathy and everyday language.",
+      materials: ["A large doll without small parts","A small fabric blanket"],
+      steps: ["Pretend the doll is sleepy or needs comfort.","Ask your child what could help the doll.","Act out hugging, covering and greeting together."],
+      observe: "Notice words or gestures used to show care.",
+      adapt: "Use a large soft toy if preferred.",
+      safety: "Avoid tiny accessories and fabrics covering the child's face.",
+    ),
+  ),
+  ParentActivity(
+    id: "cuento",
+    ageGroup: 2,
+    area: ActivityArea.language,
+    minutes: 15,
+    es: ActivityCopy(
+      title: "Cuentos que inventamos",
+      subtitle: "Mirar imágenes y crear historias juntos.",
+      goal: "Ampliar la expresión oral, la escucha y la imaginación.",
+      materials: ["Libro con imágenes grandes o dibujos hechos en casa","Un lugar cómodo"],
+      steps: ["Miren una imagen y pregunta qué está sucediendo.","Invita a imaginar qué pasó antes y qué podría ocurrir después.","Cuenta también tu versión y deja espacio para la del niño."],
+      observe: "Valora sus ideas y preguntas, aunque cambien la historia.",
+      adapt: "Puede señalar, gesticular o usar su lengua materna.",
+      safety: "Elige libros resistentes y sin piezas desprendibles.",
+    ),
+    en: ActivityCopy(
+      title: "Stories we invent",
+      subtitle: "Look at pictures and make up stories.",
+      goal: "Develop expression, listening and imagination.",
+      materials: ["A picture book or homemade large drawings","A comfortable place"],
+      steps: ["Look at a picture and ask what is happening.","Imagine what happened before and what might happen next.","Share your version and make room for your child's ideas."],
+      observe: "Welcome their questions and ideas even if the story changes.",
+      adapt: "Pointing, gestures and home languages all count.",
+      safety: "Use sturdy books without loose parts.",
+    ),
+  ),
+  ParentActivity(
+    id: "pintura",
+    ageGroup: 2,
+    area: ActivityArea.creativity,
+    minutes: 15,
+    es: ActivityCopy(
+      title: "Trazos con libertad",
+      subtitle: "Crear sin buscar un dibujo perfecto.",
+      goal: "Estimular expresión artística, coordinación y elección de colores.",
+      materials: ["Papel grande","Crayones gruesos no tóxicos adecuados a la edad"],
+      steps: ["Extiende el papel sobre una mesa baja y estable.","Invita a hacer líneas, puntos y formas a su manera.","Pregúntale qué le gusta de su creación, sin ponerle nota."],
+      observe: "Observa cómo cambia de color o presión y qué desea contar.",
+      adapt: "Sujeta el papel o utiliza un crayón de agarre fácil.",
+      safety: "Supervisa para evitar llevar materiales a la boca; usa productos infantiles certificados.",
+    ),
+    en: ActivityCopy(
+      title: "Free-flowing marks",
+      subtitle: "Create without aiming for a perfect picture.",
+      goal: "Support artistic expression, coordination and choices.",
+      materials: ["Large paper","Age-appropriate non-toxic chunky crayons"],
+      steps: ["Place paper on a low stable table.","Invite lines, dots and shapes in any style.","Ask what your child likes about the drawing, without judging it."],
+      observe: "Notice choices of colours and pressure and what they want to tell.",
+      adapt: "Hold the paper steady or use an easy-grip crayon.",
+      safety: "Supervise to prevent mouthing; choose certified child-safe supplies.",
+    ),
+  ),
+  ParentActivity(
+    id: "mercado",
+    ageGroup: 2,
+    area: ActivityArea.thinking,
+    minutes: 15,
+    es: ActivityCopy(
+      title: "Nuestro pequeño mercado",
+      subtitle: "Imaginar compras, contar y conversar.",
+      goal: "Practicar clasificación, lenguaje social y decisiones sencillas.",
+      materials: ["Cajas grandes sin grapas","Frutas de juguete grandes de una sola pieza o dibujos"],
+      steps: ["Armen juntos un puesto con cajas.","Tú pides una fruta y el niño decide cómo entregarla.","Cambien de roles e inventen preguntas: ¿qué hay hoy?"],
+      observe: "Mira cómo organiza los productos y responde a las preguntas.",
+      adapt: "Usa solo dos tipos de productos o imágenes grandes.",
+      safety: "Sin monedas, fichas pequeñas ni bolsas plásticas.",
+    ),
+    en: ActivityCopy(
+      title: "Our little market",
+      subtitle: "Pretend to shop, count and chat.",
+      goal: "Practice sorting, social language and simple decisions.",
+      materials: ["Large staple-free boxes","Large one-piece pretend fruit or drawings"],
+      steps: ["Build a market stall together.","Ask for a fruit and let your child decide how to give it.","Switch roles and invent questions: what is for sale today?"],
+      observe: "Notice how products are organized and how your child responds.",
+      adapt: "Start with two product types or large pictures.",
+      safety: "No coins, tiny tokens or plastic bags.",
+    ),
+  ),
+  ParentActivity(
+    id: "patrones",
+    ageGroup: 3,
+    area: ActivityArea.thinking,
+    minutes: 15,
+    es: ActivityCopy(
+      title: "Secuencias de colores",
+      subtitle: "Descubrir patrones con piezas grandes.",
+      goal: "Explorar regularidades, atención y razonamiento inicial.",
+      materials: ["Bloques grandes de dos colores","Superficie estable"],
+      steps: ["Forma una secuencia sencilla: rojo, azul, rojo, azul.","Pregunta qué bloque podría venir después.","Invita al niño a inventar una secuencia para que tú la sigas."],
+      observe: "Escucha cómo explica su elección, no solo si acierta.",
+      adapt: "Empieza con dos bloques alternados o usa formas en vez de colores.",
+      safety: "Usa piezas grandes, resistentes y sin imanes ni partes desmontables.",
+    ),
+    en: ActivityCopy(
+      title: "Colour sequences",
+      subtitle: "Discover patterns with large blocks.",
+      goal: "Explore patterns, attention and early reasoning.",
+      materials: ["Large blocks in two colours","A stable surface"],
+      steps: ["Make a simple red-blue-red-blue pattern.","Ask which block might come next.","Invite your child to invent a pattern for you to follow."],
+      observe: "Listen to the reasoning, not only whether the answer is right.",
+      adapt: "Begin with two alternating blocks or use shapes.",
+      safety: "Use large sturdy pieces with no magnets or detachable parts.",
+    ),
+  ),
+  ParentActivity(
+    id: "barrio",
+    ageGroup: 3,
+    area: ActivityArea.creativity,
+    minutes: 20,
+    es: ActivityCopy(
+      title: "Mi barrio en papel",
+      subtitle: "Dibujar los lugares que nos rodean.",
+      goal: "Relacionar espacio, memoria, lenguaje y pertenencia cultural.",
+      materials: ["Papel grande","Crayones gruesos","Cajas grandes opcionales"],
+      steps: ["Conversen sobre la casa, el parque o el mercado del barrio.","Dibujen juntos caminos y lugares conocidos.","Invita a contar una historia sobre un recorrido familiar."],
+      observe: "Escucha qué lugares reconoce y cuáles le importan.",
+      adapt: "Puede elegir imágenes, señalar lugares o describirlos oralmente.",
+      safety: "Evita tijeras afiladas, pegamentos fuertes y grapas.",
+    ),
+    en: ActivityCopy(
+      title: "My neighbourhood on paper",
+      subtitle: "Draw places that matter to your family.",
+      goal: "Connect spatial thinking, memory, language and belonging.",
+      materials: ["Large paper","Chunky crayons","Optional large boxes"],
+      steps: ["Talk about home, the park or the local market.","Draw paths and familiar places together.","Invite a story about a family walk."],
+      observe: "Listen for places your child recognizes and cares about.",
+      adapt: "Choose pictures, point or describe places instead of drawing.",
+      safety: "Avoid sharp scissors, strong glues and staples.",
+    ),
+  ),
+  ParentActivity(
+    id: "emociones",
+    ageGroup: 3,
+    area: ActivityArea.feelings,
+    minutes: 15,
+    es: ActivityCopy(
+      title: "Teatro de emociones",
+      subtitle: "Representar cómo nos sentimos.",
+      goal: "Reconocer emociones y ensayar formas respetuosas de expresarlas.",
+      materials: ["Dos peluches o títeres grandes","Un espacio tranquilo"],
+      steps: ["Haz que un peluche se sienta alegre, triste o frustrado.","Pregunta qué podría necesitar y escucha sin corregir.","Invita al niño a crear otra escena y acompaña su solución."],
+      observe: "Observa cómo nombra sentimientos o muestra empatía.",
+      adapt: "Puede hablar, señalar expresiones o representar con gestos.",
+      safety: "Evita títeres con ojos, botones o accesorios que puedan soltarse.",
+    ),
+    en: ActivityCopy(
+      title: "Feelings theatre",
+      subtitle: "Act out how we feel.",
+      goal: "Recognize emotions and practice respectful ways to express them.",
+      materials: ["Two large soft toys or puppets","A quiet space"],
+      steps: ["Pretend a puppet feels happy, sad or frustrated.","Ask what might help and listen without correcting.","Invite your child to invent another scene and support their ideas."],
+      observe: "Notice how feelings are named or empathy is shown.",
+      adapt: "Use speech, pointing or gestures to communicate.",
+      safety: "Avoid puppets with loose eyes, buttons or accessories.",
+    ),
+  ),
+];
