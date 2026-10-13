@@ -13,6 +13,7 @@ import '../pages/entorno_page.dart';
 
 import '../features/children/pages/children_page.dart';
 import '../features/health/pages/health_page.dart';
+import 'widgets/liquid_glass_bottom_bar.dart';
 
 // ============================================================================
 // APP SHELL
@@ -91,6 +92,7 @@ class _AppShellState extends State<AppShell> {
           );
         },
       ),
+<<<<<<< HEAD
     );
   }
 }
@@ -384,6 +386,44 @@ class _LiquidGlassNavigationBar extends StatelessWidget {
             ),
           ),
         ),
+=======
+      extendBody: true,
+      bottomNavigationBar: ValueListenableBuilder<String>(
+        valueListenable: AppConfig.idioma,
+        builder: (context, idiomaActual, _) {
+          return LiquidGlassBottomBar(
+            selectedIndex: _paginaActual,
+            onSelected: _cambiarPagina,
+            darkMode: modoOscuro,
+            items: [
+              LiquidGlassNavItem(
+                icon: Icons.home_outlined,
+                selectedIcon: Icons.home_rounded,
+                label: T.txt('navHome'),
+                color: const Color(0xFF7B2CBF),
+              ),
+              LiquidGlassNavItem(
+                icon: Icons.child_care_outlined,
+                selectedIcon: Icons.child_care_rounded,
+                label: T.txt('navChildren'),
+                color: const Color(0xFF8E44AD),
+              ),
+              LiquidGlassNavItem(
+                icon: Icons.favorite_border_rounded,
+                selectedIcon: Icons.favorite_rounded,
+                label: T.txt('navHealth'),
+                color: const Color(0xFFEF476F),
+              ),
+              LiquidGlassNavItem(
+                icon: Icons.auto_stories_outlined,
+                selectedIcon: Icons.auto_stories_rounded,
+                label: T.txt('navLearning'),
+                color: const Color(0xFFFF9F1C),
+              ),
+            ],
+          );
+        },
+>>>>>>> feec5014802cf283e11411c8aefd3d2aaaecbef5
       ),
     );
   }
