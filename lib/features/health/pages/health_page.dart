@@ -72,7 +72,6 @@ class HealthPage extends StatelessWidget {
                   const SizedBox(height: 23),
 
                   _SelectedChildCard(
-                    dark: dark,
                     onAdd: () {
                       _addChild(context);
                     },
@@ -91,7 +90,6 @@ class HealthPage extends StatelessWidget {
                     title: T.txt('vaccines'),
                     subtitle: T.txt('vaccinesSubtitle'),
                     color: Colors.blue,
-                    dark: dark,
                     onTap: () {
                       _openPage(context, const VaccinesPage());
                     },
@@ -104,7 +102,6 @@ class HealthPage extends StatelessWidget {
                     title: T.txt('growth'),
                     subtitle: T.txt('growthSubtitle'),
                     color: const Color(0xFF00A896),
-                    dark: dark,
                     onTap: () {
                       _openPage(context, const GrowthPage());
                     },
@@ -123,7 +120,6 @@ class HealthPage extends StatelessWidget {
                     title: T.txt('nutrition'),
                     subtitle: T.txt('healthNutritionIntegratedSubtitle'),
                     color: const Color(0xFF269B90),
-                    dark: dark,
                     onTap: () {
                       _openPage(context, const NutricionPage());
                     },
@@ -140,7 +136,6 @@ class HealthPage extends StatelessWidget {
 }
 
 class _SelectedChildCard extends StatelessWidget {
-  final bool dark;
   final VoidCallback onAdd;
 
   const _SelectedChildCard({required this.dark, required this.onAdd});
@@ -281,7 +276,6 @@ class HealthOptionCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.color,
-    required this.dark,
     required this.onTap,
   });
 
