@@ -35,6 +35,7 @@ class T {
 
   static final Map<String, String> _spanish = <String, String>{
     'vaccineApplied': 'APLICADA',
+    'vaccineNotApplied': 'NO APLICADA',
     'vaccineUpcoming': 'PRÓXIMA',
     'vaccineReview': 'REQUIERE REVISIÓN',
     'vaccineSeasonalReview': 'REVISAR VACUNACIÓN ESTACIONAL',
@@ -337,10 +338,19 @@ class T {
     'vaccinesLoadError': 'No se pudo cargar el esquema de vacunación.',
     'registerVaccine': 'Registrar vacuna',
     'editVaccineRecord': 'Editar registro',
+    'vaccineDoseStatus': 'Estado de esta dosis',
+    'vaccineDoseStatusSubtitle':
+        'Indica si esta dosis fue aplicada o no aplicada.',
+    'vaccineMarkApplied': 'Aplicada',
+    'vaccineMarkNotApplied': 'No aplicada',
+    'vaccineAppliedOptionHelp': 'Registra la fecha y, si deseas, el centro de salud.',
+    'vaccineNotAppliedOptionHelp': 'Registra que esta dosis no fue administrada.',
+    'vaccineNotAppliedUnlockInfo':
+        'La dosis quedará registrada como no aplicada y la siguiente dosis se habilitará. Si la siguiente depende de un intervalo, se mostrará para revisión sin inventar una fecha.',
     'vaccineAppliedDate': 'Fecha de aplicación',
     'healthCenterOptional': 'Centro de salud (opcional)',
     'notesOptional': 'Notas (opcional)',
-    'saveVaccineRecord': 'Guardar aplicación',
+    'saveVaccineRecord': 'Guardar registro',
     'deleteVaccineRecord': 'Eliminar registro',
     'deleteVaccineRecordQuestion':
         '¿Seguro que deseas eliminar este registro de vacunación?',
@@ -782,16 +792,26 @@ class T {
         'Reference based on Ecuador MSP’s 2026 national vaccination schedule.',
     'vaccinesLoadError': 'The vaccination schedule could not be loaded.',
     'vaccineApplied': 'Administered',
+    'vaccineNotApplied': 'Not administered',
     'vaccineUpcoming': 'Upcoming',
     'vaccineReview': 'Needs review',
     'vaccineSeasonalReview': 'Review seasonal vaccination',
     'vaccineWaitingPrevious': 'Waiting for previous dose',
     'registerVaccine': 'Register vaccine',
     'editVaccineRecord': 'Edit record',
+    'vaccineDoseStatus': 'Dose status',
+    'vaccineDoseStatusSubtitle':
+        'Choose whether this dose was administered or not administered.',
+    'vaccineMarkApplied': 'Administered',
+    'vaccineMarkNotApplied': 'Not administered',
+    'vaccineAppliedOptionHelp': 'Record the date and, optionally, the health center.',
+    'vaccineNotAppliedOptionHelp': 'Record that this dose was not administered.',
+    'vaccineNotAppliedUnlockInfo':
+        'This dose will be recorded as not administered and the next dose will be unlocked. If the next dose depends on an interval, it will be shown for review without inventing a date.',
     'vaccineAppliedDate': 'Administration date',
     'healthCenterOptional': 'Health center (optional)',
     'notesOptional': 'Notes (optional)',
-    'saveVaccineRecord': 'Save administration',
+    'saveVaccineRecord': 'Save record',
     'deleteVaccineRecord': 'Delete record',
     'deleteVaccineRecordQuestion':
         'Are you sure you want to delete this vaccination record?',
@@ -1412,6 +1432,7 @@ class T {
   // especialmente los textos de vacunas, crecimiento, nutrición y alertas.
   static final Map<String, String> _kichwa = <String, String>{
     'vaccineApplied': 'CHURASHKA',
+    'vaccineNotApplied': 'MANA CHURASHKA',
     'vaccineUpcoming': 'KATIKPI',
     'vaccineReview': 'RIKUNA KAN',
     'vaccineSeasonalReview': 'WATA KILLAPI VACUNATA RIKUY',
@@ -1714,10 +1735,19 @@ class T {
     'vaccinesLoadError': 'Vacuna ñanta mana kargay usharishkachu.',
     'registerVaccine': 'Vacunata killkachiy',
     'editVaccineRecord': 'Killkachishkata tikrachiy',
+    'vaccineDoseStatus': 'Kay dosispa kay',
+    'vaccineDoseStatusSubtitle':
+        'Kay dosiska churashkachu mana churashkachu akllay.',
+    'vaccineMarkApplied': 'Churashka',
+    'vaccineMarkNotApplied': 'Mana churashka',
+    'vaccineAppliedOptionHelp': 'Punchata, munashpaka hanpi wasitapash killkachiy.',
+    'vaccineNotAppliedOptionHelp': 'Kay dosiska mana churashkachu nishpa killkachiy.',
+    'vaccineNotAppliedUnlockInfo':
+        'Kay dosista mana churashka nishpa wakaychishpaka, katik dosiska paskarinka. Katik dosiska intervalo punchamanta kanchikpika, mana llullashka punchata churashpa rikunapaqmi sakirinka.',
     'vaccineAppliedDate': 'Vacunata churashka puncha',
     'healthCenterOptional': 'Hanpi wasi (munashpalla)',
     'notesOptional': 'Yuyachikuna (munashpalla)',
-    'saveVaccineRecord': 'Vacuna churashkata wakaychiy',
+    'saveVaccineRecord': 'Killkachishkata wakaychiy',
     'deleteVaccineRecord': 'Killkachishkata kichuy',
     'deleteVaccineRecordQuestion': '¿Kay vacuna killkachishkata kichunaykichu?',
     'vaccinesDisclaimer':
