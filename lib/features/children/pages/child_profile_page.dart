@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../pages/app_texts.dart';
+import '../../../pages/nutricion_page.dart';
+import '../../learning/pages/learning_hub_page.dart';
 
 import '../../growth/pages/growth_page.dart';
 import '../../vaccines/pages/vaccines_page.dart';
@@ -128,6 +130,36 @@ class _ChildProfileContent extends StatelessWidget {
       MaterialPageRoute(
         builder: (_) =>
             const GrowthPage(),
+      ),
+    );
+  }
+
+  Future<void> _openLearning(BuildContext context) async {
+    await ChildRepository.instance.selectChild(child.id);
+
+    if (!context.mounted) {
+      return;
+    }
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const LearningHubPage(),
+      ),
+    );
+  }
+
+  Future<void> _openNutrition(BuildContext context) async {
+    await ChildRepository.instance.selectChild(child.id);
+
+    if (!context.mounted) {
+      return;
+    }
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const NutricionPage(),
       ),
     );
   }
@@ -732,6 +764,70 @@ class _ChildProfileContent extends StatelessWidget {
                       _openGrowth(
                         context,
                       );
+                    },
+                  ),
+
+                  const SizedBox(
+                    height: 28,
+                  ),
+
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      T.txt('childPersonalizedForAge'),
+                      style: TextStyle(
+                        fontFamily: 'Fredoka',
+                        fontSize: 22,
+                        fontWeight: FontWeight.w800,
+                        color: dark
+                            ? Colors.white
+                            : const Color(0xFF4A2C82),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(
+                    height: 5,
+                  ),
+
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      T.txt('childPersonalizedSubtitle'),
+                      style: TextStyle(
+                        fontFamily: 'Baloo2',
+                        fontSize: 15,
+                        height: 1.25,
+                        color: dark ? Colors.white70 : Colors.black54,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(
+                    height: 12,
+                  ),
+
+                  _HealthCard(
+                    icon: Icons.auto_stories_rounded,
+                    title: T.txt('learning'),
+                    subtitle: T.txt('childLearningShortcutSubtitle'),
+                    color: const Color(0xFF7B61C9),
+                    onTap: () {
+                      _openLearning(context);
+                    },
+                  ),
+
+                  const SizedBox(
+                    height: 12,
+                  ),
+
+                  _HealthCard(
+                    icon: Icons.restaurant_rounded,
+                    title: T.txt('nutrition'),
+                    subtitle: T.txt('childNutritionShortcutSubtitle'),
+                    color: const Color(0xFFE58B52),
+                    onTap: () {
+                      _openNutrition(context);
                     },
                   ),
                 ],
