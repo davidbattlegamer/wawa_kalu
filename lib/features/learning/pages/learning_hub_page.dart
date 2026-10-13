@@ -78,7 +78,7 @@ class LearningHubPage extends StatelessWidget {
                         title: T.txt('familyGuide'),
                         subtitle: T.txt('learningGuideSubtitle'),
                         icon: Icons.auto_awesome_rounded,
-                        color: const Color(0xFF8B5CD6),
+                        color: const Color(0xFF8B5CF6),
                         badge: T.txt('learningActivitiesBadge'),
                         featured: true,
                         onTap: () => _open(
@@ -101,7 +101,7 @@ class LearningHubPage extends StatelessWidget {
                         title: T.txt('protectiveEnvironments'),
                         subtitle: T.txt('learningEnvironmentSubtitle'),
                         icon: Icons.shield_rounded,
-                        color: const Color(0xFF16A68F),
+                        color: const Color(0xFF16B89A),
                         badge: T.txt('learningGuidanceBadge'),
                         onTap: () => _open(
                           context,
