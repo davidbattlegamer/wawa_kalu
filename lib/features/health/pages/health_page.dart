@@ -4,7 +4,6 @@ import '../../../pages/app_config.dart';
 import '../../../pages/app_texts.dart';
 import '../../../app/widgets/family_content_ui.dart';
 import '../../../pages/nutricion_page.dart';
-import '../../../pages/recetas_page.dart';
 
 import '../../children/data/child_repository.dart';
 import '../../children/models/child.dart';
@@ -81,17 +80,11 @@ class HealthPage extends StatelessWidget {
 
                   const SizedBox(height: 25),
 
-                  Text(
-                    T.txt('healthTrackingTitle'),
-                    style: TextStyle(
-                      fontFamily: 'Fredoka',
-                      fontSize: 21,
-                      fontWeight: FontWeight.w800,
-                      color: dark ? Colors.white : const Color(0xFF2D2D2D),
-                    ),
+                  FamilySectionHeading(
+                    title: T.txt('healthTrackingTitle'),
+                    subtitle: T.txt('healthTrackingSubtitle'),
+                    icon: Icons.monitor_heart_rounded,
                   ),
-
-                  const SizedBox(height: 12),
 
                   HealthOptionCard(
                     icon: Icons.vaccines_rounded,
@@ -119,22 +112,16 @@ class HealthPage extends StatelessWidget {
 
                   const SizedBox(height: 25),
 
-                  Text(
-                    T.txt('healthGuidanceTitle'),
-                    style: TextStyle(
-                      fontFamily: 'Fredoka',
-                      fontSize: 21,
-                      fontWeight: FontWeight.w800,
-                      color: dark ? Colors.white : const Color(0xFF2D2D2D),
-                    ),
+                  FamilySectionHeading(
+                    title: T.txt('healthGuidanceTitle'),
+                    subtitle: T.txt('healthGuidanceSubtitle'),
+                    icon: Icons.spa_rounded,
                   ),
-
-                  const SizedBox(height: 12),
 
                   HealthOptionCard(
                     icon: Icons.restaurant_menu_rounded,
                     title: T.txt('nutrition'),
-                    subtitle: T.txt('healthNutritionSubtitle'),
+                    subtitle: T.txt('healthNutritionIntegratedSubtitle'),
                     color: const Color(0xFF269B90),
                     dark: dark,
                     onTap: () {
@@ -142,18 +129,6 @@ class HealthPage extends StatelessWidget {
                     },
                   ),
 
-                  const SizedBox(height: 14),
-
-                  HealthOptionCard(
-                    icon: Icons.menu_book_rounded,
-                    title: T.txt('recipes'),
-                    subtitle: T.txt('healthRecipesSubtitle'),
-                    color: const Color(0xFFDB7A45),
-                    dark: dark,
-                    onTap: () {
-                      _openPage(context, const RecetasPage());
-                    },
-                  ),
                 ],
               ),
             ),
