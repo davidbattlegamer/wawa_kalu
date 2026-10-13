@@ -526,6 +526,7 @@ class _Dashboard extends StatelessWidget {
 
   const _Dashboard({
     required this.child,
+    required this.dark,
     required this.onChangeChild,
     required this.onOpenProfile,
     required this.onVaccines,
@@ -1021,11 +1022,6 @@ class _EmptyHome extends StatelessWidget {
 }
 
 // =================================================================
-// TÍTULO
-// =================================================================
-
-
-// =================================================================
 // TARJETA DE SALUD
 // =================================================================
 
@@ -1036,7 +1032,6 @@ class _DashboardHealthCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.actionText,
-    required this.dark,
     required this.onTap,
   });
 
