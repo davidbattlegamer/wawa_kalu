@@ -224,137 +224,268 @@ class _EmptyChildren extends StatelessWidget {
 }
 
 class _ChildCard extends StatelessWidget {
-  final Child child;
-  final bool selected;
-  final VoidCallback onTap;
-
   const _ChildCard({
     required this.child,
     required this.selected,
     required this.onTap,
   });
 
+  final Child child;
+  final bool selected;
+  final VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
     final bool dark = Theme.of(context).brightness == Brightness.dark;
+    final Color childColor =
+        child.sex == ChildSex.girl ? const Color(0xFFE85D9C) : const Color(0xFF4F7CFF);
+    final Color accent = selected ? const Color(0xFF7B61C9) : childColor;
 
-    final Color color = child.sex == ChildSex.girl ? Colors.pink : Colors.blue;
-
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(24),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(24),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                dark ? const Color(0xFF211B2E) : Colors.white,
-                color.withValues(alpha: dark ? 0.16 : 0.08),
-              ],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(
-              color: selected
-                  ? const Color(0xFF7B2CBF)
-                  : color.withValues(alpha: 0.16),
-              width: selected ? 2 : 1.2,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: color.withValues(alpha: 0.07),
-                blurRadius: 12,
-                offset: const Offset(0, 5),
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: '${child.name}. ${childAgeText(child.birthDate)}.',
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(28),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(28),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 230),
+            curve: Curves.easeOutCubic,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  dark ? const Color(0xFF211D2B) : Colors.white,
+                  accent.withValues(alpha: dark ? 0.22 : 0.12),
+                ],
               ),
-            ],
-          ),
-          child: Row(
-            children: [
-              ChildAvatar(child: child, size: 61),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            child.name,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontFamily: 'Fredoka',
-                              fontSize: 19,
-                              fontWeight: FontWeight.w800,
-                              color: dark
-                                  ? Colors.white
-                                  : const Color(0xFF2D2D2D),
-                            ),
+              borderRadius: BorderRadius.circular(28),
+              border: Border.all(
+                color: accent.withValues(alpha: selected ? 0.58 : 0.28),
+                width: selected ? 1.8 : 1.2,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: accent.withValues(alpha: dark ? 0.07 : 0.13),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Stack(
+              children: [
+                Positioned(
+                  top: -42,
+                  right: -26,
+                  child: Container(
+                    width: 125,
+                    height: 125,
+                    decoration: BoxDecoration(
+                      color: accent.withValues(alpha: dark ? 0.07 : 0.055),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: 0,
+                  top: 18,
+                  bottom: 18,
+                  child: Container(
+                    width: selected ? 5 : 3,
+                    decoration: BoxDecoration(
+                      color: accent.withValues(alpha: selected ? 0.95 : 0.55),
+                      borderRadius: const BorderRadius.horizontal(
+                        right: Radius.circular(10),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(19, 18, 17, 18),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 74,
+                        height: 74,
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              accent.withValues(alpha: 0.32),
+                              accent.withValues(alpha: 0.10),
+                            ],
                           ),
+                          border: Border.all(
+                            color: accent.withValues(alpha: 0.30),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: accent.withValues(alpha: 0.16),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
-                        if (selected) ...[
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 3,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(
-                                0xFF00A896,
-                              ).withValues(alpha: 0.13),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              T.txt('active'),
-                              style: const TextStyle(
-                                fontFamily: 'Baloo2',
-                                fontSize: 11.5,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF00A896),
+                        child: ChildAvatar(child: child, size: 64),
+                      ),
+                      const SizedBox(width: 15),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (selected) ...[
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 9,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF00A896)
+                                      .withValues(alpha: dark ? 0.18 : 0.11),
+                                  borderRadius: BorderRadius.circular(30),
+                                  border: Border.all(
+                                    color: const Color(0xFF00A896)
+                                        .withValues(alpha: 0.18),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      Icons.check_circle_rounded,
+                                      size: 14,
+                                      color: Color(0xFF00A896),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Text(
+                                      T.txt('active'),
+                                      style: const TextStyle(
+                                        fontFamily: 'Baloo2',
+                                        fontSize: 11.5,
+                                        height: 1,
+                                        fontWeight: FontWeight.w800,
+                                        color: Color(0xFF00A896),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 7),
+                            ],
+                            Text(
+                              child.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: 'Fredoka',
+                                fontSize: 21,
+                                height: 1.05,
+                                fontWeight: FontWeight.w800,
+                                color:
+                                    dark ? Colors.white : const Color(0xFF302942),
                               ),
                             ),
+                            const SizedBox(height: 7),
+                            Wrap(
+                              spacing: 7,
+                              runSpacing: 6,
+                              children: [
+                                _ChildMetaChip(
+                                  icon: Icons.cake_outlined,
+                                  text: childAgeText(child.birthDate),
+                                  color: accent,
+                                  dark: dark,
+                                ),
+                                _ChildMetaChip(
+                                  icon: child.sex == ChildSex.girl
+                                      ? Icons.face_3_rounded
+                                      : Icons.face_6_rounded,
+                                  text: child.sex == ChildSex.girl
+                                      ? T.txt('girl')
+                                      : T.txt('boy'),
+                                  color: childColor,
+                                  dark: dark,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 9),
+                      Container(
+                        width: 42,
+                        height: 42,
+                        decoration: BoxDecoration(
+                          color: accent.withValues(alpha: dark ? 0.20 : 0.11),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: accent.withValues(alpha: 0.16),
                           ),
-                        ],
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      childAgeText(child.birthDate),
-                      style: TextStyle(
-                        fontFamily: 'Baloo2',
-                        fontSize: 15,
-                        color: dark ? Colors.white70 : Colors.black54,
+                        ),
+                        child: Icon(
+                          Icons.arrow_forward_rounded,
+                          color: accent,
+                          size: 21,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      child.sex == ChildSex.girl ? T.txt('girl') : T.txt('boy'),
-                      style: TextStyle(
-                        fontFamily: 'Baloo2',
-                        fontSize: 13.5,
-                        color: color,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 6),
-              Icon(
-                Icons.chevron_right_rounded,
-                color: selected ? const Color(0xFF7B2CBF) : color,
-                size: 28,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ChildMetaChip extends StatelessWidget {
+  const _ChildMetaChip({
+    required this.icon,
+    required this.text,
+    required this.color,
+    required this.dark,
+  });
+
+  final IconData icon;
+  final String text;
+  final Color color;
+  final bool dark;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: dark ? 0.16 : 0.08),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withValues(alpha: 0.14)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: color),
+          const SizedBox(width: 5),
+          Text(
+            text,
+            style: TextStyle(
+              fontFamily: 'Baloo2',
+              fontSize: 12.5,
+              height: 1,
+              fontWeight: FontWeight.w700,
+              color: dark ? Colors.white70 : const Color(0xFF625A69),
+            ),
+          ),
+        ],
       ),
     );
   }
