@@ -34,6 +34,13 @@ class T {
   static Set<String> get kichwaKeys => Set<String>.unmodifiable(_kichwa.keys);
 
   static final Map<String, String> _spanish = <String, String>{
+    'guideAreaExplore': "Exploración sensorial",
+    'guideAreaMove': "Movimiento",
+    'guideAreaLanguage': "Lenguaje",
+    'guideAreaThink': "Pensamiento",
+    'guideAreaCreate': "Creatividad",
+    'guideAreaLife': "Vida cotidiana",
+    'guideAreaFeel': "Emociones",
     'guideNavTitle': "Guía para familias",
     'guideHeroTag': "PARA MADRES, PADRES Y CUIDADORES",
     'guideHeroTitle': "Pequeños descubrimientos, grandes aprendizajes",
@@ -766,6 +773,13 @@ class T {
   };
 
   static final Map<String, String> _english = <String, String>{
+    'guideAreaExplore': "Sensory exploration",
+    'guideAreaMove': "Movement",
+    'guideAreaLanguage': "Language",
+    'guideAreaThink': "Thinking",
+    'guideAreaCreate': "Creativity",
+    'guideAreaLife': "Everyday life",
+    'guideAreaFeel': "Feelings",
     'guideNavTitle': "Family activity guide",
     'guideHeroTag': "FOR PARENTS AND CAREGIVERS",
     'guideHeroTitle': "Little discoveries, big learning",
@@ -1493,6 +1507,13 @@ class T {
   // MSP, debe ser revisada por un/a hablante o traductor/a de Kichwa ecuatoriano,
   // especialmente los textos de vacunas, crecimiento, nutrición y alertas.
   static final Map<String, String> _kichwa = <String, String>{
+    'guideAreaExplore': "Taripay",
+    'guideAreaMove': "Kuyuriy",
+    'guideAreaLanguage': "Shimi",
+    'guideAreaThink': "Yuyay",
+    'guideAreaCreate': "Kamay",
+    'guideAreaLife': "Punchanta kawsay",
+    'guideAreaFeel': "Shunkupa yuyaykuna",
     'guideNavTitle': "Aylluwan yachay",
     'guideHeroTag': "AYLLUKUNAPAK",
     'guideHeroTitle': "Uchilla taripaykuna, hatun yachaykuna",
