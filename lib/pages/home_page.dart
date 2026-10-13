@@ -379,7 +379,7 @@ class _HomePageState extends State<HomePage> {
             valueListenable: ChildRepository.instance.children,
             builder: (context, children, _) {
               if (children.isEmpty) {
-                return _EmptyHome(dark: dark, onAdd: _addChild);
+                return _EmptyHome(onAdd: _addChild);
               }
 
               return ValueListenableBuilder<String?>(
@@ -963,11 +963,9 @@ class _HomeChildSpotlight extends StatelessWidget {
 
 class _EmptyHome extends StatelessWidget {
   const _EmptyHome({
-    required this.dark,
     required this.onAdd,
   });
 
-  final bool dark;
   final VoidCallback onAdd;
 
   @override
@@ -1033,25 +1031,6 @@ class _EmptyHome extends StatelessWidget {
 // TÍTULO
 // =================================================================
 
-class _SectionTitle extends StatelessWidget {
-  final String title;
-  final bool dark;
-
-  const _SectionTitle({required this.title, required this.dark});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: TextStyle(
-        fontFamily: 'Fredoka',
-        fontSize: 21,
-        fontWeight: FontWeight.w800,
-        color: dark ? Colors.white : const Color(0xFF4A2C82),
-      ),
-    );
-  }
-}
 
 // =================================================================
 // TARJETA DE SALUD
