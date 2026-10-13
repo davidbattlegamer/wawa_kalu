@@ -34,6 +34,8 @@ class T {
   static Set<String> get kichwaKeys => Set<String>.unmodifiable(_kichwa.keys);
 
   static final Map<String, String> _spanish = <String, String>{
+    'learningEverydayTitle': 'Conversar, jugar y cuidar en lo cotidiano',
+    'learningEverydaySubtitle': 'Lenguaje y protección ahora forman parte del recorrido de Aprender: una idea para comunicarse y otra para cuidar, entrelazadas en la misma guía.',
     'nutritionGuideTag': 'NUTRIR · COMPARTIR · CRECER',
     'nutritionGuideTitle': 'Sabores de Ecuador para crecer en familia',
     'nutritionGuideSubtitle': 'Una guía por edad con hábitos sencillos y recetas ecuatorianas adaptadas a la primera infancia.',
@@ -784,6 +786,8 @@ class T {
   };
 
   static final Map<String, String> _english = <String, String>{
+    'learningEverydayTitle': 'Talk, play, and care in everyday moments',
+    'learningEverydaySubtitle': 'Language and protection are now part of the Learning journey: communication and care ideas are woven into the same guide.',
     'nutritionGuideTag': 'NOURISH · SHARE · GROW',
     'nutritionGuideTitle': 'Flavors of Ecuador for growing together',
     'nutritionGuideSubtitle': 'An age-based guide with simple habits and Ecuadorian recipes adapted for early childhood.',
