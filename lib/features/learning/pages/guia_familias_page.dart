@@ -6,15 +6,28 @@ import '../data/parent_activity_catalog.dart';
 
 // Guía de actividades con materiales cotidianos para madres, padres y cuidadores.
 class GuiaFamiliasPage extends StatefulWidget {
-  const GuiaFamiliasPage({super.key});
+  const GuiaFamiliasPage({
+    super.key,
+    this.initialAgeGroup = -1,
+  });
+
+  final int initialAgeGroup;
 
   @override
   State<GuiaFamiliasPage> createState() => _GuiaFamiliasPageState();
 }
 
 class _GuiaFamiliasPageState extends State<GuiaFamiliasPage> {
-  int _age = -1;
+  late int _age;
   ActivityArea? _area;
+
+  @override
+  void initState() {
+    super.initState();
+    _age = widget.initialAgeGroup >= 0 && widget.initialAgeGroup <= 3
+        ? widget.initialAgeGroup
+        : -1;
+  }
 
   @override
   Widget build(BuildContext context) {
