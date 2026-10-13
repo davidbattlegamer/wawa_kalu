@@ -20,6 +20,133 @@ class GuiaFamiliasPage extends StatefulWidget {
 class _GuiaFamiliasPageState extends State<GuiaFamiliasPage> {
   late int _age;
   ActivityArea? _area;
+  int? _languageOpen;
+  int? _environmentOpen;
+
+  List<_LanguageGuideItem> _languageItems() {
+    return const [
+      _LanguageGuideItem(
+        titleKey: 'nameObjectsTitle',
+        subtitleKey: 'nameObjectsDesc',
+        recommendationKey: 'nameObjectsRec',
+        homeKey: 'nameObjectsHome',
+        parentKey: 'nameObjectsParent',
+        icon: Icons.label_rounded,
+        color: Color(0xFF4F7CFF),
+      ),
+      _LanguageGuideItem(
+        titleKey: 'readImagesTitle',
+        subtitleKey: 'readImagesDesc',
+        recommendationKey: 'readImagesRec',
+        homeKey: 'readImagesHome',
+        parentKey: 'readImagesParent',
+        icon: Icons.menu_book_rounded,
+        color: Color(0xFF7B61C9),
+      ),
+      _LanguageGuideItem(
+        titleKey: 'singMoveTitle',
+        subtitleKey: 'singMoveDesc',
+        recommendationKey: 'singMoveRec',
+        homeKey: 'singMoveHome',
+        parentKey: 'singMoveParent',
+        icon: Icons.music_note_rounded,
+        color: Color(0xFFF59E55),
+      ),
+      _LanguageGuideItem(
+        titleKey: 'talkTitle',
+        subtitleKey: 'talkDesc',
+        recommendationKey: 'talkRec',
+        homeKey: 'talkHome',
+        parentKey: 'talkParent',
+        icon: Icons.chat_bubble_rounded,
+        color: Color(0xFF00A8C8),
+      ),
+      _LanguageGuideItem(
+        titleKey: 'imitateSoundsTitle',
+        subtitleKey: 'imitateSoundsDesc',
+        recommendationKey: 'imitateSoundsRec',
+        homeKey: 'imitateSoundsHome',
+        parentKey: 'imitateSoundsParent',
+        icon: Icons.record_voice_over_rounded,
+        color: Color(0xFF16B89A),
+      ),
+    ];
+  }
+
+  List<_EnvironmentGuideItem> _environmentItems() {
+    return const [
+      _EnvironmentGuideItem(
+        titleKey: 'safeSpacesTitle',
+        subtitleKey: 'safeSpacesSubtitle',
+        descriptionKey: 'safeSpacesDesc',
+        alertKey: 'safeSpacesAlert',
+        icon: Icons.home_rounded,
+        color: Color(0xFF16B89A),
+        actionKeys: [
+          'safeSpacesA1',
+          'safeSpacesA2',
+          'safeSpacesA3',
+          'safeSpacesA4',
+        ],
+      ),
+      _EnvironmentGuideItem(
+        titleKey: 'activeSupervisionTitle',
+        subtitleKey: 'activeSupervisionSubtitle',
+        descriptionKey: 'activeSupervisionDesc',
+        alertKey: 'activeSupervisionAlert',
+        icon: Icons.visibility_rounded,
+        color: Color(0xFF4F7CFF),
+        actionKeys: [
+          'activeSupervisionA1',
+          'activeSupervisionA2',
+          'activeSupervisionA3',
+          'activeSupervisionA4',
+        ],
+      ),
+      _EnvironmentGuideItem(
+        titleKey: 'protectiveRoutinesTitle',
+        subtitleKey: 'protectiveRoutinesSubtitle',
+        descriptionKey: 'protectiveRoutinesDesc',
+        alertKey: 'protectiveRoutinesAlert',
+        icon: Icons.schedule_rounded,
+        color: Color(0xFFF59E55),
+        actionKeys: [
+          'protectiveRoutinesA1',
+          'protectiveRoutinesA2',
+          'protectiveRoutinesA3',
+          'protectiveRoutinesA4',
+        ],
+      ),
+      _EnvironmentGuideItem(
+        titleKey: 'affectionTitle',
+        subtitleKey: 'affectionSubtitle',
+        descriptionKey: 'affectionDesc',
+        alertKey: 'affectionAlert',
+        icon: Icons.favorite_rounded,
+        color: Color(0xFFEC5F7A),
+        actionKeys: [
+          'affectionA1',
+          'affectionA2',
+          'affectionA3',
+          'affectionA4',
+        ],
+      ),
+      _EnvironmentGuideItem(
+        titleKey: 'healthAlertTitle',
+        subtitleKey: 'healthAlertSubtitle',
+        descriptionKey: 'healthAlertDesc',
+        alertKey: 'healthAlertAlert',
+        icon: Icons.health_and_safety_rounded,
+        color: Color(0xFFE35D6A),
+        actionKeys: [
+          'healthAlertA1',
+          'healthAlertA2',
+          'healthAlertA3',
+          'healthAlertA4',
+        ],
+      ),
+    ];
+  }
 
   @override
   void initState() {
@@ -48,7 +175,7 @@ class _GuiaFamiliasPageState extends State<GuiaFamiliasPage> {
             backgroundColor: dark ? const Color(0xFF211B2E) : Colors.white,
             foregroundColor: dark ? Colors.white : const Color(0xFF30283D),
             title: Text(
-              T.txt('guideNavTitle'),
+              T.txt('learning'),
               style: const TextStyle(
                 fontFamily: 'Fredoka',
                 fontWeight: FontWeight.w800,
@@ -187,6 +314,149 @@ class _GuiaFamiliasPageState extends State<GuiaFamiliasPage> {
                               ),
                           ],
                         ),
+                      const SizedBox(height: 34),
+
+                      _SectionHeading(
+                        title: T.txt('languageTitle'),
+                        icon: Icons.forum_rounded,
+                        dark: dark,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        T.txt('learningLanguageUnifiedSubtitle'),
+                        style: TextStyle(
+                          fontFamily: 'Baloo2',
+                          fontSize: 15,
+                          height: 1.35,
+                          color: dark ? Colors.white70 : Colors.black54,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      for (var i = 0; i < _languageItems().length; i++)
+                        _InlineGuidanceRow(
+                          title: T.txt(_languageItems()[i].titleKey),
+                          subtitle: T.txt(_languageItems()[i].subtitleKey),
+                          icon: _languageItems()[i].icon,
+                          color: _languageItems()[i].color,
+                          dark: dark,
+                          expanded: _languageOpen == i,
+                          onTap: () => setState(
+                            () => _languageOpen = _languageOpen == i ? null : i,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _InlineInfoBlock(
+                                title: T.txt('languageRecommendationTitle'),
+                                text: T.txt(_languageItems()[i].recommendationKey),
+                                icon: Icons.tips_and_updates_rounded,
+                                color: _languageItems()[i].color,
+                                dark: dark,
+                              ),
+                              const SizedBox(height: 10),
+                              _InlineInfoBlock(
+                                title: T.txt('homeActivity'),
+                                text: T.txt(_languageItems()[i].homeKey),
+                                icon: Icons.home_rounded,
+                                color: _languageItems()[i].color,
+                                dark: dark,
+                              ),
+                              const SizedBox(height: 10),
+                              _InlineNote(
+                                text: T.txt(_languageItems()[i].parentKey),
+                                icon: Icons.favorite_rounded,
+                                color: _languageItems()[i].color,
+                                dark: dark,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                      const SizedBox(height: 34),
+
+                      _SectionHeading(
+                        title: T.txt('environmentTitle'),
+                        icon: Icons.shield_rounded,
+                        dark: dark,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        T.txt('learningEnvironmentUnifiedSubtitle'),
+                        style: TextStyle(
+                          fontFamily: 'Baloo2',
+                          fontSize: 15,
+                          height: 1.35,
+                          color: dark ? Colors.white70 : Colors.black54,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      for (var i = 0; i < _environmentItems().length; i++)
+                        _InlineGuidanceRow(
+                          title: T.txt(_environmentItems()[i].titleKey),
+                          subtitle: T.txt(_environmentItems()[i].subtitleKey),
+                          icon: _environmentItems()[i].icon,
+                          color: _environmentItems()[i].color,
+                          dark: dark,
+                          expanded: _environmentOpen == i,
+                          onTap: () => setState(
+                            () => _environmentOpen =
+                                _environmentOpen == i ? null : i,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _InlineInfoBlock(
+                                title: T.txt('environmentWhatToKnow'),
+                                text: T.txt(_environmentItems()[i].descriptionKey),
+                                icon: Icons.info_outline_rounded,
+                                color: _environmentItems()[i].color,
+                                dark: dark,
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                T.txt('environmentActionsTitle'),
+                                style: TextStyle(
+                                  fontFamily: 'Fredoka',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800,
+                                  color: dark
+                                      ? Colors.white
+                                      : const Color(0xFF30283D),
+                                ),
+                              ),
+                              const SizedBox(height: 9),
+                              for (var actionIndex = 0;
+                                  actionIndex <
+                                      _environmentItems()[i].actionKeys.length;
+                                  actionIndex++)
+                                _InlineAction(
+                                  number: actionIndex + 1,
+                                  text: T.txt(
+                                    _environmentItems()[i]
+                                        .actionKeys[actionIndex],
+                                  ),
+                                  color: _environmentItems()[i].color,
+                                  dark: dark,
+                                ),
+                              const SizedBox(height: 4),
+                              _InlineNote(
+                                text: T.txt(_environmentItems()[i].alertKey),
+                                icon: Icons.health_and_safety_outlined,
+                                color: const Color(0xFFE58B56),
+                                dark: dark,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                      const SizedBox(height: 28),
+                      _InlineNote(
+                        text: T.txt('learningUnifiedClosing'),
+                        icon: Icons.favorite_rounded,
+                        color: const Color(0xFF8B5CF6),
+                        dark: dark,
+                      ),
+
                       const SizedBox(height: 22),
                       Text(
                         T.txt('guideAgeNotice'),
@@ -206,6 +476,321 @@ class _GuiaFamiliasPageState extends State<GuiaFamiliasPage> {
           ),
         );
       },
+    );
+  }
+}
+
+
+class _LanguageGuideItem {
+  const _LanguageGuideItem({
+    required this.titleKey,
+    required this.subtitleKey,
+    required this.recommendationKey,
+    required this.homeKey,
+    required this.parentKey,
+    required this.icon,
+    required this.color,
+  });
+
+  final String titleKey;
+  final String subtitleKey;
+  final String recommendationKey;
+  final String homeKey;
+  final String parentKey;
+  final IconData icon;
+  final Color color;
+}
+
+class _EnvironmentGuideItem {
+  const _EnvironmentGuideItem({
+    required this.titleKey,
+    required this.subtitleKey,
+    required this.descriptionKey,
+    required this.alertKey,
+    required this.icon,
+    required this.color,
+    required this.actionKeys,
+  });
+
+  final String titleKey;
+  final String subtitleKey;
+  final String descriptionKey;
+  final String alertKey;
+  final IconData icon;
+  final Color color;
+  final List<String> actionKeys;
+}
+
+class _InlineGuidanceRow extends StatelessWidget {
+  const _InlineGuidanceRow({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.color,
+    required this.dark,
+    required this.expanded,
+    required this.onTap,
+    required this.child,
+  });
+
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final Color color;
+  final bool dark;
+  final bool expanded;
+  final VoidCallback onTap;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(18),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 14),
+              child: Row(
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: dark ? 0.18 : 0.10),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Icon(icon, color: color, size: 25),
+                  ),
+                  const SizedBox(width: 13),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                            fontFamily: 'Fredoka',
+                            fontSize: 17.5,
+                            fontWeight: FontWeight.w800,
+                            color: dark
+                                ? Colors.white
+                                : const Color(0xFF30283D),
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          subtitle,
+                          style: TextStyle(
+                            fontFamily: 'Baloo2',
+                            fontSize: 14,
+                            height: 1.25,
+                            color: dark ? Colors.white60 : Colors.black54,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  AnimatedRotation(
+                    duration: const Duration(milliseconds: 220),
+                    turns: expanded ? 0.5 : 0,
+                    child: Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: color,
+                      size: 27,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        AnimatedSize(
+          duration: const Duration(milliseconds: 240),
+          curve: Curves.easeInOut,
+          alignment: Alignment.topCenter,
+          child: expanded
+              ? Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 2, 4, 15),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.fromLTRB(14, 14, 14, 5),
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: dark ? 0.08 : 0.045),
+                      borderRadius: BorderRadius.circular(18),
+                      border: Border(
+                        left: BorderSide(
+                          color: color.withValues(alpha: 0.72),
+                          width: 3,
+                        ),
+                      ),
+                    ),
+                    child: child,
+                  ),
+                )
+              : const SizedBox(width: double.infinity),
+        ),
+        Divider(
+          height: 1,
+          color: dark ? Colors.white10 : Colors.black.withValues(alpha: 0.07),
+        ),
+      ],
+    );
+  }
+}
+
+class _InlineInfoBlock extends StatelessWidget {
+  const _InlineInfoBlock({
+    required this.title,
+    required this.text,
+    required this.icon,
+    required this.color,
+    required this.dark,
+  });
+
+  final String title;
+  final String text;
+  final IconData icon;
+  final Color color;
+  final bool dark;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 20, color: color),
+        const SizedBox(width: 9),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontFamily: 'Fredoka',
+                  fontSize: 15.5,
+                  fontWeight: FontWeight.w800,
+                  color: dark ? Colors.white : const Color(0xFF30283D),
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                text,
+                style: TextStyle(
+                  fontFamily: 'Baloo2',
+                  fontSize: 14.5,
+                  height: 1.35,
+                  color: dark ? Colors.white70 : const Color(0xFF625A69),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _InlineAction extends StatelessWidget {
+  const _InlineAction({
+    required this.number,
+    required this.text,
+    required this.color,
+    required this.dark,
+  });
+
+  final int number;
+  final String text;
+  final Color color;
+  final bool dark;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 9),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 25,
+            height: 25,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: dark ? 0.18 : 0.10),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              '$number',
+              style: TextStyle(
+                fontFamily: 'Fredoka',
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+                color: color,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontFamily: 'Baloo2',
+                fontSize: 14.5,
+                height: 1.3,
+                color: dark ? Colors.white70 : const Color(0xFF625A69),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InlineNote extends StatelessWidget {
+  const _InlineNote({
+    required this.text,
+    required this.icon,
+    required this.color,
+    required this.dark,
+  });
+
+  final String text;
+  final IconData icon;
+  final Color color;
+  final bool dark;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: dark ? 0.12 : 0.065),
+        borderRadius: BorderRadius.circular(17),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: color, size: 21),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontFamily: 'Baloo2',
+                fontSize: 14.5,
+                height: 1.35,
+                color: dark ? Colors.white70 : const Color(0xFF625A69),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -309,7 +894,7 @@ class _GuideHero extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            T.txt('guideHeroTag'),
+                            T.txt('learningUnifiedTag'),
                             style: const TextStyle(
                               fontFamily: 'Baloo2',
                               color: Colors.white,
@@ -320,7 +905,7 @@ class _GuideHero extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          T.txt('guideHeroTitle'),
+                          T.txt('learningUnifiedTitle'),
                           style: const TextStyle(
                             fontFamily: 'Fredoka',
                             fontSize: 28,
@@ -331,7 +916,7 @@ class _GuideHero extends StatelessWidget {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          T.txt('guideHeroSubtitle'),
+                          T.txt('learningUnifiedSubtitle'),
                           style: TextStyle(
                             fontFamily: 'Baloo2',
                             fontSize: 14,
