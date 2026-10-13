@@ -131,7 +131,10 @@ class FamilyTopicCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = FamilyUi.dark(context);
-    return Padding(padding: const EdgeInsets.only(bottom: 13),
+    return Semantics(
+      button: true,
+      label: '$title. $subtitle',
+      child: Padding(padding: const EdgeInsets.only(bottom: 13),
       child: Material(color: isDark ? FamilyUi.surfaceDark : Colors.white,
         borderRadius: BorderRadius.circular(25), clipBehavior: Clip.antiAlias,
         child: AnimatedContainer(duration: const Duration(milliseconds: 240),
@@ -184,6 +187,7 @@ class FamilyTopicCard extends StatelessWidget {
           ]),
         ),
       ),
+    ),
     );
   }
 }
