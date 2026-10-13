@@ -138,10 +138,12 @@ class HealthPage extends StatelessWidget {
 class _SelectedChildCard extends StatelessWidget {
   final VoidCallback onAdd;
 
-  const _SelectedChildCard({required this.dark, required this.onAdd});
+  const _SelectedChildCard({required this.onAdd});
 
   @override
   Widget build(BuildContext context) {
+    final bool dark = Theme.of(context).brightness == Brightness.dark;
+
     return ValueListenableBuilder<List<Child>>(
       valueListenable: ChildRepository.instance.children,
       builder: (context, children, _) {
@@ -283,7 +285,6 @@ class HealthOptionCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final Color color;
-  final bool dark;
   final VoidCallback onTap;
 
   @override
