@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../app/widgets/family_content_ui.dart';
 import 'app_config.dart';
 import 'app_texts.dart';
 import 'recetas_page.dart';
@@ -12,10 +13,7 @@ class NutricionPage extends StatefulWidget {
 }
 
 class _NutricionPageState extends State<NutricionPage> {
-  int? indiceAbierto;
-
-  final Color colorPrincipal = const Color(0xFF7B2CBF);
-  final Color colorSecundario = const Color(0xFFFF6B6B);
+  int? _openIndex;
 
   List<MenuNutricionItem> _items() {
     return [
@@ -101,457 +99,87 @@ class _NutricionPageState extends State<NutricionPage> {
     ];
   }
 
-  void toggleItem(int index) {
-    setState(() {
-      indiceAbierto = indiceAbierto == index ? null : index;
-    });
-  }
 
-  Widget _encabezado(bool modoOscuro) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 26),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-            colorPrincipal.withValues(alpha: modoOscuro ? 0.22 : 0.10),
-            colorSecundario.withValues(alpha: modoOscuro ? 0.18 : 0.08),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(
-          color: colorPrincipal.withValues(alpha: modoOscuro ? 0.32 : 0.18),
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: colorPrincipal.withValues(alpha: modoOscuro ? 0.18 : 0.10),
-            blurRadius: 16,
-            offset: const Offset(0, 7),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Container(
-            width: 92,
-            height: 92,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  colorPrincipal.withValues(alpha: 0.25),
-                  colorSecundario.withValues(alpha: 0.14),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              shape: BoxShape.circle,
-            ),
-            child: const Center(
-              child: Text('🥗', style: TextStyle(fontSize: 48)),
-            ),
-          ),
-          const SizedBox(height: 14),
-          Text(
-            T.txt('nutritionChildTitle'),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Fredoka',
-              fontSize: 34,
-              fontWeight: FontWeight.w700,
-              color: modoOscuro ? Colors.white : colorPrincipal,
-              height: 1.05,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            T.txt('nutritionChildSubtitle'),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Baloo2',
-              fontSize: 19,
-              fontWeight: FontWeight.w600,
-              color: colorSecundario,
-              height: 1.15,
-            ),
-          ),
-          const SizedBox(height: 14),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
-            decoration: BoxDecoration(
-              color: colorPrincipal.withValues(alpha: modoOscuro ? 0.18 : 0.10),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              T.txt('touchSectionRecommendations'),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Baloo2',
-                fontSize: 16.5,
-                fontWeight: FontWeight.w700,
-                color: modoOscuro ? Colors.white : colorPrincipal,
-              ),
-            ),
-          ),
-        ],
-      ),
+  void _openRecipes() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const RecetasPage()),
     );
   }
 
-  Widget _cardNutricion(MenuNutricionItem item, int index, bool modoOscuro) {
-    final bool abierto = indiceAbierto == index;
-
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 260),
-      margin: const EdgeInsets.only(bottom: 14),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-            item.color.withValues(
-              alpha: abierto
-                  ? modoOscuro
-                        ? 0.24
-                        : 0.15
-                  : modoOscuro
-                  ? 0.14
-                  : 0.07,
-            ),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: item.color.withValues(alpha: abierto ? 0.42 : 0.20),
-          width: abierto ? 2 : 1.4,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: item.color.withValues(alpha: abierto ? 0.16 : 0.08),
-            blurRadius: abierto ? 15 : 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(24),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(24),
-          onTap: () => toggleItem(index),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
+  @override
+  Widget build(BuildContext context) => ValueListenableBuilder<String>(
+    valueListenable: AppConfig.idioma,
+    builder: (context, language, _) {
+      final topics = _items();
+      return Scaffold(
+        backgroundColor: FamilyUi.dark(context)
+            ? FamilyUi.canvasDark : FamilyUi.canvasLight,
+        appBar: FamilyUi.appBar(context, T.txt('nutritionChildTitle')),
+        body: SafeArea(child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 38),
+          child: Center(child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 720),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 56,
-                      height: 56,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            item.color.withValues(alpha: 0.25),
-                            item.color.withValues(alpha: 0.08),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      child: Icon(item.icono, color: item.color, size: 31),
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            T.txt(item.tituloKey),
-                            style: TextStyle(
-                              fontFamily: 'Fredoka',
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: modoOscuro
-                                  ? Colors.white
-                                  : const Color(0xFF2D2D2D),
-                            ),
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            T.txt(item.subtituloKey),
-                            style: TextStyle(
-                              fontFamily: 'Baloo2',
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: modoOscuro
-                                  ? Colors.white70
-                                  : Colors.black54,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    AnimatedRotation(
-                      turns: abierto ? 0.5 : 0.0,
-                      duration: const Duration(milliseconds: 260),
-                      child: Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        size: 32,
-                        color: item.color,
-                      ),
-                    ),
-                  ],
+                FamilyHero(
+                  eyebrow: T.txt('nutrition'),
+                  title: T.txt('nutritionChildTitle'),
+                  subtitle: T.txt('nutritionChildSubtitle'),
+                  icon: Icons.restaurant_rounded,
+                  color: const Color(0xFF9C55BD),
+                  accent: const Color(0xFFE8A06D),
                 ),
-                AnimatedCrossFade(
-                  firstChild: const SizedBox.shrink(),
-                  secondChild: Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: Column(
+                const SizedBox(height: 20),
+                FamilyPrimaryLink(
+                  title: T.txt('viewRecipes'),
+                  subtitle: T.txt('recipesShortDesc'),
+                  icon: Icons.menu_book_rounded,
+                  color: const Color(0xFFDB7A45),
+                  onTap: _openRecipes,
+                ),
+                const SizedBox(height: 27),
+                FamilySectionHeading(
+                  title: T.txt('nutritionAdviceTitle'),
+                  subtitle: T.txt('touchSectionRecommendations'),
+                  icon: Icons.spa_rounded,
+                ),
+                for (var i = 0; i < topics.length; i++)
+                  FamilyTopicCard(
+                    title: T.txt(topics[i].tituloKey),
+                    subtitle: T.txt(topics[i].subtituloKey),
+                    icon: topics[i].icono,
+                    color: topics[i].color,
+                    expanded: _openIndex == i,
+                    onTap: () => setState(
+                      () => _openIndex = _openIndex == i ? null : i),
+                    content: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ...item.tipsKeys.map(
-                          (tipKey) => InfoBullet(
-                            texto: T.txt(tipKey),
-                            color: item.color,
-                            modoOscuro: modoOscuro,
-                          ),
+                        FamilySectionHeading(
+                          title: T.txt('nutritionPracticalTips'),
+                          icon: Icons.check_circle_outline_rounded,
                         ),
-                        if (item.mostrarBotonRecetas) ...[
-                          const SizedBox(height: 12),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(14),
-                            decoration: BoxDecoration(
-                              color: item.color.withValues(
-                                alpha: modoOscuro ? 0.18 : 0.10,
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  T.txt('recipesForChildren'),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: 'Fredoka',
-                                    fontSize: 19,
-                                    fontWeight: FontWeight.w700,
-                                    color: modoOscuro
-                                        ? Colors.white
-                                        : item.color,
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                Text(
-                                  T.txt('recipesShortDesc'),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: 'Baloo2',
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                    color: modoOscuro
-                                        ? Colors.white70
-                                        : Colors.black87,
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                ElevatedButton.icon(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => const RecetasPage(),
-                                      ),
-                                    );
-                                  },
-                                  icon: const Icon(Icons.menu_book_rounded),
-                                  label: Text(T.txt('viewRecipes')),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: item.color,
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 22,
-                                      vertical: 13,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    textStyle: const TextStyle(
-                                      fontFamily: 'Fredoka',
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                        FamilyBulletList(
+                          items: topics[i].tipsKeys
+                              .map((key) => T.txt(key)).toList(),
+                          color: topics[i].color,
+                        ),
                       ],
                     ),
                   ),
-                  crossFadeState: abierto
-                      ? CrossFadeState.showSecond
-                      : CrossFadeState.showFirst,
-                  duration: const Duration(milliseconds: 260),
+                const SizedBox(height: 8),
+                FamilyNotice(
+                  text: T.txt('nutritionFinalNote'),
+                  icon: Icons.health_and_safety_rounded,
+                  color: const Color(0xFFE38B52),
                 ),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _alertaFinal(bool modoOscuro) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(top: 6),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-            Colors.redAccent.withValues(alpha: modoOscuro ? 0.16 : 0.09),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: Colors.redAccent.withValues(alpha: modoOscuro ? 0.28 : 0.18),
-          width: 1.4,
-        ),
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.info_outline_rounded,
-            color: Colors.redAccent,
-            size: 34,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              T.txt('nutritionFinalNote'),
-              style: TextStyle(
-                fontFamily: 'Baloo2',
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: modoOscuro ? Colors.white70 : Colors.black87,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<String>(
-      valueListenable: AppConfig.idioma,
-      builder: (context, idioma, _) {
-        return ValueListenableBuilder<ThemeMode>(
-          valueListenable: AppConfig.temaApp,
-          builder: (context, temaActual, _) {
-            final bool modoOscuro =
-                Theme.of(context).brightness == Brightness.dark;
-
-            final listaItems = _items();
-
-            return Scaffold(
-              backgroundColor: modoOscuro
-                  ? const Color(0xFF15131A)
-                  : const Color(0xFFFAF7F2),
-              appBar: AppBar(
-                title: Text(
-                  T.txt('nutritionChildTitle'),
-                  style: TextStyle(
-                    fontFamily: 'Fredoka',
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
-                  ),
-                ),
-                centerTitle: true,
-                backgroundColor: modoOscuro
-                    ? const Color(0xFF211B2E)
-                    : Colors.white,
-                foregroundColor: modoOscuro
-                    ? Colors.white
-                    : const Color(0xFF2D2D2D),
-                elevation: 0,
-              ),
-              body: SafeArea(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(18),
-                  child: Column(
-                    children: [
-                      _encabezado(modoOscuro),
-                      const SizedBox(height: 22),
-                      ...List.generate(
-                        listaItems.length,
-                        (index) => _cardNutricion(
-                          listaItems[index],
-                          index,
-                          modoOscuro,
-                        ),
-                      ),
-                      _alertaFinal(modoOscuro),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-}
-
-class InfoBullet extends StatelessWidget {
-  final String texto;
-  final Color color;
-  final bool modoOscuro;
-
-  const InfoBullet({
-    super.key,
-    required this.texto,
-    required this.color,
-    required this.modoOscuro,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 11),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(top: 5),
-            width: 10,
-            height: 10,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              texto,
-              style: TextStyle(
-                fontFamily: 'Baloo2',
-                fontSize: 15.6,
-                fontWeight: FontWeight.w500,
-                color: modoOscuro ? Colors.white70 : Colors.black87,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+          )),
+        )),
+      );
+    },
+  );
 }
 
 class MenuNutricionItem {
