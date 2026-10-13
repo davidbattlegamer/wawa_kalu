@@ -26,7 +26,7 @@ class ActivityCopy {
 
 class ParentActivity {
   final String id;
-  // 0 = 12-23 meses, 1 = 24-35, 2 = 36-47, 3 = 48-59.
+  // 0 = 12-23 meses, 1 = 24-35, 2 = 36-47, 3 = 48-71.
   final int ageGroup;
   final ActivityArea area;
   final int minutes;
@@ -81,7 +81,7 @@ const List<ParentActivity> parentActivityCatalog = [
       title: "Torres que crecen",
       subtitle: "Apilar, probar y volver a empezar.",
       goal: "Ejercitar la coordinación de manos y la comprensión de causa y efecto.",
-      materials: ["Cajas pequeñas pero grandes para no caber en la boca, firmes y sin grapas","Piso despejado"],
+      materials: ["Cajas medianas y firmes, demasiado grandes para caber en la boca y sin grapas","Piso despejado"],
       steps: ["Muestra cómo colocar una caja encima de otra.","Invita al niño a añadir una caja o a derribar la torre.","Celebra el intento y vuelve a construir sin exigir un resultado."],
       observe: "Fíjate si intenta equilibrar, repetir o cambiar la posición.",
       adapt: "Empieza con dos cajas grandes y estables.",
