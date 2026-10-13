@@ -10,6 +10,7 @@ import '../models/vaccine_record.dart';
 
 enum VaccineStatus {
   applied,
+  notApplied,
   upcoming,
   review,
   seasonalReview,
@@ -33,153 +34,102 @@ class VaccineEvaluation {
 class VaccineService {
   VaccineService._();
 
-  static final VaccineService instance =
-      VaccineService._();
+  static final VaccineService instance = VaccineService._();
 
   Future<List<VaccineEvaluation>> evaluateChild(
     Child child,
   ) async {
     final List<VaccineDose> schedule =
-        await VaccineScheduleLoader.instance
-            .loadSchedule();
+        await VaccineScheduleLoader.instance.loadSchedule();
 
     final List<VaccineRecord> records =
-        await VaccineRepository.instance
-            .getRecordsForChild(
-      child.id,
-    );
+        await VaccineRepository.instance.getRecordsForChild(child.id);
 
-    final Map<String, VaccineRecord>
-        recordByScheduleId = {
-      for (final record in records)
-        record.scheduleId: record,
+    final Map<String, VaccineRecord> recordByScheduleId = {
+      for (final record in records) record.scheduleId: record,
     };
 
-    final List<VaccineEvaluation>
-        evaluations = [];
+    final List<VaccineEvaluation> evaluations = [];
 
     for (final VaccineDose dose in schedule) {
-      final VaccineRecord? record =
-          recordByScheduleId[dose.id];
+      final VaccineRecord? record = recordByScheduleId[dose.id];
 
-      // ==========================================================
-      // VACUNA YA REGISTRADA
-      // ==========================================================
-
+      // Un registro, sea aplicada o no aplicada, representa una decisión
+      // terminada para esa dosis y por tanto habilita la siguiente.
       if (record != null) {
         evaluations.add(
           VaccineEvaluation(
             dose: dose,
-            status:
-                VaccineStatus.applied,
+            status: record.isApplied
+                ? VaccineStatus.applied
+                : VaccineStatus.notApplied,
             record: record,
-            expectedDate:
-                _calculateExpectedDate(
+            expectedDate: _calculateExpectedDate(
               child: child,
               dose: dose,
-              records:
-                  recordByScheduleId,
+              records: recordByScheduleId,
             ),
           ),
         );
-
         continue;
       }
 
-      // ==========================================================
-      // COMPROBAR REQUISITO DE DOSIS ANTERIOR
-      //
-      // Esto funciona tanto para:
-      // - segunda dosis
-      // - tercera dosis
-      // - refuerzos
-      // - dosis por intervalo
-      // ==========================================================
+      final String? previousDoseId = dose.previousDoseId;
 
-      final String? previousDoseId =
-          dose.previousDoseId;
+      // Solo se bloquea cuando todavía no existe ninguna decisión
+      // sobre la dosis anterior.
+      if (previousDoseId != null &&
+          recordByScheduleId[previousDoseId] == null) {
+        DateTime? expectedDate;
 
-      if (previousDoseId != null) {
-        final VaccineRecord?
-            previousRecord =
-            recordByScheduleId[
-                previousDoseId];
-
-        // --------------------------------------------------------
-        // SI FALTA LA DOSIS ANTERIOR, SE BLOQUEA
-        // --------------------------------------------------------
-
-        if (previousRecord == null) {
-          DateTime? expectedDate;
-
-          // Las vacunas de edad fija sí pueden mostrar
-          // su fecha de referencia aunque estén bloqueadas.
-          if (dose.isFixedAge) {
-            expectedDate =
-                _calculateExpectedDate(
-              child: child,
-              dose: dose,
-              records:
-                  recordByScheduleId,
-            );
-          }
-
-          evaluations.add(
-            VaccineEvaluation(
-              dose: dose,
-              status:
-                  VaccineStatus
-                      .waitingPreviousDose,
-              expectedDate:
-                  expectedDate,
-            ),
+        if (dose.isFixedAge) {
+          expectedDate = _calculateExpectedDate(
+            child: child,
+            dose: dose,
+            records: recordByScheduleId,
           );
-
-          continue;
         }
+
+        evaluations.add(
+          VaccineEvaluation(
+            dose: dose,
+            status: VaccineStatus.waitingPreviousDose,
+            expectedDate: expectedDate,
+          ),
+        );
+        continue;
       }
 
-      // ==========================================================
-      // DOSIS BASADA EN INTERVALO
-      // ==========================================================
-
+      // Dosis cuyo calendario depende de una dosis previa.
       if (dose.isInterval) {
-        final String? previousDoseId =
-            dose.previousDoseId;
-
         if (previousDoseId == null) {
           evaluations.add(
             VaccineEvaluation(
               dose: dose,
-              status:
-                  VaccineStatus
-                      .waitingPreviousDose,
+              status: VaccineStatus.waitingPreviousDose,
             ),
           );
-
           continue;
         }
 
-        final VaccineRecord?
-            previousRecord =
-            recordByScheduleId[
-                previousDoseId];
+        final VaccineRecord previousRecord =
+            recordByScheduleId[previousDoseId]!;
 
-        if (previousRecord == null) {
+        // La anterior fue registrada como "No aplicada":
+        // esta dosis queda habilitada, pero no inventamos una fecha
+        // basada en un intervalo que nunca comenzó.
+        if (previousRecord.isNotApplied) {
           evaluations.add(
             VaccineEvaluation(
               dose: dose,
-              status:
-                  VaccineStatus
-                      .waitingPreviousDose,
+              status: VaccineStatus.review,
+              expectedDate: null,
             ),
           );
-
           continue;
         }
 
-        final DateTime expectedDate =
-            _addDays(
+        final DateTime expectedDate = _addDays(
           previousRecord.appliedDate,
           dose.intervalDays ?? 0,
         );
@@ -187,69 +137,36 @@ class VaccineService {
         evaluations.add(
           VaccineEvaluation(
             dose: dose,
-            expectedDate:
-                expectedDate,
-            status:
-                _statusForDate(
-              expectedDate,
-            ),
+            expectedDate: expectedDate,
+            status: _statusForDate(expectedDate),
           ),
         );
-
         continue;
       }
 
-      // ==========================================================
-      // VACUNACIÓN ESTACIONAL
-      // ==========================================================
-
+      // Vacunación estacional.
       if (dose.isSeasonal) {
-        final int minAgeMonths =
-            dose.minAgeMonths ?? 0;
-
+        final int minAgeMonths = dose.minAgeMonths ?? 0;
         final DateTime startDate =
-            _addMonths(
-          child.birthDate,
-          minAgeMonths,
+            _addMonths(child.birthDate, minAgeMonths);
+
+        evaluations.add(
+          VaccineEvaluation(
+            dose: dose,
+            expectedDate: _isTodayOrFuture(startDate) ? startDate : null,
+            status: _isTodayOrFuture(startDate)
+                ? VaccineStatus.upcoming
+                : VaccineStatus.seasonalReview,
+          ),
         );
-
-        if (_isTodayOrFuture(
-          startDate,
-        )) {
-          evaluations.add(
-            VaccineEvaluation(
-              dose: dose,
-              expectedDate:
-                  startDate,
-              status:
-                  VaccineStatus
-                      .upcoming,
-            ),
-          );
-        } else {
-          evaluations.add(
-            VaccineEvaluation(
-              dose: dose,
-              status:
-                  VaccineStatus
-                      .seasonalReview,
-            ),
-          );
-        }
-
         continue;
       }
 
-      // ==========================================================
-      // VACUNAS CON EDAD FIJA
-      // ==========================================================
-
-      final DateTime? expectedDate =
-          _calculateExpectedDate(
+      // Vacunas con edad fija.
+      final DateTime? expectedDate = _calculateExpectedDate(
         child: child,
         dose: dose,
-        records:
-            recordByScheduleId,
+        records: recordByScheduleId,
       );
 
       if (expectedDate == null) {
@@ -259,12 +176,8 @@ class VaccineService {
       evaluations.add(
         VaccineEvaluation(
           dose: dose,
-          expectedDate:
-              expectedDate,
-          status:
-              _statusForDate(
-            expectedDate,
-          ),
+          expectedDate: expectedDate,
+          status: _statusForDate(expectedDate),
         ),
       );
     }
@@ -272,71 +185,42 @@ class VaccineService {
     return evaluations;
   }
 
-  // ============================================================
-  // ESTADO SEGÚN FECHA
-  // ============================================================
-
-  VaccineStatus _statusForDate(
-    DateTime expectedDate,
-  ) {
-    if (_isTodayOrFuture(
-      expectedDate,
-    )) {
+  VaccineStatus _statusForDate(DateTime expectedDate) {
+    if (_isTodayOrFuture(expectedDate)) {
       return VaccineStatus.upcoming;
     }
 
     return VaccineStatus.review;
   }
 
-  // ============================================================
-  // CALCULAR FECHA ESPERADA
-  // ============================================================
-
   DateTime? _calculateExpectedDate({
     required Child child,
     required VaccineDose dose,
-    required Map<String, VaccineRecord>
-        records,
+    required Map<String, VaccineRecord> records,
   }) {
-    // ----------------------------------------------------------
-    // EDAD FIJA
-    // ----------------------------------------------------------
-
     if (dose.isFixedAge) {
       DateTime result =
-          _addMonths(
-        child.birthDate,
-        dose.targetMonths ?? 0,
-      );
+          _addMonths(child.birthDate, dose.targetMonths ?? 0);
 
       if (dose.targetDays > 0) {
-        result =
-            _addDays(
-          result,
-          dose.targetDays,
-        );
+        result = _addDays(result, dose.targetDays);
       }
 
       return result;
     }
 
-    // ----------------------------------------------------------
-    // INTERVALO DESPUÉS DE DOSIS ANTERIOR
-    // ----------------------------------------------------------
-
     if (dose.isInterval) {
-      final String? previousDoseId =
-          dose.previousDoseId;
+      final String? previousDoseId = dose.previousDoseId;
 
       if (previousDoseId == null) {
         return null;
       }
 
-      final VaccineRecord? previous =
-          records[
-              previousDoseId];
+      final VaccineRecord? previous = records[previousDoseId];
 
-      if (previous == null) {
+      // Sin dosis aplicada no existe un punto real desde el que
+      // calcular el intervalo.
+      if (previous == null || previous.isNotApplied) {
         return null;
       }
 
@@ -349,52 +233,18 @@ class VaccineService {
     return null;
   }
 
-  // ============================================================
-  // AGREGAR MESES
-  // ============================================================
+  DateTime _addMonths(DateTime date, int months) {
+    final int monthIndex = date.month - 1 + months;
+    final int year = date.year + (monthIndex ~/ 12);
+    final int month = (monthIndex % 12) + 1;
 
-  DateTime _addMonths(
-    DateTime date,
-    int months,
-  ) {
-    final int monthIndex =
-        date.month - 1 + months;
+    final int lastDay = DateTime(year, month + 1, 0).day;
+    final int day = min(date.day, lastDay);
 
-    final int year =
-        date.year +
-            (monthIndex ~/ 12);
-
-    final int month =
-        (monthIndex % 12) + 1;
-
-    final int lastDay =
-        DateTime(
-      year,
-      month + 1,
-      0,
-    ).day;
-
-    final int day =
-        min(
-      date.day,
-      lastDay,
-    );
-
-    return DateTime(
-      year,
-      month,
-      day,
-    );
+    return DateTime(year, month, day);
   }
 
-  // ============================================================
-  // AGREGAR DÍAS
-  // ============================================================
-
-  DateTime _addDays(
-    DateTime date,
-    int days,
-  ) {
+  DateTime _addDays(DateTime date, int days) {
     return DateTime(
       date.year,
       date.month,
@@ -402,38 +252,14 @@ class VaccineService {
     );
   }
 
-  // ============================================================
-  // COMPARAR FECHAS
-  // ============================================================
+  bool _isTodayOrFuture(DateTime date) {
+    final DateTime today = _dateOnly(DateTime.now());
+    final DateTime target = _dateOnly(date);
 
-  bool _isTodayOrFuture(
-    DateTime date,
-  ) {
-    final DateTime today =
-        _dateOnly(
-      DateTime.now(),
-    );
-
-    final DateTime target =
-        _dateOnly(
-      date,
-    );
-
-    return target.isAtSameMomentAs(
-          today,
-        ) ||
-        target.isAfter(
-          today,
-        );
+    return target.isAtSameMomentAs(today) || target.isAfter(today);
   }
 
-  DateTime _dateOnly(
-    DateTime date,
-  ) {
-    return DateTime(
-      date.year,
-      date.month,
-      date.day,
-    );
+  DateTime _dateOnly(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
   }
 }
