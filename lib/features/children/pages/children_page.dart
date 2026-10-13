@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../pages/app_config.dart';
 import '../../../pages/app_texts.dart';
+import '../../../app/widgets/family_content_ui.dart';
 
 import '../data/child_repository.dart';
 import '../models/child.dart';
@@ -89,28 +90,20 @@ class ChildrenPage extends StatelessWidget {
                     return ListView(
                       padding: const EdgeInsets.fromLTRB(20, 20, 20, 110),
                       children: [
-                        Text(
-                          T.txt('childrenHeaderTitle'),
-                          style: TextStyle(
-                            fontFamily: 'Fredoka',
-                            fontSize: 25,
-                            fontWeight: FontWeight.w800,
-                            color: dark
-                                ? Colors.white
-                                : const Color(0xFF4A2C82),
-                          ),
+                        FamilyHero(
+                          eyebrow: T.txt('myChildren'),
+                          title: T.txt('childrenHubTitle'),
+                          subtitle: T.txt('childrenHubSubtitle'),
+                          icon: Icons.family_restroom_rounded,
+                          color: const Color(0xFF6E56C6),
+                          accent: const Color(0xFFDF7E9F),
                         ),
-                        const SizedBox(height: 5),
-                        Text(
-                          T.txt('childrenHeaderSubtitle'),
-                          style: TextStyle(
-                            fontFamily: 'Baloo2',
-                            fontSize: 15.5,
-                            height: 1.2,
-                            color: dark ? Colors.white70 : Colors.black54,
-                          ),
+                        const SizedBox(height: 26),
+                        FamilySectionHeading(
+                          title: T.txt('childrenProfilesTitle'),
+                          subtitle: T.txt('childrenProfilesSubtitle'),
+                          icon: Icons.people_alt_rounded,
                         ),
-                        const SizedBox(height: 20),
                         ...children.map((child) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 13),
@@ -123,6 +116,12 @@ class ChildrenPage extends StatelessWidget {
                             ),
                           );
                         }),
+                        const SizedBox(height: 8),
+                        FamilyNotice(
+                          text: T.txt('childrenContextNotice'),
+                          color: const Color(0xFF7B61C9),
+                          icon: Icons.auto_awesome_rounded,
+                        ),
                       ],
                     );
                   },
