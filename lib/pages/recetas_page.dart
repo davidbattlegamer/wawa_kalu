@@ -1,32 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../app/widgets/family_content_ui.dart';
-import 'app_config.dart';
 import 'app_texts.dart';
-
-/// Entrada independiente conservada para enlaces profundos o futuros accesos.
-/// Dentro de Nutrición se reutiliza [RecipesContent] sin crear otra ruta.
-class RecetasPage extends StatelessWidget {
-  const RecetasPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<String>(
-      valueListenable: AppConfig.idioma,
-      builder: (context, language, _) => Scaffold(
-        backgroundColor:
-            FamilyUi.dark(context) ? FamilyUi.canvasDark : FamilyUi.canvasLight,
-        appBar: FamilyUi.appBar(context, T.txt('recipesAppBar')),
-        body: const SafeArea(
-          child: RecipesContent(
-            showHero: true,
-            contentPadding: EdgeInsets.fromLTRB(20, 20, 20, 38),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 /// Vista reutilizable de recetas.
 /// Nutrición la muestra como pestaña interna para evitar rutas redundantes.
