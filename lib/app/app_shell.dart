@@ -11,6 +11,7 @@ import '../features/children/pages/children_page.dart';
 import '../features/health/pages/health_page.dart';
 
 import 'widgets/liquid_glass_bottom_bar.dart';
+import 'widgets/family_content_ui.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -101,335 +102,85 @@ class _AppShellState extends State<AppShell> {
   }
 }
 
-// ============================================================================
-// APRENDER
+// Página principal de Aprender: experiencias familiares fuera de pantalla.
 class _LearningPage extends StatelessWidget {
   const _LearningPage();
 
+  void _open(BuildContext context, Widget page) {
+    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
+  }
+
   @override
   Widget build(BuildContext context) {
-    final bool modoOscuro =
-        Theme.of(context).brightness == Brightness.dark;
-
     return ValueListenableBuilder<String>(
       valueListenable: AppConfig.idioma,
-      builder: (context, idiomaActual, _) {
-        return Scaffold(
-          backgroundColor: modoOscuro
-              ? const Color(0xFF15131A)
-              : const Color(0xFFFAF7F2),
-
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            elevation: 0,
-
-            backgroundColor: modoOscuro
-                ? const Color(0xFF211B2E)
-                : Colors.white,
-
-            title: Text(
-              T.txt('learning'),
-              style: TextStyle(
-                fontFamily: 'Fredoka',
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                color: modoOscuro
-                    ? Colors.white
-                    : const Color(0xFF2D2D2D),
-              ),
-            ),
-          ),
-
-          body: SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(
-                20,
-                20,
-                20,
-                120,
-              ),
-
-              child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
-
-                children: [
-                  Text(
-                    T.txt(
-                      'learningHeaderTitle',
-                    ),
-                    style: TextStyle(
-                      fontFamily: 'Fredoka',
-                      fontSize: 26,
-                      fontWeight:
-                          FontWeight.w700,
-                      color: modoOscuro
-                          ? Colors.white
-                          : const Color(
-                              0xFF4A2C82,
-                            ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 6),
-
-                  Text(
-                    T.txt(
-                      'learningHeaderSubtitle',
-                    ),
-                    style: TextStyle(
-                      fontFamily: 'Baloo2',
-                      fontSize: 16,
-                      height: 1.25,
-                      color: modoOscuro
-                          ? Colors.white70
-                          : Colors.black54,
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  _LearningCard(
-                    icon: Icons.menu_book_rounded,
-
-                    title: T.txt('familyGuide'),
-
-                    subtitle: T.txt('learningGuideSubtitle'),
-
-                    color: const Color(0xFF8054D7),
-
-                    modoOscuro: modoOscuro,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-
-                        MaterialPageRoute(builder: (_) => const GuiaFamiliasPage()),
-                      );
-                    },
-                  ),
-
-                  const SizedBox(height: 14),
-
-                  _LearningCard(
-                    icon: Icons
-                        .record_voice_over_rounded,
-                    title:
-                        T.txt('languageMenu'),
-                    subtitle: T.txt(
-                      'learningLanguageSubtitle',
-                    ),
-                    color: Colors.pink,
-                    modoOscuro: modoOscuro,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              const LenguajePage(),
-                        ),
-                      );
-                    },
-                  ),
-
-                  const SizedBox(height: 14),
-
-                  _LearningCard(
-                    icon: Icons
-                        .volunteer_activism_rounded,
-                    title: T.txt(
-                      'protectiveEnvironments',
-                    ),
-                    subtitle: T.txt(
-                      'learningEnvironmentSubtitle',
-                    ),
-                    color: Colors.teal,
-                    modoOscuro: modoOscuro,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              const EntornoPage(),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-// ============================================================================
-// TARJETA APRENDER
-// ============================================================================
-
-class _LearningCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final Color color;
-  final bool modoOscuro;
-  final VoidCallback onTap;
-
-  const _LearningCard({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.color,
-    required this.modoOscuro,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      borderRadius:
-          BorderRadius.circular(24),
-
-      child: InkWell(
-        borderRadius:
-            BorderRadius.circular(24),
-
-        onTap: onTap,
-
-        child: Container(
-          width: double.infinity,
-
-          padding:
-              const EdgeInsets.all(17),
-
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                modoOscuro
-                    ? const Color(
-                        0xFF211B2E,
-                      )
-                    : Colors.white,
-
-                color.withValues(
-                  alpha: modoOscuro
-                      ? 0.18
-                      : 0.09,
-                ),
-              ],
-            ),
-
-            borderRadius:
-                BorderRadius.circular(
-              24,
-            ),
-
-            border: Border.all(
-              color: color.withValues(
-                alpha: 0.20,
-              ),
-              width: 1.4,
-            ),
-
-            boxShadow: [
-              BoxShadow(
-                color: color.withValues(
-                  alpha: 0.08,
-                ),
-                blurRadius: 12,
-                offset:
-                    const Offset(0, 5),
-              ),
-            ],
-          ),
-
-          child: Row(
-            children: [
-              Container(
-                width: 58,
-                height: 58,
-
-                decoration:
-                    BoxDecoration(
-                  color:
-                      color.withValues(
-                    alpha: 0.14,
-                  ),
-                  borderRadius:
-                      BorderRadius.circular(
-                    18,
-                  ),
-                ),
-
-                child: Icon(
-                  icon,
-                  color: color,
-                  size: 31,
-                ),
-              ),
-
-              const SizedBox(width: 15),
-
-              Expanded(
-                child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment
-                          .start,
-
+      builder: (context, language, _) => Scaffold(
+        backgroundColor: FamilyUi.dark(context)
+            ? FamilyUi.canvasDark : FamilyUi.canvasLight,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          elevation: 0,
+          backgroundColor: FamilyUi.dark(context)
+              ? FamilyUi.surfaceDark : Colors.white,
+          title: Text(T.txt('learning'),
+            style: TextStyle(fontFamily: 'Fredoka', fontSize: 24,
+              fontWeight: FontWeight.w800, color: FamilyUi.ink(context))),
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 125),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 720),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style:
-                          TextStyle(
-                        fontFamily:
-                            'Fredoka',
-                        fontSize: 19,
-                        fontWeight:
-                            FontWeight
-                                .w700,
-                        color:
-                            modoOscuro
-                                ? Colors
-                                    .white
-                                : const Color(
-                                    0xFF2D2D2D,
-                                  ),
-                      ),
+                    FamilyHero(
+                      eyebrow: T.txt('learning'),
+                      title: T.txt('learningHeaderTitle'),
+                      subtitle: T.txt('learningHeaderSubtitle'),
+                      icon: Icons.auto_stories_rounded,
+                      color: const Color(0xFF7544BC),
+                      accent: const Color(0xFFEE8B76),
                     ),
-
-                    const SizedBox(
-                      height: 3,
+                    const SizedBox(height: 28),
+                    FamilySectionHeading(
+                      title: T.txt('learningExploreTitle'),
+                      subtitle: T.txt('learningExploreSubtitle'),
+                      icon: Icons.auto_awesome_rounded,
                     ),
-
-                    Text(
-                      subtitle,
-                      style:
-                          TextStyle(
-                        fontFamily:
-                            'Baloo2',
-                        fontSize:
-                            14.5,
-                        height: 1.2,
-                        color:
-                            modoOscuro
-                                ? Colors
-                                    .white70
-                                : Colors
-                                    .black54,
-                      ),
+                    FamilyTopicCard(
+                      title: T.txt('familyGuide'),
+                      subtitle: T.txt('learningGuideSubtitle'),
+                      icon: Icons.menu_book_rounded,
+                      color: const Color(0xFF8B5CD6),
+                      badge: T.txt('learningFeatured'),
+                      featured: true,
+                      onTap: () => _open(context, const GuiaFamiliasPage()),
+                    ),
+                    FamilyTopicCard(
+                      title: T.txt('languageMenu'),
+                      subtitle: T.txt('learningLanguageSubtitle'),
+                      icon: Icons.record_voice_over_rounded,
+                      color: const Color(0xFFDA5B93),
+                      onTap: () => _open(context, const LenguajePage()),
+                    ),
+                    FamilyTopicCard(
+                      title: T.txt('protectiveEnvironments'),
+                      subtitle: T.txt('learningEnvironmentSubtitle'),
+                      icon: Icons.volunteer_activism_rounded,
+                      color: const Color(0xFF269B90),
+                      onTap: () => _open(context, const EntornoPage()),
+                    ),
+                    const SizedBox(height: 11),
+                    FamilyNotice(
+                      text: T.txt('learningFamilyNotice'),
+                      color: const Color(0xFF9A75D1),
+                      icon: Icons.favorite_rounded,
                     ),
                   ],
                 ),
               ),
-
-              Icon(
-                Icons.chevron_right_rounded,
-                color: color,
-                size: 28,
-              ),
-            ],
+            ),
           ),
         ),
       ),
