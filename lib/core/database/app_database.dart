@@ -23,9 +23,10 @@ class AppDatabase {
   // v2 = vacunas
   // v3 = crecimiento
   // v4 = perímetro cefálico
+  // v5 = estado de vacuna (aplicada / no aplicada)
   // ==========================================================================
 
-  static const int _databaseVersion = 4;
+  static const int _databaseVersion = 5;
 
   Database? _database;
 
@@ -180,6 +181,22 @@ class AppDatabase {
         ''',
       );
     }
+
+    // ------------------------------------------------------------------------
+    // V2/V3/V4 -> V5
+    //
+    // Los registros ya existentes se consideran aplicados.
+    // ------------------------------------------------------------------------
+
+    if (oldVersion >= 2 &&
+        oldVersion < 5) {
+      await db.execute(
+        '''
+        ALTER TABLE vaccine_records
+        ADD COLUMN status TEXT NOT NULL DEFAULT 'applied'
+        ''',
+      );
+    }
   }
 
   // ==========================================================================
@@ -202,6 +219,8 @@ class AppDatabase {
         vaccine_code TEXT NOT NULL,
 
         applied_date TEXT NOT NULL,
+
+        status TEXT NOT NULL DEFAULT 'applied',
 
         health_center TEXT,
 
