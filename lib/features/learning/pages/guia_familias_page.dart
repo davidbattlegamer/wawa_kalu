@@ -167,6 +167,9 @@ class _GuiaFamiliasPageState extends State<GuiaFamiliasPage> {
               (_area == null || a.area == _area);
         }).toList();
 
+        final languageItems = _languageItems();
+        final environmentItems = _environmentItems();
+
         return Scaffold(
           backgroundColor: dark ? const Color(0xFF15131A) : const Color(0xFFFAF7F2),
           appBar: AppBar(
@@ -223,7 +226,128 @@ class _GuiaFamiliasPageState extends State<GuiaFamiliasPage> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 23),
+                      const SizedBox(height: 28),
+                      _SectionHeading(
+                        title: T.txt('learningEverydayTitle'),
+                        icon: Icons.diversity_1_rounded,
+                        dark: dark,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        T.txt('learningEverydaySubtitle'),
+                        style: TextStyle(
+                          fontFamily: 'Baloo2',
+                          fontSize: 15,
+                          height: 1.35,
+                          color: dark ? Colors.white70 : Colors.black54,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+
+                      for (var i = 0; i < languageItems.length; i++) ...[
+                        _InlineGuidanceRow(
+                          eyebrow: T.txt('languageTitle').toUpperCase(),
+                          title: T.txt(languageItems[i].titleKey),
+                          subtitle: T.txt(languageItems[i].subtitleKey),
+                          icon: languageItems[i].icon,
+                          color: languageItems[i].color,
+                          dark: dark,
+                          expanded: _languageOpen == i,
+                          onTap: () => setState(
+                            () => _languageOpen =
+                                _languageOpen == i ? null : i,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _InlineInfoBlock(
+                                title: T.txt('languageRecommendationTitle'),
+                                text: T.txt(languageItems[i].recommendationKey),
+                                icon: Icons.tips_and_updates_rounded,
+                                color: languageItems[i].color,
+                                dark: dark,
+                              ),
+                              const SizedBox(height: 10),
+                              _InlineInfoBlock(
+                                title: T.txt('homeActivity'),
+                                text: T.txt(languageItems[i].homeKey),
+                                icon: Icons.home_rounded,
+                                color: languageItems[i].color,
+                                dark: dark,
+                              ),
+                              const SizedBox(height: 10),
+                              _InlineNote(
+                                text: T.txt(languageItems[i].parentKey),
+                                icon: Icons.favorite_rounded,
+                                color: languageItems[i].color,
+                                dark: dark,
+                              ),
+                            ],
+                          ),
+                        ),
+                        _InlineGuidanceRow(
+                          eyebrow:
+                              T.txt('protectiveEnvironments').toUpperCase(),
+                          title: T.txt(environmentItems[i].titleKey),
+                          subtitle: T.txt(environmentItems[i].subtitleKey),
+                          icon: environmentItems[i].icon,
+                          color: environmentItems[i].color,
+                          dark: dark,
+                          expanded: _environmentOpen == i,
+                          onTap: () => setState(
+                            () => _environmentOpen =
+                                _environmentOpen == i ? null : i,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _InlineInfoBlock(
+                                title: T.txt('environmentWhatToKnow'),
+                                text:
+                                    T.txt(environmentItems[i].descriptionKey),
+                                icon: Icons.info_outline_rounded,
+                                color: environmentItems[i].color,
+                                dark: dark,
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                T.txt('environmentActionsTitle'),
+                                style: TextStyle(
+                                  fontFamily: 'Fredoka',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800,
+                                  color: dark
+                                      ? Colors.white
+                                      : const Color(0xFF30283D),
+                                ),
+                              ),
+                              const SizedBox(height: 9),
+                              for (var actionIndex = 0;
+                                  actionIndex <
+                                      environmentItems[i].actionKeys.length;
+                                  actionIndex++)
+                                _InlineAction(
+                                  number: actionIndex + 1,
+                                  text: T.txt(
+                                    environmentItems[i]
+                                        .actionKeys[actionIndex],
+                                  ),
+                                  color: environmentItems[i].color,
+                                  dark: dark,
+                                ),
+                              const SizedBox(height: 4),
+                              _InlineNote(
+                                text: T.txt(environmentItems[i].alertKey),
+                                icon: Icons.health_and_safety_outlined,
+                                color: const Color(0xFFE58B56),
+                                dark: dark,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+
+                      const SizedBox(height: 28),
                       _SectionHeading(
                         title: T.txt('guideAreasTitle'),
                         icon: Icons.category_rounded,
@@ -269,7 +393,8 @@ class _GuiaFamiliasPageState extends State<GuiaFamiliasPage> {
                           ),
                           Text(
                             T.txt('guideCount').replaceAll(
-                              '{count}', visible.length.toString(),
+                              '{count}',
+                              visible.length.toString(),
                             ),
                             style: TextStyle(
                               fontFamily: 'Baloo2',
@@ -314,141 +439,6 @@ class _GuiaFamiliasPageState extends State<GuiaFamiliasPage> {
                               ),
                           ],
                         ),
-                      const SizedBox(height: 34),
-
-                      _SectionHeading(
-                        title: T.txt('languageTitle'),
-                        icon: Icons.forum_rounded,
-                        dark: dark,
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        T.txt('learningLanguageUnifiedSubtitle'),
-                        style: TextStyle(
-                          fontFamily: 'Baloo2',
-                          fontSize: 15,
-                          height: 1.35,
-                          color: dark ? Colors.white70 : Colors.black54,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      for (var i = 0; i < _languageItems().length; i++)
-                        _InlineGuidanceRow(
-                          title: T.txt(_languageItems()[i].titleKey),
-                          subtitle: T.txt(_languageItems()[i].subtitleKey),
-                          icon: _languageItems()[i].icon,
-                          color: _languageItems()[i].color,
-                          dark: dark,
-                          expanded: _languageOpen == i,
-                          onTap: () => setState(
-                            () => _languageOpen = _languageOpen == i ? null : i,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _InlineInfoBlock(
-                                title: T.txt('languageRecommendationTitle'),
-                                text: T.txt(_languageItems()[i].recommendationKey),
-                                icon: Icons.tips_and_updates_rounded,
-                                color: _languageItems()[i].color,
-                                dark: dark,
-                              ),
-                              const SizedBox(height: 10),
-                              _InlineInfoBlock(
-                                title: T.txt('homeActivity'),
-                                text: T.txt(_languageItems()[i].homeKey),
-                                icon: Icons.home_rounded,
-                                color: _languageItems()[i].color,
-                                dark: dark,
-                              ),
-                              const SizedBox(height: 10),
-                              _InlineNote(
-                                text: T.txt(_languageItems()[i].parentKey),
-                                icon: Icons.favorite_rounded,
-                                color: _languageItems()[i].color,
-                                dark: dark,
-                              ),
-                            ],
-                          ),
-                        ),
-
-                      const SizedBox(height: 34),
-
-                      _SectionHeading(
-                        title: T.txt('environmentTitle'),
-                        icon: Icons.shield_rounded,
-                        dark: dark,
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        T.txt('learningEnvironmentUnifiedSubtitle'),
-                        style: TextStyle(
-                          fontFamily: 'Baloo2',
-                          fontSize: 15,
-                          height: 1.35,
-                          color: dark ? Colors.white70 : Colors.black54,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      for (var i = 0; i < _environmentItems().length; i++)
-                        _InlineGuidanceRow(
-                          title: T.txt(_environmentItems()[i].titleKey),
-                          subtitle: T.txt(_environmentItems()[i].subtitleKey),
-                          icon: _environmentItems()[i].icon,
-                          color: _environmentItems()[i].color,
-                          dark: dark,
-                          expanded: _environmentOpen == i,
-                          onTap: () => setState(
-                            () => _environmentOpen =
-                                _environmentOpen == i ? null : i,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _InlineInfoBlock(
-                                title: T.txt('environmentWhatToKnow'),
-                                text: T.txt(_environmentItems()[i].descriptionKey),
-                                icon: Icons.info_outline_rounded,
-                                color: _environmentItems()[i].color,
-                                dark: dark,
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                T.txt('environmentActionsTitle'),
-                                style: TextStyle(
-                                  fontFamily: 'Fredoka',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w800,
-                                  color: dark
-                                      ? Colors.white
-                                      : const Color(0xFF30283D),
-                                ),
-                              ),
-                              const SizedBox(height: 9),
-                              for (var actionIndex = 0;
-                                  actionIndex <
-                                      _environmentItems()[i].actionKeys.length;
-                                  actionIndex++)
-                                _InlineAction(
-                                  number: actionIndex + 1,
-                                  text: T.txt(
-                                    _environmentItems()[i]
-                                        .actionKeys[actionIndex],
-                                  ),
-                                  color: _environmentItems()[i].color,
-                                  dark: dark,
-                                ),
-                              const SizedBox(height: 4),
-                              _InlineNote(
-                                text: T.txt(_environmentItems()[i].alertKey),
-                                icon: Icons.health_and_safety_outlined,
-                                color: const Color(0xFFE58B56),
-                                dark: dark,
-                              ),
-                            ],
-                          ),
-                        ),
-
                       const SizedBox(height: 28),
                       _InlineNote(
                         text: T.txt('learningUnifiedClosing'),
@@ -523,6 +513,7 @@ class _EnvironmentGuideItem {
 
 class _InlineGuidanceRow extends StatelessWidget {
   const _InlineGuidanceRow({
+    required this.eyebrow,
     required this.title,
     required this.subtitle,
     required this.icon,
@@ -533,6 +524,7 @@ class _InlineGuidanceRow extends StatelessWidget {
     required this.child,
   });
 
+  final String eyebrow;
   final String title;
   final String subtitle;
   final IconData icon;
@@ -569,6 +561,30 @@ class _InlineGuidanceRow extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: color.withValues(
+                              alpha: dark ? 0.16 : 0.08,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            eyebrow,
+                            style: TextStyle(
+                              fontFamily: 'Baloo2',
+                              fontSize: 10.5,
+                              height: 1,
+                              letterSpacing: 0.35,
+                              fontWeight: FontWeight.w800,
+                              color: dark ? Colors.white70 : color,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
                         Text(
                           title,
                           style: TextStyle(
