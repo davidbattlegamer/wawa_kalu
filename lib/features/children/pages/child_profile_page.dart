@@ -134,6 +134,20 @@ class _ChildProfileContent extends StatelessWidget {
     );
   }
 
+  int _guideAgeGroup(DateTime birthDate) {
+    final now = DateTime.now();
+    var months = (now.year - birthDate.year) * 12 + now.month - birthDate.month;
+    if (now.day < birthDate.day) {
+      months--;
+    }
+
+    if (months >= 12 && months < 24) return 0;
+    if (months >= 24 && months < 36) return 1;
+    if (months >= 36 && months < 48) return 2;
+    if (months >= 48 && months <= 60) return 3;
+    return -1;
+  }
+
   Future<void> _openLearning(BuildContext context) async {
     await ChildRepository.instance.selectChild(child.id);
 
@@ -144,7 +158,9 @@ class _ChildProfileContent extends StatelessWidget {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => const LearningHubPage(),
+        builder: (_) => LearningHubPage(
+          initialAgeGroup: _guideAgeGroup(child.birthDate),
+        ),
       ),
     );
   }
