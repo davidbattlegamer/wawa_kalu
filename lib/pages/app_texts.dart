@@ -34,6 +34,7 @@ class T {
   static Set<String> get kichwaKeys => Set<String>.unmodifiable(_kichwa.keys);
 
   static final Map<String, String> _spanish = <String, String>{
+    'childHealthSubtitle': 'Vacunas y crecimiento usan este mismo perfil, sin crear registros duplicados.',
     'learningHeroEyebrow': 'ACOMPAÑAR · DESCUBRIR · CUIDAR',
     'learningHubTitle': 'Acompaña cada descubrimiento',
     'learningHubSubtitle': 'Actividades y orientaciones claras para aprender, comunicarse y crecer en un entorno seguro.',
@@ -744,6 +745,7 @@ class T {
   };
 
   static final Map<String, String> _english = <String, String>{
+    'childHealthSubtitle': 'Vaccines and growth use this same profile, without creating duplicate records.',
     'learningHeroEyebrow': 'SUPPORT · DISCOVER · CARE',
     'learningHubTitle': 'Support every discovery',
     'learningHubSubtitle': 'Clear activities and guidance to learn, communicate, and grow in a safe environment.',
