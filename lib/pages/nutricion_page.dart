@@ -184,8 +184,8 @@ class _NutritionGuideContentState extends State<NutritionGuideContent> {
                 title: T.txt('nutritionChildTitle'),
                 subtitle: T.txt('nutritionIntegratedSubtitle'),
                 icon: Icons.restaurant_rounded,
-                color: const Color(0xFFB66A37),
-                accent: const Color(0xFFE5A257),
+                color: const Color(0xFFF59E55),
+                accent: const Color(0xFFF4C064),
               ),
               const SizedBox(height: 26),
               FamilySectionHeading(
