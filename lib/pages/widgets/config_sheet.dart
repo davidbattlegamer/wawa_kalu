@@ -447,8 +447,8 @@ void _mostrarAcercaDe(BuildContext context, bool modoOscuro) {
                                 modoOscuro: modoOscuro,
                               ),
                               _AboutFeatureChip(
-                                icon: Icons.sports_esports_rounded,
-                                text: T.txt('games'),
+                                icon: Icons.menu_book_rounded,
+                                text: T.txt('familyGuide'),
                                 color: const Color(0xFFFF9F1C),
                                 modoOscuro: modoOscuro,
                               ),
