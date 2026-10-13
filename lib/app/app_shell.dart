@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import '../pages/app_config.dart';
 import '../pages/app_texts.dart';
 import '../pages/home_page.dart';
-import '../features/learning/pages/learning_hub_page.dart';
+import '../features/learning/pages/guia_familias_page.dart';
 import '../features/children/pages/children_page.dart';
 import '../features/health/pages/health_page.dart';
 
@@ -27,7 +27,7 @@ class _AppShellState extends State<AppShell> {
     super.initState();
     _paginas = const [
       HomePage(),
-      LearningHubPage(),
+      GuiaFamiliasPage(),
       HealthPage(),
       ChildrenPage(),
     ];
