@@ -137,10 +137,7 @@ class _EntornoPageState extends State<EntornoPage> {
               shape: BoxShape.circle,
             ),
             child: const Center(
-              child: Text(
-                '🛡️',
-                style: TextStyle(fontSize: 48),
-              ),
+              child: Text('🛡️', style: TextStyle(fontSize: 48)),
             ),
           ),
           const SizedBox(height: 14),
@@ -203,11 +200,11 @@ class _EntornoPageState extends State<EntornoPage> {
             item.color.withValues(
               alpha: abierto
                   ? modoOscuro
-                      ? 0.24
-                      : 0.15
+                        ? 0.24
+                        : 0.15
                   : modoOscuro
-                      ? 0.14
-                      : 0.07,
+                  ? 0.14
+                  : 0.07,
             ),
           ],
         ),
@@ -273,8 +270,9 @@ class _EntornoPageState extends State<EntornoPage> {
                               fontFamily: 'Baloo2',
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
-                              color:
-                                  modoOscuro ? Colors.white70 : Colors.black54,
+                              color: modoOscuro
+                                  ? Colors.white70
+                                  : Colors.black54,
                             ),
                           ),
                         ],
@@ -313,8 +311,9 @@ class _EntornoPageState extends State<EntornoPage> {
                               fontFamily: 'Baloo2',
                               fontSize: 15.8,
                               fontWeight: FontWeight.w600,
-                              color:
-                                  modoOscuro ? Colors.white70 : Colors.black87,
+                              color: modoOscuro
+                                  ? Colors.white70
+                                  : Colors.black87,
                               height: 1.25,
                             ),
                           ),
@@ -459,10 +458,12 @@ class _EntornoPageState extends State<EntornoPage> {
                   ),
                 ),
                 centerTitle: true,
-                backgroundColor:
-                    modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-                foregroundColor:
-                    modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
+                backgroundColor: modoOscuro
+                    ? const Color(0xFF211B2E)
+                    : Colors.white,
+                foregroundColor: modoOscuro
+                    ? Colors.white
+                    : const Color(0xFF2D2D2D),
                 elevation: 0,
               ),
               body: SafeArea(

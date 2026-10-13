@@ -151,10 +151,7 @@ class _NutricionPageState extends State<NutricionPage> {
               shape: BoxShape.circle,
             ),
             child: const Center(
-              child: Text(
-                '🥗',
-                style: TextStyle(fontSize: 48),
-              ),
+              child: Text('🥗', style: TextStyle(fontSize: 48)),
             ),
           ),
           const SizedBox(height: 14),
@@ -204,11 +201,7 @@ class _NutricionPageState extends State<NutricionPage> {
     );
   }
 
-  Widget _cardNutricion(
-    MenuNutricionItem item,
-    int index,
-    bool modoOscuro,
-  ) {
+  Widget _cardNutricion(MenuNutricionItem item, int index, bool modoOscuro) {
     final bool abierto = indiceAbierto == index;
 
     return AnimatedContainer(
@@ -221,11 +214,11 @@ class _NutricionPageState extends State<NutricionPage> {
             item.color.withValues(
               alpha: abierto
                   ? modoOscuro
-                      ? 0.24
-                      : 0.15
+                        ? 0.24
+                        : 0.15
                   : modoOscuro
-                      ? 0.14
-                      : 0.07,
+                  ? 0.14
+                  : 0.07,
             ),
           ],
           begin: Alignment.topLeft,
@@ -268,11 +261,7 @@ class _NutricionPageState extends State<NutricionPage> {
                         ),
                         borderRadius: BorderRadius.circular(18),
                       ),
-                      child: Icon(
-                        item.icono,
-                        color: item.color,
-                        size: 31,
-                      ),
+                      child: Icon(item.icono, color: item.color, size: 31),
                     ),
                     const SizedBox(width: 14),
                     Expanded(
@@ -297,8 +286,9 @@ class _NutricionPageState extends State<NutricionPage> {
                               fontFamily: 'Baloo2',
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
-                              color:
-                                  modoOscuro ? Colors.white70 : Colors.black54,
+                              color: modoOscuro
+                                  ? Colors.white70
+                                  : Colors.black54,
                             ),
                           ),
                         ],
@@ -481,15 +471,16 @@ class _NutricionPageState extends State<NutricionPage> {
                     fontFamily: 'Fredoka',
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
-                    color:
-                        modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
+                    color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
                   ),
                 ),
                 centerTitle: true,
-                backgroundColor:
-                    modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-                foregroundColor:
-                    modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
+                backgroundColor: modoOscuro
+                    ? const Color(0xFF211B2E)
+                    : Colors.white,
+                foregroundColor: modoOscuro
+                    ? Colors.white
+                    : const Color(0xFF2D2D2D),
                 elevation: 0,
               ),
               body: SafeArea(
@@ -543,10 +534,7 @@ class InfoBullet extends StatelessWidget {
             margin: const EdgeInsets.only(top: 5),
             width: 10,
             height: 10,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
           const SizedBox(width: 10),
           Expanded(

@@ -5,13 +5,10 @@ import 'app_texts.dart';
 import 'widgets/config_sheet.dart';
 
 class WelcomePage extends StatefulWidget {
-  const WelcomePage({
-    super.key,
-  });
+  const WelcomePage({super.key});
 
   @override
-  State<WelcomePage> createState() =>
-      _WelcomePageState();
+  State<WelcomePage> createState() => _WelcomePageState();
 }
 
 class _WelcomePageState extends State<WelcomePage>
@@ -31,9 +28,7 @@ class _WelcomePageState extends State<WelcomePage>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(
-        milliseconds: 1000,
-      ),
+      duration: const Duration(milliseconds: 1000),
     );
 
     _fadeAnimation = CurvedAnimation(
@@ -44,25 +39,12 @@ class _WelcomePageState extends State<WelcomePage>
     _scaleAnimation = Tween<double>(
       begin: 0.82,
       end: 1.0,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOutBack,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
 
     _slideAnimation = Tween<Offset>(
-      begin: const Offset(
-        0,
-        0.08,
-      ),
+      begin: const Offset(0, 0.08),
       end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOutCubic,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
     _controller.forward();
   }
@@ -86,11 +68,7 @@ class _WelcomePageState extends State<WelcomePage>
       _pressing = true;
     });
 
-    await Future<void>.delayed(
-      const Duration(
-        milliseconds: 110,
-      ),
-    );
+    await Future<void>.delayed(const Duration(milliseconds: 110));
 
     if (!mounted) {
       return;
@@ -101,11 +79,7 @@ class _WelcomePageState extends State<WelcomePage>
       _starting = true;
     });
 
-    await Future<void>.delayed(
-      const Duration(
-        milliseconds: 420,
-      ),
-    );
+    await Future<void>.delayed(const Duration(milliseconds: 420));
 
     await AppConfig.marcarBienvenidaVista();
   }
@@ -114,62 +88,34 @@ class _WelcomePageState extends State<WelcomePage>
   // CONFIGURACIÓN
   // ============================================================
 
-  Widget _settingsButton({
-    required bool dark,
-  }) {
+  Widget _settingsButton({required bool dark}) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius:
-            BorderRadius.circular(
-          22,
-        ),
+        borderRadius: BorderRadius.circular(22),
         onTap: () {
-          showConfigSheet(
-            context,
-          );
+          showConfigSheet(context);
         },
         child: Container(
           width: 47,
           height: 47,
           decoration: BoxDecoration(
-            color: dark
-                ? const Color(
-                    0xFF211B2E,
-                  )
-                : Colors.white,
+            color: dark ? const Color(0xFF211B2E) : Colors.white,
             shape: BoxShape.circle,
             border: Border.all(
-              color:
-                  const Color(
-                0xFF7B2CBF,
-              ).withValues(
-                alpha: 0.18,
-              ),
+              color: const Color(0xFF7B2CBF).withValues(alpha: 0.18),
             ),
             boxShadow: [
               BoxShadow(
-                color:
-                    Colors.black.withValues(
-                  alpha:
-                      dark ? 0.18 : 0.08,
-                ),
+                color: Colors.black.withValues(alpha: dark ? 0.18 : 0.08),
                 blurRadius: 12,
-                offset:
-                    const Offset(
-                  0,
-                  4,
-                ),
+                offset: const Offset(0, 4),
               ),
             ],
           ),
           child: Icon(
             Icons.settings_rounded,
-            color: dark
-                ? Colors.white
-                : const Color(
-                    0xFF4A2C82,
-                  ),
+            color: dark ? Colors.white : const Color(0xFF4A2C82),
             size: 26,
           ),
         ),
@@ -181,93 +127,48 @@ class _WelcomePageState extends State<WelcomePage>
   // LOGO
   // ============================================================
 
-  Widget _logo({
-    required bool dark,
-    required bool smallScreen,
-  }) {
-    final double size =
-        smallScreen ? 145 : 185;
+  Widget _logo({required bool dark, required bool smallScreen}) {
+    final double size = smallScreen ? 145 : 185;
 
     return ScaleTransition(
       scale: _scaleAnimation,
       child: Container(
         width: size,
         height: size,
-        padding:
-            const EdgeInsets.all(
-          14,
-        ),
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          gradient:
-              LinearGradient(
-            begin:
-                Alignment.topLeft,
-            end:
-                Alignment.bottomRight,
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
             colors: [
-              const Color(
-                0xFF7B2CBF,
-              ).withValues(
-                alpha:
-                    dark ? 0.22 : 0.10,
-              ),
-              const Color(
-                0xFFFF006E,
-              ).withValues(
-                alpha:
-                    dark ? 0.15 : 0.06,
-              ),
-              const Color(
-                0xFF00A896,
-              ).withValues(
-                alpha:
-                    dark ? 0.15 : 0.06,
-              ),
+              const Color(0xFF7B2CBF).withValues(alpha: dark ? 0.22 : 0.10),
+              const Color(0xFFFF006E).withValues(alpha: dark ? 0.15 : 0.06),
+              const Color(0xFF00A896).withValues(alpha: dark ? 0.15 : 0.06),
             ],
           ),
           border: Border.all(
-            color:
-                const Color(
-              0xFF7B2CBF,
-            ).withValues(
-              alpha: 0.14,
-            ),
+            color: const Color(0xFF7B2CBF).withValues(alpha: 0.14),
           ),
           boxShadow: [
             BoxShadow(
-              color:
-                  const Color(
+              color: const Color(
                 0xFF7B2CBF,
-              ).withValues(
-                alpha:
-                    dark ? 0.16 : 0.12,
-              ),
+              ).withValues(alpha: dark ? 0.16 : 0.12),
               blurRadius: 28,
               spreadRadius: 2,
-              offset:
-                  const Offset(
-                0,
-                10,
-              ),
+              offset: const Offset(0, 10),
             ),
           ],
         ),
         child: Image.asset(
           'assets/images/familia_kalu.png',
           fit: BoxFit.contain,
-          errorBuilder: (
-            context,
-            error,
-            stackTrace,
-          ) {
+          errorBuilder: (context, error, stackTrace) {
             return const Icon(
               Icons.child_care_rounded,
               size: 90,
-              color:
-                  Color(
-                0xFF7B2CBF,
-              ),
+              color: Color(0xFF7B2CBF),
             );
           },
         ),
@@ -287,42 +188,19 @@ class _WelcomePageState extends State<WelcomePage>
     required String subtitle,
   }) {
     return Container(
-      width:
-          double.infinity,
-      padding:
-          const EdgeInsets.symmetric(
-        horizontal: 15,
-        vertical: 13,
-      ),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
       decoration: BoxDecoration(
-        gradient:
-            LinearGradient(
+        gradient: LinearGradient(
           colors: [
-            dark
-                ? const Color(
-                    0xFF211B2E,
-                  )
-                : Colors.white,
-            color.withValues(
-              alpha:
-                  dark ? 0.15 : 0.06,
-            ),
+            dark ? const Color(0xFF211B2E) : Colors.white,
+            color.withValues(alpha: dark ? 0.15 : 0.06),
           ],
-          begin:
-              Alignment.centerLeft,
-          end:
-              Alignment.centerRight,
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
         ),
-        borderRadius:
-            BorderRadius.circular(
-          21,
-        ),
-        border: Border.all(
-          color:
-              color.withValues(
-            alpha: 0.15,
-          ),
-        ),
+        borderRadius: BorderRadius.circular(21),
+        border: Border.all(color: color.withValues(alpha: 0.15)),
       ),
       child: Row(
         children: [
@@ -330,64 +208,37 @@ class _WelcomePageState extends State<WelcomePage>
             width: 49,
             height: 49,
             decoration: BoxDecoration(
-              color:
-                  color.withValues(
-                alpha: 0.12,
-              ),
-              borderRadius:
-                  BorderRadius.circular(
-                15,
-              ),
+              color: color.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(15),
             ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 28,
-            ),
+            child: Icon(icon, color: color, size: 28),
           ),
-          const SizedBox(
-            width: 13,
-          ),
+          const SizedBox(width: 13),
           Expanded(
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment
-                      .start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
                   maxLines: 1,
-                  overflow:
-                      TextOverflow.ellipsis,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontFamily:
-                        'Fredoka',
+                    fontFamily: 'Fredoka',
                     fontSize: 17,
-                    fontWeight:
-                        FontWeight.w700,
-                    color: dark
-                        ? Colors.white
-                        : const Color(
-                            0xFF2D2D2D,
-                          ),
+                    fontWeight: FontWeight.w700,
+                    color: dark ? Colors.white : const Color(0xFF2D2D2D),
                   ),
                 ),
-                const SizedBox(
-                  height: 2,
-                ),
+                const SizedBox(height: 2),
                 Text(
                   subtitle,
                   maxLines: 2,
-                  overflow:
-                      TextOverflow.ellipsis,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontFamily:
-                        'Baloo2',
+                    fontFamily: 'Baloo2',
                     fontSize: 13.5,
                     height: 1.15,
-                    color: dark
-                        ? Colors.white60
-                        : Colors.black54,
+                    color: dark ? Colors.white60 : Colors.black54,
                   ),
                 ),
               ],
@@ -404,167 +255,80 @@ class _WelcomePageState extends State<WelcomePage>
 
   Widget _startButton() {
     return AnimatedScale(
-      scale:
-          _pressing ? 0.97 : 1,
-      duration:
-          const Duration(
-        milliseconds: 110,
-      ),
+      scale: _pressing ? 0.97 : 1,
+      duration: const Duration(milliseconds: 110),
       child: AnimatedContainer(
-        duration:
-            const Duration(
-          milliseconds: 300,
-        ),
-        width:
-            double.infinity,
+        duration: const Duration(milliseconds: 300),
+        width: double.infinity,
         height: 59,
         decoration: BoxDecoration(
-          gradient:
-              LinearGradient(
-            begin:
-                Alignment.centerLeft,
-            end:
-                Alignment.centerRight,
+          gradient: LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
             colors: _starting
-                ? const [
-                    Color(
-                      0xFF00A896,
-                    ),
-                    Color(
-                      0xFF118AB2,
-                    ),
-                  ]
-                : const [
-                    Color(
-                      0xFF7B2CBF,
-                    ),
-                    Color(
-                      0xFFFF006E,
-                    ),
-                  ],
+                ? const [Color(0xFF00A896), Color(0xFF118AB2)]
+                : const [Color(0xFF7B2CBF), Color(0xFFFF006E)],
           ),
-          borderRadius:
-              BorderRadius.circular(
-            22,
-          ),
+          borderRadius: BorderRadius.circular(22),
           boxShadow: [
             BoxShadow(
-              color:
-                  const Color(
-                0xFF7B2CBF,
-              ).withValues(
-                alpha: 0.25,
-              ),
+              color: const Color(0xFF7B2CBF).withValues(alpha: 0.25),
               blurRadius: 18,
-              offset:
-                  const Offset(
-                0,
-                8,
-              ),
+              offset: const Offset(0, 8),
             ),
           ],
         ),
         child: Material(
-          color:
-              Colors.transparent,
-          borderRadius:
-              BorderRadius.circular(
-            22,
-          ),
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(22),
           child: InkWell(
-            onTap:
-                _starting
-                    ? null
-                    : _startApp,
-            borderRadius:
-                BorderRadius.circular(
-              22,
-            ),
+            onTap: _starting ? null : _startApp,
+            borderRadius: BorderRadius.circular(22),
             child: Center(
-              child:
-                  AnimatedSwitcher(
-                duration:
-                    const Duration(
-                  milliseconds:
-                      250,
-                ),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
                 child: _starting
                     ? Row(
-                        key:
-                            const ValueKey(
-                          'starting',
-                        ),
-                        mainAxisAlignment:
-                            MainAxisAlignment
-                                .center,
+                        key: const ValueKey('starting'),
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const SizedBox(
                             width: 21,
                             height: 21,
-                            child:
-                                CircularProgressIndicator(
-                              strokeWidth:
-                                  2.4,
-                              color:
-                                  Colors.white,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.4,
+                              color: Colors.white,
                             ),
                           ),
-                          const SizedBox(
-                            width: 11,
-                          ),
+                          const SizedBox(width: 11),
                           Text(
-                            T.txt(
-                              'startingApp',
-                            ),
-                            style:
-                                const TextStyle(
-                              fontFamily:
-                                  'Fredoka',
-                              fontSize:
-                                  19,
-                              fontWeight:
-                                  FontWeight
-                                      .w700,
-                              color:
-                                  Colors.white,
+                            T.txt('startingApp'),
+                            style: const TextStyle(
+                              fontFamily: 'Fredoka',
+                              fontSize: 19,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
                             ),
                           ),
                         ],
                       )
                     : Row(
-                        key:
-                            const ValueKey(
-                          'start',
-                        ),
-                        mainAxisAlignment:
-                            MainAxisAlignment
-                                .center,
+                        key: const ValueKey('start'),
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            T.txt(
-                              'startApp',
-                            ),
-                            style:
-                                const TextStyle(
-                              fontFamily:
-                                  'Fredoka',
-                              fontSize:
-                                  20,
-                              fontWeight:
-                                  FontWeight
-                                      .w700,
-                              color:
-                                  Colors.white,
+                            T.txt('startApp'),
+                            style: const TextStyle(
+                              fontFamily: 'Fredoka',
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
                             ),
                           ),
-                          const SizedBox(
-                            width: 8,
-                          ),
+                          const SizedBox(width: 8),
                           const Icon(
-                            Icons
-                                .arrow_forward_rounded,
-                            color:
-                                Colors.white,
+                            Icons.arrow_forward_rounded,
+                            color: Colors.white,
                             size: 24,
                           ),
                         ],
@@ -581,312 +345,155 @@ class _WelcomePageState extends State<WelcomePage>
   // CONTENIDO
   // ============================================================
 
-  Widget _content({
-    required bool dark,
-  }) {
+  Widget _content({required bool dark}) {
     return LayoutBuilder(
-      builder: (
-        context,
-        constraints,
-      ) {
+      builder: (context, constraints) {
         final bool smallScreen =
-            constraints.maxHeight <
-                    760 ||
-                constraints.maxWidth <
-                    380;
+            constraints.maxHeight < 760 || constraints.maxWidth < 380;
 
         return SingleChildScrollView(
-          padding:
-              EdgeInsets.fromLTRB(
-            22,
-            smallScreen
-                ? 18
-                : 26,
-            22,
-            30,
-          ),
+          padding: EdgeInsets.fromLTRB(22, smallScreen ? 18 : 26, 22, 30),
           child: ConstrainedBox(
-            constraints:
-                BoxConstraints(
-              minHeight:
-                  constraints
-                          .maxHeight -
-                      48,
-            ),
+            constraints: BoxConstraints(minHeight: constraints.maxHeight - 48),
             child: Column(
-              mainAxisAlignment:
-                  MainAxisAlignment
-                      .center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // ================================================
                 // LOGO
                 // ================================================
+                _logo(dark: dark, smallScreen: smallScreen),
 
-                _logo(
-                  dark: dark,
-                  smallScreen:
-                      smallScreen,
-                ),
-
-                SizedBox(
-                  height:
-                      smallScreen
-                          ? 16
-                          : 20,
-                ),
+                SizedBox(height: smallScreen ? 16 : 20),
 
                 // ================================================
                 // BIENVENIDA
                 // ================================================
-
                 Text(
-                  T.txt(
-                    'welcomeScreenTitle',
-                  ),
-                  textAlign:
-                      TextAlign.center,
+                  T.txt('welcomeScreenTitle'),
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
-                    fontFamily:
-                        'Baloo2',
+                    fontFamily: 'Baloo2',
                     fontSize: 18,
-                    fontWeight:
-                        FontWeight.w700,
-                    color:
-                        Color(
-                      0xFFEF476F,
-                    ),
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFFEF476F),
                   ),
                 ),
 
-                const SizedBox(
-                  height: 1,
-                ),
+                const SizedBox(height: 1),
 
                 // ================================================
                 // NOMBRE
                 // ================================================
-
                 Text(
-                  T.txt(
-                    'appName',
-                  ),
-                  textAlign:
-                      TextAlign.center,
+                  T.txt('appName'),
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontFamily:
-                        'Fredoka',
-                    fontSize:
-                        smallScreen
-                            ? 39
-                            : 45,
+                    fontFamily: 'Fredoka',
+                    fontSize: smallScreen ? 39 : 45,
                     height: 1,
-                    fontWeight:
-                        FontWeight.w900,
-                    color: dark
-                        ? Colors.white
-                        : const Color(
-                            0xFF4A2C82,
-                          ),
+                    fontWeight: FontWeight.w900,
+                    color: dark ? Colors.white : const Color(0xFF4A2C82),
                     shadows: [
                       Shadow(
-                        color:
-                            const Color(
-                          0xFF7B2CBF,
-                        ).withValues(
-                          alpha: 0.12,
-                        ),
+                        color: const Color(0xFF7B2CBF).withValues(alpha: 0.12),
                         blurRadius: 8,
-                        offset:
-                            const Offset(
-                          0,
-                          3,
-                        ),
+                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),
                 ),
 
-                const SizedBox(
-                  height: 9,
-                ),
+                const SizedBox(height: 9),
 
                 // ================================================
                 // SUBTÍTULO
                 // ================================================
-
                 Text(
-                  T.txt(
-                    'subtitle',
-                  ),
-                  textAlign:
-                      TextAlign.center,
+                  T.txt('subtitle'),
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontFamily:
-                        'Baloo2',
-                    fontSize:
-                        smallScreen
-                            ? 15
-                            : 16.5,
-                    fontWeight:
-                        FontWeight.w600,
+                    fontFamily: 'Baloo2',
+                    fontSize: smallScreen ? 15 : 16.5,
+                    fontWeight: FontWeight.w600,
                     height: 1.25,
-                    color: dark
-                        ? Colors.white70
-                        : Colors.black54,
+                    color: dark ? Colors.white70 : Colors.black54,
                   ),
                 ),
 
-                SizedBox(
-                  height:
-                      smallScreen
-                          ? 22
-                          : 28,
-                ),
+                SizedBox(height: smallScreen ? 22 : 28),
 
                 // ================================================
                 // FUNCIONES PRINCIPALES
                 // ================================================
+                _featureCard(
+                  dark: dark,
+                  icon: Icons.child_care_rounded,
+                  color: const Color(0xFF118AB2),
+                  title: T.txt('myChildren'),
+                  subtitle: T.txt('childrenHeaderSubtitle'),
+                ),
+
+                const SizedBox(height: 10),
 
                 _featureCard(
                   dark: dark,
-                  icon:
-                      Icons.child_care_rounded,
-                  color:
-                      const Color(
-                    0xFF118AB2,
-                  ),
-                  title:
-                      T.txt(
-                    'myChildren',
-                  ),
-                  subtitle:
-                      T.txt(
-                    'childrenHeaderSubtitle',
-                  ),
+                  icon: Icons.vaccines_rounded,
+                  color: const Color(0xFF7B2CBF),
+                  title: T.txt('vaccines'),
+                  subtitle: T.txt('vaccinesSubtitle'),
                 ),
 
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
 
                 _featureCard(
                   dark: dark,
-                  icon:
-                      Icons.vaccines_rounded,
-                  color:
-                      const Color(
-                    0xFF7B2CBF,
-                  ),
-                  title:
-                      T.txt(
-                    'vaccines',
-                  ),
-                  subtitle:
-                      T.txt(
-                    'vaccinesSubtitle',
-                  ),
+                  icon: Icons.show_chart_rounded,
+                  color: const Color(0xFF00A896),
+                  title: T.txt('growth'),
+                  subtitle: T.txt('growthSubtitle'),
                 ),
 
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
 
                 _featureCard(
                   dark: dark,
-                  icon:
-                      Icons.show_chart_rounded,
-                  color:
-                      const Color(
-                    0xFF00A896,
-                  ),
-                  title:
-                      T.txt(
-                    'growth',
-                  ),
-                  subtitle:
-                      T.txt(
-                    'growthSubtitle',
-                  ),
+                  icon: Icons.extension_rounded,
+                  color: Colors.orange,
+                  title: T.txt('learning'),
+                  subtitle: T.txt('learningHeaderSubtitle'),
                 ),
 
-                const SizedBox(
-                  height: 10,
-                ),
-
-                _featureCard(
-                  dark: dark,
-                  icon:
-                      Icons.extension_rounded,
-                  color:
-                      Colors.orange,
-                  title:
-                      T.txt(
-                    'learning',
-                  ),
-                  subtitle:
-                      T.txt(
-                    'learningHeaderSubtitle',
-                  ),
-                ),
-
-                SizedBox(
-                  height:
-                      smallScreen
-                          ? 22
-                          : 28,
-                ),
+                SizedBox(height: smallScreen ? 22 : 28),
 
                 // ================================================
                 // COMENZAR
                 // ================================================
-
                 _startButton(),
 
-                const SizedBox(
-                  height: 13,
-                ),
+                const SizedBox(height: 13),
 
                 // ================================================
                 // NOTA
                 // ================================================
-
                 Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment
-                          .center,
-                  crossAxisAlignment:
-                      CrossAxisAlignment
-                          .start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(
-                      Icons
-                          .shield_outlined,
+                      Icons.shield_outlined,
                       size: 17,
-                      color: dark
-                          ? Colors.white38
-                          : const Color(
-                              0xFF00A896,
-                            ),
+                      color: dark ? Colors.white38 : const Color(0xFF00A896),
                     ),
-                    const SizedBox(
-                      width: 6,
-                    ),
+                    const SizedBox(width: 6),
                     Flexible(
                       child: Text(
-                        T.txt(
-                          'welcomeSettingsNote',
-                        ),
-                        textAlign:
-                            TextAlign.center,
-                        style:
-                            TextStyle(
-                          fontFamily:
-                              'Baloo2',
+                        T.txt('welcomeSettingsNote'),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'Baloo2',
                           fontSize: 12.5,
                           height: 1.2,
-                          color: dark
-                              ? Colors.white54
-                              : Colors.black45,
+                          color: dark ? Colors.white54 : Colors.black45,
                         ),
                       ),
                     ),
@@ -905,46 +512,25 @@ class _WelcomePageState extends State<WelcomePage>
   // ============================================================
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     return ValueListenableBuilder<String>(
-      valueListenable:
-          AppConfig.idioma,
-      builder: (
-        context,
-        idioma,
-        _,
-      ) {
-        return ValueListenableBuilder<
-            ThemeMode>(
-          valueListenable:
-              AppConfig.temaApp,
-          builder: (
-            context,
-            themeMode,
-            _,
-          ) {
-            final bool dark =
-                Theme.of(context)
-                        .brightness ==
-                    Brightness.dark;
+      valueListenable: AppConfig.idioma,
+      builder: (context, idioma, _) {
+        return ValueListenableBuilder<ThemeMode>(
+          valueListenable: AppConfig.temaApp,
+          builder: (context, themeMode, _) {
+            final bool dark = Theme.of(context).brightness == Brightness.dark;
 
             return Scaffold(
               backgroundColor: dark
-                  ? const Color(
-                      0xFF15131A,
-                    )
-                  : const Color(
-                      0xFFFFF9F1,
-                    ),
+                  ? const Color(0xFF15131A)
+                  : const Color(0xFFFFF9F1),
               body: SafeArea(
                 child: Stack(
                   children: [
                     // ============================================
                     // DECORACIÓN SUPERIOR
                     // ============================================
-
                     Positioned(
                       top: -85,
                       left: -75,
@@ -952,18 +538,11 @@ class _WelcomePageState extends State<WelcomePage>
                         child: Container(
                           width: 210,
                           height: 210,
-                          decoration:
-                              BoxDecoration(
-                            shape:
-                                BoxShape.circle,
-                            color:
-                                const Color(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: const Color(
                               0xFF7B2CBF,
-                            ).withValues(
-                              alpha: dark
-                                  ? 0.08
-                                  : 0.05,
-                            ),
+                            ).withValues(alpha: dark ? 0.08 : 0.05),
                           ),
                         ),
                       ),
@@ -972,7 +551,6 @@ class _WelcomePageState extends State<WelcomePage>
                     // ============================================
                     // DECORACIÓN INFERIOR
                     // ============================================
-
                     Positioned(
                       right: -90,
                       bottom: -100,
@@ -980,18 +558,11 @@ class _WelcomePageState extends State<WelcomePage>
                         child: Container(
                           width: 240,
                           height: 240,
-                          decoration:
-                              BoxDecoration(
-                            shape:
-                                BoxShape.circle,
-                            color:
-                                const Color(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: const Color(
                               0xFF00A896,
-                            ).withValues(
-                              alpha: dark
-                                  ? 0.08
-                                  : 0.05,
-                            ),
+                            ).withValues(alpha: dark ? 0.08 : 0.05),
                           ),
                         ),
                       ),
@@ -1000,21 +571,12 @@ class _WelcomePageState extends State<WelcomePage>
                     // ============================================
                     // CONTENIDO ANIMADO
                     // ============================================
-
                     Positioned.fill(
-                      child:
-                          FadeTransition(
-                        opacity:
-                            _fadeAnimation,
-                        child:
-                            SlideTransition(
-                          position:
-                              _slideAnimation,
-                          child:
-                              _content(
-                            dark:
-                                dark,
-                          ),
+                      child: FadeTransition(
+                        opacity: _fadeAnimation,
+                        child: SlideTransition(
+                          position: _slideAnimation,
+                          child: _content(dark: dark),
                         ),
                       ),
                     ),
@@ -1022,14 +584,10 @@ class _WelcomePageState extends State<WelcomePage>
                     // ============================================
                     // CONFIGURACIÓN
                     // ============================================
-
                     Positioned(
                       top: 8,
                       right: 12,
-                      child:
-                          _settingsButton(
-                        dark: dark,
-                      ),
+                      child: _settingsButton(dark: dark),
                     ),
                   ],
                 ),

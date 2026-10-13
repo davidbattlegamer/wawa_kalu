@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 import 'app_config.dart';
 import 'app_texts.dart';
 
@@ -100,11 +99,7 @@ class RecetasPage extends StatelessWidget {
         momentoKey: 'recipe5Moment',
         color: const Color(0xFFFF006E),
         descripcionKey: 'recipe5Desc',
-        ingredientesKeys: const [
-          'recipe5Ing1',
-          'recipe5Ing2',
-          'recipe5Ing3',
-        ],
+        ingredientesKeys: const ['recipe5Ing1', 'recipe5Ing2', 'recipe5Ing3'],
         preparacionKeys: const [
           'recipe5Step1',
           'recipe5Step2',
@@ -132,12 +127,16 @@ class RecetasPage extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(30),
         border: Border.all(
-          color: const Color(0xFF7B2CBF).withValues(alpha: modoOscuro ? 0.32 : 0.18),
+          color: const Color(
+            0xFF7B2CBF,
+          ).withValues(alpha: modoOscuro ? 0.32 : 0.18),
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF7B2CBF).withValues(alpha: modoOscuro ? 0.18 : 0.10),
+            color: const Color(
+              0xFF7B2CBF,
+            ).withValues(alpha: modoOscuro ? 0.18 : 0.10),
             blurRadius: 16,
             offset: const Offset(0, 7),
           ),
@@ -160,10 +159,7 @@ class RecetasPage extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: const Center(
-              child: Text(
-                '🧸',
-                style: TextStyle(fontSize: 48),
-              ),
+              child: Text('🧸', style: TextStyle(fontSize: 48)),
             ),
           ),
           const SizedBox(height: 14),
@@ -171,7 +167,7 @@ class RecetasPage extends StatelessWidget {
             T.txt('recipesHeaderTitle'),
             textAlign: TextAlign.center,
             style: TextStyle(
-  fontFamily: 'Fredoka',
+              fontFamily: 'Fredoka',
               fontSize: 34,
               fontWeight: FontWeight.w700,
               color: modoOscuro ? Colors.white : const Color(0xFF7B2CBF),
@@ -183,7 +179,7 @@ class RecetasPage extends StatelessWidget {
             T.txt('recipesHeaderSubtitle'),
             textAlign: TextAlign.center,
             style: TextStyle(
-  fontFamily: 'Baloo2',
+              fontFamily: 'Baloo2',
               fontSize: 19,
               fontWeight: FontWeight.w600,
               color: const Color(0xFFFF6B6B),
@@ -194,14 +190,16 @@ class RecetasPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
             decoration: BoxDecoration(
-              color: const Color(0xFF7B2CBF).withValues(alpha: modoOscuro ? 0.18 : 0.10),
+              color: const Color(
+                0xFF7B2CBF,
+              ).withValues(alpha: modoOscuro ? 0.18 : 0.10),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
               T.txt('recipesHeaderNote'),
               textAlign: TextAlign.center,
               style: TextStyle(
-  fontFamily: 'Baloo2',
+                fontFamily: 'Baloo2',
                 fontSize: 16.5,
                 fontWeight: FontWeight.w700,
                 color: modoOscuro ? Colors.white : const Color(0xFF7B2CBF),
@@ -255,10 +253,7 @@ class RecetasPage extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: Center(
-              child: Text(
-                receta.emoji,
-                style: const TextStyle(fontSize: 43),
-              ),
+              child: Text(receta.emoji, style: const TextStyle(fontSize: 43)),
             ),
           ),
           const SizedBox(height: 12),
@@ -266,7 +261,7 @@ class RecetasPage extends StatelessWidget {
             T.txt(receta.tituloKey),
             textAlign: TextAlign.center,
             style: TextStyle(
-  fontFamily: 'Fredoka',
+              fontFamily: 'Fredoka',
               fontSize: 25,
               fontWeight: FontWeight.w700,
               color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
@@ -277,7 +272,7 @@ class RecetasPage extends StatelessWidget {
             T.txt(receta.descripcionKey),
             textAlign: TextAlign.center,
             style: TextStyle(
-  fontFamily: 'Baloo2',
+              fontFamily: 'Baloo2',
               fontSize: 16,
               fontWeight: FontWeight.w500,
               color: modoOscuro ? Colors.white70 : Colors.black87,
@@ -331,16 +326,13 @@ class RecetasPage extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.tips_and_updates_rounded,
-                  color: receta.color,
-                ),
+                Icon(Icons.tips_and_updates_rounded, color: receta.color),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     T.txt(receta.recomendacionKey),
                     style: TextStyle(
-  fontFamily: 'Baloo2',
+                      fontFamily: 'Baloo2',
                       fontSize: 15.5,
                       fontWeight: FontWeight.w600,
                       color: modoOscuro ? Colors.white70 : Colors.black87,
@@ -375,7 +367,7 @@ class RecetasPage extends StatelessWidget {
           Text(
             texto,
             style: TextStyle(
-  fontFamily: 'Baloo2',
+              fontFamily: 'Baloo2',
               fontSize: 15.5,
               fontWeight: FontWeight.w700,
               color: modoOscuro ? Colors.white : color,
@@ -416,7 +408,7 @@ class RecetasPage extends StatelessWidget {
               Text(
                 titulo,
                 style: TextStyle(
-  fontFamily: 'Fredoka',
+                  fontFamily: 'Fredoka',
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: modoOscuro ? Colors.white : color,
@@ -434,7 +426,7 @@ class RecetasPage extends StatelessWidget {
                   Text(
                     '• ',
                     style: TextStyle(
-  fontFamily: 'Baloo2',
+                      fontFamily: 'Baloo2',
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                       color: color,
@@ -444,7 +436,7 @@ class RecetasPage extends StatelessWidget {
                     child: Text(
                       dato,
                       style: TextStyle(
-  fontFamily: 'Baloo2',
+                        fontFamily: 'Baloo2',
                         fontSize: 15.5,
                         fontWeight: FontWeight.w500,
                         color: modoOscuro ? Colors.white70 : Colors.black87,
@@ -488,7 +480,7 @@ class RecetasPage extends StatelessWidget {
             child: Text(
               T.txt('recipeFinalNote'),
               style: TextStyle(
-  fontFamily: 'Baloo2',
+                fontFamily: 'Baloo2',
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
                 color: modoOscuro ? Colors.white70 : Colors.black87,
@@ -508,7 +500,8 @@ class RecetasPage extends StatelessWidget {
         return ValueListenableBuilder<ThemeMode>(
           valueListenable: AppConfig.temaApp,
           builder: (context, temaActual, _) {
-            final bool modoOscuro = Theme.of(context).brightness == Brightness.dark;
+            final bool modoOscuro =
+                Theme.of(context).brightness == Brightness.dark;
             final listaRecetas = _recetas();
 
             return Scaffold(
@@ -519,17 +512,19 @@ class RecetasPage extends StatelessWidget {
                 title: Text(
                   T.txt('recipesAppBar'),
                   style: TextStyle(
-  fontFamily: 'Fredoka',
+                    fontFamily: 'Fredoka',
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
                   ),
                 ),
                 centerTitle: true,
-                backgroundColor:
-                    modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-                foregroundColor:
-                    modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
+                backgroundColor: modoOscuro
+                    ? const Color(0xFF211B2E)
+                    : Colors.white,
+                foregroundColor: modoOscuro
+                    ? Colors.white
+                    : const Color(0xFF2D2D2D),
                 elevation: 0,
               ),
               body: SafeArea(

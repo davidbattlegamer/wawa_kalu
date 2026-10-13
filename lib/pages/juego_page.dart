@@ -36,10 +36,12 @@ class JuegoPage extends StatelessWidget {
                   ),
                 ),
                 centerTitle: true,
-                backgroundColor:
-                    modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-                foregroundColor:
-                    modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
+                backgroundColor: modoOscuro
+                    ? const Color(0xFF211B2E)
+                    : Colors.white,
+                foregroundColor: modoOscuro
+                    ? Colors.white
+                    : const Color(0xFF2D2D2D),
                 elevation: 0,
               ),
               body: SafeArea(
@@ -47,7 +49,7 @@ class JuegoPage extends StatelessWidget {
                   builder: (context, constraints) {
                     final bool pantallaPequena =
                         constraints.maxHeight < 720 ||
-                            constraints.maxWidth < 380;
+                        constraints.maxWidth < 380;
 
                     return SingleChildScrollView(
                       padding: EdgeInsets.all(pantallaPequena ? 16 : 20),
@@ -139,9 +141,7 @@ class JuegoPage extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(30),
         border: Border.all(
-          color: Colors.deepPurple.withValues(
-            alpha: modoOscuro ? 0.30 : 0.16,
-          ),
+          color: Colors.deepPurple.withValues(alpha: modoOscuro ? 0.30 : 0.16),
           width: 1.5,
         ),
         boxShadow: [
@@ -340,12 +340,7 @@ class JuegoPage extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(28),
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => page,
-              ),
-            );
+            Navigator.push(context, MaterialPageRoute(builder: (_) => page));
           },
           child: Padding(
             padding: const EdgeInsets.all(18),
@@ -365,11 +360,7 @@ class JuegoPage extends StatelessWidget {
                     ),
                     borderRadius: BorderRadius.circular(22),
                   ),
-                  child: Icon(
-                    icon,
-                    color: color,
-                    size: 36,
-                  ),
+                  child: Icon(icon, color: color, size: 36),
                 ),
                 const SizedBox(width: 15),
                 Expanded(
@@ -443,11 +434,7 @@ class JuegoPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                Icon(
-                  Icons.chevron_right_rounded,
-                  color: color,
-                  size: 31,
-                ),
+                Icon(Icons.chevron_right_rounded, color: color, size: 31),
               ],
             ),
           ),

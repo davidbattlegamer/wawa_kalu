@@ -100,16 +100,16 @@ class _LenguajePageState extends State<LenguajePage> {
         ),
         borderRadius: BorderRadius.circular(30),
         border: Border.all(
-          color: const Color(0xFF7B2CBF).withValues(
-            alpha: modoOscuro ? 0.32 : 0.18,
-          ),
+          color: const Color(
+            0xFF7B2CBF,
+          ).withValues(alpha: modoOscuro ? 0.32 : 0.18),
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF7B2CBF).withValues(
-              alpha: modoOscuro ? 0.18 : 0.10,
-            ),
+            color: const Color(
+              0xFF7B2CBF,
+            ).withValues(alpha: modoOscuro ? 0.18 : 0.10),
             blurRadius: 16,
             offset: const Offset(0, 7),
           ),
@@ -130,10 +130,7 @@ class _LenguajePageState extends State<LenguajePage> {
               shape: BoxShape.circle,
             ),
             child: const Center(
-              child: Text(
-                '🗣️',
-                style: TextStyle(fontSize: 46),
-              ),
+              child: Text('🗣️', style: TextStyle(fontSize: 46)),
             ),
           ),
           const SizedBox(height: 14),
@@ -164,9 +161,9 @@ class _LenguajePageState extends State<LenguajePage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
             decoration: BoxDecoration(
-              color: const Color(0xFF7B2CBF).withValues(
-                alpha: modoOscuro ? 0.18 : 0.10,
-              ),
+              color: const Color(
+                0xFF7B2CBF,
+              ).withValues(alpha: modoOscuro ? 0.18 : 0.10),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
@@ -199,11 +196,11 @@ class _LenguajePageState extends State<LenguajePage> {
             colorBase.withValues(
               alpha: sinSeleccion
                   ? modoOscuro
-                      ? 0.14
-                      : 0.08
+                        ? 0.14
+                        : 0.08
                   : modoOscuro
-                      ? 0.24
-                      : 0.16,
+                  ? 0.24
+                  : 0.16,
             ),
           ],
         ),
@@ -234,11 +231,7 @@ class _LenguajePageState extends State<LenguajePage> {
               ),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              iconoSeleccionado,
-              size: 44,
-              color: colorBase,
-            ),
+            child: Icon(iconoSeleccionado, size: 44, color: colorBase),
           ),
           const SizedBox(height: 14),
           Text(
@@ -250,8 +243,8 @@ class _LenguajePageState extends State<LenguajePage> {
               fontWeight: FontWeight.w700,
               color: sinSeleccion
                   ? modoOscuro
-                      ? Colors.white
-                      : const Color(0xFF2D2D2D)
+                        ? Colors.white
+                        : const Color(0xFF2D2D2D)
                   : colorBase,
             ),
           ),
@@ -430,11 +423,11 @@ class _LenguajePageState extends State<LenguajePage> {
                   actividad.color.withValues(
                     alpha: seleccionada
                         ? modoOscuro
-                            ? 0.28
-                            : 0.18
+                              ? 0.28
+                              : 0.18
                         : modoOscuro
-                            ? 0.14
-                            : 0.08,
+                        ? 0.14
+                        : 0.08,
                   ),
                 ],
               ),
@@ -587,10 +580,12 @@ class _LenguajePageState extends State<LenguajePage> {
                   ),
                 ),
                 centerTitle: true,
-                backgroundColor:
-                    modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-                foregroundColor:
-                    modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
+                backgroundColor: modoOscuro
+                    ? const Color(0xFF211B2E)
+                    : Colors.white,
+                foregroundColor: modoOscuro
+                    ? Colors.white
+                    : const Color(0xFF2D2D2D),
                 elevation: 0,
               ),
               body: SafeArea(

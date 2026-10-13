@@ -11,8 +11,7 @@ import '../app_texts.dart';
 const String _appVersion = '1.1.0';
 const String _developers = 'D.S Y K.T';
 
-final AudioPlayer _switchPlayer =
-    AudioPlayer();
+final AudioPlayer _switchPlayer = AudioPlayer();
 
 // ============================================================================
 // SONIDO DEL SWITCH
@@ -26,13 +25,7 @@ Future<void> _reproducirSonidoSwitch() async {
   try {
     await _switchPlayer.stop();
 
-    await _switchPlayer.play(
-      AssetSource(
-        'sonidos/switch.mp3',
-      ),
-      volume:
-          0.55,
-    );
+    await _switchPlayer.play(AssetSource('sonidos/switch.mp3'), volume: 0.55);
   } catch (_) {
     // El sonido de interfaz es opcional.
   }
@@ -42,67 +35,48 @@ Future<void> _reproducirSonidoSwitch() async {
 // VIBRACIÓN
 // ============================================================================
 
-Future<bool>
-    dispositivoPermiteVibracion() async {
+Future<bool> dispositivoPermiteVibracion() async {
   if (kIsWeb) {
     return false;
   }
 
-  if (defaultTargetPlatform ==
-      TargetPlatform.android) {
+  if (defaultTargetPlatform == TargetPlatform.android) {
     try {
-      return await Vibration
-          .hasVibrator();
+      return await Vibration.hasVibrator();
     } catch (_) {
       return false;
     }
   }
 
-  if (defaultTargetPlatform ==
-      TargetPlatform.iOS) {
+  if (defaultTargetPlatform == TargetPlatform.iOS) {
     return true;
   }
 
   return false;
 }
 
-Future<void>
-    vibrarActivacionFuerte() async {
+Future<void> vibrarActivacionFuerte() async {
   try {
     if (kIsWeb) {
       return;
     }
 
-    if (defaultTargetPlatform ==
-        TargetPlatform.android) {
-      final bool tieneVibrador =
-          await Vibration
-              .hasVibrator();
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      final bool tieneVibrador = await Vibration.hasVibrator();
 
       if (tieneVibrador) {
-        await Vibration.vibrate(
-          pattern:
-              <int>[
-            0,
-            120,
-            60,
-            120,
-          ],
-        );
+        await Vibration.vibrate(pattern: <int>[0, 120, 60, 120]);
 
         return;
       }
     }
 
-    if (defaultTargetPlatform ==
-        TargetPlatform.iOS) {
-      await HapticFeedback
-          .heavyImpact();
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      await HapticFeedback.heavyImpact();
     }
   } catch (_) {
     try {
-      await HapticFeedback
-          .mediumImpact();
+      await HapticFeedback.mediumImpact();
     } catch (_) {}
   }
 }
@@ -111,53 +85,36 @@ Future<void>
 // TEXTO DEL TEMA
 // ============================================================================
 
-String textoTema(
-  ThemeMode tema,
-) {
+String textoTema(ThemeMode tema) {
   switch (tema) {
     case ThemeMode.system:
-      return T.txt(
-        'themeAutomatic',
-      );
+      return T.txt('themeAutomatic');
 
     case ThemeMode.light:
-      return T.txt(
-        'lightMode',
-      );
+      return T.txt('lightMode');
 
     case ThemeMode.dark:
-      return T.txt(
-        'darkMode',
-      );
+      return T.txt('darkMode');
   }
 }
 
-IconData iconoTema(
-  ThemeMode tema,
-) {
+IconData iconoTema(ThemeMode tema) {
   switch (tema) {
     case ThemeMode.system:
-      return Icons
-          .brightness_auto_rounded;
+      return Icons.brightness_auto_rounded;
 
     case ThemeMode.light:
-      return Icons
-          .light_mode_rounded;
+      return Icons.light_mode_rounded;
 
     case ThemeMode.dark:
-      return Icons
-          .dark_mode_rounded;
+      return Icons.dark_mode_rounded;
   }
 }
 
-Color colorTema(
-  ThemeMode tema,
-) {
+Color colorTema(ThemeMode tema) {
   switch (tema) {
     case ThemeMode.system:
-      return const Color(
-        0xFF00A896,
-      );
+      return const Color(0xFF00A896);
 
     case ThemeMode.light:
       return Colors.amber;
@@ -176,27 +133,19 @@ String textoIdiomaActual({
   required String idiomaActual,
 }) {
   if (idiomaAuto) {
-    return T.txt(
-      'languageAutomatic',
-    );
+    return T.txt('languageAutomatic');
   }
 
   switch (idiomaActual) {
     case 'en':
-      return T.txt(
-        'english',
-      );
+      return T.txt('english');
 
     case 'qu':
-      return T.txt(
-        'kichwa',
-      );
+      return T.txt('kichwa');
 
     case 'es':
     default:
-      return T.txt(
-        'spanish',
-      );
+      return T.txt('spanish');
   }
 }
 
@@ -204,14 +153,9 @@ String textoIdiomaActual({
 // COLOR DEL IDIOMA
 // ============================================================================
 
-Color _colorIdioma({
-  required bool idiomaAuto,
-  required String idiomaActual,
-}) {
+Color _colorIdioma({required bool idiomaAuto, required String idiomaActual}) {
   if (idiomaAuto) {
-    return const Color(
-      0xFF00A896,
-    );
+    return const Color(0xFF00A896);
   }
 
   switch (idiomaActual) {
@@ -219,9 +163,7 @@ Color _colorIdioma({
       return Colors.deepPurple;
 
     case 'qu':
-      return const Color(
-        0xFF2E7D32,
-      );
+      return const Color(0xFF2E7D32);
 
     case 'es':
     default:
@@ -233,10 +175,7 @@ Color _colorIdioma({
 // ACERCA DE
 // ============================================================================
 
-void _mostrarAcercaDe(
-  BuildContext context,
-  bool modoOscuro,
-) {
+void _mostrarAcercaDe(BuildContext context, bool modoOscuro) {
   showDialog<void>(
     context: context,
     barrierColor: Colors.black.withValues(alpha: 0.48),
@@ -255,15 +194,9 @@ void _mostrarAcercaDe(
 
       return Dialog(
         backgroundColor: Colors.transparent,
-        insetPadding: const EdgeInsets.symmetric(
-          horizontal: 18,
-          vertical: 24,
-        ),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 24),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: 520,
-            maxHeight: 690,
-          ),
+          constraints: const BoxConstraints(maxWidth: 520, maxHeight: 690),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(30),
             child: Material(
@@ -274,7 +207,6 @@ void _mostrarAcercaDe(
                   // ==========================================================
                   // CABECERA
                   // ==========================================================
-
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.fromLTRB(20, 18, 14, 22),
@@ -319,9 +251,9 @@ void _mostrarAcercaDe(
                             height: 130,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: const Color(0xFFFFC300).withValues(
-                                alpha: modoOscuro ? 0.10 : 0.18,
-                              ),
+                              color: const Color(
+                                0xFFFFC300,
+                              ).withValues(alpha: modoOscuro ? 0.10 : 0.18),
                             ),
                           ),
                         ),
@@ -428,7 +360,6 @@ void _mostrarAcercaDe(
                   // ==========================================================
                   // CONTENIDO
                   // ==========================================================
-
                   Flexible(
                     child: SingleChildScrollView(
                       padding: const EdgeInsets.fromLTRB(20, 20, 20, 22),
@@ -547,9 +478,9 @@ void _mostrarAcercaDe(
                                   : const Color(0xFFF8F3FC),
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
-                                color: const Color(0xFF7B2CBF).withValues(
-                                  alpha: modoOscuro ? 0.18 : 0.11,
-                                ),
+                                color: const Color(
+                                  0xFF7B2CBF,
+                                ).withValues(alpha: modoOscuro ? 0.18 : 0.11),
                               ),
                             ),
                             child: Row(
@@ -571,7 +502,8 @@ void _mostrarAcercaDe(
                                 const SizedBox(width: 13),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         T.txt('developers'),
@@ -631,300 +563,148 @@ void _mostrarAcercaDe(
 // HOJA DE CONFIGURACIÓN
 // ============================================================================
 
-void showConfigSheet(
-  BuildContext context,
-) {
+void showConfigSheet(BuildContext context) {
   showModalBottomSheet<void>(
-    context:
-        context,
-    isScrollControlled:
-        true,
-    backgroundColor:
-        Colors.transparent,
-    builder:
-        (
-      BuildContext sheetContext,
-    ) {
-      final double altoPantalla =
-          MediaQuery.of(
-        sheetContext,
-      ).size.height;
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (BuildContext sheetContext) {
+      final double altoPantalla = MediaQuery.of(sheetContext).size.height;
 
-      return ValueListenableBuilder<
-          ThemeMode>(
-        valueListenable:
-            AppConfig.temaApp,
-        builder:
-            (
-          context,
-          temaActual,
-          _,
-        ) {
+      return ValueListenableBuilder<ThemeMode>(
+        valueListenable: AppConfig.temaApp,
+        builder: (context, temaActual, _) {
           final bool modoOscuro =
-              Theme.of(
-                context,
-              ).brightness ==
-              Brightness.dark;
+              Theme.of(context).brightness == Brightness.dark;
 
-          final Color fondoModal =
-              modoOscuro
-                  ? const Color(
-                      0xFF15131A,
-                    )
-                  : const Color(
-                      0xFFFAF7F2,
-                    );
+          final Color fondoModal = modoOscuro
+              ? const Color(0xFF15131A)
+              : const Color(0xFFFAF7F2);
 
-          final Color
-              textoSecundario =
-              modoOscuro
-                  ? Colors.white70
-                  : Colors.black54;
+          final Color textoSecundario = modoOscuro
+              ? Colors.white70
+              : Colors.black54;
 
-          final Color
-              colorApariencia =
-              colorTema(
-            temaActual,
-          );
+          final Color colorApariencia = colorTema(temaActual);
 
           return Container(
-            decoration:
-                BoxDecoration(
-              color:
-                  fondoModal,
-              borderRadius:
-                  const BorderRadius.vertical(
-                top:
-                    Radius.circular(
-                  28,
-                ),
+            decoration: BoxDecoration(
+              color: fondoModal,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(28),
               ),
             ),
-            child:
-                SafeArea(
-              child:
-                  ConstrainedBox(
-                constraints:
-                    BoxConstraints(
-                  maxHeight:
-                      altoPantalla *
-                          0.92,
-                ),
-                child:
-                    SingleChildScrollView(
-                  padding:
-                      EdgeInsets.only(
-                    left:
-                        18,
-                    right:
-                        18,
-                    top:
-                        18,
-                    bottom:
-                        MediaQuery.of(
-                              context,
-                            )
-                                .viewInsets
-                                .bottom +
-                            22,
+            child: SafeArea(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: altoPantalla * 0.92),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                    left: 18,
+                    right: 18,
+                    top: 18,
+                    bottom: MediaQuery.of(context).viewInsets.bottom + 22,
                   ),
-                  child:
-                      ValueListenableBuilder<
-                          String>(
-                    valueListenable:
-                        AppConfig.idioma,
-                    builder:
-                        (
-                      context,
-                      idiomaActual,
-                      _,
-                    ) {
-                      return ValueListenableBuilder<
-                          bool>(
-                        valueListenable:
-                            AppConfig
-                                .idiomaAuto,
-                        builder:
-                            (
-                          context,
-                          idiomaAuto,
-                          _,
-                        ) {
-                          return ValueListenableBuilder<
-                              bool>(
-                            valueListenable:
-                                AppConfig
-                                    .sonidosActivos,
-                            builder:
-                                (
-                              context,
-                              sonidosActivos,
-                              _,
-                            ) {
-                              return ValueListenableBuilder<
-                                  bool>(
-                                valueListenable:
-                                    AppConfig
-                                        .vibracionActiva,
-                                builder:
-                                    (
-                                  context,
-                                  vibracionActiva,
-                                  _,
-                                ) {
-                                  final Color
-                                      colorIdioma =
-                                      _colorIdioma(
-                                    idiomaAuto:
-                                        idiomaAuto,
-                                    idiomaActual:
-                                        idiomaActual,
+                  child: ValueListenableBuilder<String>(
+                    valueListenable: AppConfig.idioma,
+                    builder: (context, idiomaActual, _) {
+                      return ValueListenableBuilder<bool>(
+                        valueListenable: AppConfig.idiomaAuto,
+                        builder: (context, idiomaAuto, _) {
+                          return ValueListenableBuilder<bool>(
+                            valueListenable: AppConfig.sonidosActivos,
+                            builder: (context, sonidosActivos, _) {
+                              return ValueListenableBuilder<bool>(
+                                valueListenable: AppConfig.vibracionActiva,
+                                builder: (context, vibracionActiva, _) {
+                                  final Color colorIdioma = _colorIdioma(
+                                    idiomaAuto: idiomaAuto,
+                                    idiomaActual: idiomaActual,
                                   );
 
                                   return Column(
-                                    mainAxisSize:
-                                        MainAxisSize.min,
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       // ======================================================
                                       // INDICADOR
                                       // ======================================================
-
                                       Container(
-                                        width:
-                                            48,
-                                        height:
-                                            5,
-                                        decoration:
-                                            BoxDecoration(
-                                          color:
-                                              modoOscuro
-                                                  ? Colors.white24
-                                                  : Colors.black26,
-                                          borderRadius:
-                                              BorderRadius.circular(
+                                        width: 48,
+                                        height: 5,
+                                        decoration: BoxDecoration(
+                                          color: modoOscuro
+                                              ? Colors.white24
+                                              : Colors.black26,
+                                          borderRadius: BorderRadius.circular(
                                             20,
                                           ),
                                         ),
                                       ),
 
-                                      const SizedBox(
-                                        height:
-                                            18,
-                                      ),
+                                      const SizedBox(height: 18),
 
                                       // ======================================================
                                       // ICONO
                                       // ======================================================
-
                                       Container(
-                                        width:
-                                            74,
-                                        height:
-                                            74,
-                                        decoration:
-                                            BoxDecoration(
-                                          gradient:
-                                              LinearGradient(
+                                        width: 74,
+                                        height: 74,
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
                                             colors: [
                                               Colors.deepPurple.withValues(
-                                                alpha:
-                                                    modoOscuro
-                                                        ? 0.38
-                                                        : 0.22,
+                                                alpha: modoOscuro ? 0.38 : 0.22,
                                               ),
                                               Colors.deepPurple.withValues(
-                                                alpha:
-                                                    modoOscuro
-                                                        ? 0.16
-                                                        : 0.08,
+                                                alpha: modoOscuro ? 0.16 : 0.08,
                                               ),
                                             ],
                                           ),
-                                          shape:
-                                              BoxShape.circle,
+                                          shape: BoxShape.circle,
                                         ),
-                                        child:
-                                            const Icon(
+                                        child: const Icon(
                                           Icons.settings_rounded,
-                                          size:
-                                              42,
-                                          color:
-                                              Colors.deepPurple,
+                                          size: 42,
+                                          color: Colors.deepPurple,
                                         ),
                                       ),
 
-                                      const SizedBox(
-                                        height:
-                                            14,
-                                      ),
+                                      const SizedBox(height: 14),
 
                                       Text(
-                                        T.txt(
-                                          'settingsTitle',
-                                        ),
-                                        textAlign:
-                                            TextAlign.center,
-                                        style:
-                                            TextStyle(
-                                          fontFamily:
-                                              'Fredoka',
-                                          fontSize:
-                                              28,
-                                          fontWeight:
-                                              FontWeight.w700,
-                                          color:
-                                              modoOscuro
-                                                  ? Colors.white
-                                                  : const Color(
-                                                      0xFF4A2C82,
-                                                    ),
+                                        T.txt('settingsTitle'),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontFamily: 'Fredoka',
+                                          fontSize: 28,
+                                          fontWeight: FontWeight.w700,
+                                          color: modoOscuro
+                                              ? Colors.white
+                                              : const Color(0xFF4A2C82),
                                         ),
                                       ),
 
-                                      const SizedBox(
-                                        height:
-                                            18,
-                                      ),
+                                      const SizedBox(height: 18),
 
                                       // ======================================================
                                       // SONIDOS
                                       // ======================================================
-
                                       SettingCard(
-                                        color:
-                                            sonidosActivos
-                                                ? Colors.green
-                                                : Colors.redAccent,
-                                        icon:
-                                            sonidosActivos
-                                                ? Icons.volume_up_rounded
-                                                : Icons.volume_off_rounded,
-                                        title:
-                                            T.txt(
-                                          'sounds',
-                                        ),
-                                        subtitle:
-                                            sonidosActivos
-                                                ? T.txt(
-                                                    'enabled',
-                                                  )
-                                                : T.txt(
-                                                    'disabled',
-                                                  ),
-                                        modoOscuro:
-                                            modoOscuro,
-                                        trailing:
-                                            AdaptiveSwitch(
-                                          value:
-                                              sonidosActivos,
-                                          activeColor:
-                                              Colors.green,
-                                          inactiveColor:
-                                              Colors.redAccent,
-                                          onChanged:
-                                              (
-                                            bool valor,
-                                          ) async {
+                                        color: sonidosActivos
+                                            ? Colors.green
+                                            : Colors.redAccent,
+                                        icon: sonidosActivos
+                                            ? Icons.volume_up_rounded
+                                            : Icons.volume_off_rounded,
+                                        title: T.txt('sounds'),
+                                        subtitle: sonidosActivos
+                                            ? T.txt('enabled')
+                                            : T.txt('disabled'),
+                                        modoOscuro: modoOscuro,
+                                        trailing: AdaptiveSwitch(
+                                          value: sonidosActivos,
+                                          activeColor: Colors.green,
+                                          inactiveColor: Colors.redAccent,
+                                          onChanged: (bool valor) async {
                                             if (!valor) {
                                               await _reproducirSonidoSwitch();
                                             }
@@ -940,67 +720,39 @@ void showConfigSheet(
                                         ),
                                       ),
 
-                                      const SizedBox(
-                                        height:
-                                            14,
-                                      ),
+                                      const SizedBox(height: 14),
 
                                       // ======================================================
                                       // IDIOMA
                                       // ======================================================
-
                                       SettingCard(
-                                        color:
-                                            colorIdioma,
-                                        icon:
-                                            idiomaAuto
-                                                ? Icons.translate_rounded
-                                                : Icons.language_rounded,
-                                        title:
-                                            T.txt(
-                                          'language',
-                                        ),
-                                        subtitle:
-                                            idiomaAuto
-                                                ? T.txt(
-                                                    'languageAutoSubtitle',
-                                                  )
-                                                : textoIdiomaActual(
-                                                    idiomaAuto:
-                                                        idiomaAuto,
-                                                    idiomaActual:
-                                                        idiomaActual,
-                                                  ),
-                                        modoOscuro:
-                                            modoOscuro,
-                                        trailing:
-                                            LanguageSelector(
-                                          idiomaActual:
-                                              idiomaActual,
-                                          idiomaAuto:
-                                              idiomaAuto,
-                                          modoOscuro:
-                                              modoOscuro,
+                                        color: colorIdioma,
+                                        icon: idiomaAuto
+                                            ? Icons.translate_rounded
+                                            : Icons.language_rounded,
+                                        title: T.txt('language'),
+                                        subtitle: idiomaAuto
+                                            ? T.txt('languageAutoSubtitle')
+                                            : textoIdiomaActual(
+                                                idiomaAuto: idiomaAuto,
+                                                idiomaActual: idiomaActual,
+                                              ),
+                                        modoOscuro: modoOscuro,
+                                        trailing: LanguageSelector(
+                                          idiomaActual: idiomaActual,
+                                          idiomaAuto: idiomaAuto,
+                                          modoOscuro: modoOscuro,
                                         ),
                                       ),
 
                                       // ======================================================
                                       // VIBRACIÓN
                                       // ======================================================
-
-                                      FutureBuilder<
-                                          bool>(
-                                        future:
-                                            dispositivoPermiteVibracion(),
-                                        builder:
-                                            (
-                                          context,
-                                          snapshot,
-                                        ) {
-                                          final bool
-                                              puedeVibrar =
-                                              snapshot.data ??
-                                                  false;
+                                      FutureBuilder<bool>(
+                                        future: dispositivoPermiteVibracion(),
+                                        builder: (context, snapshot) {
+                                          final bool puedeVibrar =
+                                              snapshot.data ?? false;
 
                                           if (!puedeVibrar) {
                                             return const SizedBox.shrink();
@@ -1008,47 +760,27 @@ void showConfigSheet(
 
                                           return Column(
                                             children: [
-                                              const SizedBox(
-                                                height:
-                                                    14,
-                                              ),
+                                              const SizedBox(height: 14),
                                               SettingCard(
-                                                color:
-                                                    vibracionActiva
-                                                        ? Colors.orange
-                                                        : Colors.blueGrey,
-                                                icon:
-                                                    vibracionActiva
-                                                        ? Icons.vibration_rounded
-                                                        : Icons.phone_android_rounded,
-                                                title:
-                                                    T.txt(
-                                                  'vibration',
-                                                ),
-                                                subtitle:
-                                                    vibracionActiva
-                                                        ? T.txt(
-                                                            'vibrationOn',
-                                                          )
-                                                        : T.txt(
-                                                            'vibrationOff',
-                                                          ),
-                                                modoOscuro:
-                                                    modoOscuro,
-                                                trailing:
-                                                    AdaptiveSwitch(
-                                                  value:
-                                                      vibracionActiva,
-                                                  activeColor:
-                                                      Colors.orange,
+                                                color: vibracionActiva
+                                                    ? Colors.orange
+                                                    : Colors.blueGrey,
+                                                icon: vibracionActiva
+                                                    ? Icons.vibration_rounded
+                                                    : Icons
+                                                          .phone_android_rounded,
+                                                title: T.txt('vibration'),
+                                                subtitle: vibracionActiva
+                                                    ? T.txt('vibrationOn')
+                                                    : T.txt('vibrationOff'),
+                                                modoOscuro: modoOscuro,
+                                                trailing: AdaptiveSwitch(
+                                                  value: vibracionActiva,
+                                                  activeColor: Colors.orange,
                                                   inactiveColor:
                                                       Colors.blueGrey,
-                                                  onChanged:
-                                                      (
-                                                    bool valor,
-                                                  ) async {
-                                                    await AppConfig
-                                                        .cambiarVibracion(
+                                                  onChanged: (bool valor) async {
+                                                    await AppConfig.cambiarVibracion(
                                                       valor,
                                                     );
 
@@ -1063,138 +795,78 @@ void showConfigSheet(
                                         },
                                       ),
 
-                                      const SizedBox(
-                                        height:
-                                            14,
-                                      ),
+                                      const SizedBox(height: 14),
 
                                       // ======================================================
                                       // APARIENCIA
                                       // ======================================================
-
                                       SettingCard(
-                                        color:
-                                            colorApariencia,
-                                        icon:
-                                            iconoTema(
-                                          temaActual,
-                                        ),
-                                        title:
-                                            T.txt(
-                                          'appearance',
-                                        ),
-                                        subtitle:
-                                            textoTema(
-                                          temaActual,
-                                        ),
-                                        modoOscuro:
-                                            modoOscuro,
-                                        trailing:
-                                            ThemeSelector(
-                                          temaActual:
-                                              temaActual,
-                                          modoOscuro:
-                                              modoOscuro,
+                                        color: colorApariencia,
+                                        icon: iconoTema(temaActual),
+                                        title: T.txt('appearance'),
+                                        subtitle: textoTema(temaActual),
+                                        modoOscuro: modoOscuro,
+                                        trailing: ThemeSelector(
+                                          temaActual: temaActual,
+                                          modoOscuro: modoOscuro,
                                           onChanged:
-                                              (
-                                            ThemeMode nuevoTema,
-                                          ) async {
-                                            await AppConfig.cambiarTema(
-                                              nuevoTema,
-                                            );
-                                          },
+                                              (ThemeMode nuevoTema) async {
+                                                await AppConfig.cambiarTema(
+                                                  nuevoTema,
+                                                );
+                                              },
                                         ),
                                       ),
 
-                                      const SizedBox(
-                                        height:
-                                            14,
-                                      ),
+                                      const SizedBox(height: 14),
 
                                       // ======================================================
                                       // PRIVACIDAD
                                       // ======================================================
-
                                       SettingCard(
-                                        color:
-                                            Colors.teal,
-                                        icon:
-                                            Icons.privacy_tip_outlined,
-                                        title:
-                                            T.txt(
-                                          'privacyAndData',
-                                        ),
-                                        subtitle:
-                                            T.txt(
+                                        color: Colors.teal,
+                                        icon: Icons.privacy_tip_outlined,
+                                        title: T.txt('privacyAndData'),
+                                        subtitle: T.txt(
                                           'privacySettingsSubtitle',
                                         ),
-                                        modoOscuro:
-                                            modoOscuro,
-                                        trailing:
-                                            IconButton(
-                                          tooltip:
-                                              T.txt(
-                                            'privacyAndData',
-                                          ),
-                                          icon:
-                                              const Icon(
+                                        modoOscuro: modoOscuro,
+                                        trailing: IconButton(
+                                          tooltip: T.txt('privacyAndData'),
+                                          icon: const Icon(
                                             Icons.chevron_right_rounded,
                                           ),
-                                          color:
-                                              Colors.teal,
-                                          onPressed:
-                                              () {
-                                            Navigator.of(
-                                              context,
-                                            ).push(
+                                          color: Colors.teal,
+                                          onPressed: () {
+                                            Navigator.of(context).push(
                                               MaterialPageRoute<void>(
-                                                builder:
-                                                    (
-                                                  context,
-                                                ) =>
-                                                        PrivacyPage(),
+                                                builder: (context) =>
+                                                    PrivacyPage(),
                                               ),
                                             );
                                           },
                                         ),
                                       ),
 
-                                      const SizedBox(
-                                        height:
-                                            14,
-                                      ),
+                                      const SizedBox(height: 14),
 
                                       // ======================================================
                                       // ACERCA DE
                                       // ======================================================
-
                                       SettingCard(
-                                        color:
-                                            Colors.lightBlue,
-                                        icon:
-                                            Icons.info_outline_rounded,
-                                        title:
-                                            T.txt(
-                                          'aboutApp',
-                                        ),
+                                        color: Colors.lightBlue,
+                                        icon: Icons.info_outline_rounded,
+                                        title: T.txt('aboutApp'),
                                         subtitle:
                                             '${T.txt('appVersion')} $_appVersion',
-                                        modoOscuro:
-                                            modoOscuro,
-                                        trailing:
-                                            IconButton(
-                                          tooltip:
-                                              T.txt(
-                                            'aboutApp',
-                                          ),
-                                          icon:
-                                              const Icon(
+                                        modoOscuro: modoOscuro,
+                                        trailing: IconButton(
+                                          tooltip: T.txt('aboutApp'),
+                                          icon: const Icon(
                                             Icons.chevron_right_rounded,
                                           ),
-                                          color:
-                                              Colors.lightBlue,
-                                          onPressed:
-                                              () {
+                                          color: Colors.lightBlue,
+                                          onPressed: () {
                                             _mostrarAcercaDe(
                                               context,
                                               modoOscuro,
@@ -1203,34 +875,20 @@ void showConfigSheet(
                                         ),
                                       ),
 
-                                      const SizedBox(
-                                        height:
-                                            16,
-                                      ),
+                                      const SizedBox(height: 16),
 
                                       Text(
-                                        T.txt(
-                                          'settingsNote',
-                                        ),
-                                        textAlign:
-                                            TextAlign.center,
-                                        style:
-                                            TextStyle(
-                                          fontFamily:
-                                              'Baloo2',
-                                          fontSize:
-                                              15.5,
-                                          height:
-                                              1.3,
-                                          color:
-                                              textoSecundario,
+                                        T.txt('settingsNote'),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontFamily: 'Baloo2',
+                                          fontSize: 15.5,
+                                          height: 1.3,
+                                          color: textoSecundario,
                                         ),
                                       ),
 
-                                      const SizedBox(
-                                        height:
-                                            8,
-                                      ),
+                                      const SizedBox(height: 8),
                                     ],
                                   );
                                 },
@@ -1294,11 +952,7 @@ class _AboutSectionCard extends StatelessWidget {
               color: color.withValues(alpha: modoOscuro ? 0.22 : 0.13),
               borderRadius: BorderRadius.circular(14),
             ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 25,
-            ),
+            child: Icon(icon, color: color, size: 25),
           ),
           const SizedBox(height: 11),
           Text(
@@ -1344,10 +998,7 @@ class _AboutFeatureChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 11,
-        vertical: 8,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
       decoration: BoxDecoration(
         color: color.withValues(alpha: modoOscuro ? 0.15 : 0.08),
         borderRadius: BorderRadius.circular(30),
@@ -1358,11 +1009,7 @@ class _AboutFeatureChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            size: 17,
-            color: color,
-          ),
+          Icon(icon, size: 17, color: color),
           const SizedBox(width: 6),
           Text(
             text,
@@ -1402,156 +1049,71 @@ class SettingCard extends StatelessWidget {
   });
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder:
-          (
-        context,
-        constraints,
-      ) {
-        final bool estrecho =
-            constraints.maxWidth <
-                430;
+      builder: (context, constraints) {
+        final bool estrecho = constraints.maxWidth < 430;
 
         return Container(
-          width:
-              double.infinity,
-          padding:
-              EdgeInsets.all(
-            estrecho
-                ? 14
-                : 16,
-          ),
-          decoration:
-              BoxDecoration(
-            gradient:
-                LinearGradient(
+          width: double.infinity,
+          padding: EdgeInsets.all(estrecho ? 14 : 16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
               colors: [
-                modoOscuro
-                    ? const Color(
-                        0xFF211B2E,
-                      )
-                    : Colors.white,
-                color.withValues(
-                  alpha:
-                      modoOscuro
-                          ? 0.18
-                          : 0.09,
-                ),
+                modoOscuro ? const Color(0xFF211B2E) : Colors.white,
+                color.withValues(alpha: modoOscuro ? 0.18 : 0.09),
               ],
-              begin:
-                  Alignment.centerLeft,
-              end:
-                  Alignment.centerRight,
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
             ),
-            borderRadius:
-                BorderRadius.circular(
-              22,
-            ),
-            border:
-                Border.all(
-              color:
-                  color.withValues(
-                alpha:
-                    modoOscuro
-                        ? 0.30
-                        : 0.16,
-              ),
-              width:
-                  1.5,
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(
+              color: color.withValues(alpha: modoOscuro ? 0.30 : 0.16),
+              width: 1.5,
             ),
             boxShadow: [
               BoxShadow(
-                color:
-                    color.withValues(
-                  alpha:
-                      modoOscuro
-                          ? 0.10
-                          : 0.08,
-                ),
-                blurRadius:
-                    12,
-                offset:
-                    const Offset(
-                  0,
-                  5,
-                ),
+                color: color.withValues(alpha: modoOscuro ? 0.10 : 0.08),
+                blurRadius: 12,
+                offset: const Offset(0, 5),
               ),
             ],
           ),
-          child:
-              estrecho
-                  ? Column(
+          child: estrecho
+              ? Column(
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            SettingIcon(
-                              color:
-                                  color,
-                              icon:
-                                  icon,
-                            ),
-                            const SizedBox(
-                              width:
-                                  12,
-                            ),
-                            Expanded(
-                              child:
-                                  SettingText(
-                                title:
-                                    title,
-                                subtitle:
-                                    subtitle,
-                                modoOscuro:
-                                    modoOscuro,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height:
-                              12,
-                        ),
-                        Align(
-                          alignment:
-                              Alignment.centerRight,
-                          child:
-                              trailing,
-                        ),
-                      ],
-                    )
-                  : Row(
-                      children: [
-                        SettingIcon(
-                          color:
-                              color,
-                          icon:
-                              icon,
-                        ),
-                        const SizedBox(
-                          width:
-                              14,
-                        ),
+                        SettingIcon(color: color, icon: icon),
+                        const SizedBox(width: 12),
                         Expanded(
-                          child:
-                              SettingText(
-                            title:
-                                title,
-                            subtitle:
-                                subtitle,
-                            modoOscuro:
-                                modoOscuro,
+                          child: SettingText(
+                            title: title,
+                            subtitle: subtitle,
+                            modoOscuro: modoOscuro,
                           ),
                         ),
-                        const SizedBox(
-                          width:
-                              12,
-                        ),
-                        trailing,
                       ],
                     ),
+                    const SizedBox(height: 12),
+                    Align(alignment: Alignment.centerRight, child: trailing),
+                  ],
+                )
+              : Row(
+                  children: [
+                    SettingIcon(color: color, icon: icon),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: SettingText(
+                        title: title,
+                        subtitle: subtitle,
+                        modoOscuro: modoOscuro,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    trailing,
+                  ],
+                ),
         );
       },
     );
@@ -1566,49 +1128,23 @@ class SettingIcon extends StatelessWidget {
   final Color color;
   final IconData icon;
 
-  const SettingIcon({
-    super.key,
-    required this.color,
-    required this.icon,
-  });
+  const SettingIcon({super.key, required this.color, required this.icon});
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     return Container(
-      width:
-          52,
-      height:
-          52,
-      decoration:
-          BoxDecoration(
-        gradient:
-            LinearGradient(
+      width: 52,
+      height: 52,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
           colors: [
-            color.withValues(
-              alpha:
-                  0.25,
-            ),
-            color.withValues(
-              alpha:
-                  0.10,
-            ),
+            color.withValues(alpha: 0.25),
+            color.withValues(alpha: 0.10),
           ],
         ),
-        borderRadius:
-            BorderRadius.circular(
-          16,
-        ),
+        borderRadius: BorderRadius.circular(16),
       ),
-      child:
-          Icon(
-        icon,
-        color:
-            color,
-        size:
-            30,
-      ),
+      child: Icon(icon, color: color, size: 30),
     );
   }
 }
@@ -1630,61 +1166,33 @@ class SettingText extends StatelessWidget {
   });
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          maxLines:
-              2,
-          overflow:
-              TextOverflow.ellipsis,
-          style:
-              TextStyle(
-            fontFamily:
-                'Fredoka',
-            fontSize:
-                19,
-            height:
-                1.05,
-            fontWeight:
-                FontWeight.w700,
-            color:
-                modoOscuro
-                    ? Colors.white
-                    : const Color(
-                        0xFF2D2D2D,
-                      ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontFamily: 'Fredoka',
+            fontSize: 19,
+            height: 1.05,
+            fontWeight: FontWeight.w700,
+            color: modoOscuro ? Colors.white : const Color(0xFF2D2D2D),
           ),
         ),
-        const SizedBox(
-          height:
-              4,
-        ),
+        const SizedBox(height: 4),
         Text(
           subtitle,
-          maxLines:
-              3,
-          overflow:
-              TextOverflow.ellipsis,
-          style:
-              TextStyle(
-            fontFamily:
-                'Baloo2',
-            fontSize:
-                15,
-            height:
-                1.2,
-            fontWeight:
-                FontWeight.w500,
-            color:
-                modoOscuro
-                    ? Colors.white70
-                    : Colors.black54,
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontFamily: 'Baloo2',
+            fontSize: 15,
+            height: 1.2,
+            fontWeight: FontWeight.w500,
+            color: modoOscuro ? Colors.white70 : Colors.black54,
           ),
         ),
       ],
@@ -1696,14 +1204,11 @@ class SettingText extends StatelessWidget {
 // SWITCH
 // ============================================================================
 
-class AdaptiveSwitch
-    extends StatelessWidget {
+class AdaptiveSwitch extends StatelessWidget {
   final bool value;
   final Color activeColor;
   final Color inactiveColor;
-  final Future<void> Function(
-    bool valor,
-  ) onChanged;
+  final Future<void> Function(bool valor) onChanged;
 
   const AdaptiveSwitch({
     super.key,
@@ -1714,23 +1219,13 @@ class AdaptiveSwitch
   });
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     return Switch(
-      value:
-          value,
-      activeThumbColor:
-          activeColor,
-      inactiveThumbColor:
-          inactiveColor,
-      onChanged:
-          (
-        bool valor,
-      ) async {
-        await onChanged(
-          valor,
-        );
+      value: value,
+      activeThumbColor: activeColor,
+      inactiveThumbColor: inactiveColor,
+      onChanged: (bool valor) async {
+        await onChanged(valor);
       },
     );
   }
@@ -1740,8 +1235,7 @@ class AdaptiveSwitch
 // SELECTOR DE IDIOMA
 // ============================================================================
 
-class LanguageSelector
-    extends StatelessWidget {
+class LanguageSelector extends StatelessWidget {
   final String idiomaActual;
   final bool idiomaAuto;
   final bool modoOscuro;
@@ -1754,145 +1248,67 @@ class LanguageSelector
   });
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
-    final Color seleccionado =
-        _colorIdioma(
-      idiomaAuto:
-          idiomaAuto,
-      idiomaActual:
-          idiomaActual,
+  Widget build(BuildContext context) {
+    final Color seleccionado = _colorIdioma(
+      idiomaAuto: idiomaAuto,
+      idiomaActual: idiomaActual,
     );
 
-    final Color fondo =
-        modoOscuro
-            ? const Color(
-                0xFF15131A,
-              )
-            : const Color(
-                0xFFF2ECFF,
-              );
+    final Color fondo = modoOscuro
+        ? const Color(0xFF15131A)
+        : const Color(0xFFF2ECFF);
 
     return Container(
-      padding:
-          const EdgeInsets.all(
-        4,
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: fondo,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: seleccionado.withValues(alpha: 0.22)),
       ),
-      decoration:
-          BoxDecoration(
-        color:
-            fondo,
-        borderRadius:
-            BorderRadius.circular(
-          18,
-        ),
-        border:
-            Border.all(
-          color:
-              seleccionado.withValues(
-            alpha:
-                0.22,
-          ),
-        ),
-      ),
-      child:
-          Wrap(
-        spacing:
-            2,
-        runSpacing:
-            2,
-        alignment:
-            WrapAlignment.end,
+      child: Wrap(
+        spacing: 2,
+        runSpacing: 2,
+        alignment: WrapAlignment.end,
         children: [
           LanguageOptionButton(
-            text:
-                'A',
-            icon:
-                Icons.settings_suggest_rounded,
-            selected:
-                idiomaAuto,
-            selectedColor:
-                seleccionado,
-            modoOscuro:
-                modoOscuro,
-            tooltip:
-                T.txt(
-              'languageAutomatic',
-            ),
-            onTap:
-                () async {
-              await AppConfig
-                  .cambiarIdiomaAutomatico();
+            text: 'A',
+            icon: Icons.settings_suggest_rounded,
+            selected: idiomaAuto,
+            selectedColor: seleccionado,
+            modoOscuro: modoOscuro,
+            tooltip: T.txt('languageAutomatic'),
+            onTap: () async {
+              await AppConfig.cambiarIdiomaAutomatico();
             },
           ),
           LanguageOptionButton(
-            text:
-                'ES',
-            selected:
-                !idiomaAuto &&
-                idiomaActual ==
-                    'es',
-            selectedColor:
-                seleccionado,
-            modoOscuro:
-                modoOscuro,
-            tooltip:
-                T.txt(
-              'spanish',
-            ),
-            onTap:
-                () async {
-              await AppConfig
-                  .cambiarIdioma(
-                'es',
-              );
+            text: 'ES',
+            selected: !idiomaAuto && idiomaActual == 'es',
+            selectedColor: seleccionado,
+            modoOscuro: modoOscuro,
+            tooltip: T.txt('spanish'),
+            onTap: () async {
+              await AppConfig.cambiarIdioma('es');
             },
           ),
           LanguageOptionButton(
-            text:
-                'EN',
-            selected:
-                !idiomaAuto &&
-                idiomaActual ==
-                    'en',
-            selectedColor:
-                seleccionado,
-            modoOscuro:
-                modoOscuro,
-            tooltip:
-                T.txt(
-              'english',
-            ),
-            onTap:
-                () async {
-              await AppConfig
-                  .cambiarIdioma(
-                'en',
-              );
+            text: 'EN',
+            selected: !idiomaAuto && idiomaActual == 'en',
+            selectedColor: seleccionado,
+            modoOscuro: modoOscuro,
+            tooltip: T.txt('english'),
+            onTap: () async {
+              await AppConfig.cambiarIdioma('en');
             },
           ),
           LanguageOptionButton(
-            text:
-                'KI',
-            selected:
-                !idiomaAuto &&
-                idiomaActual ==
-                    'qu',
-            selectedColor:
-                seleccionado,
-            modoOscuro:
-                modoOscuro,
-            tooltip:
-                T.txt(
-              'kichwa',
-            ),
-            onTap:
-                () async {
-              await AppConfig
-                  .cambiarIdioma(
-                'qu',
-              );
+            text: 'KI',
+            selected: !idiomaAuto && idiomaActual == 'qu',
+            selectedColor: seleccionado,
+            modoOscuro: modoOscuro,
+            tooltip: T.txt('kichwa'),
+            onTap: () async {
+              await AppConfig.cambiarIdioma('qu');
             },
           ),
         ],
@@ -1905,16 +1321,14 @@ class LanguageSelector
 // BOTÓN DE IDIOMA
 // ============================================================================
 
-class LanguageOptionButton
-    extends StatelessWidget {
+class LanguageOptionButton extends StatelessWidget {
   final String text;
   final IconData? icon;
   final bool selected;
   final Color selectedColor;
   final bool modoOscuro;
   final String tooltip;
-  final Future<void> Function()
-      onTap;
+  final Future<void> Function() onTap;
 
   const LanguageOptionButton({
     super.key,
@@ -1928,108 +1342,55 @@ class LanguageOptionButton
   });
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     return Tooltip(
-      message:
-          tooltip,
-      child:
-          AnimatedContainer(
-        duration:
-            const Duration(
-          milliseconds:
-              220,
+      message: tooltip,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        margin: const EdgeInsets.symmetric(horizontal: 1),
+        decoration: BoxDecoration(
+          color: selected ? selectedColor : Colors.transparent,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: selected
+              ? [
+                  BoxShadow(
+                    color: selectedColor.withValues(alpha: 0.26),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ]
+              : const [],
         ),
-        margin:
-            const EdgeInsets.symmetric(
-          horizontal:
-              1,
-        ),
-        decoration:
-            BoxDecoration(
-          color:
-              selected
-                  ? selectedColor
-                  : Colors.transparent,
-          borderRadius:
-              BorderRadius.circular(
-            14,
-          ),
-          boxShadow:
-              selected
-                  ? [
-                      BoxShadow(
-                        color:
-                            selectedColor.withValues(
-                          alpha:
-                              0.26,
-                        ),
-                        blurRadius:
-                            8,
-                        offset:
-                            const Offset(
-                          0,
-                          3,
-                        ),
-                      ),
-                    ]
-                  : const [],
-        ),
-        child:
-            InkWell(
-          borderRadius:
-              BorderRadius.circular(
-            14,
-          ),
-          onTap:
-              () async {
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: () async {
             await onTap();
           },
-          child:
-              Padding(
-            padding:
-                const EdgeInsets.symmetric(
-              horizontal:
-                  9,
-              vertical:
-                  9,
-            ),
-            child:
-                icon != null
-                    ? Icon(
-                        icon,
-                        size:
-                            20,
-                        color:
-                            selected
-                                ? Colors.white
-                                : modoOscuro
-                                    ? Colors.white70
-                                    : const Color(
-                                        0xFF4A2C82,
-                                      ),
-                      )
-                    : Text(
-                        text,
-                        style:
-                            TextStyle(
-                          fontFamily:
-                              'Fredoka',
-                          fontSize:
-                              13,
-                          fontWeight:
-                              FontWeight.w800,
-                          color:
-                              selected
-                                  ? Colors.white
-                                  : modoOscuro
-                                      ? Colors.white70
-                                      : const Color(
-                                          0xFF4A2C82,
-                                        ),
-                        ),
-                      ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 9),
+            child: icon != null
+                ? Icon(
+                    icon,
+                    size: 20,
+                    color: selected
+                        ? Colors.white
+                        : modoOscuro
+                        ? Colors.white70
+                        : const Color(0xFF4A2C82),
+                  )
+                : Text(
+                    text,
+                    style: TextStyle(
+                      fontFamily: 'Fredoka',
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
+                      color: selected
+                          ? Colors.white
+                          : modoOscuro
+                          ? Colors.white70
+                          : const Color(0xFF4A2C82),
+                    ),
+                  ),
           ),
         ),
       ),
@@ -2041,13 +1402,10 @@ class LanguageOptionButton
 // SELECTOR DE TEMA
 // ============================================================================
 
-class ThemeSelector
-    extends StatelessWidget {
+class ThemeSelector extends StatelessWidget {
   final ThemeMode temaActual;
   final bool modoOscuro;
-  final Future<void> Function(
-    ThemeMode nuevoTema,
-  ) onChanged;
+  final Future<void> Function(ThemeMode nuevoTema) onChanged;
 
   const ThemeSelector({
     super.key,
@@ -2057,99 +1415,48 @@ class ThemeSelector
   });
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
-    final Color fondo =
-        modoOscuro
-            ? const Color(
-                0xFF15131A,
-              )
-            : const Color(
-                0xFFF2ECFF,
-              );
+  Widget build(BuildContext context) {
+    final Color fondo = modoOscuro
+        ? const Color(0xFF15131A)
+        : const Color(0xFFF2ECFF);
 
-    final Color seleccionado =
-        colorTema(
-      temaActual,
-    );
+    final Color seleccionado = colorTema(temaActual);
 
     return Container(
-      padding:
-          const EdgeInsets.all(
-        4,
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: fondo,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: seleccionado.withValues(alpha: 0.22)),
       ),
-      decoration:
-          BoxDecoration(
-        color:
-            fondo,
-        borderRadius:
-            BorderRadius.circular(
-          18,
-        ),
-        border:
-            Border.all(
-          color:
-              seleccionado.withValues(
-            alpha:
-                0.22,
-          ),
-        ),
-      ),
-      child:
-          Row(
-        mainAxisSize:
-            MainAxisSize.min,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           ThemeOptionButton(
-            icon:
-                Icons.brightness_auto_rounded,
-            selected:
-                temaActual ==
-                ThemeMode.system,
-            selectedColor:
-                seleccionado,
-            modoOscuro:
-                modoOscuro,
-            onTap:
-                () {
-              onChanged(
-                ThemeMode.system,
-              );
+            icon: Icons.brightness_auto_rounded,
+            selected: temaActual == ThemeMode.system,
+            selectedColor: seleccionado,
+            modoOscuro: modoOscuro,
+            onTap: () {
+              onChanged(ThemeMode.system);
             },
           ),
           ThemeOptionButton(
-            icon:
-                Icons.light_mode_rounded,
-            selected:
-                temaActual ==
-                ThemeMode.light,
-            selectedColor:
-                seleccionado,
-            modoOscuro:
-                modoOscuro,
-            onTap:
-                () {
-              onChanged(
-                ThemeMode.light,
-              );
+            icon: Icons.light_mode_rounded,
+            selected: temaActual == ThemeMode.light,
+            selectedColor: seleccionado,
+            modoOscuro: modoOscuro,
+            onTap: () {
+              onChanged(ThemeMode.light);
             },
           ),
           ThemeOptionButton(
-            icon:
-                Icons.dark_mode_rounded,
-            selected:
-                temaActual ==
-                ThemeMode.dark,
-            selectedColor:
-                seleccionado,
-            modoOscuro:
-                modoOscuro,
-            onTap:
-                () {
-              onChanged(
-                ThemeMode.dark,
-              );
+            icon: Icons.dark_mode_rounded,
+            selected: temaActual == ThemeMode.dark,
+            selectedColor: seleccionado,
+            modoOscuro: modoOscuro,
+            onTap: () {
+              onChanged(ThemeMode.dark);
             },
           ),
         ],
@@ -2162,8 +1469,7 @@ class ThemeSelector
 // BOTÓN DE TEMA
 // ============================================================================
 
-class ThemeOptionButton
-    extends StatelessWidget {
+class ThemeOptionButton extends StatelessWidget {
   final IconData icon;
   final bool selected;
   final Color selectedColor;
@@ -2180,77 +1486,36 @@ class ThemeOptionButton
   });
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration:
-          const Duration(
-        milliseconds:
-            220,
+      duration: const Duration(milliseconds: 220),
+      margin: const EdgeInsets.symmetric(horizontal: 2),
+      decoration: BoxDecoration(
+        color: selected ? selectedColor : Colors.transparent,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: selected
+            ? [
+                BoxShadow(
+                  color: selectedColor.withValues(alpha: 0.28),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ]
+            : const [],
       ),
-      margin:
-          const EdgeInsets.symmetric(
-        horizontal:
-            2,
-      ),
-      decoration:
-          BoxDecoration(
-        color:
-            selected
-                ? selectedColor
-                : Colors.transparent,
-        borderRadius:
-            BorderRadius.circular(
-          14,
-        ),
-        boxShadow:
-            selected
-                ? [
-                    BoxShadow(
-                      color:
-                          selectedColor.withValues(
-                        alpha:
-                            0.28,
-                      ),
-                      blurRadius:
-                          8,
-                      offset:
-                          const Offset(
-                        0,
-                        3,
-                      ),
-                    ),
-                  ]
-                : const [],
-      ),
-      child:
-          InkWell(
-        borderRadius:
-            BorderRadius.circular(
-          14,
-        ),
-        onTap:
-            onTap,
-        child:
-            Padding(
-          padding:
-              const EdgeInsets.all(
-            9,
-          ),
-          child:
-              Icon(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(9),
+          child: Icon(
             icon,
-            size:
-                22,
-            color:
-                selected
-                    ? Colors.white
-                    : modoOscuro
-                        ? Colors.white70
-                        : const Color(
-                            0xFF4A2C82,
-                          ),
+            size: 22,
+            color: selected
+                ? Colors.white
+                : modoOscuro
+                ? Colors.white70
+                : const Color(0xFF4A2C82),
           ),
         ),
       ),
