@@ -27,9 +27,9 @@ class _AppShellState extends State<AppShell> {
     super.initState();
     _paginas = const [
       HomePage(),
-      ChildrenPage(),
-      HealthPage(),
       LearningHubPage(),
+      HealthPage(),
+      ChildrenPage(),
     ];
   }
 
@@ -72,10 +72,10 @@ class _AppShellState extends State<AppShell> {
               ),
 
               LiquidGlassNavItem(
-                icon: Icons.child_care_outlined,
-                selectedIcon: Icons.child_care_rounded,
-                label: T.txt('navChildren'),
-                color: const Color(0xFF3A86FF),
+                icon: Icons.auto_stories_outlined,
+                selectedIcon: Icons.auto_stories_rounded,
+                label: T.txt('navLearning'),
+                color: const Color(0xFFFF9F1C),
               ),
 
               LiquidGlassNavItem(
@@ -86,10 +86,10 @@ class _AppShellState extends State<AppShell> {
               ),
 
               LiquidGlassNavItem(
-                icon: Icons.auto_stories_outlined,
-                selectedIcon: Icons.auto_stories_rounded,
-                label: T.txt('navLearning'),
-                color: const Color(0xFFFF9F1C),
+                icon: Icons.child_care_outlined,
+                selectedIcon: Icons.child_care_rounded,
+                label: T.txt('navChildren'),
+                color: const Color(0xFF6E56C6),
               ),
             ],
           );
