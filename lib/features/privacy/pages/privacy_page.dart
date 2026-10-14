@@ -476,7 +476,7 @@ class _PrivacyPageState
                 ),
 
                 // ================================================
-                // ELIMINAR TODO
+                // ELIMINAR DATOS
                 // ================================================
 
                 Container(
