@@ -1064,69 +1064,36 @@ class _GrowthChartsContentState
           // SELECTOR DE 5 GRÁFICAS
           // ==================================================================
 
-          SizedBox(
-            height:
-                112,
-            child:
-                ListView.separated(
-              scrollDirection:
-                  Axis.horizontal,
-              itemCount:
-                  _GrowthChartType
-                      .values
-                      .length,
-              separatorBuilder:
-                  (
-                context,
-                index,
-              ) =>
-                      const SizedBox(
-                width:
-                    10,
+          _LiquidGlassSelectorRail(
+            dark: widget.dark,
+            child: SizedBox(
+              height: 126,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: _GrowthChartType.values.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(width: 10),
+                itemBuilder: (context, index) {
+                  final _GrowthChartType type =
+                      _GrowthChartType.values[index];
+                  final bool available = _isAvailable(type);
+
+                  return _ChartSelectorCard(
+                    label: _selectorLabel(type),
+                    icon: _selectorIcon(type),
+                    selected: _selected == type,
+                    available: available,
+                    dark: widget.dark,
+                    onTap: available
+                        ? () {
+                            setState(() {
+                              _selected = type;
+                            });
+                          }
+                        : null,
+                  );
+                },
               ),
-              itemBuilder:
-                  (
-                context,
-                index,
-              ) {
-                final _GrowthChartType type =
-                    _GrowthChartType
-                        .values[index];
-
-                final bool available =
-                    _isAvailable(
-                  type,
-                );
-
-                return _ChartSelectorCard(
-                  label:
-                      _selectorLabel(
-                    type,
-                  ),
-                  icon:
-                      _selectorIcon(
-                    type,
-                  ),
-                  selected:
-                      _selected ==
-                          type,
-                  available:
-                      available,
-                  dark:
-                      widget.dark,
-                  onTap:
-                      available
-                          ? () {
-                              setState(
-                                () {
-                                  _selected =
-                                      type;
-                                },
-                              );
-                            }
-                          : null,
-                );
-              },
             ),
           ),
 
@@ -1793,82 +1760,48 @@ class _OfficialGrowthChartCard
           // ==================================================================
 
           Container(
-            height:
-                470,
-            width:
-                double.infinity,
-            clipBehavior:
-                Clip.antiAlias,
-            decoration:
-                BoxDecoration(
-              color:
-                  dark
-                      ? const Color(
-                          0xFF17141C,
-                        )
-                      : const Color(
-                          0xFFFEFEFE,
-                        ),
-              borderRadius:
-                  BorderRadius.circular(
-                18,
+            height: 470,
+            width: double.infinity,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              color: dark
+                  ? const Color(0xFF17141C)
+                  : const Color(0xFFFEFEFE),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: dark
+                    ? Colors.white.withValues(alpha: 0.07)
+                    : Colors.black.withValues(alpha: 0.06),
               ),
-              border:
-                  Border.all(
-                color:
-                    dark
-                        ? Colors.white.withValues(
-                            alpha:
-                                0.06,
-                          )
-                        : Colors.black.withValues(
-                            alpha:
-                                0.06,
-                          ),
-              ),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF00A896).withValues(
+                    alpha: dark ? 0.035 : 0.055,
+                  ),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                ),
+              ],
             ),
-            child:
-                InteractiveViewer(
-              minScale:
-                  0.7,
-              maxScale:
-                  5,
-              boundaryMargin:
-                  const EdgeInsets.all(
-                150,
-              ),
-              constrained:
-                  false,
-              child:
-                  _LiquidGlassSelectorRail(
-            dark: widget.dark,
-            child: SizedBox(
-              height: 126,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: _GrowthChartType.values.length,
-                separatorBuilder: (context, index) =>
-                    const SizedBox(width: 10),
-                itemBuilder: (context, index) {
-                  final _GrowthChartType type =
-                      _GrowthChartType.values[index];
-                  final bool available = _isAvailable(type);
-
-                  return _ChartSelectorCard(
-                    label: _selectorLabel(type),
-                    icon: _selectorIcon(type),
-                    selected: _selected == type,
-                    available: available,
-                    dark: widget.dark,
-                    onTap: available
-                        ? () {
-                            setState(() {
-                              _selected = type;
-                            });
-                          }
-                        : null,
-                  );
-                },
+            child: InteractiveViewer(
+              minScale: 0.7,
+              maxScale: 5,
+              boundaryMargin: const EdgeInsets.all(150),
+              constrained: false,
+              child: SizedBox(
+                width: 900,
+                height: 620,
+                child: CustomPaint(
+                  painter: _WhoGrowthChartPainter(
+                    table: spec.table,
+                    points: spec.points,
+                    dark: dark,
+                    pointColor: pointColor,
+                    spanish: spanish,
+                    xLabel: spec.xLabel,
+                    yLabel: spec.yLabel,
+                  ),
+                ),
               ),
             ),
           ),
