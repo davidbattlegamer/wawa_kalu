@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,26 +8,6 @@ import '../app_config.dart';
 import '../app_texts.dart';
 
 const String _appVersion = '1.1.0';
-final AudioPlayer _switchPlayer = AudioPlayer();
-
-// ============================================================================
-// SONIDO DEL SWITCH
-// ============================================================================
-
-Future<void> _reproducirSonidoSwitch() async {
-  if (!AppConfig.sonidosActivos.value) {
-    return;
-  }
-
-  try {
-    await _switchPlayer.stop();
-
-    await _switchPlayer.play(AssetSource('sonidos/switch.mp3'), volume: 0.55);
-  } catch (_) {
-    // El sonido de interfaz es opcional.
-  }
-}
-
 // ============================================================================
 // VIBRACIÓN
 // ============================================================================
@@ -648,10 +627,7 @@ void showConfigSheet(BuildContext context) {
                         valueListenable: AppConfig.idiomaAuto,
                         builder: (context, idiomaAuto, _) {
                           return ValueListenableBuilder<bool>(
-                            valueListenable: AppConfig.sonidosActivos,
-                            builder: (context, sonidosActivos, _) {
-                              return ValueListenableBuilder<bool>(
-                                valueListenable: AppConfig.vibracionActiva,
+                            valueListenable: AppConfig.vibracionActiva,
                                 builder: (context, vibracionActiva, _) {
                                   final Color colorIdioma = _colorIdioma(
                                     idiomaAuto: idiomaAuto,
@@ -721,43 +697,6 @@ void showConfigSheet(BuildContext context) {
                                       ),
 
                                       const SizedBox(height: 18),
-
-                                      // ======================================================
-                                      // SONIDOS
-                                      // ======================================================
-                                      SettingCard(
-                                        color: sonidosActivos
-                                            ? Colors.green
-                                            : Colors.redAccent,
-                                        icon: sonidosActivos
-                                            ? Icons.volume_up_rounded
-                                            : Icons.volume_off_rounded,
-                                        title: T.txt('sounds'),
-                                        subtitle: sonidosActivos
-                                            ? T.txt('enabled')
-                                            : T.txt('disabled'),
-                                        modoOscuro: modoOscuro,
-                                        trailing: AdaptiveSwitch(
-                                          value: sonidosActivos,
-                                          activeColor: Colors.green,
-                                          inactiveColor: Colors.redAccent,
-                                          onChanged: (bool valor) async {
-                                            if (!valor) {
-                                              await _reproducirSonidoSwitch();
-                                            }
-
-                                            await AppConfig.cambiarSonidos(
-                                              valor,
-                                            );
-
-                                            if (valor) {
-                                              await _reproducirSonidoSwitch();
-                                            }
-                                          },
-                                        ),
-                                      ),
-
-                                      const SizedBox(height: 14),
 
                                       // ======================================================
                                       // IDIOMA
@@ -930,8 +869,6 @@ void showConfigSheet(BuildContext context) {
                                   );
                                 },
                               );
-                            },
-                          );
                         },
                       );
                     },
