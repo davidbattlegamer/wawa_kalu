@@ -34,6 +34,7 @@ class T {
   static Set<String> get kichwaKeys => Set<String>.unmodifiable(_kichwa.keys);
 
   static final Map<String, String> _spanish = <String, String>{
+    'growthYearShort': 'a',
     'guideActTexturesTitle': 'Un mundo de texturas',
     'guideActTexturesSubtitle': 'Explorar con las manos y descubrir diferencias.',
     'guideActTexturesGoal': 'Favorecer la exploración sensorial, la atención y las primeras palabras.',
@@ -1108,6 +1109,7 @@ class T {
   };
 
   static final Map<String, String> _english = <String, String>{
+    'growthYearShort': 'y',
     'guideActTexturesTitle': 'A world of textures',
     'guideActTexturesSubtitle': 'Explore with little hands and notice differences.',
     'guideActTexturesGoal': 'Encourage sensory exploration, attention and early vocabulary.',
@@ -2177,6 +2179,7 @@ class T {
   // MSP, debe ser revisada por un/a hablante o traductor/a de Kichwa ecuatoriano,
   // especialmente los textos de vacunas, crecimiento, nutrición y alertas.
   static final Map<String, String> _kichwa = <String, String>{
+    'growthYearShort': 'w',
     'guideActTexturesTitle': 'Rikchaykunapa pachamama',
     'guideActTexturesSubtitle': 'Makiwan taripay, chikan chikan rikchaykunata riksiy.',
     'guideActTexturesGoal': 'Sensoriota taripayta, yuyayta, kallari shimikunatapash yanapay.',
