@@ -801,6 +801,14 @@ void showConfigSheet(BuildContext context) {
                                             Icons.chevron_right_rounded,
                                           ),
                                           color: Colors.teal,
+                                          style: IconButton.styleFrom(
+                                            backgroundColor: Colors.teal
+                                                .withValues(alpha: 0.10),
+                                            side: BorderSide(
+                                              color: Colors.teal
+                                                  .withValues(alpha: 0.14),
+                                            ),
+                                          ),
                                           onPressed: () {
                                             Navigator.of(context).push(
                                               MaterialPageRoute<void>(
@@ -830,6 +838,14 @@ void showConfigSheet(BuildContext context) {
                                             Icons.chevron_right_rounded,
                                           ),
                                           color: Colors.lightBlue,
+                                          style: IconButton.styleFrom(
+                                            backgroundColor: Colors.lightBlue
+                                                .withValues(alpha: 0.10),
+                                            side: BorderSide(
+                                              color: Colors.lightBlue
+                                                  .withValues(alpha: 0.14),
+                                            ),
+                                          ),
                                           onPressed: () {
                                             _mostrarAcercaDe(
                                               context,
@@ -1583,13 +1599,41 @@ class AdaptiveSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Switch(
-      value: value,
-      activeThumbColor: activeColor,
-      inactiveThumbColor: inactiveColor,
-      onChanged: (bool valor) async {
-        await onChanged(valor);
-      },
+    final bool dark =
+        Theme.of(context).brightness == Brightness.dark;
+    final Color accent = value ? activeColor : inactiveColor;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 3,
+        vertical: 2,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(
+          alpha: dark ? 0.06 : 0.58,
+        ),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(
+          color: accent.withValues(alpha: 0.18),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: accent.withValues(alpha: 0.10),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Switch(
+        value: value,
+        activeThumbColor: Colors.white,
+        activeTrackColor: activeColor,
+        inactiveThumbColor: Colors.white,
+        inactiveTrackColor: inactiveColor.withValues(alpha: 0.44),
+        onChanged: (bool valor) async {
+          await onChanged(valor);
+        },
+      ),
     );
   }
 }
@@ -1617,16 +1661,33 @@ class LanguageSelector extends StatelessWidget {
       idiomaActual: idiomaActual,
     );
 
-    final Color fondo = modoOscuro
-        ? const Color(0xFF15131A)
-        : const Color(0xFFF2ECFF);
-
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: fondo,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: seleccionado.withValues(alpha: 0.22)),
+        gradient: LinearGradient(
+          colors: modoOscuro
+              ? [
+                  Colors.white.withValues(alpha: 0.075),
+                  seleccionado.withValues(alpha: 0.08),
+                ]
+              : [
+                  Colors.white.withValues(alpha: 0.72),
+                  seleccionado.withValues(alpha: 0.065),
+                ],
+        ),
+        borderRadius: BorderRadius.circular(19),
+        border: Border.all(
+          color: Colors.white.withValues(
+            alpha: modoOscuro ? 0.10 : 0.82,
+          ),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: seleccionado.withValues(alpha: 0.09),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Wrap(
         spacing: 2,
@@ -1712,14 +1773,33 @@ class LanguageOptionButton extends StatelessWidget {
         duration: const Duration(milliseconds: 220),
         margin: const EdgeInsets.symmetric(horizontal: 1),
         decoration: BoxDecoration(
-          color: selected ? selectedColor : Colors.transparent,
+          gradient: selected
+              ? LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    selectedColor,
+                    Color.lerp(
+                      selectedColor,
+                      const Color(0xFF8B5CF6),
+                      0.32,
+                    )!,
+                  ],
+                )
+              : null,
+          color: selected ? null : Colors.transparent,
           borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: selected
+                ? Colors.white.withValues(alpha: 0.30)
+                : Colors.transparent,
+          ),
           boxShadow: selected
               ? [
                   BoxShadow(
-                    color: selectedColor.withValues(alpha: 0.26),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
+                    color: selectedColor.withValues(alpha: 0.28),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
                   ),
                 ]
               : const [],
@@ -1779,18 +1859,35 @@ class ThemeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color fondo = modoOscuro
-        ? const Color(0xFF15131A)
-        : const Color(0xFFF2ECFF);
-
     final Color seleccionado = colorTema(temaActual);
 
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: fondo,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: seleccionado.withValues(alpha: 0.22)),
+        gradient: LinearGradient(
+          colors: modoOscuro
+              ? [
+                  Colors.white.withValues(alpha: 0.075),
+                  seleccionado.withValues(alpha: 0.08),
+                ]
+              : [
+                  Colors.white.withValues(alpha: 0.72),
+                  seleccionado.withValues(alpha: 0.065),
+                ],
+        ),
+        borderRadius: BorderRadius.circular(19),
+        border: Border.all(
+          color: Colors.white.withValues(
+            alpha: modoOscuro ? 0.10 : 0.82,
+          ),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: seleccionado.withValues(alpha: 0.09),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -1854,14 +1951,33 @@ class ThemeOptionButton extends StatelessWidget {
       duration: const Duration(milliseconds: 220),
       margin: const EdgeInsets.symmetric(horizontal: 2),
       decoration: BoxDecoration(
-        color: selected ? selectedColor : Colors.transparent,
+        gradient: selected
+            ? LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  selectedColor,
+                  Color.lerp(
+                    selectedColor,
+                    const Color(0xFF8B5CF6),
+                    0.28,
+                  )!,
+                ],
+              )
+            : null,
+        color: selected ? null : Colors.transparent,
         borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: selected
+              ? Colors.white.withValues(alpha: 0.30)
+              : Colors.transparent,
+        ),
         boxShadow: selected
             ? [
                 BoxShadow(
                   color: selectedColor.withValues(alpha: 0.28),
-                  blurRadius: 8,
-                  offset: const Offset(0, 3),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
                 ),
               ]
             : const [],
