@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -583,7 +585,9 @@ void showConfigSheet(BuildContext context) {
   showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
+    useSafeArea: true,
     backgroundColor: Colors.transparent,
+    barrierColor: Colors.black.withValues(alpha: 0.34),
     builder: (BuildContext sheetContext) {
       final double altoPantalla = MediaQuery.of(sheetContext).size.height;
 
@@ -593,27 +597,66 @@ void showConfigSheet(BuildContext context) {
           final bool modoOscuro =
               Theme.of(context).brightness == Brightness.dark;
 
-          final Color fondoModal = modoOscuro
-              ? const Color(0xFF15131A)
-              : const Color(0xFFFAF7F2);
-
           final Color textoSecundario = modoOscuro
               ? Colors.white70
-              : Colors.black54;
+              : const Color(0xFF6F667B);
 
           final Color colorApariencia = colorTema(temaActual);
 
-          return Container(
-            decoration: BoxDecoration(
-              color: fondoModal,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(28),
-              ),
+          return ClipRRect(
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(34),
             ),
-            child: SafeArea(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: altoPantalla * 0.92),
-                child: SingleChildScrollView(
+            child: BackdropFilter(
+              filter: ui.ImageFilter.blur(
+                sigmaX: 26,
+                sigmaY: 26,
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: modoOscuro
+                        ? [
+                            const Color(0xFF211B2E).withValues(alpha: 0.94),
+                            const Color(0xFF17131E).withValues(alpha: 0.91),
+                            const Color(0xFF2A1D36).withValues(alpha: 0.88),
+                          ]
+                        : [
+                            Colors.white.withValues(alpha: 0.88),
+                            const Color(0xFFFFF8F2).withValues(alpha: 0.91),
+                            const Color(0xFFF5EDFF).withValues(alpha: 0.86),
+                          ],
+                  ),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(34),
+                  ),
+                  border: Border(
+                    top: BorderSide(
+                      color: Colors.white.withValues(
+                        alpha: modoOscuro ? 0.14 : 0.92,
+                      ),
+                      width: 1.2,
+                    ),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(
+                        alpha: modoOscuro ? 0.30 : 0.14,
+                      ),
+                      blurRadius: 34,
+                      offset: const Offset(0, -8),
+                    ),
+                  ],
+                ),
+                child: SafeArea(
+                  top: false,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: altoPantalla * 0.92,
+                    ),
+                    child: SingleChildScrollView(
                   padding: EdgeInsets.only(
                     left: 18,
                     right: 18,
@@ -872,6 +915,7 @@ void showConfigSheet(BuildContext context) {
                         },
                       );
                     },
+                    ),
                   ),
                 ),
               ),
