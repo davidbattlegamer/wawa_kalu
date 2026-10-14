@@ -920,7 +920,8 @@ void showConfigSheet(BuildContext context) {
                 ),
               ),
             ),
-          );
+          ),
+        );
         },
       );
     },
