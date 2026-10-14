@@ -1603,9 +1603,8 @@ class _OfficialGrowthChartCard
     final OfficialWhoGrowthPoint latest =
         spec.points.last;
 
-    final bool spanish =
-        AppConfig.idioma.value ==
-            'es';
+    final String yearSuffix =
+        T.txt('growthYearShort');
 
     return Container(
       width:
@@ -2136,7 +2135,7 @@ class _WhoGrowthChartPainter
 
   final Color pointColor;
 
-  final bool spanish;
+  final String yearSuffix;
 
   final String xLabel;
 
@@ -2147,7 +2146,7 @@ class _WhoGrowthChartPainter
     required this.points,
     required this.dark,
     required this.pointColor,
-    required this.spanish,
+    required this.yearSuffix,
     required this.xLabel,
     required this.yLabel,
   });
@@ -2839,9 +2838,7 @@ class _WhoGrowthChartPainter
             '0';
       } else {
         text =
-            spanish
-                ? '${i}a'
-                : '${i}y';
+            '${i}$yearSuffix';
       }
 
       _drawText(
@@ -3299,8 +3296,8 @@ class _WhoGrowthChartPainter
             dark ||
         oldDelegate.pointColor !=
             pointColor ||
-        oldDelegate.spanish !=
-            spanish ||
+        oldDelegate.yearSuffix !=
+            yearSuffix ||
         oldDelegate.xLabel !=
             xLabel ||
         oldDelegate.yLabel !=
