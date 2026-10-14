@@ -99,7 +99,7 @@ class ParentActivity {
   }
 }
 
-const List<ParentActivity> parentActivityCatalog = [
+final List<ParentActivity> parentActivityCatalog = <ParentActivity>[
   ParentActivity(
     id: "texturas",
     ageGroup: 0,
