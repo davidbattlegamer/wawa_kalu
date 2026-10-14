@@ -1796,7 +1796,7 @@ class _OfficialGrowthChartCard
                     points: spec.points,
                     dark: dark,
                     pointColor: pointColor,
-                    spanish: spanish,
+                    yearSuffix: yearSuffix,
                     xLabel: spec.xLabel,
                     yLabel: spec.yLabel,
                   ),
