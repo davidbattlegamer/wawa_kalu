@@ -2838,7 +2838,7 @@ class _WhoGrowthChartPainter
             '0';
       } else {
         text =
-            '${i}$yearSuffix';
+            '$i$yearSuffix';
       }
 
       _drawText(
