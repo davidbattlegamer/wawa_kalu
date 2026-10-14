@@ -122,161 +122,81 @@ class _NutricionPageState extends State<NutricionPage> {
   }
 
   _NutritionStageCopy _stageCopy() {
-    final bool english = AppConfig.idioma.value == 'en';
-
-    const es = <int, _NutritionStageCopy>{
-      -1: _NutritionStageCopy(
-        title: 'Alimentación que crece con tu peque',
-        subtitle:
-            'Elige una etapa para ver orientaciones y recetas con texturas adecuadas para su edad.',
-        tips: [
-          'Prioriza alimentos caseros, variados y de tu entorno.',
-          'Acompaña las comidas sin presión y observa señales de hambre y saciedad.',
-          'Adapta siempre la textura, el tamaño y la consistencia a lo que el niño ya puede manejar.',
-        ],
-      ),
-      0: _NutritionStageCopy(
-        title: '0–5 meses · solo leche',
-        subtitle:
-            'En esta etapa no mostramos recetas de alimentos complementarios.',
-        tips: [
-          'Antes de los 6 meses, UNICEF recomienda lactancia materna exclusiva.',
-          'No se ofrecen agua, té, jugos, papillas ni otros alimentos antes de los 6 meses.',
-          'Si existen dificultades de alimentación o crecimiento, busca orientación del personal de salud.',
-        ],
-      ),
-      1: _NutritionStageCopy(
-        title: '6–8 meses · primeras cucharadas',
-        subtitle:
-            'Empieza con alimentos blandos, húmedos y fáciles de tragar, manteniendo la lactancia.',
-        tips: [
-          'Comienza con pequeñas cantidades y aumenta poco a poco.',
-          'Puedes usar quinua, arroz o maíz, frutas suaves y vegetales bien cocidos.',
-          'La carne o el pollo deben estar bien cocidos y muy finos.',
-          'La textura debe ser suave, pero puede avanzar gradualmente según sus habilidades.',
-        ],
-      ),
-      2: _NutritionStageCopy(
-        title: '9–11 meses · más textura y variedad',
-        subtitle:
-            'Aparecen alimentos aplastados y trocitos muy blandos que ayudan a practicar la masticación.',
-        tips: [
-          'Incluye granos como lenteja o fréjol bien cocidos y aplastados.',
-          'Combina alimentos locales: papa, verde, zanahoria, zapallo, quinua o yuca.',
-          'Mantén los alimentos húmedos y evita piezas duras, redondas o difíciles de manejar.',
-        ],
-      ),
-      3: _NutritionStageCopy(
-        title: '1–2 años · comida de la familia adaptada',
-        subtitle:
-            'Puede compartir muchas preparaciones familiares, con porciones pequeñas y texturas seguras.',
-        tips: [
-          'Ofrece frutas y verduras todos los días y agua segura.',
-          'Usa poca sal y evita bebidas azucaradas y productos ultraprocesados.',
-          'Corta o aplasta los alimentos para que pueda comerlos con seguridad.',
-          'Mantén horarios y un ambiente tranquilo durante las comidas.',
-        ],
-      ),
-      4: _NutritionStageCopy(
-        title: '2–3 años · sabores de casa',
-        subtitle:
-            'Es una buena etapa para ampliar la variedad y compartir preparaciones ecuatorianas sencillas.',
-        tips: [
-          'Combina cereales o tubérculos con verduras y una fuente de proteína.',
-          'Invítalo a participar en tareas simples como lavar alimentos o mezclar con ayuda.',
-          'Mantén el agua como bebida principal y limita productos muy azucarados o ultraprocesados.',
-        ],
-      ),
-      5: _NutritionStageCopy(
-        title: '3–5 años · variedad y autonomía',
-        subtitle:
-            'La comida familiar puede convertirse también en un momento de aprendizaje y participación.',
-        tips: [
-          'Ofrece variedad de colores, texturas y alimentos locales durante la semana.',
-          'Deja que participe en preparaciones sencillas con supervisión.',
-          'Mantén frutas, verduras, granos, tubérculos y proteínas como base de las comidas.',
-          'Evita usar dulces o comida como premio o castigo.',
-        ],
-      ),
-    };
-
-    const en = <int, _NutritionStageCopy>{
-      -1: _NutritionStageCopy(
-        title: 'Food that grows with your child',
-        subtitle:
-            'Choose a stage to see guidance and recipes with age-appropriate textures.',
-        tips: [
-          'Prioritize homemade, varied foods from your local environment.',
-          'Share meals without pressure and watch hunger and fullness cues.',
-          'Always adapt texture, size, and consistency to the child’s current eating skills.',
-        ],
-      ),
-      0: _NutritionStageCopy(
-        title: '0–5 months · milk only',
-        subtitle:
-            'At this stage, complementary-food recipes are not displayed.',
-        tips: [
-          'Before 6 months, UNICEF recommends exclusive breastfeeding.',
-          'Water, tea, juice, purees, or other foods are not offered before 6 months.',
-          'If feeding or growth is difficult, seek guidance from health personnel.',
-        ],
-      ),
-      1: _NutritionStageCopy(
-        title: '6–8 months · first spoonfuls',
-        subtitle:
-            'Start with soft, moist foods that are easy to swallow while continuing breastfeeding.',
-        tips: [
-          'Begin with small amounts and increase gradually.',
-          'Quinoa, rice or corn, soft fruit, and well-cooked vegetables can be used.',
-          'Meat or chicken should be thoroughly cooked and finely prepared.',
-          'Texture should be soft and can progress with the child’s skills.',
-        ],
-      ),
-      2: _NutritionStageCopy(
-        title: '9–11 months · more texture and variety',
-        subtitle:
-            'Mashed foods and very soft small pieces help practice chewing.',
-        tips: [
-          'Include well-cooked mashed legumes such as lentils or beans.',
-          'Combine local foods such as potato, plantain, carrot, pumpkin, quinoa, or cassava.',
-          'Keep foods moist and avoid hard, round, or difficult pieces.',
-        ],
-      ),
-      3: _NutritionStageCopy(
-        title: '1–2 years · adapted family meals',
-        subtitle:
-            'Many family foods can be shared in small portions and safe textures.',
-        tips: [
-          'Offer fruit and vegetables daily and safe drinking water.',
-          'Use little salt and avoid sugary drinks and ultra-processed foods.',
-          'Cut or mash foods to make eating safer.',
-          'Keep regular meal times and a calm eating environment.',
-        ],
-      ),
-      4: _NutritionStageCopy(
-        title: '2–3 years · family flavors',
-        subtitle:
-            'A good stage to expand variety and share simple Ecuadorian preparations.',
-        tips: [
-          'Combine grains or tubers with vegetables and a protein source.',
-          'Invite the child to help with simple tasks such as washing or mixing with support.',
-          'Keep water as the main drink and limit very sugary or ultra-processed products.',
-        ],
-      ),
-      5: _NutritionStageCopy(
-        title: '3–5 years · variety and independence',
-        subtitle:
-            'Family meals can also become moments for learning and participation.',
-        tips: [
-          'Offer different colors, textures, and local foods throughout the week.',
-          'Let the child participate in simple food preparation with supervision.',
-          'Base meals on fruit, vegetables, grains, tubers, and protein foods.',
-          'Avoid using sweets or food as a reward or punishment.',
-        ],
-      ),
-    };
-
-    return (english ? en : es)[_ageGroup] ?? (english ? en : es)[-1]!;
+    switch (_ageGroup) {
+      case 0:
+        return _NutritionStageCopy(
+          title: T.txt('nutritionStage0Title'),
+          subtitle: T.txt('nutritionStage0Subtitle'),
+          tips: [
+            T.txt('nutritionStage0Tip1'),
+            T.txt('nutritionStage0Tip2'),
+            T.txt('nutritionStage0Tip3'),
+          ],
+        );
+      case 1:
+        return _NutritionStageCopy(
+          title: T.txt('nutritionStage1Title'),
+          subtitle: T.txt('nutritionStage1Subtitle'),
+          tips: [
+            T.txt('nutritionStage1Tip1'),
+            T.txt('nutritionStage1Tip2'),
+            T.txt('nutritionStage1Tip3'),
+            T.txt('nutritionStage1Tip4'),
+          ],
+        );
+      case 2:
+        return _NutritionStageCopy(
+          title: T.txt('nutritionStage2Title'),
+          subtitle: T.txt('nutritionStage2Subtitle'),
+          tips: [
+            T.txt('nutritionStage2Tip1'),
+            T.txt('nutritionStage2Tip2'),
+            T.txt('nutritionStage2Tip3'),
+          ],
+        );
+      case 3:
+        return _NutritionStageCopy(
+          title: T.txt('nutritionStage3Title'),
+          subtitle: T.txt('nutritionStage3Subtitle'),
+          tips: [
+            T.txt('nutritionStage3Tip1'),
+            T.txt('nutritionStage3Tip2'),
+            T.txt('nutritionStage3Tip3'),
+            T.txt('nutritionStage3Tip4'),
+          ],
+        );
+      case 4:
+        return _NutritionStageCopy(
+          title: T.txt('nutritionStage4Title'),
+          subtitle: T.txt('nutritionStage4Subtitle'),
+          tips: [
+            T.txt('nutritionStage4Tip1'),
+            T.txt('nutritionStage4Tip2'),
+            T.txt('nutritionStage4Tip3'),
+          ],
+        );
+      case 5:
+        return _NutritionStageCopy(
+          title: T.txt('nutritionStage5Title'),
+          subtitle: T.txt('nutritionStage5Subtitle'),
+          tips: [
+            T.txt('nutritionStage5Tip1'),
+            T.txt('nutritionStage5Tip2'),
+            T.txt('nutritionStage5Tip3'),
+            T.txt('nutritionStage5Tip4'),
+          ],
+        );
+      default:
+        return _NutritionStageCopy(
+          title: T.txt('nutritionStageAllTitle'),
+          subtitle: T.txt('nutritionStageAllSubtitle'),
+          tips: [
+            T.txt('nutritionStageAllTip1'),
+            T.txt('nutritionStageAllTip2'),
+            T.txt('nutritionStageAllTip3'),
+          ],
+        );
+    }
   }
 
   bool _recipeVisible(EcuadorRecipe recipe) {
