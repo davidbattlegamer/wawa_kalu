@@ -1511,8 +1511,8 @@ class _ChartSelectorCard extends StatelessWidget {
                       children: [
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 220),
-                          width: 43,
-                          height: 43,
+                          width: iconBox,
+                          height: iconBox,
                           decoration: BoxDecoration(
                             color: selected
                                 ? Colors.white.withValues(alpha: 0.18)
@@ -1528,7 +1528,7 @@ class _ChartSelectorCard extends StatelessWidget {
                           ),
                           child: Icon(
                             available ? icon : Icons.lock_outline_rounded,
-                            size: 23,
+                            size: width < 360 ? 21 : 23,
                             color: available && !selected
                                 ? selectedColor
                                 : foreground,
@@ -1542,7 +1542,7 @@ class _ChartSelectorCard extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: 'Fredoka',
-                            fontSize: 13,
+                            fontSize: labelSize,
                             height: 1.05,
                             fontWeight: FontWeight.w800,
                             color: foreground,
