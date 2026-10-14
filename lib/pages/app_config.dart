@@ -6,8 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppConfig {
   AppConfig._();
 
-  static final ValueNotifier<bool> sonidosActivos = ValueNotifier<bool>(true);
-
   static final ValueNotifier<bool> vibracionActiva = ValueNotifier<bool>(true);
 
   static final ValueNotifier<String> idioma = ValueNotifier<String>('es');
@@ -28,8 +26,6 @@ class AppConfig {
 
   static Future<void> cargarConfiguracion() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    sonidosActivos.value = prefs.getBool('sonidosActivos') ?? true;
 
     vibracionActiva.value = prefs.getBool('vibracionActiva') ?? true;
 
@@ -109,18 +105,6 @@ class AppConfig {
         idioma.value = 'es';
         break;
     }
-  }
-
-  // ==========================================================================
-  // SONIDOS
-  // ==========================================================================
-
-  static Future<void> cambiarSonidos(bool valor) async {
-    sonidosActivos.value = valor;
-
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    await prefs.setBool('sonidosActivos', valor);
   }
 
   // ==========================================================================
@@ -219,8 +203,6 @@ class AppConfig {
   // ==========================================================================
   // GETTERS
   // ==========================================================================
-
-  static bool get sonidosEncendidos => sonidosActivos.value;
 
   static bool get vibracionEncendida => vibracionActiva.value;
 
