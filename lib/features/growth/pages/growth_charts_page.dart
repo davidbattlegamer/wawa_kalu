@@ -806,17 +806,45 @@ class _GrowthChartsContentState
     final _GrowthChartSpec spec =
         _chartSpec();
 
+    final double screenWidth =
+        MediaQuery.sizeOf(context).width;
+
+    final double selectorHeight =
+        screenWidth < 380
+            ? 114
+            : screenWidth < 700
+                ? 126
+                : 134;
+
     return SafeArea(
-      child:
-          ListView(
-        padding:
-            const EdgeInsets.fromLTRB(
-          18,
-          18,
-          18,
-          40,
-        ),
-        children: [
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final double horizontalPadding =
+              constraints.maxWidth < 360
+                  ? 12
+                  : constraints.maxWidth < 700
+                      ? 18
+                      : 28;
+
+          final double contentWidth =
+              math.min(
+            constraints.maxWidth,
+            1080,
+          );
+
+          return Align(
+            alignment: Alignment.topCenter,
+            child: SizedBox(
+              width: contentWidth,
+              height: constraints.maxHeight,
+              child: ListView(
+                padding: EdgeInsets.fromLTRB(
+                  horizontalPadding,
+                  18,
+                  horizontalPadding,
+                  40,
+                ),
+                children: [
           FamilyHero(
             eyebrow: T.txt('growthChartsHeroEyebrow'),
             title: T.txt('growthChartsHeroTitle'),
@@ -1067,7 +1095,7 @@ class _GrowthChartsContentState
           _LiquidGlassSelectorRail(
             dark: widget.dark,
             child: SizedBox(
-              height: 126,
+              height: selectorHeight,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: _GrowthChartType.values.length,
@@ -1261,7 +1289,11 @@ class _GrowthChartsContentState
                       : Colors.black54,
             ),
           ),
-        ],
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -1374,6 +1406,22 @@ class _ChartSelectorCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const selectedColor = Color(0xFF00A896);
+
+    final double width =
+        MediaQuery.sizeOf(context).width;
+
+    final double cardWidth =
+        width < 360
+            ? 112
+            : width < 700
+                ? 126
+                : 142;
+
+    final double iconBox =
+        width < 360 ? 39 : 43;
+
+    final double labelSize =
+        width < 360 ? 11.8 : 13;
     final Color foreground = !available
         ? (dark ? Colors.white30 : Colors.black26)
         : selected
@@ -1409,7 +1457,7 @@ class _ChartSelectorCard extends StatelessWidget {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 240),
                     curve: Curves.easeOutCubic,
-                    width: 132,
+                    width: cardWidth,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 10,
                       vertical: 12,
@@ -1758,51 +1806,82 @@ class _OfficialGrowthChartCard
           // GRÁFICA
           // ==================================================================
 
-          Container(
-            height: 470,
-            width: double.infinity,
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              color: dark
-                  ? const Color(0xFF17141C)
-                  : const Color(0xFFFEFEFE),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: dark
-                    ? Colors.white.withValues(alpha: 0.07)
-                    : Colors.black.withValues(alpha: 0.06),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF00A896).withValues(
-                    alpha: dark ? 0.035 : 0.055,
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final MediaQueryData media =
+                  MediaQuery.of(context);
+
+              final double chartWidth =
+                  constraints.maxWidth;
+
+              final bool landscape =
+                  media.orientation ==
+                      Orientation.landscape;
+
+              final double chartHeight =
+                  landscape
+                      ? (media.size.height * 0.58)
+                          .clamp(300.0, 460.0)
+                      : (chartWidth * 0.78)
+                          .clamp(320.0, 520.0);
+
+              final double boundary =
+                  chartWidth < 430 ? 80 : 140;
+
+              return Container(
+                height: chartHeight,
+                width: double.infinity,
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  color: dark
+                      ? const Color(0xFF17141C)
+                      : const Color(0xFFFEFEFE),
+                  borderRadius:
+                      BorderRadius.circular(20),
+                  border: Border.all(
+                    color: dark
+                        ? Colors.white.withValues(
+                            alpha: 0.07,
+                          )
+                        : Colors.black.withValues(
+                            alpha: 0.06,
+                          ),
                   ),
-                  blurRadius: 16,
-                  offset: const Offset(0, 6),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF00A896)
+                          .withValues(
+                        alpha: dark ? 0.035 : 0.055,
+                      ),
+                      blurRadius: 16,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: InteractiveViewer(
-              minScale: 0.7,
-              maxScale: 5,
-              boundaryMargin: const EdgeInsets.all(150),
-              constrained: false,
-              child: SizedBox(
-                width: 900,
-                height: 620,
-                child: CustomPaint(
-                  painter: _WhoGrowthChartPainter(
-                    table: spec.table,
-                    points: spec.points,
-                    dark: dark,
-                    pointColor: pointColor,
-                    yearSuffix: yearSuffix,
-                    xLabel: spec.xLabel,
-                    yLabel: spec.yLabel,
+                child: InteractiveViewer(
+                  minScale: 1,
+                  maxScale: 5,
+                  boundaryMargin:
+                      EdgeInsets.all(boundary),
+                  clipBehavior: Clip.hardEdge,
+                  child: SizedBox(
+                    width: chartWidth,
+                    height: chartHeight,
+                    child: CustomPaint(
+                      painter: _WhoGrowthChartPainter(
+                        table: spec.table,
+                        points: spec.points,
+                        dark: dark,
+                        pointColor: pointColor,
+                        yearSuffix: yearSuffix,
+                        xLabel: spec.xLabel,
+                        yLabel: spec.yLabel,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
 
           const SizedBox(
@@ -2152,22 +2231,6 @@ class _WhoGrowthChartPainter
   });
 
   // ==========================================================================
-  // MÁRGENES
-  // ==========================================================================
-
-  static const double _left =
-      68;
-
-  static const double _right =
-      64;
-
-  static const double _top =
-      32;
-
-  static const double _bottom =
-      58;
-
-  // ==========================================================================
   // PAINT
   // ==========================================================================
 
@@ -2180,14 +2243,46 @@ class _WhoGrowthChartPainter
       return;
     }
 
+    final bool compact =
+        size.width < 430;
+
+    final bool medium =
+        size.width < 700;
+
+    final double leftMargin =
+        compact
+            ? 48
+            : medium
+                ? 58
+                : 68;
+
+    final double rightMargin =
+        compact
+            ? 36
+            : medium
+                ? 50
+                : 64;
+
+    final double topMargin =
+        compact ? 26 : 32;
+
+    final double bottomMargin =
+        compact ? 50 : 58;
+
+    final double axisFontSize =
+        compact ? 9.5 : 11;
+
+    final double axisLabelSize =
+        compact ? 10.5 : 12;
+
     final Rect plot =
         Rect.fromLTRB(
-      _left,
-      _top,
+      leftMargin,
+      topMargin,
       size.width -
-          _right,
+          rightMargin,
       size.height -
-          _bottom,
+          bottomMargin,
     );
 
     final Color gridColor =
@@ -2279,8 +2374,10 @@ class _WhoGrowthChartPainter
     // GRID HORIZONTAL
     // ========================================================================
 
-    const int yTicks =
-        6;
+    final int yTicks =
+        size.height < 360 || size.width < 360
+            ? 4
+            : 6;
 
     for (int i = 0;
         i <= yTicks;
@@ -2332,7 +2429,7 @@ class _WhoGrowthChartPainter
         color:
             axisColor,
         fontSize:
-            11,
+            axisFontSize,
         anchorRight:
             true,
         centerVertical:
@@ -2434,7 +2531,7 @@ class _WhoGrowthChartPainter
       color:
           axisColor,
       fontSize:
-          12,
+          axisLabelSize,
       fontWeight:
           FontWeight.w600,
       centerHorizontal:
@@ -2460,7 +2557,7 @@ class _WhoGrowthChartPainter
       color:
           axisColor,
       fontSize:
-          12,
+          axisLabelSize,
       fontWeight:
           FontWeight.w600,
     );
@@ -2855,7 +2952,7 @@ class _WhoGrowthChartPainter
         color:
             axisColor,
         fontSize:
-            11,
+            plot.width < 300 ? 9.5 : 11,
         centerHorizontal:
             true,
       );
@@ -2877,8 +2974,12 @@ class _WhoGrowthChartPainter
     required Color gridColor,
     required Color axisColor,
   }) {
-    const int ticks =
-        6;
+    final int ticks =
+        plot.width < 280
+            ? 4
+            : plot.width < 460
+                ? 5
+                : 6;
 
     for (int i = 0;
         i <= ticks;
@@ -2930,7 +3031,7 @@ class _WhoGrowthChartPainter
         color:
             axisColor,
         fontSize:
-            11,
+            plot.width < 300 ? 9.5 : 11,
         centerHorizontal:
             true,
       );
@@ -3168,7 +3269,7 @@ class _WhoGrowthChartPainter
         color:
             color,
         fontSize:
-            10.5,
+            plot.width < 300 ? 9 : 10.5,
         fontWeight:
             FontWeight.w700,
         centerVertical:
