@@ -1,3 +1,5 @@
+import '../../../pages/app_texts.dart';
+
 // Actividades originales para el acompañamiento familiar de 1 a 5 años.
 // Las edades son orientativas: adaptar a intereses y capacidades de cada niño.
 enum ActivityArea { exploration, movement, language, protection, thinking, creativity, life, feelings }
@@ -24,25 +26,77 @@ class ActivityCopy {
   });
 }
 
+class ActivityCopyKeys {
+  const ActivityCopyKeys({
+    required this.titleKey,
+    required this.subtitleKey,
+    required this.goalKey,
+    required this.materialKeys,
+    required this.stepKeys,
+    required this.observeKey,
+    required this.adaptKey,
+    required this.safetyKey,
+  });
+
+  final String titleKey;
+  final String subtitleKey;
+  final String goalKey;
+  final List<String> materialKeys;
+  final List<String> stepKeys;
+  final String observeKey;
+  final String adaptKey;
+  final String safetyKey;
+
+  ActivityCopy resolve() {
+    return ActivityCopy(
+      title: T.txt(titleKey),
+      subtitle: T.txt(subtitleKey),
+      goal: T.txt(goalKey),
+      materials: materialKeys.map(T.txt).toList(growable: false),
+      steps: stepKeys.map(T.txt).toList(growable: false),
+      observe: T.txt(observeKey),
+      adapt: T.txt(adaptKey),
+      safety: T.txt(safetyKey),
+    );
+  }
+}
+
 class ParentActivity {
   final String id;
   // 0 = 12-23 meses, 1 = 24-35, 2 = 36-47, 3 = 48-71.
   final int ageGroup;
   final ActivityArea area;
   final int minutes;
-  final ActivityCopy es;
-  final ActivityCopy en;
+  final ActivityCopy? es;
+  final ActivityCopy? en;
+  final ActivityCopyKeys? copyKeys;
 
   const ParentActivity({
     required this.id,
     required this.ageGroup,
     required this.area,
     required this.minutes,
-    required this.es,
-    required this.en,
-  });
+    required ActivityCopy this.es,
+    required ActivityCopy this.en,
+  }) : copyKeys = null;
 
-  ActivityCopy copyFor(String language) => language == 'en' ? en : es;
+  const ParentActivity.localized({
+    required this.id,
+    required this.ageGroup,
+    required this.area,
+    required this.minutes,
+    required ActivityCopyKeys this.copyKeys,
+  })  : es = null,
+        en = null;
+
+  ActivityCopy copyFor(String language) {
+    final keys = copyKeys;
+    if (keys != null) {
+      return keys.resolve();
+    }
+
+    return language == 'en' ? en! : es!;
+  }
 }
 
 const List<ParentActivity> parentActivityCatalog = [
@@ -357,239 +411,201 @@ const List<ParentActivity> parentActivityCatalog = [
       adapt: "Use speech, pointing or gestures to communicate.",
       safety: "Avoid puppets with loose eyes, buttons or accessories.",
     ),
-  ),,
-  ParentActivity(
+  ),
+  ParentActivity.localized(
     id: "nombrar_objetos",
     ageGroup: 0,
     area: ActivityArea.language,
     minutes: 8,
-    es: ActivityCopy(
-      title: "Nombrar lo que nos rodea",
-      subtitle: "Palabras sencillas para objetos de todos los días.",
-      goal: "Fortalecer la comprensión, la asociación entre palabra y objeto y los primeros intentos de comunicación.",
-      materials: ["Tres objetos grandes y seguros del hogar","Un espacio tranquilo para conversar"],
-      steps: ["Elige tres objetos conocidos y muéstralos uno por uno.","Di su nombre lentamente y úsalo en una frase corta.","Espera una mirada, gesto, señal o sonido antes de pasar al siguiente objeto."],
-      observe: "Mira qué objetos reconoce, señala o intenta nombrar.",
-      adapt: "Si aún no habla, responde a miradas, gestos y sonidos como formas válidas de comunicación.",
-      safety: "Usa objetos grandes, limpios y sin piezas pequeñas o bordes filosos.",
-    ),
-    en: ActivityCopy(
-      title: "Name what is around us",
-      subtitle: "Simple words for everyday objects.",
-      goal: "Support understanding, word-object associations and early communication attempts.",
-      materials: ["Three large safe household objects","A calm place to talk"],
-      steps: ["Choose three familiar objects and show them one at a time.","Say each name slowly and use it in a short sentence.","Wait for a look, gesture, point or sound before moving on."],
-      observe: "Notice which objects your child recognizes, points to or tries to name.",
-      adapt: "If speech is not present yet, treat looks, gestures and sounds as valid communication.",
-      safety: "Use large clean objects with no small detachable parts or sharp edges.",
+    copyKeys: ActivityCopyKeys(
+      titleKey: 'nameObjectsTitle',
+      subtitleKey: 'nameObjectsDesc',
+      goalKey: 'nameObjectsRec',
+      materialKeys: [
+        'guideMaterialEverydayObjects',
+        'guideMaterialCalmSpace',
+      ],
+      stepKeys: ['nameObjectsHome'],
+      observeKey: 'guideObserveCommunication',
+      adaptKey: 'guideAdaptCommunication',
+      safetyKey: 'guideSafetyCommunication',
     ),
   ),
-  ParentActivity(
+  ParentActivity.localized(
     id: "leer_imagenes",
     ageGroup: 1,
     area: ActivityArea.language,
     minutes: 10,
-    es: ActivityCopy(
-      title: "Leer imágenes juntos",
-      subtitle: "Mirar, señalar y conversar sobre lo que aparece.",
-      goal: "Ampliar vocabulario, atención conjunta y comprensión de preguntas sencillas.",
-      materials: ["Un cuento resistente, una foto familiar o una lámina grande","Un lugar cómodo"],
-      steps: ["Miren una imagen y describe una cosa que aparezca.","Pregunta: ¿qué ves?, ¿dónde está? o ¿qué hace?","Sigue lo que el niño señale y añade una frase corta sobre eso."],
-      observe: "Fíjate si busca detalles, señala, imita palabras o responde con gestos.",
-      adapt: "No hace falta responder con palabras; mirar, señalar o sonreír también cuenta.",
-      safety: "Usa libros o láminas resistentes, sin grapas sueltas ni piezas pequeñas.",
-    ),
-    en: ActivityCopy(
-      title: "Read pictures together",
-      subtitle: "Look, point and talk about what you see.",
-      goal: "Build vocabulary, shared attention and understanding of simple questions.",
-      materials: ["A sturdy picture book, family photo or large picture","A comfortable place"],
-      steps: ["Look at one picture and describe something in it.","Ask: what do you see, where is it, or what is it doing?","Follow what your child points to and add a short sentence."],
-      observe: "Notice whether your child searches for details, points, imitates words or answers with gestures.",
-      adapt: "Words are not required; looking, pointing and smiling also count.",
-      safety: "Use sturdy books or pictures with no loose staples or small parts.",
+    copyKeys: ActivityCopyKeys(
+      titleKey: 'readImagesTitle',
+      subtitleKey: 'readImagesDesc',
+      goalKey: 'readImagesRec',
+      materialKeys: [
+        'guideMaterialPicture',
+        'guideMaterialCalmSpace',
+      ],
+      stepKeys: ['readImagesHome'],
+      observeKey: 'guideObserveCommunication',
+      adaptKey: 'guideAdaptCommunication',
+      safetyKey: 'guideSafetyCommunication',
     ),
   ),
-  ParentActivity(
+  ParentActivity.localized(
     id: "turnos_conversacion",
     ageGroup: 2,
     area: ActivityArea.language,
     minutes: 10,
-    es: ActivityCopy(
-      title: "Conversaciones con turnos",
-      subtitle: "Escuchar, esperar y responder también es aprender.",
-      goal: "Fortalecer la intención comunicativa, la escucha y la confianza para expresarse.",
-      materials: ["Una actividad cotidiana: vestirse, comer o guardar juguetes","Tiempo sin pantallas"],
-      steps: ["Describe brevemente lo que están haciendo juntos.","Haz una pregunta sencilla y espera varios segundos.","Responde a su palabra, gesto o sonido y deja otro espacio para que continúe."],
-      observe: "Observa cómo inicia o mantiene el intercambio y qué temas llaman su atención.",
-      adapt: "Usa frases más cortas, gestos o elecciones entre dos opciones si necesita apoyo.",
-      safety: "Mantén la conversación durante una actividad segura y sin prisas.",
-    ),
-    en: ActivityCopy(
-      title: "Taking turns in conversation",
-      subtitle: "Listening, waiting and responding are part of learning.",
-      goal: "Support communication intent, listening and confidence to express ideas.",
-      materials: ["An everyday routine such as dressing, eating or tidying toys","Screen-free time"],
-      steps: ["Briefly describe what you are doing together.","Ask one simple question and wait several seconds.","Respond to any word, gesture or sound and leave room for another turn."],
-      observe: "Notice how your child starts or continues exchanges and which topics attract attention.",
-      adapt: "Use shorter phrases, gestures or two simple choices when support is needed.",
-      safety: "Keep the conversation within a calm and safe daily activity.",
+    copyKeys: ActivityCopyKeys(
+      titleKey: 'talkTitle',
+      subtitleKey: 'talkDesc',
+      goalKey: 'talkRec',
+      materialKeys: [
+        'guideMaterialDailyRoutine',
+        'guideMaterialCalmSpace',
+      ],
+      stepKeys: ['talkHome'],
+      observeKey: 'guideObserveCommunication',
+      adaptKey: 'guideAdaptCommunication',
+      safetyKey: 'guideSafetyCommunication',
     ),
   ),
-  ParentActivity(
+  ParentActivity.localized(
     id: "juego_sonidos",
     ageGroup: 3,
     area: ActivityArea.language,
     minutes: 12,
-    es: ActivityCopy(
-      title: "Juego de sonidos y palabras",
-      subtitle: "Imitar, inventar y jugar con la voz.",
-      goal: "Practicar pronunciación, memoria auditiva y expresión oral sin presión.",
-      materials: ["Tu voz","Objetos o dibujos conocidos para inventar sonidos"],
-      steps: ["Haz tres sonidos sencillos de animales, objetos o acciones.","Invita al niño a imitarlos y después a inventar uno nuevo.","Conviertan cada sonido en una palabra o frase corta dentro de una pequeña historia."],
-      observe: "Escucha qué sonidos repite con facilidad y cuáles transforma creativamente.",
-      adapt: "Puede participar con gestos, ritmo o movimientos si no desea repetir palabras.",
-      safety: "Evita gritos o sonidos muy fuertes cerca de los oídos.",
-    ),
-    en: ActivityCopy(
-      title: "Sounds and words game",
-      subtitle: "Imitate, invent and play with your voice.",
-      goal: "Practice pronunciation, listening memory and spoken expression without pressure.",
-      materials: ["Your voice","Familiar objects or pictures for inventing sounds"],
-      steps: ["Make three simple animal, object or action sounds.","Invite your child to copy them and then invent a new one.","Turn each sound into a word or short phrase in a tiny story."],
-      observe: "Listen for sounds that are easy to repeat and those your child changes creatively.",
-      adapt: "Gestures, rhythm or movement can replace spoken repetition.",
-      safety: "Avoid shouting or making very loud sounds close to the ears.",
+    copyKeys: ActivityCopyKeys(
+      titleKey: 'imitateSoundsTitle',
+      subtitleKey: 'imitateSoundsDesc',
+      goalKey: 'imitateSoundsRec',
+      materialKeys: [
+        'guideMaterialVoice',
+        'guideMaterialCalmSpace',
+      ],
+      stepKeys: ['imitateSoundsHome'],
+      observeKey: 'guideObserveCommunication',
+      adaptKey: 'guideAdaptCommunication',
+      safetyKey: 'guideSafetyCommunication',
     ),
   ),
-  ParentActivity(
+  ParentActivity.localized(
     id: "casa_segura",
     ageGroup: 0,
     area: ActivityArea.protection,
     minutes: 10,
-    es: ActivityCopy(
-      title: "Explorar una casa segura",
-      subtitle: "Preparar el espacio antes de que empiece el juego.",
-      goal: "Favorecer la exploración autónoma reduciendo riesgos del entorno cercano.",
-      materials: ["Una habitación de uso cotidiano","Una caja o lugar alto para guardar objetos de riesgo"],
-      steps: ["Recorre el espacio a la altura del niño y mira qué puede alcanzar.","Retira objetos pequeños, productos de limpieza, medicinas y elementos cortantes.","Revisa enchufes, cables, esquinas y accesos a escaleras antes de dejarlo explorar."],
-      observe: "Identifica qué lugares busca con más frecuencia para reforzar ahí la prevención.",
-      adapt: "Haz la revisión por zonas si el espacio es grande.",
-      safety: "Cocina, baño, escaleras, ventanas y agua requieren supervisión adulta directa.",
-    ),
-    en: ActivityCopy(
-      title: "Explore a safer home",
-      subtitle: "Prepare the space before play begins.",
-      goal: "Support independent exploration while reducing nearby environmental risks.",
-      materials: ["An everyday room","A high or locked place for hazardous items"],
-      steps: ["Look around the room from your child's height and notice what is reachable.","Remove small objects, cleaning products, medicines and sharp items.","Check outlets, cords, corners and stair access before exploration."],
-      observe: "Notice which places your child seeks most often so prevention can focus there.",
-      adapt: "Review one area at a time if the space is large.",
-      safety: "Kitchens, bathrooms, stairs, windows and water require direct adult supervision.",
+    copyKeys: ActivityCopyKeys(
+      titleKey: 'safeSpacesTitle',
+      subtitleKey: 'safeSpacesSubtitle',
+      goalKey: 'safeSpacesDesc',
+      materialKeys: [
+        'guideMaterialSafeRoom',
+        'guideMaterialTrustedAdult',
+      ],
+      stepKeys: [
+        'safeSpacesA1',
+        'safeSpacesA2',
+        'safeSpacesA3',
+        'safeSpacesA4',
+      ],
+      observeKey: 'guideObserveProtection',
+      adaptKey: 'guideAdaptProtection',
+      safetyKey: 'safeSpacesAlert',
     ),
   ),
-  ParentActivity(
+  ParentActivity.localized(
     id: "supervision_activa",
     ageGroup: 1,
     area: ActivityArea.protection,
     minutes: 10,
-    es: ActivityCopy(
-      title: "Mirar, acompañar y anticipar",
-      subtitle: "La supervisión activa protege mientras aprende.",
-      goal: "Convertir el acompañamiento adulto en una práctica cotidiana de prevención.",
-      materials: ["Un espacio de juego habitual","Atención del adulto sin distracciones"],
-      steps: ["Ubícate cerca y observa qué intenta hacer el niño.","Anticipa riesgos antes de intervenir y ofrece una alternativa segura.","Si debes alejarte, deja al niño en un lugar protegido antes de hacerlo."],
-      observe: "Reconoce qué situaciones requieren estar más cerca: agua, altura, comida o desplazamiento.",
-      adapt: "Organiza el espacio para que supervisar sea más fácil y no dependa de prohibir todo.",
-      safety: "Nunca dejes al niño solo cerca de agua, ventanas, cocina, escaleras o superficies altas.",
-    ),
-    en: ActivityCopy(
-      title: "Watch, stay close and anticipate",
-      subtitle: "Active supervision protects while learning happens.",
-      goal: "Turn adult presence into an everyday prevention practice.",
-      materials: ["A usual play area","Undistracted adult attention"],
-      steps: ["Stay nearby and watch what your child is trying to do.","Anticipate risks and offer a safer alternative before danger occurs.","If you must step away, place the child in a safe area first."],
-      observe: "Notice situations that require closer supervision: water, heights, eating or movement.",
-      adapt: "Arrange the space so supervision is easier instead of relying only on prohibitions.",
-      safety: "Never leave a child alone near water, windows, kitchens, stairs or high surfaces.",
+    copyKeys: ActivityCopyKeys(
+      titleKey: 'activeSupervisionTitle',
+      subtitleKey: 'activeSupervisionSubtitle',
+      goalKey: 'activeSupervisionDesc',
+      materialKeys: [
+        'guideMaterialSafeRoom',
+        'guideMaterialTrustedAdult',
+      ],
+      stepKeys: [
+        'activeSupervisionA1',
+        'activeSupervisionA2',
+        'activeSupervisionA3',
+        'activeSupervisionA4',
+      ],
+      observeKey: 'guideObserveProtection',
+      adaptKey: 'guideAdaptProtection',
+      safetyKey: 'activeSupervisionAlert',
     ),
   ),
-  ParentActivity(
+  ParentActivity.localized(
     id: "rutina_protectora",
     ageGroup: 2,
     area: ActivityArea.protection,
     minutes: 12,
-    es: ActivityCopy(
-      title: "Una rutina que da seguridad",
-      subtitle: "Anticipar lo que viene ayuda a sentirse tranquilo.",
-      goal: "Fortalecer seguridad emocional, organización y transiciones respetuosas.",
-      materials: ["Tres dibujos simples de momentos del día","Una rutina familiar real"],
-      steps: ["Elijan tres momentos: comer, jugar y dormir, por ejemplo.","Ordénenlos y explica con palabras sencillas qué sucede después.","Antes de cambiar de actividad, avisa con calma y recuerda el siguiente paso."],
-      observe: "Mira si anticipar la rutina reduce frustración o ayuda a colaborar.",
-      adapt: "Usa gestos, fotos o un solo dibujo si todavía no sigue una secuencia completa.",
-      safety: "Mantén horarios flexibles y prioriza las necesidades de descanso y alimentación del niño.",
-    ),
-    en: ActivityCopy(
-      title: "A routine that feels safe",
-      subtitle: "Knowing what comes next can bring calm.",
-      goal: "Support emotional security, organization and respectful transitions.",
-      materials: ["Three simple pictures of daily moments","A real family routine"],
-      steps: ["Choose three moments such as eating, playing and sleeping.","Put them in order and explain simply what comes next.","Before changing activities, give a calm warning and name the next step."],
-      observe: "Notice whether predictable routines reduce frustration or make cooperation easier.",
-      adapt: "Use gestures, photos or just one picture when a full sequence is too much.",
-      safety: "Keep routines flexible and prioritize the child's needs for rest and food.",
+    copyKeys: ActivityCopyKeys(
+      titleKey: 'protectiveRoutinesTitle',
+      subtitleKey: 'protectiveRoutinesSubtitle',
+      goalKey: 'protectiveRoutinesDesc',
+      materialKeys: [
+        'guideMaterialRoutineImages',
+        'guideMaterialTrustedAdult',
+      ],
+      stepKeys: [
+        'protectiveRoutinesA1',
+        'protectiveRoutinesA2',
+        'protectiveRoutinesA3',
+        'protectiveRoutinesA4',
+      ],
+      observeKey: 'guideObserveProtection',
+      adaptKey: 'guideAdaptProtection',
+      safetyKey: 'protectiveRoutinesAlert',
     ),
   ),
-  ParentActivity(
+  ParentActivity.localized(
     id: "buen_trato",
     ageGroup: 3,
     area: ActivityArea.protection,
     minutes: 12,
-    es: ActivityCopy(
-      title: "Cuidarnos con buen trato",
-      subtitle: "Poner límites también puede hacerse con respeto.",
-      goal: "Fortalecer confianza, regulación emocional y formas respetuosas de resolver conflictos.",
-      materials: ["Dos muñecos o dibujos","Un momento tranquilo"],
-      steps: ["Representa una situación cotidiana que genere frustración.","Nombra la emoción y muestra un límite claro sin gritos ni amenazas.","Invita al niño a proponer una forma segura de resolver la situación."],
-      observe: "Escucha cómo nombra emociones, pide ayuda o propone soluciones.",
-      adapt: "Puede señalar caras, usar gestos o elegir entre dos soluciones.",
-      safety: "Si el adulto está muy alterado, es mejor pedir apoyo y recuperar la calma antes de continuar.",
-    ),
-    en: ActivityCopy(
-      title: "Care with respectful treatment",
-      subtitle: "Limits can also be set with respect.",
-      goal: "Build trust, emotional regulation and respectful ways to solve conflicts.",
-      materials: ["Two dolls or drawings","A calm moment"],
-      steps: ["Act out an everyday situation that can cause frustration.","Name the feeling and show a clear limit without shouting or threats.","Invite your child to suggest a safe way to solve the situation."],
-      observe: "Listen for how feelings are named, help is requested or solutions are suggested.",
-      adapt: "Pointing to faces, using gestures or choosing between two solutions all work.",
-      safety: "If the adult feels overwhelmed, seek support and calm down before continuing.",
+    copyKeys: ActivityCopyKeys(
+      titleKey: 'affectionTitle',
+      subtitleKey: 'affectionSubtitle',
+      goalKey: 'affectionDesc',
+      materialKeys: [
+        'guideMaterialDolls',
+        'guideMaterialCalmSpace',
+      ],
+      stepKeys: [
+        'affectionA1',
+        'affectionA2',
+        'affectionA3',
+        'affectionA4',
+      ],
+      observeKey: 'guideObserveProtection',
+      adaptKey: 'guideAdaptProtection',
+      safetyKey: 'affectionAlert',
     ),
   ),
-  ParentActivity(
+  ParentActivity.localized(
     id: "senales_ayuda",
     ageGroup: 3,
     area: ActivityArea.protection,
     minutes: 10,
-    es: ActivityCopy(
-      title: "Reconocer cuándo pedir ayuda",
-      subtitle: "Hablar de cuidado también enseña a protegerse.",
-      goal: "Ayudar a reconocer situaciones en las que debe avisar a un adulto y buscar apoyo.",
-      materials: ["Dibujos de situaciones cotidianas","Una conversación tranquila"],
-      steps: ["Hablen de situaciones sencillas: una caída, sentirse muy mal o perderse de vista del cuidador.","Pregunta a qué adulto de confianza podría acudir.","Practiquen una frase simple para pedir ayuda y repetir su nombre."],
-      observe: "Comprueba si identifica al menos un adulto de confianza y una forma de pedir ayuda.",
-      adapt: "Usa fotografías de personas conocidas si las preguntas abiertas resultan difíciles.",
-      safety: "La actividad no sustituye la supervisión. Ante dificultad respiratoria, convulsiones, golpes fuertes o decaimiento extremo, busca atención médica.",
-    ),
-    en: ActivityCopy(
-      title: "Recognize when to ask for help",
-      subtitle: "Talking about care also teaches protection.",
-      goal: "Help children recognize situations when they should tell an adult and seek support.",
-      materials: ["Pictures of everyday situations","A calm conversation"],
-      steps: ["Talk about simple situations: a fall, feeling very unwell or losing sight of the caregiver.","Ask which trusted adult could help.","Practice a simple phrase for asking for help and saying their name."],
-      observe: "Check whether your child can identify at least one trusted adult and one way to ask for help.",
-      adapt: "Use photos of familiar people if open questions are difficult.",
-      safety: "This does not replace supervision. Seek medical care for breathing difficulty, seizures, severe injury or extreme lethargy.",
+    copyKeys: ActivityCopyKeys(
+      titleKey: 'healthAlertTitle',
+      subtitleKey: 'healthAlertSubtitle',
+      goalKey: 'healthAlertDesc',
+      materialKeys: [
+        'guideMaterialDolls',
+        'guideMaterialTrustedAdult',
+      ],
+      stepKeys: [
+        'healthAlertA1',
+        'healthAlertA2',
+        'healthAlertA3',
+        'healthAlertA4',
+      ],
+      observeKey: 'guideObserveProtection',
+      adaptKey: 'guideAdaptProtection',
+      safetyKey: 'healthAlertAlert',
     ),
   )
 ];
