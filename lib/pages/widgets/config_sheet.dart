@@ -597,10 +597,6 @@ void showConfigSheet(BuildContext context) {
           final bool modoOscuro =
               Theme.of(context).brightness == Brightness.dark;
 
-          final Color textoSecundario = modoOscuro
-              ? Colors.white70
-              : const Color(0xFF6F667B);
-
           final Color colorApariencia = colorTema(temaActual);
 
           return ClipRRect(
@@ -855,16 +851,74 @@ void showConfigSheet(BuildContext context) {
                                         ),
                                       ),
 
-                                      const SizedBox(height: 16),
+                                      const SizedBox(height: 18),
 
-                                      Text(
-                                        T.txt('settingsNote'),
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontFamily: 'Baloo2',
-                                          fontSize: 15.5,
-                                          height: 1.3,
-                                          color: textoSecundario,
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 14,
+                                          vertical: 9,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withValues(
+                                            alpha: modoOscuro ? 0.045 : 0.48,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          border: Border.all(
+                                            color: Colors.white.withValues(
+                                              alpha:
+                                                  modoOscuro ? 0.08 : 0.72,
+                                            ),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Icon(
+                                              Icons.auto_awesome_rounded,
+                                              size: 16,
+                                              color: Color(0xFF8B5CF6),
+                                            ),
+                                            const SizedBox(width: 7),
+                                            Text(
+                                              'Wawa Kalú',
+                                              style: TextStyle(
+                                                fontFamily: 'Fredoka',
+                                                fontSize: 13.5,
+                                                fontWeight: FontWeight.w700,
+                                                color: modoOscuro
+                                                    ? Colors.white60
+                                                    : const Color(0xFF6F667B),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Container(
+                                              width: 5,
+                                              height: 5,
+                                              decoration: const BoxDecoration(
+                                                color: Color(0xFFEC5F7A),
+                                                shape: BoxShape.circle,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 5),
+                                            Container(
+                                              width: 5,
+                                              height: 5,
+                                              decoration: const BoxDecoration(
+                                                color: Color(0xFF16B89A),
+                                                shape: BoxShape.circle,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 5),
+                                            Container(
+                                              width: 5,
+                                              height: 5,
+                                              decoration: const BoxDecoration(
+                                                color: Color(0xFFF59E55),
+                                                shape: BoxShape.circle,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
 
