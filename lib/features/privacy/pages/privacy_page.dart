@@ -23,7 +23,7 @@ class _PrivacyPageState
   bool _deleting = false;
 
   // ============================================================
-  // ELIMINAR TODOS LOS DATOS INFANTILES
+  // ELIMINAR DATOSS LOS DATOS INFANTILES
   // ============================================================
 
   Future<void> _deleteAllChildData() async {
