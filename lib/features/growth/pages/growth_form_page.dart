@@ -445,7 +445,7 @@ class _GrowthFormPageState
               );
 
     // ------------------------------------------------------------
-    // TODO SE GUARDA SIEMPRE EN KG Y CM
+    // LOS DATOS SE GUARDAN SIEMPRE EN KG Y CM
     // ------------------------------------------------------------
 
     final double weightKg =
