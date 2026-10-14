@@ -9,8 +9,6 @@ import '../app_config.dart';
 import '../app_texts.dart';
 
 const String _appVersion = '1.1.0';
-const String _developers = 'D.S Y K.T';
-
 final AudioPlayer _switchPlayer = AudioPlayer();
 
 // ============================================================================
@@ -303,10 +301,19 @@ void _mostrarAcercaDe(BuildContext context, bool modoOscuro) {
                                   ),
                                 ],
                               ),
-                              child: const Icon(
-                                Icons.child_care_rounded,
-                                size: 50,
-                                color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Image.asset(
+                                  'assets/images/home.png',
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(
+                                      Icons.child_care_rounded,
+                                      size: 50,
+                                      color: Colors.white,
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                             const SizedBox(height: 12),
@@ -471,61 +478,91 @@ void _mostrarAcercaDe(BuildContext context, bool modoOscuro) {
 
                           Container(
                             width: double.infinity,
-                            padding: const EdgeInsets.all(15),
+                            padding: const EdgeInsets.fromLTRB(16, 15, 16, 16),
                             decoration: BoxDecoration(
-                              color: modoOscuro
-                                  ? Colors.white.withValues(alpha: 0.055)
-                                  : const Color(0xFFF8F3FC),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: const Color(
-                                  0xFF7B2CBF,
-                                ).withValues(alpha: modoOscuro ? 0.18 : 0.11),
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: modoOscuro
+                                    ? [
+                                        const Color(0xFF241D30),
+                                        const Color(0xFF7B2CBF)
+                                            .withValues(alpha: 0.13),
+                                      ]
+                                    : [
+                                        Colors.white,
+                                        const Color(0xFFF8F0FF),
+                                      ],
                               ),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 46,
-                                  height: 46,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF7B2CBF).withValues(
-                                      alpha: modoOscuro ? 0.22 : 0.11,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  child: const Icon(
-                                    Icons.code_rounded,
-                                    color: Color(0xFF7B2CBF),
-                                  ),
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(
+                                color: const Color(0xFF7B2CBF).withValues(
+                                  alpha: modoOscuro ? 0.22 : 0.13,
                                 ),
-                                const SizedBox(width: 13),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(0xFF7B2CBF).withValues(
+                                    alpha: modoOscuro ? 0.05 : 0.08,
+                                  ),
+                                  blurRadius: 18,
+                                  offset: const Offset(0, 7),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 44,
+                                      height: 44,
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF7B2CBF)
+                                            .withValues(
+                                          alpha: modoOscuro ? 0.22 : 0.10,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(14),
+                                      ),
+                                      child: const Icon(
+                                        Icons.draw_rounded,
+                                        color: Color(0xFF7B2CBF),
+                                        size: 24,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text(
                                         T.txt('developers'),
                                         style: TextStyle(
                                           fontFamily: 'Fredoka',
-                                          fontSize: 14.5,
-                                          fontWeight: FontWeight.w700,
-                                          color: textoSecundario,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        _developers,
-                                        style: TextStyle(
-                                          fontFamily: 'Fredoka',
-                                          fontSize: 17,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.w800,
                                           color: textoPrincipal,
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 14),
+                                _DeveloperSignature(
+                                  name: 'DAVID SANTANA',
+                                  modoOscuro: modoOscuro,
+                                  colors: const [
+                                    Color(0xFF7B2CBF),
+                                    Color(0xFFFF006E),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                _DeveloperSignature(
+                                  name: 'KERLY TELLO',
+                                  modoOscuro: modoOscuro,
+                                  colors: const [
+                                    Color(0xFF00A896),
+                                    Color(0xFF118AB2),
+                                  ],
                                 ),
                               ],
                             ),
@@ -1018,6 +1055,78 @@ class _AboutFeatureChip extends StatelessWidget {
               fontSize: 13.5,
               fontWeight: FontWeight.w700,
               color: modoOscuro ? Colors.white : const Color(0xFF413449),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DeveloperSignature extends StatelessWidget {
+  const _DeveloperSignature({
+    required this.name,
+    required this.modoOscuro,
+    required this.colors,
+  });
+
+  final String name;
+  final bool modoOscuro;
+  final List<Color> colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(14, 11, 14, 9),
+      decoration: BoxDecoration(
+        color: modoOscuro
+            ? Colors.white.withValues(alpha: 0.045)
+            : Colors.white.withValues(alpha: 0.76),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color: colors.first.withValues(
+            alpha: modoOscuro ? 0.20 : 0.11,
+          ),
+        ),
+      ),
+      child: Column(
+        children: [
+          ShaderMask(
+            blendMode: BlendMode.srcIn,
+            shaderCallback: (bounds) {
+              return LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: colors,
+              ).createShader(bounds);
+            },
+            child: Text(
+              name,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontFamily: 'Fredoka',
+                fontSize: 22,
+                height: 1.05,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1.15,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Align(
+            alignment: Alignment.center,
+            child: FractionallySizedBox(
+              widthFactor: 0.58,
+              child: Container(
+                height: 2.2,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: colors),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
             ),
           ),
         ],
