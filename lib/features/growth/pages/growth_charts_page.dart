@@ -829,7 +829,7 @@ class _GrowthChartsContentState
           final double contentWidth =
               math.min(
             constraints.maxWidth,
-            1080,
+            1080.0,
           );
 
           return Align(
@@ -1818,12 +1818,18 @@ class _OfficialGrowthChartCard
                   media.orientation ==
                       Orientation.landscape;
 
-              final double chartHeight =
+              final double rawChartHeight =
                   landscape
-                      ? (media.size.height * 0.58)
-                          .clamp(300.0, 460.0)
-                      : (chartWidth * 0.78)
-                          .clamp(320.0, 520.0);
+                      ? media.size.height * 0.58
+                      : chartWidth * 0.78;
+
+              final double chartHeight =
+                  rawChartHeight
+                      .clamp(
+                        landscape ? 300.0 : 320.0,
+                        landscape ? 460.0 : 520.0,
+                      )
+                      .toDouble();
 
               final double boundary =
                   chartWidth < 430 ? 80 : 140;
