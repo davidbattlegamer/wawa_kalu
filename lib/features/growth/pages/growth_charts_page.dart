@@ -1,9 +1,11 @@
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
 import '../../../pages/app_config.dart';
 import '../../../pages/app_texts.dart';
+import '../../../app/widgets/family_content_ui.dart';
 
 import '../../children/models/child.dart';
 import '../../children/utils/child_display_utils.dart';
@@ -159,59 +161,30 @@ class _GrowthChartsPageState
 
         return Scaffold(
           backgroundColor:
-              dark
-                  ? const Color(
-                      0xFF15131A,
-                    )
-                  : const Color(
-                      0xFFFAF7F2,
-                    ),
+              dark ? FamilyUi.canvasDark : FamilyUi.canvasLight,
 
           // ==================================================================
           // APP BAR
           // ==================================================================
 
-          appBar:
-              AppBar(
+          appBar: AppBar(
             backgroundColor:
-                dark
-                    ? const Color(
-                        0xFF211B2E,
-                      )
-                    : Colors.white,
+                dark ? FamilyUi.surfaceDark : Colors.white.withValues(alpha: 0.94),
             foregroundColor:
-                dark
-                    ? Colors.white
-                    : const Color(
-                        0xFF2D2D2D,
-                      ),
-            elevation:
-                0,
-            title:
-                Text(
-              T.txt(
-                'growthChartsTitle',
-              ),
-              style:
-                  const TextStyle(
-                fontFamily:
-                    'Fredoka',
-                fontWeight:
-                    FontWeight.w700,
+                dark ? Colors.white : const Color(0xFF302942),
+            elevation: 0,
+            title: Text(
+              T.txt('growthChartsTitle'),
+              style: const TextStyle(
+                fontFamily: 'Fredoka',
+                fontWeight: FontWeight.w800,
               ),
             ),
             actions: [
               IconButton(
-                tooltip:
-                    T.txt(
-                  'refresh',
-                ),
-                onPressed:
-                    _reload,
-                icon:
-                    const Icon(
-                  Icons.refresh_rounded,
-                ),
+                tooltip: T.txt('refresh'),
+                onPressed: _reload,
+                icon: const Icon(Icons.refresh_rounded),
               ),
             ],
           ),
@@ -844,6 +817,17 @@ class _GrowthChartsContentState
           40,
         ),
         children: [
+          FamilyHero(
+            eyebrow: T.txt('growthChartsHeroEyebrow'),
+            title: T.txt('growthChartsHeroTitle'),
+            subtitle: T.txt('growthChartsHeroSubtitle')
+                .replaceAll('{name}', widget.child.name),
+            icon: Icons.auto_graph_rounded,
+            color: const Color(0xFF00A896),
+            accent: const Color(0xFF6C63FF),
+          ),
+          const SizedBox(height: 18),
+
           // ==================================================================
           // PERFIL DEL NIÑO
           // ==================================================================
@@ -880,9 +864,18 @@ class _GrowthChartsContentState
                 color:
                     childColor.withValues(
                   alpha:
-                      0.14,
+                      0.16,
                 ),
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: childColor.withValues(
+                    alpha: widget.dark ? 0.05 : 0.10,
+                  ),
+                  blurRadius: 18,
+                  offset: const Offset(0, 7),
+                ),
+              ],
             ),
             child:
                 Row(
@@ -1059,57 +1052,13 @@ class _GrowthChartsContentState
                 23,
           ),
 
-          // ==================================================================
-          // TÍTULO SELECTOR
-          // ==================================================================
-
-          Text(
-            T.txt(
-              'growthSelectorTitle',
-            ),
-            style:
-                TextStyle(
-              fontFamily:
-                  'Fredoka',
-              fontSize:
-                  21,
-              fontWeight:
-                  FontWeight.w800,
-              color:
-                  widget.dark
-                      ? Colors.white
-                      : const Color(
-                          0xFF4A2C82,
-                        ),
-            ),
+          FamilySectionHeading(
+            title: T.txt('growthSelectorTitle'),
+            subtitle: T.txt('growthSelectorGlassHint'),
+            icon: Icons.view_carousel_rounded,
           ),
 
-          const SizedBox(
-            height:
-                4,
-          ),
-
-          Text(
-            T.txt(
-              'growthSelectorSubtitle',
-            ),
-            style:
-                TextStyle(
-              fontFamily:
-                  'Baloo2',
-              fontSize:
-                  14,
-              color:
-                  widget.dark
-                      ? Colors.white60
-                      : Colors.black54,
-            ),
-          ),
-
-          const SizedBox(
-            height:
-                13,
-          ),
+          const SizedBox(height: 4),
 
           // ==================================================================
           // SELECTOR DE 5 GRÁFICAS
@@ -1383,20 +1332,62 @@ class _GrowthChartSpec {
 // TARJETA DEL SELECTOR
 // ============================================================================
 
-class _ChartSelectorCard
-    extends StatelessWidget {
-  final String label;
-
-  final IconData icon;
-
-  final bool selected;
-
-  final bool available;
+class _LiquidGlassSelectorRail extends StatelessWidget {
+  const _LiquidGlassSelectorRail({
+    required this.dark,
+    required this.child,
+  });
 
   final bool dark;
+  final Widget child;
 
-  final VoidCallback? onTap;
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(30),
+      child: BackdropFilter(
+        filter: ui.ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(10, 9, 10, 9),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: dark
+                  ? [
+                      Colors.white.withValues(alpha: 0.10),
+                      const Color(0xFF00A896).withValues(alpha: 0.08),
+                    ]
+                  : [
+                      Colors.white.withValues(alpha: 0.72),
+                      const Color(0xFFE8FFF9).withValues(alpha: 0.54),
+                    ],
+            ),
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(
+              color: Colors.white.withValues(
+                alpha: dark ? 0.16 : 0.76,
+              ),
+              width: 1.1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF00A896).withValues(
+                  alpha: dark ? 0.08 : 0.12,
+                ),
+                blurRadius: 22,
+                offset: const Offset(0, 9),
+              ),
+            ],
+          ),
+          child: child,
+        ),
+      ),
+    );
+  }
+}
 
+class _ChartSelectorCard extends StatelessWidget {
   const _ChartSelectorCard({
     required this.label,
     required this.icon,
@@ -1406,178 +1397,158 @@ class _ChartSelectorCard
     required this.onTap,
   });
 
+  final String label;
+  final IconData icon;
+  final bool selected;
+  final bool available;
+  final bool dark;
+  final VoidCallback? onTap;
+
   @override
-  Widget build(
-    BuildContext context,
-  ) {
-    const Color selectedColor =
-        Color(
-      0xFF00A896,
-    );
-
-    final Color normalText =
-        dark
+  Widget build(BuildContext context) {
+    const selectedColor = Color(0xFF00A896);
+    final Color foreground = !available
+        ? (dark ? Colors.white30 : Colors.black26)
+        : selected
             ? Colors.white
-            : const Color(
-                0xFF2D2D2D,
-              );
-
-    final Color foreground =
-        !available
-            ? Colors.grey
-            : selected
+            : dark
                 ? Colors.white
-                : normalText;
+                : const Color(0xFF302942);
 
     return Semantics(
-      button:
-          true,
-      selected:
-          selected,
-      enabled:
-          available,
-      label:
-          label,
-      child:
-          AnimatedOpacity(
-        duration:
-            const Duration(
-          milliseconds:
-              180,
-        ),
-        opacity:
-            available
-                ? 1
-                : 0.42,
-        child:
-            Material(
-          color:
-              Colors.transparent,
-          borderRadius:
-              BorderRadius.circular(
-            21,
-          ),
-          child:
-              InkWell(
-            onTap:
-                onTap,
-            borderRadius:
-                BorderRadius.circular(
-              21,
-            ),
-            child:
-                AnimatedContainer(
-              duration:
-                  const Duration(
-                milliseconds:
-                    220,
+      button: true,
+      selected: selected,
+      enabled: available,
+      label: label,
+      child: AnimatedOpacity(
+        duration: const Duration(milliseconds: 180),
+        opacity: available ? 1 : 0.46,
+        child: AnimatedScale(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutCubic,
+          scale: selected ? 1.0 : 0.96,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: BackdropFilter(
+              filter: ui.ImageFilter.blur(
+                sigmaX: selected ? 22 : 15,
+                sigmaY: selected ? 22 : 15,
               ),
-              width:
-                  126,
-              padding:
-                  const EdgeInsets.symmetric(
-                horizontal:
-                    10,
-                vertical:
-                    11,
-              ),
-              decoration:
-                  BoxDecoration(
-                color:
-                    selected
-                        ? selectedColor
-                        : dark
-                            ? const Color(
-                                0xFF211B2E,
-                              )
-                            : Colors.white,
-                borderRadius:
-                    BorderRadius.circular(
-                  21,
-                ),
-                border:
-                    Border.all(
-                  color:
-                      selected
-                          ? selectedColor
-                          : available
-                              ? selectedColor.withValues(
-                                  alpha:
-                                      0.18,
-                                )
-                              : Colors.grey.withValues(
-                                  alpha:
-                                      0.20,
-                                ),
-                  width:
-                      selected
-                          ? 1.8
-                          : 1,
-                ),
-                boxShadow:
-                    selected
-                        ? [
-                            BoxShadow(
-                              color:
-                                  selectedColor
-                                      .withValues(
-                                alpha:
-                                    0.20,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: onTap,
+                  borderRadius: BorderRadius.circular(24),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 240),
+                    curve: Curves.easeOutCubic,
+                    width: 132,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: selected
+                            ? [
+                                selectedColor.withValues(alpha: 0.92),
+                                const Color(0xFF4D8DFF).withValues(alpha: 0.78),
+                              ]
+                            : dark
+                                ? [
+                                    Colors.white.withValues(alpha: 0.11),
+                                    Colors.white.withValues(alpha: 0.045),
+                                  ]
+                                : [
+                                    Colors.white.withValues(alpha: 0.82),
+                                    Colors.white.withValues(alpha: 0.48),
+                                  ],
+                      ),
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(
+                        color: selected
+                            ? Colors.white.withValues(alpha: 0.42)
+                            : Colors.white.withValues(
+                                alpha: dark ? 0.12 : 0.88,
                               ),
-                              blurRadius:
-                                  13,
-                              offset:
-                                  const Offset(
-                                0,
-                                5,
-                              ),
+                        width: selected ? 1.4 : 1,
+                      ),
+                      boxShadow: [
+                        if (selected)
+                          BoxShadow(
+                            color: selectedColor.withValues(alpha: 0.28),
+                            blurRadius: 18,
+                            offset: const Offset(0, 7),
+                          ),
+                        BoxShadow(
+                          color: Colors.black.withValues(
+                            alpha: dark ? 0.08 : 0.035,
+                          ),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 220),
+                          width: 43,
+                          height: 43,
+                          decoration: BoxDecoration(
+                            color: selected
+                                ? Colors.white.withValues(alpha: 0.18)
+                                : selectedColor.withValues(
+                                    alpha: dark ? 0.14 : 0.09,
+                                  ),
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: selected
+                                  ? Colors.white.withValues(alpha: 0.24)
+                                  : selectedColor.withValues(alpha: 0.12),
                             ),
-                          ]
-                        : const [],
-              ),
-              child:
-                  Column(
-                mainAxisAlignment:
-                    MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    available
-                        ? icon
-                        : Icons.lock_outline_rounded,
-                    size:
-                        28,
-                    color:
-                        foreground,
-                  ),
-
-                  const SizedBox(
-                    height:
-                        7,
-                  ),
-
-                  Text(
-                    label,
-                    maxLines:
-                        2,
-                    overflow:
-                        TextOverflow.ellipsis,
-                    textAlign:
-                        TextAlign.center,
-                    style:
-                        TextStyle(
-                      fontFamily:
-                          'Fredoka',
-                      fontSize:
-                          13,
-                      height:
-                          1.05,
-                      fontWeight:
-                          FontWeight.w700,
-                      color:
-                          foreground,
+                          ),
+                          child: Icon(
+                            available ? icon : Icons.lock_outline_rounded,
+                            size: 23,
+                            color: available && !selected
+                                ? selectedColor
+                                : foreground,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          label,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Fredoka',
+                            fontSize: 13,
+                            height: 1.05,
+                            fontWeight: FontWeight.w800,
+                            color: foreground,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 220),
+                          width: selected ? 24 : 6,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: selected
+                                ? Colors.white
+                                : selectedColor.withValues(alpha: 0.35),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           ),
@@ -1676,28 +1647,30 @@ class _OfficialGrowthChartCard
           const EdgeInsets.all(
         14,
       ),
-      decoration:
-          BoxDecoration(
-        color:
-            dark
-                ? const Color(
-                    0xFF211B2E,
-                  )
-                : Colors.white,
-        borderRadius:
-            BorderRadius.circular(
-          24,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            dark ? const Color(0xFF211B2E) : Colors.white,
+            const Color(0xFF00A896).withValues(
+              alpha: dark ? 0.09 : 0.045,
+            ),
+          ],
         ),
-        border:
-            Border.all(
-          color:
-              const Color(
-            0xFF00A896,
-          ).withValues(
-            alpha:
-                0.15,
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(
+          color: const Color(0xFF00A896).withValues(alpha: 0.20),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF00A896).withValues(
+              alpha: dark ? 0.04 : 0.08,
+            ),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
-        ),
+        ],
       ),
       child:
           Column(
@@ -1867,31 +1840,35 @@ class _OfficialGrowthChartCard
               constrained:
                   false,
               child:
-                  SizedBox(
-                width:
-                    900,
-                height:
-                    620,
-                child:
-                    CustomPaint(
-                  painter:
-                      _WhoGrowthChartPainter(
-                    table:
-                        spec.table,
-                    points:
-                        spec.points,
-                    dark:
-                        dark,
-                    pointColor:
-                        pointColor,
-                    spanish:
-                        spanish,
-                    xLabel:
-                        spec.xLabel,
-                    yLabel:
-                        spec.yLabel,
-                  ),
-                ),
+                  _LiquidGlassSelectorRail(
+            dark: widget.dark,
+            child: SizedBox(
+              height: 126,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: _GrowthChartType.values.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(width: 10),
+                itemBuilder: (context, index) {
+                  final _GrowthChartType type =
+                      _GrowthChartType.values[index];
+                  final bool available = _isAvailable(type);
+
+                  return _ChartSelectorCard(
+                    label: _selectorLabel(type),
+                    icon: _selectorIcon(type),
+                    selected: _selected == type,
+                    available: available,
+                    dark: widget.dark,
+                    onTap: available
+                        ? () {
+                            setState(() {
+                              _selected = type;
+                            });
+                          }
+                        : null,
+                  );
+                },
               ),
             ),
           ),
