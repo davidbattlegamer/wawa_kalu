@@ -680,63 +680,8 @@ void showConfigSheet(BuildContext context) {
                                   return Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      // ======================================================
-                                      // INDICADOR
-                                      // ======================================================
-                                      Container(
-                                        width: 48,
-                                        height: 5,
-                                        decoration: BoxDecoration(
-                                          color: modoOscuro
-                                              ? Colors.white24
-                                              : Colors.black26,
-                                          borderRadius: BorderRadius.circular(
-                                            20,
-                                          ),
-                                        ),
-                                      ),
-
-                                      const SizedBox(height: 18),
-
-                                      // ======================================================
-                                      // ICONO
-                                      // ======================================================
-                                      Container(
-                                        width: 74,
-                                        height: 74,
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: [
-                                              Colors.deepPurple.withValues(
-                                                alpha: modoOscuro ? 0.38 : 0.22,
-                                              ),
-                                              Colors.deepPurple.withValues(
-                                                alpha: modoOscuro ? 0.16 : 0.08,
-                                              ),
-                                            ],
-                                          ),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(
-                                          Icons.settings_rounded,
-                                          size: 42,
-                                          color: Colors.deepPurple,
-                                        ),
-                                      ),
-
-                                      const SizedBox(height: 14),
-
-                                      Text(
-                                        T.txt('settingsTitle'),
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontFamily: 'Fredoka',
-                                          fontSize: 28,
-                                          fontWeight: FontWeight.w700,
-                                          color: modoOscuro
-                                              ? Colors.white
-                                              : const Color(0xFF4A2C82),
-                                        ),
+                                      _SettingsGlassHero(
+                                        modoOscuro: modoOscuro,
                                       ),
 
                                       const SizedBox(height: 18),
@@ -1117,6 +1062,210 @@ class _DeveloperSignature extends StatelessWidget {
   }
 }
 
+class _SettingsGlassHero extends StatelessWidget {
+  const _SettingsGlassHero({
+    required this.modoOscuro,
+  });
+
+  final bool modoOscuro;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: 46,
+          height: 5,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [
+                Color(0xFF7B61C9),
+                Color(0xFFEC5F7A),
+                Color(0xFF16B89A),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF7B61C9).withValues(alpha: 0.24),
+                blurRadius: 10,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(30),
+          child: BackdropFilter(
+            filter: ui.ImageFilter.blur(
+              sigmaX: 18,
+              sigmaY: 18,
+            ),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.fromLTRB(18, 17, 18, 17),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: modoOscuro
+                      ? [
+                          Colors.white.withValues(alpha: 0.10),
+                          const Color(0xFF7B61C9)
+                              .withValues(alpha: 0.12),
+                          const Color(0xFF16B89A)
+                              .withValues(alpha: 0.07),
+                        ]
+                      : [
+                          Colors.white.withValues(alpha: 0.78),
+                          const Color(0xFFF4EFFF)
+                              .withValues(alpha: 0.80),
+                          const Color(0xFFEFFBF8)
+                              .withValues(alpha: 0.62),
+                        ],
+                ),
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(
+                  color: Colors.white.withValues(
+                    alpha: modoOscuro ? 0.13 : 0.88,
+                  ),
+                  width: 1.2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF7B61C9).withValues(
+                      alpha: modoOscuro ? 0.08 : 0.12,
+                    ),
+                    blurRadius: 26,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: -34,
+                    right: -22,
+                    child: Container(
+                      width: 112,
+                      height: 112,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color(0xFFEC5F7A).withValues(
+                          alpha: modoOscuro ? 0.08 : 0.07,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: -38,
+                    right: 54,
+                    child: Container(
+                      width: 102,
+                      height: 102,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color(0xFF16B89A).withValues(
+                          alpha: modoOscuro ? 0.07 : 0.06,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        width: 66,
+                        height: 66,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Color(0xFF8B5CF6),
+                              Color(0xFFEC5F7A),
+                              Color(0xFFF59E55),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(23),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.50),
+                            width: 1.2,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFF8B5CF6)
+                                  .withValues(alpha: 0.24),
+                              blurRadius: 18,
+                              offset: const Offset(0, 7),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.tune_rounded,
+                          color: Colors.white,
+                          size: 34,
+                        ),
+                      ),
+                      const SizedBox(width: 15),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Wawa Kalú',
+                              style: TextStyle(
+                                fontFamily: 'Baloo2',
+                                fontSize: 12.5,
+                                height: 1,
+                                letterSpacing: 0.8,
+                                fontWeight: FontWeight.w800,
+                                color: modoOscuro
+                                    ? Colors.white60
+                                    : const Color(0xFF7B61C9),
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              T.txt('settingsTitle'),
+                              style: TextStyle(
+                                fontFamily: 'Fredoka',
+                                fontSize: 27,
+                                height: 1,
+                                fontWeight: FontWeight.w800,
+                                color: modoOscuro
+                                    ? Colors.white
+                                    : const Color(0xFF302942),
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              T.txt('settingsNote'),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: 'Baloo2',
+                                fontSize: 13.5,
+                                height: 1.2,
+                                color: modoOscuro
+                                    ? Colors.white60
+                                    : const Color(0xFF6F667B),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 // ============================================================================
 // TARJETA
 // ============================================================================
@@ -1145,66 +1294,149 @@ class SettingCard extends StatelessWidget {
       builder: (context, constraints) {
         final bool estrecho = constraints.maxWidth < 430;
 
-        return Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(estrecho ? 14 : 16),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                modoOscuro ? const Color(0xFF211B2E) : Colors.white,
-                color.withValues(alpha: modoOscuro ? 0.18 : 0.09),
-              ],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(27),
+          child: BackdropFilter(
+            filter: ui.ImageFilter.blur(
+              sigmaX: 15,
+              sigmaY: 15,
             ),
-            borderRadius: BorderRadius.circular(22),
-            border: Border.all(
-              color: color.withValues(alpha: modoOscuro ? 0.30 : 0.16),
-              width: 1.5,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: color.withValues(alpha: modoOscuro ? 0.10 : 0.08),
-                blurRadius: 12,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: estrecho
-              ? Column(
-                  children: [
-                    Row(
-                      children: [
-                        SettingIcon(color: color, icon: icon),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: SettingText(
-                            title: title,
-                            subtitle: subtitle,
-                            modoOscuro: modoOscuro,
-                          ),
-                        ),
-                      ],
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: modoOscuro
+                      ? [
+                          Colors.white.withValues(alpha: 0.075),
+                          color.withValues(alpha: 0.13),
+                          Colors.white.withValues(alpha: 0.035),
+                        ]
+                      : [
+                          Colors.white.withValues(alpha: 0.74),
+                          color.withValues(alpha: 0.085),
+                          Colors.white.withValues(alpha: 0.58),
+                        ],
+                ),
+                borderRadius: BorderRadius.circular(27),
+                border: Border.all(
+                  color: Colors.white.withValues(
+                    alpha: modoOscuro ? 0.11 : 0.86,
+                  ),
+                  width: 1.15,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: color.withValues(
+                      alpha: modoOscuro ? 0.08 : 0.13,
                     ),
-                    const SizedBox(height: 12),
-                    Align(alignment: Alignment.centerRight, child: trailing),
-                  ],
-                )
-              : Row(
-                  children: [
-                    SettingIcon(color: color, icon: icon),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: SettingText(
-                        title: title,
-                        subtitle: subtitle,
-                        modoOscuro: modoOscuro,
+                    blurRadius: 22,
+                    offset: const Offset(0, 8),
+                  ),
+                  BoxShadow(
+                    color: Colors.white.withValues(
+                      alpha: modoOscuro ? 0.015 : 0.38,
+                    ),
+                    blurRadius: 5,
+                    offset: const Offset(0, -2),
+                  ),
+                ],
+              ),
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: -34,
+                    right: -30,
+                    child: Container(
+                      width: 104,
+                      height: 104,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: color.withValues(
+                          alpha: modoOscuro ? 0.07 : 0.055,
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    trailing,
-                  ],
-                ),
+                  ),
+                  Positioned(
+                    left: 0,
+                    top: 16,
+                    bottom: 16,
+                    child: Container(
+                      width: 4,
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: 0.88),
+                        borderRadius: const BorderRadius.horizontal(
+                          right: Radius.circular(20),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: color.withValues(alpha: 0.26),
+                            blurRadius: 8,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      estrecho ? 16 : 17,
+                      estrecho ? 15 : 16,
+                      estrecho ? 14 : 16,
+                      estrecho ? 15 : 16,
+                    ),
+                    child: estrecho
+                        ? Column(
+                            children: [
+                              Row(
+                                children: [
+                                  SettingIcon(
+                                    color: color,
+                                    icon: icon,
+                                    modoOscuro: modoOscuro,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: SettingText(
+                                      title: title,
+                                      subtitle: subtitle,
+                                      modoOscuro: modoOscuro,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: trailing,
+                              ),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              SettingIcon(
+                                color: color,
+                                icon: icon,
+                                modoOscuro: modoOscuro,
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: SettingText(
+                                  title: title,
+                                  subtitle: subtitle,
+                                  modoOscuro: modoOscuro,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              trailing,
+                            ],
+                          ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         );
       },
     );
@@ -1218,24 +1450,64 @@ class SettingCard extends StatelessWidget {
 class SettingIcon extends StatelessWidget {
   final Color color;
   final IconData icon;
+  final bool modoOscuro;
 
-  const SettingIcon({super.key, required this.color, required this.icon});
+  const SettingIcon({
+    super.key,
+    required this.color,
+    required this.icon,
+    required this.modoOscuro,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 52,
-      height: 52,
+      width: 56,
+      height: 56,
       decoration: BoxDecoration(
         gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
           colors: [
-            color.withValues(alpha: 0.25),
-            color.withValues(alpha: 0.10),
+            color.withValues(alpha: modoOscuro ? 0.32 : 0.23),
+            color.withValues(alpha: modoOscuro ? 0.13 : 0.075),
           ],
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(19),
+        border: Border.all(
+          color: Colors.white.withValues(
+            alpha: modoOscuro ? 0.12 : 0.72,
+          ),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.17),
+            blurRadius: 12,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
-      child: Icon(icon, color: color, size: 30),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned(
+            top: 5,
+            left: 7,
+            right: 7,
+            child: Container(
+              height: 1,
+              color: Colors.white.withValues(
+                alpha: modoOscuro ? 0.11 : 0.52,
+              ),
+            ),
+          ),
+          Icon(
+            icon,
+            color: color,
+            size: 29,
+          ),
+        ],
+      ),
     );
   }
 }
