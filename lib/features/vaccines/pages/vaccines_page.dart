@@ -4,6 +4,7 @@ import '../../../core/notifications/notification_service.dart';
 
 import '../../../pages/app_config.dart';
 import '../../../pages/app_texts.dart';
+import '../../../app/widgets/family_content_ui.dart';
 
 import '../../children/data/child_repository.dart';
 import '../../children/models/child.dart';
@@ -252,38 +253,13 @@ class _VaccinesPageState
                 Brightness.dark;
 
         return Scaffold(
-          backgroundColor: dark
-              ? const Color(
-                  0xFF15131A,
-                )
-              : const Color(
-                  0xFFFAF7F2,
-                ),
-          appBar: AppBar(
-            backgroundColor: dark
-                ? const Color(
-                    0xFF211B2E,
-                  )
-                : Colors.white,
-            foregroundColor: dark
-                ? Colors.white
-                : const Color(
-                    0xFF2D2D2D,
-                  ),
-            elevation: 0,
-            title: Text(
-              T.txt(
-                'vaccinesPageTitle',
-              ),
-              style:
-                  const TextStyle(
-                fontFamily:
-                    'Fredoka',
-                fontWeight:
-                    FontWeight.w700,
-              ),
-            ),
+          backgroundColor:
+              dark ? FamilyUi.canvasDark : FamilyUi.canvasLight,
+          appBar: FamilyUi.appBar(
+            context,
+            T.txt('vaccinesPageTitle'),
           ),
+
           body:
               ValueListenableBuilder<String?>(
             valueListenable:
@@ -489,6 +465,17 @@ class _VaccinesContent
           35,
         ),
         children: [
+          FamilyHero(
+            eyebrow: T.txt('vaccinesVisualHeroEyebrow'),
+            title: T.txt('vaccinesVisualHeroTitle'),
+            subtitle: T.txt('vaccinesVisualHeroSubtitle')
+                .replaceAll('{name}', child.name),
+            icon: Icons.vaccines_rounded,
+            color: const Color(0xFF4D8DFF),
+            accent: const Color(0xFF8B5CF6),
+          ),
+          const SizedBox(height: 20),
+
           // ======================================================
           // NIÑO SELECCIONADO
           // ======================================================
@@ -521,11 +508,15 @@ class _VaccinesContent
                 24,
               ),
               border: Border.all(
-                color:
-                    childColor.withValues(
-                  alpha: 0.16,
-                ),
+                color: childColor.withValues(alpha: 0.18),
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: childColor.withValues(alpha: dark ? 0.05 : 0.10),
+                  blurRadius: 18,
+                  offset: const Offset(0, 7),
+                ),
+              ],
             ),
             child: Row(
               children: [
@@ -631,51 +622,17 @@ class _VaccinesContent
             height: 25,
           ),
 
-          // ======================================================
-          // TÍTULO
-          // ======================================================
-
-          Text(
-            T.txt(
-              'vaccinesScheduleTitle',
-            ),
-            style: TextStyle(
-              fontFamily:
-                  'Fredoka',
-              fontSize:
-                  23,
-              fontWeight:
-                  FontWeight.w800,
-              color: dark
-                  ? Colors.white
-                  : const Color(
-                      0xFF4A2C82,
-                    ),
-            ),
+          FamilySectionHeading(
+            title: T.txt('vaccinesScheduleTitle'),
+            subtitle: T.txt('vaccinesScheduleSubtitle'),
+            icon: Icons.calendar_month_rounded,
           ),
 
-          const SizedBox(
-            height: 4,
-          ),
+          const SizedBox(height: 2),
 
-          Text(
-            T.txt(
-              'vaccinesScheduleSubtitle',
-            ),
-            style: TextStyle(
-              fontFamily:
-                  'Baloo2',
-              fontSize:
-                  14.5,
-              color: dark
-                  ? Colors.white60
-                  : Colors.black54,
-            ),
-          ),
+          _VaccineColorGuide(dark: dark),
 
-          const SizedBox(
-            height: 18,
-          ),
+          const SizedBox(height: 20),
 
           // ======================================================
           // LISTA DE VACUNAS
@@ -797,6 +754,222 @@ class _VaccinesContent
   }
 }
 
+class _VaccineColorGuide extends StatelessWidget {
+  const _VaccineColorGuide({
+    required this.dark,
+  });
+
+  final bool dark;
+
+  @override
+  Widget build(BuildContext context) {
+    final items = <_VaccineLegendItem>[
+      _VaccineLegendItem(
+        color: const Color(0xFF00B894),
+        icon: Icons.check_circle_rounded,
+        title: T.txt('vaccineApplied'),
+        description: T.txt('vaccineColorAppliedDesc'),
+      ),
+      _VaccineLegendItem(
+        color: const Color(0xFFFF5D73),
+        icon: Icons.remove_circle_rounded,
+        title: T.txt('vaccineNotApplied'),
+        description: T.txt('vaccineColorNotAppliedDesc'),
+      ),
+      _VaccineLegendItem(
+        color: const Color(0xFF2F80ED),
+        icon: Icons.schedule_rounded,
+        title: T.txt('vaccineUpcoming'),
+        description: T.txt('vaccineColorUpcomingDesc'),
+      ),
+      _VaccineLegendItem(
+        color: const Color(0xFFFF9F1C),
+        icon: Icons.info_rounded,
+        title: T.txt('vaccineReview'),
+        description: T.txt('vaccineColorReviewDesc'),
+      ),
+      _VaccineLegendItem(
+        color: const Color(0xFF8B5CF6),
+        icon: Icons.event_repeat_rounded,
+        title: T.txt('vaccineSeasonalReview'),
+        description: T.txt('vaccineColorSeasonalDesc'),
+      ),
+      _VaccineLegendItem(
+        color: const Color(0xFF7C8798),
+        icon: Icons.lock_rounded,
+        title: T.txt('vaccineWaitingPrevious'),
+        description: T.txt('vaccineColorWaitingDesc'),
+      ),
+    ];
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            dark ? const Color(0xFF211D2B) : Colors.white,
+            const Color(0xFF4D8DFF).withValues(
+              alpha: dark ? 0.08 : 0.04,
+            ),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(26),
+        border: Border.all(
+          color: const Color(0xFF4D8DFF).withValues(alpha: 0.14),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF4D8DFF).withValues(
+              alpha: dark ? 0.035 : 0.07,
+            ),
+            blurRadius: 16,
+            offset: const Offset(0, 7),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF4D8DFF).withValues(
+                    alpha: dark ? 0.16 : 0.09,
+                  ),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(
+                  Icons.palette_outlined,
+                  color: Color(0xFF4D8DFF),
+                  size: 22,
+                ),
+              ),
+              const SizedBox(width: 11),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      T.txt('vaccineColorsTitle'),
+                      style: TextStyle(
+                        fontFamily: 'Fredoka',
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                        color: FamilyUi.ink(context),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      T.txt('vaccineColorsSubtitle'),
+                      style: TextStyle(
+                        fontFamily: 'Baloo2',
+                        fontSize: 13.5,
+                        height: 1.2,
+                        color: FamilyUi.muted(context),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          for (var i = 0; i < items.length; i++) ...[
+            _VaccineLegendRow(
+              item: items[i],
+              dark: dark,
+            ),
+            if (i != items.length - 1)
+              Divider(
+                height: 14,
+                color: dark ? Colors.white10 : Colors.black12,
+              ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _VaccineLegendItem {
+  const _VaccineLegendItem({
+    required this.color,
+    required this.icon,
+    required this.title,
+    required this.description,
+  });
+
+  final Color color;
+  final IconData icon;
+  final String title;
+  final String description;
+}
+
+class _VaccineLegendRow extends StatelessWidget {
+  const _VaccineLegendRow({
+    required this.item,
+    required this.dark,
+  });
+
+  final _VaccineLegendItem item;
+  final bool dark;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 34,
+          height: 34,
+          decoration: BoxDecoration(
+            color: item.color.withValues(alpha: dark ? 0.17 : 0.09),
+            borderRadius: BorderRadius.circular(11),
+          ),
+          child: Icon(
+            item.icon,
+            color: item.color,
+            size: 19,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                item.title,
+                style: TextStyle(
+                  fontFamily: 'Fredoka',
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w800,
+                  color: FamilyUi.ink(context),
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                item.description,
+                style: TextStyle(
+                  fontFamily: 'Baloo2',
+                  fontSize: 13,
+                  height: 1.25,
+                  color: FamilyUi.muted(context),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 // ================================================================
 // RECORDATORIOS
 // ================================================================
@@ -856,14 +1029,16 @@ class _ReminderCard
             BorderRadius.circular(
           24,
         ),
-        border:
-            Border.all(
-          color:
-              color.withValues(
-            alpha:
-                0.14,
-          ),
+        border: Border.all(
+          color: color.withValues(alpha: 0.20),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: dark ? 0.05 : 0.09),
+            blurRadius: 18,
+            offset: const Offset(0, 7),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -1227,16 +1402,16 @@ class _VaccineCard extends StatelessWidget {
 
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(25),
+      borderRadius: BorderRadius.circular(28),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(28),
         splashColor: color.withValues(alpha: 0.08),
         highlightColor: color.withValues(alpha: 0.035),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 240),
           curve: Curves.easeOutCubic,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(17),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -1251,7 +1426,7 @@ class _VaccineCard extends StatelessWidget {
                       color.withValues(alpha: backgroundAlpha),
                     ],
             ),
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(28),
             border: Border.all(
               color: color.withValues(alpha: borderAlpha),
               width: locked ? 1.25 : 1.8,
