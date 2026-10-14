@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../pages/app_config.dart';
 import '../../../pages/app_texts.dart';
+import '../../../app/widgets/family_content_ui.dart';
 
 import '../../children/data/child_repository.dart';
 import '../../children/models/child.dart';
@@ -180,42 +181,16 @@ class _GrowthPageState extends State<GrowthPage> {
                 Brightness.dark;
 
         return Scaffold(
-          backgroundColor: dark
-              ? const Color(
-                  0xFF15131A,
-                )
-              : const Color(
-                  0xFFFAF7F2,
-                ),
+          backgroundColor:
+              dark ? FamilyUi.canvasDark : FamilyUi.canvasLight,
 
           // ==================================================================
           // APP BAR
           // ==================================================================
 
-          appBar: AppBar(
-            backgroundColor: dark
-                ? const Color(
-                    0xFF211B2E,
-                  )
-                : Colors.white,
-            foregroundColor: dark
-                ? Colors.white
-                : const Color(
-                    0xFF2D2D2D,
-                  ),
-            elevation: 0,
-            title: Text(
-              T.txt(
-                'growthPageTitle',
-              ),
-              style:
-                  const TextStyle(
-                fontFamily:
-                    'Fredoka',
-                fontWeight:
-                    FontWeight.w700,
-              ),
-            ),
+          appBar: FamilyUi.appBar(
+            context,
+            T.txt('growthPageTitle'),
           ),
 
           // ==================================================================
@@ -442,6 +417,17 @@ class _GrowthContent extends StatelessWidget {
           40,
         ),
         children: [
+          FamilyHero(
+            eyebrow: T.txt('growthVisualHeroEyebrow'),
+            title: T.txt('growthVisualHeroTitle'),
+            subtitle: T.txt('growthVisualHeroSubtitle')
+                .replaceAll('{name}', child.name),
+            icon: Icons.monitor_heart_rounded,
+            color: const Color(0xFF00A896),
+            accent: const Color(0xFF6C63FF),
+          ),
+          const SizedBox(height: 20),
+
           // ==================================================================
           // NIÑO
           // ==================================================================
@@ -478,9 +464,16 @@ class _GrowthContent extends StatelessWidget {
                 color:
                     childColor.withValues(
                   alpha:
-                      0.12,
+                      0.16,
                 ),
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: childColor.withValues(alpha: dark ? 0.05 : 0.10),
+                  blurRadius: 18,
+                  offset: const Offset(0, 7),
+                ),
+              ],
             ),
             child: Row(
               children: [
@@ -593,29 +586,13 @@ class _GrowthContent extends StatelessWidget {
           // ÚLTIMO CONTROL
           // ==================================================================
 
-          Text(
-            T.txt(
-              'latestGrowthControl',
-            ),
-            style: TextStyle(
-              fontFamily:
-                  'Fredoka',
-              fontSize:
-                  22,
-              fontWeight:
-                  FontWeight.w800,
-              color: dark
-                  ? Colors.white
-                  : const Color(
-                      0xFF4A2C82,
-                    ),
-            ),
+          FamilySectionHeading(
+            title: T.txt('latestGrowthControl'),
+            subtitle: T.txt('growthLatestSubtitle'),
+            icon: Icons.insights_rounded,
           ),
 
-          const SizedBox(
-            height:
-                12,
-          ),
+          const SizedBox(height: 2),
 
           if (latest == null)
             _EmptyGrowthCard(
@@ -872,29 +849,13 @@ class _GrowthContent extends StatelessWidget {
           // HISTORIAL
           // ==================================================================
 
-          Text(
-            T.txt(
-              'growthHistory',
-            ),
-            style: TextStyle(
-              fontFamily:
-                  'Fredoka',
-              fontSize:
-                  22,
-              fontWeight:
-                  FontWeight.w800,
-              color: dark
-                  ? Colors.white
-                  : const Color(
-                      0xFF4A2C82,
-                    ),
-            ),
+          FamilySectionHeading(
+            title: T.txt('growthHistory'),
+            subtitle: T.txt('growthHistorySubtitle'),
+            icon: Icons.timeline_rounded,
           ),
 
-          const SizedBox(
-            height:
-                12,
-          ),
+          const SizedBox(height: 2),
 
           if (measurements.isEmpty)
             _EmptyHistoryCard(
@@ -1022,9 +983,16 @@ class _LatestControlCard
               color:
                   color.withValues(
                 alpha:
-                    0.12,
+                    0.22,
               ),
             ),
+            boxShadow: [
+              BoxShadow(
+                color: color.withValues(alpha: dark ? 0.05 : 0.10),
+                blurRadius: 18,
+                offset: const Offset(0, 7),
+              ),
+            ],
           ),
           child: Column(
             children: [
