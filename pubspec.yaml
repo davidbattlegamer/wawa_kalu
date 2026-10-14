@@ -11,7 +11,6 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  audioplayers: ^6.6.0
   vibration: ^3.1.8
   shared_preferences: ^2.5.5
   sqflite: ^2.4.4+1
@@ -35,7 +34,6 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/sonidos/
     - assets/data/vaccines/
     - assets/data/growth/who/
 
