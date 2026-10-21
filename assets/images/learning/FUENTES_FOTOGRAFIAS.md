@@ -32,12 +32,13 @@ Fotos libres obtenidas de Wikimedia Commons, utilizadas como referencias visuale
 
 ### ropa.webp
 
-- **Fotografía:** File:Child Hanging Laundry.jpg
-- **Autor:** Johnnybam
-- **Licencia:** CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0)
-- **Fuente:** https://commons.wikimedia.org/wiki/File:Child_Hanging_Laundry.jpg
-- **Modificación:** reducida y convertida a WebP para uso sin conexión.
-- **Nota:** fotografía de referencia, no es una instrucción ni garantía del resultado de la actividad.
+- **Fotografía:** File:Jeans and brown shirt folded.jpg
+- **Autor:** Ejdowning00
+- **Licencia:** CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
+- **Fuente:** https://commons.wikimedia.org/wiki/File:Jeans_and_brown_shirt_folded.jpg
+- **Modificación:** redimensionada y convertida a WebP local.
+- **Edad y actividad:** Prendas plegadas y ordenadas, tarea segura y accesible para 24–35 meses con acompañamiento. No muestra niños de mayor edad.
+- **Precaución:** imagen referencial; no permite verificar por sí sola la edad de las personas.
 
 ### cojines.webp
 
@@ -60,12 +61,13 @@ Fotos libres obtenidas de Wikimedia Commons, utilizadas como referencias visuale
 
 ### cuento.webp
 
-- **Fotografía:** File:Child reading book.jpg
-- **Autor:** Widad.sirkhotte
-- **Licencia:** CC BY 4.0 (https://creativecommons.org/licenses/by/4.0)
-- **Fuente:** https://commons.wikimedia.org/wiki/File:Child_reading_book.jpg
-- **Modificación:** reducida y convertida a WebP para uso sin conexión.
-- **Nota:** fotografía de referencia, no es una instrucción ni garantía del resultado de la actividad.
+- **Fotografía:** File:McConnell incorporates '6 by 6' 121023-F-EP111-016.jpg
+- **Autor:** Senior Airman Katrina Brisbin (U.S. Air Force)
+- **Licencia:** Dominio público ()
+- **Fuente:** https://commons.wikimedia.org/wiki/File:McConnell_incorporates_%276_by_6%27_121023-F-EP111-016.jpg
+- **Modificación:** redimensionada y convertida a WebP local.
+- **Edad y actividad:** Lectura compartida de cuentos con niños de edad preescolar, apropiada como referencia de 36–47 meses.
+- **Precaución:** imagen referencial; no permite verificar por sí sola la edad de las personas.
 
 ### pintura.webp
 
@@ -116,25 +118,33 @@ Fotos libres obtenidas de Wikimedia Commons, utilizadas como referencias visuale
 
 ### nombrar_objetos.webp
 
-- **Origen:** se reutiliza la foto libre de `torres.webp` por un error temporal en Wikimedia. Véase arriba su licencia y autor.
+- **Fotografía:** File:Infant explores colorful toy while seated in a high chair, showcasing sensory play and fine motor development.jpg
+- **Autor:** Shixart1985
+- **Licencia:** CC BY 2.0 (https://creativecommons.org/licenses/by/2.0/)
+- **Fuente:** https://commons.wikimedia.org/wiki/File:Infant_explores_colorful_toy_while_seated_in_a_high_chair,_showcasing_sensory_play_and_fine_motor_development.jpg
+- **Modificación:** redimensionada y convertida a WebP local.
+- **Edad y actividad:** Niño pequeño explorando un objeto de colores, etapa inicial del vocabulario.
+- **Precaución:** imagen referencial; no permite verificar por sí sola la edad de las personas.
 
 ### leer_imagenes.webp
 
-- **Fotografía:** File:A child and adult reading book in Venezuela.jpg
-- **Autor:** Bobjgalindo
-- **Licencia:** CC BY 4.0 (https://creativecommons.org/licenses/by/4.0)
-- **Fuente:** https://commons.wikimedia.org/wiki/File:A_child_and_adult_reading_book_in_Venezuela.jpg
-- **Modificación:** reducida y convertida a WebP para uso sin conexión.
-- **Nota:** fotografía de referencia, no es una instrucción ni garantía del resultado de la actividad.
+- **Fotografía:** File:Picturebook1.JPG
+- **Autor:** Brams
+- **Licencia:** Dominio público ()
+- **Fuente:** https://commons.wikimedia.org/wiki/File:Picturebook1.JPG
+- **Modificación:** redimensionada y convertida a WebP local.
+- **Edad y actividad:** Fotografía de un niño de dos años explorando un libro de imágenes.
+- **Precaución:** imagen referencial; no permite verificar por sí sola la edad de las personas.
 
 ### turnos_conversacion.webp
 
-- **Fotografía:** File:Mother and child talk.jpg
-- **Autor:** MD sajjad hossain photography
-- **Licencia:** CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0)
-- **Fuente:** https://commons.wikimedia.org/wiki/File:Mother_and_child_talk.jpg
-- **Modificación:** reducida y convertida a WebP para uso sin conexión.
-- **Nota:** fotografía de referencia, no es una instrucción ni garantía del resultado de la actividad.
+- **Fotografía:** File:The conversation.jpg
+- **Autor:** Armup Media
+- **Licencia:** CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
+- **Fuente:** https://commons.wikimedia.org/wiki/File:The_conversation.jpg
+- **Modificación:** redimensionada y convertida a WebP local.
+- **Edad y actividad:** Madre e hijo conversando frente a su casa; fotografía de interacción verbal.
+- **Precaución:** imagen referencial; no permite verificar por sí sola la edad de las personas.
 
 ### juego_sonidos.webp
 
