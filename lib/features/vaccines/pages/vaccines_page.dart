@@ -523,16 +523,11 @@ class _VaccinesContent
                   LinearGradient(
                 colors: [
                   dark
-                      ? const Color(
-                          0xFF211B2E,
-                        )
-                      : Colors.white,
-                  childColor.withValues(
-                    alpha:
-                        dark
-                            ? 0.16
-                            : 0.07,
-                  ),
+                      ? const Color(0xFF292135)
+                      : Color.lerp(Colors.white, childColor, 0.12)!,
+                  dark
+                      ? Color.lerp(const Color(0xFF332940), childColor, 0.20)!
+                      : Color.lerp(Colors.white, childColor, 0.25)!,
                 ],
               ),
               borderRadius:
@@ -810,7 +805,16 @@ class _VaccineProgressSummary extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: dark ? const Color(0xFF211D2B) : Colors.white,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: dark
+              ? [const Color(0xFF29243A), const Color(0xFF30264B)]
+              : [
+                  Color.lerp(Colors.white, accent, 0.16)!,
+                  Color.lerp(Colors.white, const Color(0xFF8B5CF6), 0.23)!,
+                ],
+        ),
         borderRadius: BorderRadius.circular(22),
         border: Border.all(
           color: accent.withValues(alpha: dark ? 0.25 : 0.16),
@@ -831,10 +835,12 @@ class _VaccineProgressSummary extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: accent.withValues(alpha: 0.12),
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF4D8DFF), Color(0xFF8B5CF6)],
+                  ),
                   borderRadius: BorderRadius.circular(13),
                 ),
-                child: const Icon(Icons.insights_rounded, color: accent),
+                child: const Icon(Icons.insights_rounded, color: Colors.white),
               ),
               const SizedBox(width: 11),
               Expanded(
@@ -1167,16 +1173,11 @@ class _ReminderCard
             LinearGradient(
           colors: [
             dark
-                ? const Color(
-                    0xFF211B2E,
-                  )
-                : Colors.white,
-            color.withValues(
-              alpha:
-                  dark
-                      ? 0.16
-                      : 0.07,
-            ),
+                ? const Color(0xFF2D213B)
+                : Color.lerp(Colors.white, color, 0.14)!,
+            dark
+                ? Color.lerp(const Color(0xFF322542), color, 0.20)!
+                : Color.lerp(Colors.white, color, 0.24)!,
           ],
         ),
         borderRadius:
@@ -1414,7 +1415,7 @@ class _ReminderCard
                     selectedColor: color.withValues(alpha: dark ? 0.27 : 0.13),
                     backgroundColor: dark
                         ? const Color(0xFF292333)
-                        : Colors.white,
+                        : Color.lerp(Colors.white, color, 0.10)!,
                     side: BorderSide(
                       color: intervalDays == interval
                           ? color
@@ -1622,9 +1623,14 @@ class _VaccineCard extends StatelessWidget {
     final Color detailColor = dark
         ? Color.lerp(const Color(0xFF332D42), color, 0.12)!
         : Color.lerp(Colors.white, color, 0.13)!;
-    final Color statusForeground = evaluation.status == VaccineStatus.review
-        ? const Color(0xFF442800)
-        : Colors.white;
+    final Color statusForeground = switch (evaluation.status) {
+      VaccineStatus.applied => const Color(0xFF04392A),
+      VaccineStatus.notApplied => const Color(0xFF561125),
+      VaccineStatus.upcoming => const Color(0xFF061F43),
+      VaccineStatus.review => const Color(0xFF442800),
+      VaccineStatus.seasonalReview => Colors.white,
+      VaccineStatus.waitingPreviousDose => const Color(0xFF182532),
+    };
 
     return Material(
       color: Colors.transparent,
