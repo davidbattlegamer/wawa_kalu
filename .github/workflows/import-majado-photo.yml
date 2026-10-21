@@ -1,0 +1,93 @@
+name: Incorporar foto offline de majado
+on:
+  push:
+    paths:
+      - '.github/workflows/import-majado-photo.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  download-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener repositorio
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Preparar conversor de imágenes
+        run: python -m pip install --disable-pip-version-check pillow
+
+      - name: Descargar y optimizar foto CC0
+        run: |
+          python - <<'PY'
+          import io
+          import pathlib
+          import urllib.request
+          from PIL import Image
+
+          url = 'https://upload.wikimedia.org/wikipedia/commons/6/6f/Dominican_Mangu.jpg'
+          request = urllib.request.Request(
+              url,
+              headers={'User-Agent': 'WawaKalu/1.0 (educational app; download public-domain photo)'},
+          )
+          with urllib.request.urlopen(request, timeout=60) as response:
+              data = response.read()
+          if len(data) < 10000:
+              raise ValueError('La imagen descargada es demasiado pequeña')
+
+          image = Image.open(io.BytesIO(data)).convert('RGB')
+          image.thumbnail((960, 800), Image.Resampling.LANCZOS)
+          folder = pathlib.Path('assets/images/recipes')
+          folder.mkdir(parents=True, exist_ok=True)
+          destination = folder / 'majado_verde_9_11.webp'
+          image.save(destination, 'WEBP', quality=83, method=6)
+          print(f'Foto local: {destination} - {destination.stat().st_size} bytes')
+
+          credits = folder / 'FUENTES_FOTOGRAFIAS.md'
+          credits.write_text(
+              '# Fotografías locales de recetas\n\n'
+              '## majado_verde_9_11.webp\n\n'
+              '- **Imagen original:** *Dominican Mangu.jpg*, fotografía de puré '
+              'de plátano verde (mangú dominicano).\n'
+              '- **Autor:** Ll1324.\n'
+              '- **Fuente:** https://commons.wikimedia.org/wiki/File:Dominican_Mangu.jpg\n'
+              '- **Licencia:** Creative Commons Zero (CC0 1.0, dominio público).\n'
+              '- **Adaptación:** Redimensionada y convertida a WebP.\n'
+              '- **Uso:** Imagen referencial para la textura machacada del majado '
+              'suave de verde con pollo, entre 9 y 11 meses. No representa '
+              'necesariamente los ingredientes ni la receta exacta.\n',
+              encoding='utf-8',
+          )
+
+          pubspec = pathlib.Path('pubspec.yaml')
+          content = pubspec.read_text(encoding='utf-8')
+          entry = '    - assets/images/recipes/'
+          if entry not in content:
+              original = '    - assets/images/\n'
+              if original not in content:
+                  raise ValueError('No se encuentra la entrada assets/images en pubspec.yaml')
+              pubspec.write_text(
+                  content.replace(original, original + entry + '\n', 1),
+                  encoding='utf-8',
+              )
+          PY
+
+      - name: Incorporar foto al repositorio
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pubspec.yaml assets/images/recipes/majado_verde_9_11.webp assets/images/recipes/FUENTES_FOTOGRAFIAS.md
+          if ! git diff --cached --quiet; then
+            git commit -m "assets(nutricion): guardar foto CC0 local de majado 9-11 meses"
+            git push origin HEAD:main
+          else
+            echo "El recurso ya está incluido."
+          fi
