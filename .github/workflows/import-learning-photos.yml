@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/import-learning-photos.yml'
+      - 'scripts/import_learning_photos.py'
   workflow_dispatch:
 
 permissions:
