@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Fotografías de recetas alojadas en sitios externos -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <!-- Vibración -->
     <uses-permission android:name="android.permission.VIBRATE" />
 
