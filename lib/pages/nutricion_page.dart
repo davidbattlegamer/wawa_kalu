@@ -893,14 +893,17 @@ class _RecipePhoto extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image.network(
-              photo.url,
-              fit: BoxFit.cover,
-              filterQuality: FilterQuality.medium,
-              errorBuilder: (_, __, ___) => _placeholder(),
-              loadingBuilder: (_, child, progress) =>
-                  progress == null ? child : _placeholder(),
-            ),
+            // Priorizar fotos dentro del APK: no consumen datos móviles.
+            // Si aún no se ha incorporado el asset, usar la foto web como
+            // respaldo; el resto de recetas mantienen su comportamiento.
+            photo.assetPath == null
+                ? _networkPhoto(photo.url)
+                : Image.asset(
+                    photo.assetPath!,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.medium,
+                    errorBuilder: (_, __, ___) => _networkPhoto(photo.url),
+                  ),
             if (height >= 140)
               Positioned(
                 left: 9,
@@ -930,6 +933,15 @@ class _RecipePhoto extends StatelessWidget {
       ),
     );
   }
+
+  Widget _networkPhoto(String url) => Image.network(
+    url,
+    fit: BoxFit.cover,
+    filterQuality: FilterQuality.medium,
+    errorBuilder: (_, __, ___) => _placeholder(),
+    loadingBuilder: (_, child, progress) =>
+        progress == null ? child : _placeholder(),
+  );
 
   Widget _placeholder() => ColoredBox(
     color: color.withValues(alpha: 0.12),
