@@ -19,11 +19,42 @@ class VaccineNotificationService {
   static const String _enabledKey =
       'vaccine_reminders_enabled';
 
-  static const List<int> _reminderDays = [
-    7,
-    1,
-    0,
-  ];
+  // 0 conserva los avisos originales: 7, 1 y 0 días antes.
+  // Las opciones personalizadas repiten el aviso durante la semana
+  // anterior, incluyendo siempre el mismo día de la dosis.
+  static const String _intervalKey = 'vaccine_reminder_interval_days';
+  static const List<int> allowedIntervals = <int>[0, 1, 2, 3, 7];
+
+  static List<int> reminderOffsetsFor(int intervalDays) {
+    if (intervalDays == 0 || !allowedIntervals.contains(intervalDays)) {
+      return <int>[7, 1, 0];
+    }
+
+    final offsets = <int>[];
+    for (int days = 7; days >= 0; days -= intervalDays) {
+      offsets.add(days);
+    }
+    if (!offsets.contains(0)) offsets.add(0);
+    return offsets;
+  }
+
+  Future<int> getReminderIntervalDays() async {
+    final prefs = await SharedPreferences.getInstance();
+    final interval = prefs.getInt(_intervalKey) ?? 0;
+    return allowedIntervals.contains(interval) ? interval : 0;
+  }
+
+  Future<void> setReminderIntervalDays(int intervalDays) async {
+    if (!allowedIntervals.contains(intervalDays)) {
+      throw ArgumentError.value(intervalDays, 'intervalDays');
+    }
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_intervalKey, intervalDays);
+    if (await isEnabled()) {
+      // Cancela los intervalos antiguos y agenda la nueva frecuencia.
+      await rescheduleAllChildren();
+    }
+  }
 
   Future<bool> isEnabled() async {
     final prefs =
@@ -112,6 +143,7 @@ class VaccineNotificationService {
             .evaluateChild(
       child,
     );
+    final offsets = reminderOffsetsFor(await getReminderIntervalDays());
 
     for (final evaluation
         in evaluations) {
@@ -152,8 +184,7 @@ class VaccineNotificationService {
         continue;
       }
 
-      for (final int daysBefore
-          in _reminderDays) {
+      for (final int daysBefore in offsets) {
         final DateTime reminderDate =
             expected.subtract(
           Duration(
@@ -202,15 +233,11 @@ class VaccineNotificationService {
     required Child child,
     required String doseId,
   }) async {
-    for (final int daysBefore
-        in _reminderDays) {
-      await NotificationService.instance
-          .cancel(
-        _notificationId(
-          child.id,
-          doseId,
-          daysBefore,
-        ),
+    // Limpiar TODOS los posibles intervalos de la semana:
+    // también elimina recordatorios que quedaron de otra frecuencia.
+    for (int daysBefore = 0; daysBefore <= 7; daysBefore++) {
+      await NotificationService.instance.cancel(
+        _notificationId(child.id, doseId, daysBefore),
       );
     }
   }
@@ -273,17 +300,14 @@ class VaccineNotificationService {
           );
     }
 
-    return T.txt(
-      'vaccineNotificationToday',
-    )
-        .replaceAll(
-          '{vaccine}',
-          vaccineName,
-        )
-        .replaceAll(
-          '{name}',
-          child.name,
-        );
+    final template = daysBefore == 0
+        ? T.txt('vaccineNotificationToday')
+        : T.txt('vaccineNotificationInDays');
+
+    return template
+        .replaceAll('{vaccine}', vaccineName)
+        .replaceAll('{name}', child.name)
+        .replaceAll('{days}', daysBefore.toString());
   }
 
   int _notificationId(
