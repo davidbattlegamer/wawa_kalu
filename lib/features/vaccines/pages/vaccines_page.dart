@@ -1612,9 +1612,19 @@ class _VaccineCard extends StatelessWidget {
     final Color foreground = locked
         ? (dark ? Colors.white60 : const Color(0xFF77717F))
         : FamilyUi.ink(context);
+    // Gradientes según el estado: estética alegre como en Aprender.
+    final Color gradientStart = dark
+        ? Color.lerp(const Color(0xFF292335), color, locked ? 0.06 : 0.15)!
+        : Color.lerp(Colors.white, color, locked ? 0.10 : 0.20)!;
+    final Color gradientEnd = dark
+        ? Color.lerp(const Color(0xFF30263D), color, locked ? 0.10 : 0.28)!
+        : Color.lerp(Colors.white, color, locked ? 0.14 : 0.34)!;
     final Color detailColor = dark
-        ? const Color(0xFF2C2735)
-        : const Color(0xFFF8F8FC);
+        ? Color.lerp(const Color(0xFF332D42), color, 0.12)!
+        : Color.lerp(Colors.white, color, 0.13)!;
+    final Color statusForeground = evaluation.status == VaccineStatus.review
+        ? const Color(0xFF442800)
+        : Colors.white;
 
     return Material(
       color: Colors.transparent,
@@ -1627,17 +1637,22 @@ class _VaccineCard extends StatelessWidget {
           curve: Curves.easeOutCubic,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: dark ? const Color(0xFF211D2B) : Colors.white,
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [gradientStart, gradientEnd],
+            ),
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: color.withValues(alpha: locked ? 0.15 : 0.30),
-              width: 1.2,
+              color: color.withValues(alpha: locked ? 0.26 : 0.55),
+              width: 1.4,
             ),
             boxShadow: [
               BoxShadow(
-                color: color.withValues(alpha: dark ? 0.035 : 0.08),
-                blurRadius: 17,
-                offset: const Offset(0, 5),
+                color: color.withValues(alpha: dark ? 0.12 : 0.17),
+                blurRadius: 19,
+                spreadRadius: -2,
+                offset: const Offset(0, 7),
               ),
             ],
           ),
@@ -1649,13 +1664,60 @@ class _VaccineCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    width: 47,
-                    height: 47,
+                    width: 70,
+                    height: 90,
                     decoration: BoxDecoration(
-                      color: color.withValues(alpha: dark ? 0.19 : 0.10),
-                      borderRadius: BorderRadius.circular(15),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          color.withValues(alpha: 0.98),
+                          color.withValues(alpha: 0.75),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(19),
+                      boxShadow: [
+                        BoxShadow(
+                          color: color.withValues(alpha: dark ? 0.23 : 0.25),
+                          blurRadius: 13,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
                     ),
-                    child: Icon(_statusIcon(), color: color, size: 26),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(19),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Positioned(
+                            top: -19,
+                            right: -18,
+                            child: Container(
+                              width: 61,
+                              height: 61,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.19),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                          Icon(
+                            _statusIcon(),
+                            color: Colors.white,
+                            size: 35,
+                          ),
+                          const Positioned(
+                            bottom: 8,
+                            right: 8,
+                            child: Icon(
+                              Icons.auto_awesome_rounded,
+                              color: Color(0xFFFFEDAE),
+                              size: 17,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -1680,7 +1742,9 @@ class _VaccineCard extends StatelessWidget {
                             fontSize: 13,
                             height: 1.2,
                             fontWeight: FontWeight.w700,
-                            color: FamilyUi.muted(context),
+                            color: dark
+                                ? Colors.white70
+                                : const Color(0xFF574D62),
                           ),
                         ),
                       ],
@@ -1709,14 +1773,26 @@ class _VaccineCard extends StatelessWidget {
                       horizontal: 11, vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: color.withValues(alpha: dark ? 0.21 : 0.10),
+                      gradient: LinearGradient(
+                        colors: [
+                          color.withValues(alpha: 0.98),
+                          color.withValues(alpha: 0.80),
+                        ],
+                      ),
                       borderRadius: BorderRadius.circular(50),
+                      boxShadow: [
+                        BoxShadow(
+                          color: color.withValues(alpha: 0.15),
+                          blurRadius: 7,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                     child: Wrap(
                       spacing: 5,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        Icon(_statusIcon(), color: color, size: 15),
+                        Icon(_statusIcon(), color: statusForeground, size: 15),
                         Text(
                           _statusText(),
                           style: TextStyle(
@@ -1724,7 +1800,7 @@ class _VaccineCard extends StatelessWidget {
                             fontSize: 12,
                             height: 1.1,
                             fontWeight: FontWeight.w800,
-                            color: color,
+                            color: statusForeground,
                           ),
                         ),
                       ],
@@ -1742,10 +1818,15 @@ class _VaccineCard extends StatelessWidget {
                     horizontal: 13, vertical: 12,
                   ),
                   decoration: BoxDecoration(
-                    color: detailColor,
+                    gradient: LinearGradient(
+                      colors: [
+                        detailColor,
+                        color.withValues(alpha: dark ? 0.18 : 0.16),
+                      ],
+                    ),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border(
-                      left: BorderSide(color: color, width: 3),
+                    border: Border.all(
+                      color: color.withValues(alpha: dark ? 0.30 : 0.27),
                     ),
                   ),
                   child: Row(
