@@ -369,7 +369,7 @@ class _NutricionPageState extends State<NutricionPage> {
                               ),
                               const SizedBox(height: 9),
                               SizedBox(
-                                height: 154,
+                                height: 194,
                                 child: ListView.separated(
                                   scrollDirection: Axis.horizontal,
                                   itemCount: recipes.length - 1,
@@ -797,6 +797,39 @@ class _NutritionBulletList extends StatelessWidget {
   }
 }
 
+// Fotografía de referencia, con alternativa visual cuando no hay conexión.
+class _RecipePhoto extends StatelessWidget {
+  const _RecipePhoto({required this.recipe, required this.color,
+    this.height = 150, this.radius = 18});
+
+  final EcuadorRecipe recipe;
+  final Color color;
+  final double height;
+  final double radius;
+
+  @override
+  Widget build(BuildContext context) => ClipRRect(
+    borderRadius: BorderRadius.circular(radius),
+    child: SizedBox(
+      width: double.infinity,
+      height: height,
+      child: Image.network(
+        recipe.imageUrl,
+        fit: BoxFit.cover,
+        filterQuality: FilterQuality.medium,
+        errorBuilder: (_, __, ___) => _placeholder(),
+        loadingBuilder: (_, child, progress) =>
+            progress == null ? child : _placeholder(),
+      ),
+    ),
+  );
+
+  Widget _placeholder() => ColoredBox(
+    color: color.withValues(alpha: 0.12),
+    child: Center(child: Icon(Icons.restaurant_rounded, color: color, size: 32)),
+  );
+}
+
 class _RecipeSpotlight extends StatelessWidget {
   const _RecipeSpotlight({
     required this.recipe,
@@ -893,6 +926,8 @@ class _RecipeSpotlight extends StatelessWidget {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 14),
+                    _RecipePhoto(recipe: recipe, color: color, height: 168, radius: 19),
                     const SizedBox(height: 16),
                     Padding(
                       padding: const EdgeInsets.only(right: 76),
@@ -1025,7 +1060,9 @@ class _RecipeQuickPick extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 9),
+              const SizedBox(height: 8),
+              _RecipePhoto(recipe: recipe, color: color, height: 64, radius: 10),
+              const SizedBox(height: 7),
               Text(
                 copy.title,
                 maxLines: 2,
@@ -1215,6 +1252,8 @@ class _RecipeDetailPage extends StatelessWidget {
                     color: regionColor,
                     accent: const Color(0xFFF3C664),
                   ),
+                   const SizedBox(height: 15),
+                   _RecipePhoto(recipe: recipe, color: regionColor, height: 250, radius: 24),
                   const SizedBox(height: 23),
                   Wrap(
                     spacing: 8,
