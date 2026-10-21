@@ -13,12 +13,13 @@ Fotos libres obtenidas de Wikimedia Commons, utilizadas como referencias visuale
 
 ### torres.webp
 
-- **Fotografía:** File:Child engaging in colorful wooden block sorting activity.jpg
-- **Autor:** Shixart1985
-- **Licencia:** CC BY 2.0 (https://creativecommons.org/licenses/by/2.0)
-- **Fuente:** https://commons.wikimedia.org/wiki/File:Child_engaging_in_colorful_wooden_block_sorting_activity.jpg
-- **Modificación:** reducida y convertida a WebP para uso sin conexión.
-- **Nota:** fotografía de referencia, no es una instrucción ni garantía del resultado de la actividad.
+- **Fotografía:** File:Child playing with large Mega Bloks.jpg
+- **Autor:** MHV
+- **Licencia:** Dominio público ()
+- **Fuente:** https://commons.wikimedia.org/wiki/File:Child_playing_with_large_Mega_Bloks.jpg
+- **Modificación:** redimensionada y convertida a WebP local.
+- **Edad y actividad:** Bloques grandes pensados para menores de 2 años, etapa de 12 a 23 meses.
+- **Precaución:** imagen referencial; no permite verificar por sí sola la edad de las personas.
 
 ### canciones.webp
 
@@ -40,12 +41,13 @@ Fotos libres obtenidas de Wikimedia Commons, utilizadas como referencias visuale
 
 ### cojines.webp
 
-- **Fotografía:** File:Pillow Fight IMG 0728 (3412764396).jpg
-- **Autor:** Jason Braley from Cambridge, MA, United States
-- **Licencia:** CC BY-SA 2.0 (https://creativecommons.org/licenses/by-sa/2.0)
-- **Fuente:** https://commons.wikimedia.org/wiki/File:Pillow_Fight_IMG_0728_(3412764396).jpg
-- **Modificación:** reducida y convertida a WebP para uso sin conexión.
-- **Nota:** fotografía de referencia, no es una instrucción ni garantía del resultado de la actividad.
+- **Fotografía:** File:A ln American toddler plays at home in 2023.jpg
+- **Autor:** Tenley235
+- **Licencia:** CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
+- **Fuente:** https://commons.wikimedia.org/wiki/File:A_ln_American_toddler_plays_at_home_in_2023.jpg
+- **Modificación:** redimensionada y convertida a WebP local.
+- **Edad y actividad:** Niño pequeño jugando en casa: referencia de motricidad doméstica a los 2–3 años; no muestra específicamente el recorrido con cojines.
+- **Precaución:** imagen referencial; no permite verificar por sí sola la edad de las personas.
 
 ### casita.webp
 
@@ -85,12 +87,13 @@ Fotos libres obtenidas de Wikimedia Commons, utilizadas como referencias visuale
 
 ### patrones.webp
 
-- **Fotografía:** File:Shape sorter.jpg
-- **Autor:** Mvolz
-- **Licencia:** CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en)
-- **Fuente:** https://commons.wikimedia.org/wiki/File:Shape_sorter.jpg
-- **Modificación:** reducida y convertida a WebP para uso sin conexión.
-- **Nota:** fotografía de referencia, no es una instrucción ni garantía del resultado de la actividad.
+- **Fotografía:** File:A symmetrical pattern block design created by eight year olds.jpg
+- **Autor:** Annielogue
+- **Licencia:** CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
+- **Fuente:** https://commons.wikimedia.org/wiki/File:A_symmetrical_pattern_block_design_created_by_eight_year_olds.jpg
+- **Modificación:** redimensionada y convertida a WebP local.
+- **Edad y actividad:** Fotografía de una secuencia/patrón de bloques como referencia para juego de patrones a los 4–5 años; el modelo fotografiado es avanzado.
+- **Precaución:** imagen referencial; no permite verificar por sí sola la edad de las personas.
 
 ### barrio.webp
 
@@ -103,12 +106,13 @@ Fotos libres obtenidas de Wikimedia Commons, utilizadas como referencias visuale
 
 ### emociones.webp
 
-- **Fotografía:** File:Emotions , Children Girls, هیجان، دختر بچه 22.jpg
+- **Fotografía:** File:Emotions , Children Girls, هیجان، دختر بچه 12.jpg
 - **Autor:** Mostafameraji
 - **Licencia:** CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
-- **Fuente:** https://commons.wikimedia.org/wiki/File:Emotions_,_Children_Girls,_%D9%87%DB%8C%D8%AC%D8%A7%D9%86%D8%8C_%D8%AF%D8%AE%D8%AA%D8%B1_%D8%A8%DA%86%D9%87_22.jpg
-- **Modificación:** reducida y convertida a WebP para uso sin conexión.
-- **Nota:** fotografía de referencia, no es una instrucción ni garantía del resultado de la actividad.
+- **Fuente:** https://commons.wikimedia.org/wiki/File:Emotions_,_Children_Girls,_%D9%87%DB%8C%D8%AC%D8%A7%D9%86%D8%8C_%D8%AF%D8%AE%D8%AA%D8%B1_%D8%A8%DA%86%D9%87_12.jpg
+- **Modificación:** redimensionada y convertida a WebP local.
+- **Edad y actividad:** Niña de cinco años y medio mostrando una emoción mediante su expresión corporal o facial.
+- **Precaución:** imagen referencial; no permite verificar por sí sola la edad de las personas.
 
 ### nombrar_objetos.webp
 
