@@ -247,7 +247,31 @@ def main() -> None:
         except Exception as exc:
             # Último recurso offline si el servidor externo está saturado.
             # Se reutiliza una foto local relacionada; nunca queda un asset roto.
-            sibling = {"barrio": "torres", "emociones": "canciones"}.get(activity)
+            related = {
+                "torres": "texturas",
+                "canciones": "torres",
+                "ropa": "texturas",
+                "cojines": "torres",
+                "casita": "torres",
+                "cuento": "canciones",
+                "pintura": "texturas",
+                "mercado": "casita",
+                "patrones": "torres",
+                "barrio": "torres",
+                "emociones": "canciones",
+                "nombrar_objetos": "torres",
+                "leer_imagenes": "cuento",
+                "turnos_conversacion": "canciones",
+                "juego_sonidos": "canciones",
+            }
+            requested = related.get(activity)
+            possible = [requested] if requested else []
+            possible.extend(name for name in PHOTOS if name != activity)
+            sibling = next(
+                (name for name in possible
+                 if name and (DEST / (name + ".webp")).is_file()),
+                None,
+            )
             previous = DEST / (sibling + ".webp") if sibling else None
             if previous and previous.exists():
                 print("Respaldo local para {}: {}".format(activity, sibling))
