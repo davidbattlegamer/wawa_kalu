@@ -788,6 +788,115 @@ class _VaccinesContent
   }
 }
 
+class _VaccineProgressSummary extends StatelessWidget {
+  const _VaccineProgressSummary({
+    required this.evaluations,
+    required this.dark,
+  });
+
+  final List<VaccineEvaluation> evaluations;
+  final bool dark;
+
+  @override
+  Widget build(BuildContext context) {
+    const accent = Color(0xFF4D8DFF);
+    final int applied = evaluations
+        .where((item) => item.status == VaccineStatus.applied)
+        .length;
+    final int total = evaluations.length;
+    final double progress = total == 0 ? 0 : applied / total;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: dark ? const Color(0xFF211D2B) : Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(
+          color: accent.withValues(alpha: dark ? 0.25 : 0.16),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: accent.withValues(alpha: dark ? 0.03 : 0.07),
+            blurRadius: 18,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: accent.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(13),
+                ),
+                child: const Icon(Icons.insights_rounded, color: accent),
+              ),
+              const SizedBox(width: 11),
+              Expanded(
+                child: Text(
+                  T.txt('vaccinesProgressTitle'),
+                  style: TextStyle(
+                    fontFamily: 'Fredoka',
+                    fontWeight: FontWeight.w800,
+                    fontSize: 17,
+                    color: FamilyUi.ink(context),
+                  ),
+                ),
+              ),
+              Text(
+                '${(progress * 100).round()}%',
+                style: const TextStyle(
+                  color: accent,
+                  fontFamily: 'Fredoka',
+                  fontSize: 19,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 13),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: LinearProgressIndicator(
+              value: progress,
+              minHeight: 8,
+              backgroundColor: accent.withValues(alpha: 0.12),
+              valueColor: const AlwaysStoppedAnimation<Color>(accent),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            T.txt('vaccinesProgressCount')
+                .replaceAll('{applied}', '$applied')
+                .replaceAll('{total}', '$total'),
+            style: TextStyle(
+              fontFamily: 'Fredoka',
+              fontWeight: FontWeight.w700,
+              fontSize: 14,
+              color: FamilyUi.ink(context),
+            ),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            T.txt('vaccinesProgressSubtitle'),
+            style: TextStyle(
+              fontFamily: 'Baloo2',
+              fontSize: 12.5,
+              height: 1.25,
+              color: FamilyUi.muted(context),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _VaccineColorGuide extends StatelessWidget {
   const _VaccineColorGuide({
     required this.dark,
@@ -1013,6 +1122,8 @@ class _ReminderCard
   final bool dark;
   final bool enabled;
   final bool loading;
+  final int intervalDays;
+  final ValueChanged<int> onIntervalChanged;
 
   final ValueChanged<bool> onChanged;
   final VoidCallback onTest;
@@ -1021,9 +1132,18 @@ class _ReminderCard
     required this.dark,
     required this.enabled,
     required this.loading,
+    required this.intervalDays,
+    required this.onIntervalChanged,
     required this.onChanged,
     required this.onTest,
   });
+
+  String _intervalLabel(int value) {
+    if (value == 0) return T.txt('vaccineReminderFrequencyDefault');
+    if (value == 1) return T.txt('vaccineReminderFrequencyDaily');
+    return T.txt('vaccineReminderFrequencyEveryDays')
+        .replaceAll('{days}', value.toString());
+  }
 
   @override
   Widget build(
@@ -1227,9 +1347,9 @@ class _ReminderCard
 
                 Expanded(
                   child: Text(
-                    T.txt(
-                      'vaccineRemindersSchedule',
-                    ),
+                    intervalDays == 0
+                        ? T.txt('vaccineRemindersSchedule')
+                        : T.txt('vaccineReminderFrequencyRange'),
                     style:
                         TextStyle(
                       fontFamily:
@@ -1245,6 +1365,71 @@ class _ReminderCard
                     ),
                   ),
                 ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 16),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              T.txt('vaccineReminderFrequencyTitle'),
+              style: TextStyle(
+                fontFamily: 'Fredoka',
+                fontSize: 15.5,
+                fontWeight: FontWeight.w800,
+                color: FamilyUi.ink(context),
+              ),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              T.txt('vaccineReminderFrequencySubtitle'),
+              style: TextStyle(
+                fontFamily: 'Baloo2',
+                fontSize: 12.7,
+                height: 1.25,
+                color: FamilyUi.muted(context),
+              ),
+            ),
+          ),
+          const SizedBox(height: 11),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Wrap(
+              spacing: 7,
+              runSpacing: 7,
+              children: [
+                for (final interval in VaccineNotificationService.allowedIntervals)
+                  ChoiceChip(
+                    label: Text(_intervalLabel(interval)),
+                    selected: intervalDays == interval,
+                    onSelected: loading
+                        ? null
+                        : (selected) {
+                            if (selected) onIntervalChanged(interval);
+                          },
+                    selectedColor: color.withValues(alpha: dark ? 0.27 : 0.13),
+                    backgroundColor: dark
+                        ? const Color(0xFF292333)
+                        : Colors.white,
+                    side: BorderSide(
+                      color: intervalDays == interval
+                          ? color
+                          : color.withValues(alpha: 0.18),
+                    ),
+                    checkmarkColor: color,
+                    labelStyle: TextStyle(
+                      fontFamily: 'Baloo2',
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w700,
+                      color: intervalDays == interval
+                          ? color
+                          : FamilyUi.ink(context),
+                    ),
+                  ),
               ],
             ),
           ),
