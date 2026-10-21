@@ -1,0 +1,58 @@
+name: Incorporar fotos locales de Aprender
+
+on:
+  push:
+    paths:
+      - '.github/workflows/import-learning-photos.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import-photos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Obtener el repositorio
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar Pillow
+        run: python -m pip install --disable-pip-version-check pillow
+
+      - name: Descargar y verificar fotos libres
+        run: python scripts/import_learning_photos.py
+
+      - name: Registrar imágenes en Flutter
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("pubspec.yaml")
+          data = path.read_text(encoding="utf-8")
+          entry = "    - assets/images/learning/\n"
+          if entry not in data:
+              anchor = "    - assets/images/recipes/\n"
+              if anchor not in data:
+                  raise RuntimeError("No se encontró la sección de assets")
+              data = data.replace(anchor, anchor + entry, 1)
+              path.write_text(data, encoding="utf-8")
+          PY
+
+      - name: Guardar fotos optimizadas en GitHub
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pubspec.yaml assets/images/learning/
+          if ! git diff --cached --quiet; then
+            git commit -m "assets(aprender): incluir 16 fotografías locales de juegos y actividades"
+            git push origin HEAD:main
+          else
+            echo "Las fotografías ya están guardadas."
+          fi
