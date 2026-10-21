@@ -313,8 +313,8 @@ const List<EcuadorRecipe> ecuadorRecipeCatalog = <EcuadorRecipe>[
   ),
   EcuadorRecipe(
     id: 'bolon_suave_verde_queso',
-    imageUrl: 'https://bacu-assets-prod.s3.amazonaws.com/products/762/762-PurDePltano-1727965382.webp',
-    imageSourceUrl: 'https://menu.bacu.co/es/product/1203',
+    imageUrl: 'https://img-global.cpcdn.com/recipes/7ec91a6e6f342988/1200x630cq70/photo.jpg',
+    imageSourceUrl: 'https://cookpad.com/es/buscar/bolon%20de%20verde',
     agePhotos: <int, EcuadorRecipePhoto>{
       5: EcuadorRecipePhoto(
         url: 'https://www.recetasnestle.com.ec/sites/default/files/styles/recipe_detail_desktop_new/public/srh_recipes/b58bf96b15a0458b2a7a762ac7578dcb.jpg?itok=ff7IxR9N',
