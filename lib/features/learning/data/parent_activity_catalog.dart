@@ -77,6 +77,12 @@ class ParentActivity {
     required this.copyKeys,
   });
 
+  /// Solo los juegos y actividades prácticas muestran fotografías.
+  /// Las cinco fichas de protección mantienen su icono original.
+  String? get imageAsset => area == ActivityArea.protection
+      ? null
+      : 'assets/images/learning/$id.webp';
+
   ActivityCopy copyFor(String language) {
     return copyKeys.resolve();
   }
