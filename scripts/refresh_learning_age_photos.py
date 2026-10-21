@@ -14,6 +14,7 @@ import urllib.parse
 import urllib.request
 
 from PIL import Image, ImageOps
+from import_learning_photos import choose_file
 
 DEST = pathlib.Path("assets/images/learning")
 CREDITS = DEST / "FUENTES_FOTOGRAFIAS.md"
@@ -21,6 +22,16 @@ UA = "WawaKaluLearning/1.0 (public Wikimedia Commons pictures; educational famil
 
 # Título de Commons, autor, licencia, justificación de edad y juego.
 UPDATES = {
+    "ropa": (
+        "Jeans and brown shirt folded.jpg", "Ejdowning00",
+        "CC BY-SA 4.0", "https://creativecommons.org/licenses/by-sa/4.0/",
+        "Prendas plegadas y ordenadas, tarea segura y accesible para 24–35 meses con acompañamiento. No muestra niños de mayor edad.",
+    ),
+    "cuento": (
+        "McConnell incorporates '6 by 6' 121023-F-EP111-016.jpg", "Senior Airman Katrina Brisbin (U.S. Air Force)",
+        "Dominio público", "",
+        "Lectura compartida de cuentos con niños de edad preescolar, apropiada como referencia de 36–47 meses.",
+    ),
     "torres": (
         "Child playing with large Mega Bloks.jpg", "MHV",
         "Dominio público", "",
@@ -96,12 +107,28 @@ def download_photo(title: str) -> Image.Image:
                 return ImageOps.exif_transpose(img).convert("RGB")
         except Exception as exc:
             print(f"Probando descarga alternativa para {title}: {exc}")
+    # Las URL originales pueden rechazarse; la API de Commons ofrece
+    # miniaturas con URL canónica, más fiables para títulos antiguos.
+    try:
+        item = choose_file(title)
+        if item:
+            link = item["info"].get("thumburl") or item["info"]["url"]
+            payload = download(link)
+            with Image.open(io.BytesIO(payload)) as image:
+                return ImageOps.exif_transpose(image).convert("RGB")
+    except Exception as exc:
+        print(f"Fallo también la API de Wikimedia para {title}: {exc}")
     raise RuntimeError(f"No se pudo obtener {title}")
 
 
 def main() -> None:
     text = CREDITS.read_text(encoding="utf-8")
     for id, (title, author, license_name, license_url, note) in UPDATES.items():
+        # Evitar solicitudes repetidas a Commons para fotos ya actualizadas.
+        block = re.search(rf"### {re.escape(id)}\.webp\n\n([\s\S]*?)(?=### |$)", text)
+        if block and f"File:{title}" in block.group(1):
+            print(f"Ya está actualizada: {id}")
+            continue
         try:
             image = download_photo(title)
         except Exception as e:
