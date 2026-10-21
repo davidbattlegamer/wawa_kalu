@@ -369,7 +369,9 @@ class _NutricionPageState extends State<NutricionPage> {
                               ),
                               const SizedBox(height: 9),
                               SizedBox(
-                                height: 194,
+                                // Espacio para foto, título de dos líneas y pie
+                                // sin desbordar las tarjetas horizontales.
+                                height: 224,
                                 child: ListView.separated(
                                   scrollDirection: Axis.horizontal,
                                   itemCount: recipes.length - 1,
