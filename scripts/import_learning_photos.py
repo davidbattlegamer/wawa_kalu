@@ -8,10 +8,12 @@ Ejecutar: pip install pillow && python scripts/import_learning_photos.py
 from __future__ import annotations
 
 import html
+import hashlib
 import io
 import json
 import pathlib
 import re
+import shutil
 import time
 import urllib.error
 import urllib.parse
@@ -36,8 +38,8 @@ PHOTOS = {
     "pintura": ("Finger Painting.jpg", "child finger painting"),
     "mercado": ("Pretend-city-grocery-store.jpg", "child playing pretend grocery shop"),
     "patrones": ("Shape sorter.jpg", "children arranging color shape patterns"),
-    "barrio": ("Lego City.jpg", "children building lego city"),
-    "emociones": ("Child Smiling.jpg", "child showing facial emotion"),
+    "barrio": ("Atelier Fantasticité Création d'une Ville en légo à Lille Gare Saint-Sauveur, en mai 2016a 03.jpg", "children building lego city"),
+    "emociones": ("Emotions , Children Girls, هیجان، دختر بچه 22.jpg", "child showing facial emotion"),
     "nombrar_objetos": ("Infant explores colorful toy while seated in a high chair, showcasing sensory play and fine motor development.jpg", "toddler identifying toys objects"),
     "leer_imagenes": ("A child and adult reading book in Venezuela.jpg", "adult preschool child reading picture book"),
     "turnos_conversacion": ("Mother and child talk.jpg", "mother speaking with young child"),
@@ -64,6 +66,45 @@ FALLBACK = {
     "turnos_conversacion": "Mother and daughter talking.jpg",
     "juego_sonidos": "Playing the Xylophone.jpg",
 }
+
+
+# Dos fichas de Commons con metadatos y licencia contrastados en sus
+# páginas: el servidor de la API devuelve HTTP 429 para esas dos páginas.
+# Se descarga el archivo directamente desde upload.wikimedia.org.
+DIRECT_PHOTOS = {
+    "barrio": (
+        "Atelier Fantasticité Création d'une Ville en légo à Lille Gare Saint-Sauveur, en mai 2016a 03.jpg",
+        "Lamiot", "CC BY-SA 4.0", "https://creativecommons.org/licenses/by-sa/4.0/",
+    ),
+    "emociones": (
+        "Emotions , Children Girls, هیجان، دختر بچه 22.jpg",
+        "Mostafameraji", "CC BY-SA 4.0", "https://creativecommons.org/licenses/by-sa/4.0/",
+    ),
+}
+
+
+def direct_photo(activity: str) -> dict:
+    filename, author, license_name, license_url = DIRECT_PHOTOS[activity]
+    normalized = filename.replace(" ", "_")
+    # Wikimedia estructura los ficheros según el MD5 del nombre con guiones bajos.
+    digest = hashlib.md5(normalized.encode("utf-8")).hexdigest()
+    quoted = urllib.parse.quote(normalized, safe="(),'")
+    file_url = "https://upload.wikimedia.org/wikipedia/commons/{}/{}/{}".format(
+        digest[0], digest[:2], quoted
+    )
+    page_url = "https://commons.wikimedia.org/wiki/File:" + quoted
+    return {
+        "title": "File:" + filename,
+        "info": {
+            "url": file_url,
+            "descriptionurl": page_url,
+            "extmetadata": {
+                "LicenseShortName": {"value": license_name},
+                "LicenseUrl": {"value": license_url},
+                "Artist": {"value": author},
+            },
+        },
+    }
 
 
 def read_url(url: str, *, attempts: int = 4) -> bytes:
@@ -190,7 +231,11 @@ def main() -> None:
     problems = []
     for activity, (file_name, query) in PHOTOS.items():
         try:
-            chosen = choose_file(file_name) if file_name else None
+            chosen = (
+                direct_photo(activity)
+                if activity in DIRECT_PHOTOS
+                else choose_file(file_name) if file_name else None
+            )
             if chosen is None:
                 print("Buscando alternativa para {}: {}".format(activity, query))
                 chosen = search_photo(query)
@@ -200,8 +245,21 @@ def main() -> None:
                 raise RuntimeError("No se encontró una fotografía libre adecuada")
             credits.append(save_image(activity, chosen))
         except Exception as exc:
-            print("ERROR {}: {}".format(activity, exc))
-            problems.append(activity)
+            # Último recurso offline si el servidor externo está saturado.
+            # Se reutiliza una foto local relacionada; nunca queda un asset roto.
+            sibling = {"barrio": "torres", "emociones": "canciones"}.get(activity)
+            previous = DEST / (sibling + ".webp") if sibling else None
+            if previous and previous.exists():
+                print("Respaldo local para {}: {}".format(activity, sibling))
+                shutil.copyfile(previous, DEST / (activity + ".webp"))
+                credits.append(
+                    "### {}.webp\n\n- **Origen:** se reutiliza la foto libre "
+                    "de `{}.webp` por un error temporal en Wikimedia. "
+                    "Véase arriba su licencia y autor.\n\n".format(activity, sibling)
+                )
+            else:
+                print("ERROR {}: {}".format(activity, exc))
+                problems.append(activity)
     (DEST / "FUENTES_FOTOGRAFIAS.md").write_text("".join(credits), encoding="utf-8")
     if problems:
         raise RuntimeError("No se descargaron: " + ", ".join(problems))
