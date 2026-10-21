@@ -60,6 +60,8 @@ class EcuadorRecipe {
     required this.maxAgeMonths,
     required this.region,
     required this.emoji,
+    required this.imageUrl,
+    required this.imageSourceUrl,
     required this.minutes,
     required this.copyKeys,
   });
@@ -69,6 +71,10 @@ class EcuadorRecipe {
   final int maxAgeMonths;
   final EcuadorRecipeRegion region;
   final String emoji;
+  // Fotografía de referencia: puede mostrar una variante de la preparación.
+  // Las imágenes se cargan de sus sitios de origen y necesitan Internet.
+  final String imageUrl;
+  final String imageSourceUrl;
   final int minutes;
   final EcuadorRecipeCopyKeys copyKeys;
 
@@ -86,6 +92,8 @@ class EcuadorRecipe {
 const List<EcuadorRecipe> ecuadorRecipeCatalog = <EcuadorRecipe>[
   EcuadorRecipe(
     id: 'papilla_quinua_banano',
+    imageUrl: 'https://cdn7.kiwilimon.com/ss_secreto/1365/640x640/1365.jpg.jpg',
+    imageSourceUrl: 'https://www.kiwilimon.com/tips/cocina/tips-de-platillos/papilla-de-platano-y-quinoa',
     minAgeMonths: 6,
     maxAgeMonths: 8,
     region: EcuadorRecipeRegion.sierra,
@@ -110,6 +118,8 @@ const List<EcuadorRecipe> ecuadorRecipeCatalog = <EcuadorRecipe>[
   ),
   EcuadorRecipe(
     id: 'crema_zapallo_papa_pollo',
+    imageUrl: 'https://thefuelfood.com/cdn/shop/files/AZr03N21j-zN2-kemJFeKw-AZr03N214QF_Rnfj6sr_aA.jpg?v=1765044751',
+    imageSourceUrl: 'https://thefuelfood.com/products/crema-de-calabaza-con-pollo',
     minAgeMonths: 6,
     maxAgeMonths: 8,
     region: EcuadorRecipeRegion.sierra,
@@ -135,6 +145,8 @@ const List<EcuadorRecipe> ecuadorRecipeCatalog = <EcuadorRecipe>[
   ),
   EcuadorRecipe(
     id: 'lenteja_papa_zanahoria',
+    imageUrl: 'https://snapcalorie-webflow-website.s3.us-east-2.amazonaws.com/media/food_pics_v2/medium/sopa_de_lentejas.jpg',
+    imageSourceUrl: 'https://www.snapcalorie.com/nutrition/sopa_de_lentejas_nutrition.html',
     minAgeMonths: 9,
     maxAgeMonths: 11,
     region: EcuadorRecipeRegion.sierra,
@@ -160,6 +172,8 @@ const List<EcuadorRecipe> ecuadorRecipeCatalog = <EcuadorRecipe>[
   ),
   EcuadorRecipe(
     id: 'majado_verde_pollo',
+    imageUrl: 'https://www.recetasnestle.com.ec/sites/default/files/srh_recipes/f143eccd7f5b11dbd8d95eb8829d0caf.jpg',
+    imageSourceUrl: 'https://www.recetasnestle.com.ec/recetas/majado-de-verde',
     minAgeMonths: 9,
     maxAgeMonths: 17,
     region: EcuadorRecipeRegion.costa,
@@ -185,6 +199,8 @@ const List<EcuadorRecipe> ecuadorRecipeCatalog = <EcuadorRecipe>[
   ),
   EcuadorRecipe(
     id: 'locro_suave_papa_queso',
+    imageUrl: 'https://toursaroundquito.com/wp-content/uploads/2025/02/Potato-soup-locro-de-papa.jpg',
+    imageSourceUrl: 'https://toursaroundquito.com/dishes-to-eat-in-quito-and-ecuador/',
     minAgeMonths: 12,
     maxAgeMonths: 35,
     region: EcuadorRecipeRegion.sierra,
@@ -210,6 +226,8 @@ const List<EcuadorRecipe> ecuadorRecipeCatalog = <EcuadorRecipe>[
   ),
   EcuadorRecipe(
     id: 'sopa_quinua_pollo',
+    imageUrl: 'https://www.recetasnestle.com.ec/sites/default/files/srh_recipes/1c7c9902781c62ebd24ea257fd5a6271.jpg',
+    imageSourceUrl: 'https://www.recetasnestle.com.ec/recetas/sopa-de-quinua',
     minAgeMonths: 12,
     maxAgeMonths: 60,
     region: EcuadorRecipeRegion.sierra,
@@ -235,6 +253,8 @@ const List<EcuadorRecipe> ecuadorRecipeCatalog = <EcuadorRecipe>[
   ),
   EcuadorRecipe(
     id: 'bolon_suave_verde_queso',
+    imageUrl: 'https://www.recetasnestle.com.ec/sites/default/files/styles/recipe_detail_desktop_new/public/srh_recipes/b58bf96b15a0458b2a7a762ac7578dcb.jpg?itok=ff7IxR9N',
+    imageSourceUrl: 'https://www.recetasnestle.com.ec/recetas/bolon-de-verde',
     minAgeMonths: 24,
     maxAgeMonths: 60,
     region: EcuadorRecipeRegion.costa,
@@ -259,6 +279,8 @@ const List<EcuadorRecipe> ecuadorRecipeCatalog = <EcuadorRecipe>[
   ),
   EcuadorRecipe(
     id: 'sango_pescado_coco',
+    imageUrl: 'https://cloudfront-us-east-1.images.arcpublishing.com/eluniverso/XTOJLBXOINCYNCIDWMKIY43E7E.jpg',
+    imageSourceUrl: 'https://www.eluniverso.com/larevista/cocina/receta-de-sango-de-verde-con-pescado-por-las-fiestas-de-independencia-de-guayaquil-nota/',
     minAgeMonths: 24,
     maxAgeMonths: 60,
     region: EcuadorRecipeRegion.costa,
@@ -284,6 +306,8 @@ const List<EcuadorRecipe> ecuadorRecipeCatalog = <EcuadorRecipe>[
   ),
   EcuadorRecipe(
     id: 'yuca_pollo_vegetales',
+    imageUrl: 'https://www.arise-app.com/images/dishes/es/pollo-a-la-plancha-con-yuca-y-ensalada-1v8e5m.webp',
+    imageSourceUrl: 'https://www.arise-app.com/es/plato/Pollo-a-la-plancha-con-yuca-y-ensalada',
     minAgeMonths: 24,
     maxAgeMonths: 60,
     region: EcuadorRecipeRegion.amazonia,
@@ -309,6 +333,8 @@ const List<EcuadorRecipe> ecuadorRecipeCatalog = <EcuadorRecipe>[
   ),
   EcuadorRecipe(
     id: 'tortilla_maiz_queso_aguacate',
+    imageUrl: 'https://storage.googleapis.com/avena-recipes/2019/10/1571780258082.jpeg',
+    imageSourceUrl: 'https://avena.io/receta/quesadillas-con-aguacate-id2633',
     minAgeMonths: 36,
     maxAgeMonths: 60,
     region: EcuadorRecipeRegion.sierra,
