@@ -36,6 +36,7 @@ class _VaccinesPageState
 
   bool _remindersEnabled = false;
   bool _loadingReminders = true;
+  int _reminderIntervalDays = 0;
 
   @override
   void initState() {
@@ -50,9 +51,9 @@ class _VaccinesPageState
 
   Future<void> _loadReminderState() async {
     final bool enabled =
-        await VaccineNotificationService
-            .instance
-            .isEnabled();
+        await VaccineNotificationService.instance.isEnabled();
+    final int intervalDays =
+        await VaccineNotificationService.instance.getReminderIntervalDays();
 
     if (!mounted) {
       return;
@@ -60,8 +61,33 @@ class _VaccinesPageState
 
     setState(() {
       _remindersEnabled = enabled;
+      _reminderIntervalDays = intervalDays;
       _loadingReminders = false;
     });
+  }
+
+  Future<void> _changeReminderInterval(int intervalDays) async {
+    if (_loadingReminders || intervalDays == _reminderIntervalDays) return;
+
+    setState(() => _loadingReminders = true);
+    try {
+      await VaccineNotificationService.instance
+          .setReminderIntervalDays(intervalDays);
+      if (!mounted) return;
+      setState(() {
+        _reminderIntervalDays = intervalDays;
+        _loadingReminders = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(T.txt('vaccineReminderFrequencyUpdated'))),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _loadingReminders = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(T.txt('vaccineReminderFrequencyError'))),
+      );
+    }
   }
 
   Future<void> _changeReminders(
@@ -384,6 +410,8 @@ class _VaccinesPageState
                         dark,
                     remindersEnabled:
                         _remindersEnabled,
+                    reminderIntervalDays: _reminderIntervalDays,
+                    onReminderIntervalChanged: _changeReminderInterval,
                     loadingReminders:
                         _loadingReminders,
                     onReminderChanged:
@@ -423,6 +451,8 @@ class _VaccinesContent
   final bool dark;
 
   final bool remindersEnabled;
+  final int reminderIntervalDays;
+  final ValueChanged<int> onReminderIntervalChanged;
   final bool loadingReminders;
 
   final ValueChanged<bool>
@@ -440,6 +470,8 @@ class _VaccinesContent
     required this.evaluations,
     required this.dark,
     required this.remindersEnabled,
+    required this.reminderIntervalDays,
+    required this.onReminderIntervalChanged,
     required this.loadingReminders,
     required this.onReminderChanged,
     required this.onTestNotification,
@@ -610,6 +642,8 @@ class _VaccinesContent
                 dark,
             enabled:
                 remindersEnabled,
+            intervalDays: reminderIntervalDays,
+            onIntervalChanged: onReminderIntervalChanged,
             loading:
                 loadingReminders,
             onChanged:
@@ -628,10 +662,8 @@ class _VaccinesContent
             icon: Icons.calendar_month_rounded,
           ),
 
-          const SizedBox(height: 2),
-
-          _VaccineColorGuide(dark: dark),
-
+          const SizedBox(height: 12),
+          _VaccineProgressSummary(evaluations: evaluations, dark: dark),
           const SizedBox(height: 20),
 
           // ======================================================
@@ -748,6 +780,8 @@ class _VaccinesContent
               ],
             ),
           ),
+          const SizedBox(height: 22),
+          _VaccineColorGuide(dark: dark),
         ],
       ),
     );
