@@ -613,6 +613,7 @@ class _ActivityCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color color = _areaColor(activity.area);
+    final String? imageAsset = activity.imageAsset;
     final ActivityCopy copy = activity.copyFor(AppConfig.idioma.value);
     return Material(
       color: Colors.transparent,
@@ -654,11 +655,35 @@ class _ActivityCard extends StatelessWidget {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    Positioned(
-                      top: -17, right: -18,
-                      child: _SoftCircle(size: 65, opacity: 0.19),
-                    ),
-                    Icon(_areaIcon(activity.area), color: Colors.white, size: 40),
+                    if (imageAsset != null)
+                      Positioned.fill(
+                        // La foto reemplaza al icono en el MISMO espacio de
+                        // 76 x 100 px; no se altera la tarjeta ni sus textos.
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(19),
+                          child: Image.asset(
+                            imageAsset,
+                            fit: BoxFit.cover,
+                            filterQuality: FilterQuality.medium,
+                            errorBuilder: (_, __, ___) => Icon(
+                              _areaIcon(activity.area),
+                              color: Colors.white,
+                              size: 40,
+                            ),
+                          ),
+                        ),
+                      )
+                    else ...[
+                      Positioned(
+                        top: -17, right: -18,
+                        child: _SoftCircle(size: 65, opacity: 0.19),
+                      ),
+                      Icon(
+                        _areaIcon(activity.area),
+                        color: Colors.white,
+                        size: 40,
+                      ),
+                    ],
                     const Positioned(
                       bottom: 7, right: 8,
                       child: Icon(Icons.star_rounded,
@@ -907,6 +932,31 @@ class _ActivityDetailPageState extends State<_ActivityDetailPage> {
                           ],
                         ),
                       ),
+                      if (activity.imageAsset != null) ...[
+                        const SizedBox(height: 14),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(22),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 190,
+                            child: Image.asset(
+                              activity.imageAsset!,
+                              fit: BoxFit.cover,
+                              filterQuality: FilterQuality.medium,
+                              errorBuilder: (_, __, ___) => ColoredBox(
+                                color: color.withValues(alpha: 0.10),
+                                child: Center(
+                                  child: Icon(
+                                    _areaIcon(activity.area),
+                                    color: color,
+                                    size: 48,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: 18),
                       _GuideSection(
                         title: T.txt('guideGoal'),
