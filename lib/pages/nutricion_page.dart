@@ -1252,8 +1252,13 @@ class _RecipeDetailPage extends StatelessWidget {
                     color: regionColor,
                     accent: const Color(0xFFF3C664),
                   ),
-                   const SizedBox(height: 15),
-                   _RecipePhoto(recipe: recipe, color: regionColor, height: 250, radius: 24),
+                  const SizedBox(height: 15),
+                  _RecipePhoto(
+                    recipe: recipe,
+                    color: regionColor,
+                    height: 250,
+                    radius: 24,
+                  ),
                   const SizedBox(height: 23),
                   Wrap(
                     spacing: 8,
