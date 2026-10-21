@@ -35,6 +35,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/recipes/
+    - assets/images/learning/
     - assets/data/vaccines/
     - assets/data/growth/who/
 
