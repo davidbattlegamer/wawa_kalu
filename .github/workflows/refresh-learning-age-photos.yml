@@ -1,0 +1,50 @@
+name: Revisar fotos por edades en Aprender
+
+on:
+  push:
+    paths:
+      - '.github/workflows/refresh-learning-age-photos.yml'
+      - 'scripts/refresh_learning_age_photos.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-learning-photos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Instalar Pillow
+        run: python -m pip install --disable-pip-version-check pillow
+      - name: Descargar fotos relacionadas con edad y actividad
+        run: python scripts/refresh_learning_age_photos.py
+      - name: Confirmar que las 16 fotos siguen disponibles
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          expected = ['texturas', 'torres', 'canciones', 'ropa', 'cojines', 'casita',
+                      'cuento', 'pintura', 'mercado', 'patrones', 'barrio',
+                      'emociones', 'nombrar_objetos', 'leer_imagenes',
+                      'turnos_conversacion', 'juego_sonidos']
+          missing = [x for x in expected if not Path('assets/images/learning', x+'.webp').is_file()]
+          if missing:
+              raise RuntimeError(f'Fotos locales faltantes: {missing}')
+          PY
+      - name: Guardar fotos actualizadas
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/images/learning/
+          if ! git diff --cached --quiet; then
+            git commit -m "assets(aprender): fotos corregidas por actividad y grupo de edad"
+            git push origin HEAD:main
+          fi
