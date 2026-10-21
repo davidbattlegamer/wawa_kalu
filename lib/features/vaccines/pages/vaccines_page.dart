@@ -1712,21 +1712,19 @@ class _VaccineCard extends StatelessWidget {
                       color: color.withValues(alpha: dark ? 0.21 : 0.10),
                       borderRadius: BorderRadius.circular(50),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
+                    child: Wrap(
+                      spacing: 5,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         Icon(_statusIcon(), color: color, size: 15),
-                        const SizedBox(width: 5),
-                        Flexible(
-                          child: Text(
-                            _statusText(),
-                            style: TextStyle(
-                              fontFamily: 'Baloo2',
-                              fontSize: 12,
-                              height: 1.1,
-                              fontWeight: FontWeight.w800,
-                              color: color,
-                            ),
+                        Text(
+                          _statusText(),
+                          style: TextStyle(
+                            fontFamily: 'Baloo2',
+                            fontSize: 12,
+                            height: 1.1,
+                            fontWeight: FontWeight.w800,
+                            color: color,
                           ),
                         ),
                       ],
