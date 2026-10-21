@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../pages/app_config.dart';
+import '../../children/data/child_repository.dart';
 import '../../../pages/app_texts.dart';
 import '../data/parent_activity_catalog.dart';
 
@@ -20,13 +21,56 @@ class GuiaFamiliasPage extends StatefulWidget {
 class _GuiaFamiliasPageState extends State<GuiaFamiliasPage> {
   late int _age;
   ActivityArea? _area;
+  late String _selectedChildSignature;
 
   @override
   void initState() {
     super.initState();
+    _selectedChildSignature = _profileSignature();
     _age = widget.initialAgeGroup >= 0 && widget.initialAgeGroup <= 3
         ? widget.initialAgeGroup
-        : -1;
+        : _selectedChildAgeGroup();
+    ChildRepository.instance.selectedChildId.addListener(_onChildChanged);
+    ChildRepository.instance.children.addListener(_onChildChanged);
+  }
+
+  @override
+  void dispose() {
+    ChildRepository.instance.selectedChildId.removeListener(_onChildChanged);
+    ChildRepository.instance.children.removeListener(_onChildChanged);
+    super.dispose();
+  }
+
+  // Una fotografía siempre pertenece a una actividad de la etapa elegida.
+  // El perfil del niño fija esa etapa al entrar y cuando se cambia el perfil.
+  int _selectedChildAgeGroup() {
+    final child = ChildRepository.instance.selectedChild;
+    if (child == null) return -1;
+    final now = DateTime.now();
+    final months = (now.year - child.birthDate.year) * 12 +
+        now.month - child.birthDate.month -
+        (now.day < child.birthDate.day ? 1 : 0);
+    if (months >= 12 && months < 24) return 0;
+    if (months >= 24 && months < 36) return 1;
+    if (months >= 36 && months < 48) return 2;
+    if (months >= 48 && months < 72) return 3;
+    return -1;
+  }
+
+  String _profileSignature() {
+    final child = ChildRepository.instance.selectedChild;
+    return child == null
+        ? 'sin_perfil'
+        : '${child.id}|${child.birthDate.toIso8601String()}';
+  }
+
+  void _onChildChanged() {
+    final signature = _profileSignature();
+    if (!mounted || signature == _selectedChildSignature) return;
+    _selectedChildSignature = signature;
+    setState(() {
+      _age = _selectedChildAgeGroup();
+    });
   }
 
   @override
@@ -90,7 +134,9 @@ class _GuiaFamiliasPageState extends State<GuiaFamiliasPage> {
                                 selected: _age == index,
                                 dark: dark,
                                 color: const Color(0xFF8054D7),
-                                onTap: () => setState(() => _age = index),
+                                onTap: () => setState(() {
+                                  _age = index;
+                                }),
                               ),
                               const SizedBox(width: 8),
                             ],
