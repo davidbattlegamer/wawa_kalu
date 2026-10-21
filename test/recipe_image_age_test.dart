@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wawa_kalu/features/health/data/ecuador_recipe_catalog.dart';
 
@@ -46,4 +47,20 @@ void main() {
     expect(recipe.photoForAgeMonths(48).url,
         recipe.photoForAgeMonths(35).url);
   });
+  testWidgets('El majado de 9-11 meses incluye una foto local real',
+      (tester) async {
+    final recipe = ecuadorRecipeCatalog.singleWhere(
+      (element) => element.id == 'majado_verde_pollo',
+    );
+    final photo = recipe.photoForAgeMonths(10);
+    expect(photo.assetPath, 'assets/images/recipes/majado_verde_9_11.webp');
+
+    // Comprueba que la fotografía realmente está empaquetada en Flutter.
+    final bytes = await rootBundle.load(photo.assetPath!);
+    expect(bytes.lengthInBytes, greaterThan(10000));
+
+    // La presentación de niños mayores sigue siendo independiente.
+    expect(recipe.photoForAgeMonths(14).assetPath, isNull);
+  });
+
 }
