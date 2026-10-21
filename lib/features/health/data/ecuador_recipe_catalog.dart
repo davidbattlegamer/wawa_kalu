@@ -11,10 +11,13 @@ class EcuadorRecipePhoto {
   const EcuadorRecipePhoto({
     required this.url,
     required this.sourceUrl,
+    this.assetPath,
   });
 
   final String url;
   final String sourceUrl;
+  /// Fotografía incluida en Flutter; no necesita conexión a Internet.
+  final String? assetPath;
 }
 
 class EcuadorRecipeCopy {
@@ -210,9 +213,16 @@ const List<EcuadorRecipe> ecuadorRecipeCatalog = <EcuadorRecipe>[
   ),
   EcuadorRecipe(
     id: 'majado_verde_pollo',
-    imageUrl: 'https://1.bp.blogspot.com/-AMbc2jLXy_o/VZY1WMFO49I/AAAAAAAAFKY/M7I7kE7y0cc/s1600/7.jpg',
-    imageSourceUrl: 'https://yumforbaby.blogspot.com/2015/07/4-easy-plantain-recipes.html',
+    // Foto CC0: puré real de plátano verde (mangú dominicano).
+    // Se usa como referencia visual de textura para 9–11 meses.
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/6f/Dominican_Mangu.jpg',
+    imageSourceUrl: 'https://commons.wikimedia.org/wiki/File:Dominican_Mangu.jpg',
     agePhotos: <int, EcuadorRecipePhoto>{
+      2: EcuadorRecipePhoto(
+        url: 'https://upload.wikimedia.org/wikipedia/commons/6/6f/Dominican_Mangu.jpg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:Dominican_Mangu.jpg',
+        assetPath: 'assets/images/recipes/majado_verde_9_11.webp',
+      ),
       3: EcuadorRecipePhoto(
         url: 'https://www.recetasnestle.com.ec/sites/default/files/srh_recipes/f143eccd7f5b11dbd8d95eb8829d0caf.jpg',
         sourceUrl: 'https://www.recetasnestle.com.ec/recetas/majado-de-verde',
