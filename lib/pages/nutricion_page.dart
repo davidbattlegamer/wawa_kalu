@@ -16,32 +16,77 @@ class NutricionPage extends StatefulWidget {
 class _NutricionPageState extends State<NutricionPage> {
   int _ageGroup = -1;
   int? _openTopic;
+  bool _manualAgeSelection = false;
+  late String _selectedProfileSignature;
 
   @override
   void initState() {
     super.initState();
+    _selectedProfileSignature = _profileSignature();
     _ageGroup = _selectedChildAgeGroup();
+    ChildRepository.instance.selectedChildId.addListener(_onProfileChanged);
+    ChildRepository.instance.children.addListener(_onProfileChanged);
+  }
+
+  @override
+  void dispose() {
+    ChildRepository.instance.selectedChildId.removeListener(_onProfileChanged);
+    ChildRepository.instance.children.removeListener(_onProfileChanged);
+    super.dispose();
+  }
+
+  // Si cambia el niño seleccionado (o su cumpleaños), actualizar la etapa.
+  void _onProfileChanged() {
+    final signature = _profileSignature();
+    if (signature == _selectedProfileSignature || !mounted) return;
+    _selectedProfileSignature = signature;
+    setState(() {
+      _manualAgeSelection = false;
+      _ageGroup = _selectedChildAgeGroup();
+    });
+  }
+
+  String _profileSignature() {
+    final child = ChildRepository.instance.selectedChild;
+    return child == null
+        ? 'sin_perfil'
+        : '${child.id}|${child.birthDate.toIso8601String()}';
+  }
+
+  int? _selectedChildAgeMonths() {
+    final child = ChildRepository.instance.selectedChild;
+    if (child == null) return null;
+    final now = DateTime.now();
+    final months = (now.year - child.birthDate.year) * 12 +
+        now.month - child.birthDate.month -
+        (now.day < child.birthDate.day ? 1 : 0);
+    return months < 0 ? null : months;
+  }
+
+  int _photoAgeMonths(EcuadorRecipe recipe) {
+    final actualMonths = _selectedChildAgeMonths();
+    if (!_manualAgeSelection && actualMonths != null) {
+      return actualMonths;
+    }
+    switch (_ageGroup) {
+      case 1:
+        return 7; // 6–8 meses
+      case 2:
+        return 10; // 9–11 meses
+      case 3:
+        return 18; // 12–23 meses
+      case 4:
+        return 30; // 24–35 meses
+      case 5:
+        return 48; // 36–60 meses
+      default:
+        return recipe.minAgeMonths;
+    }
   }
 
   int _selectedChildAgeGroup() {
-    final selectedId = ChildRepository.instance.selectedChildId.value;
-    if (selectedId == null) {
-      return -1;
-    }
-
-    final child = ChildRepository.instance.findById(selectedId);
-    if (child == null) {
-      return -1;
-    }
-
-    final now = DateTime.now();
-    var months =
-        (now.year - child.birthDate.year) * 12 + now.month - child.birthDate.month;
-    if (now.day < child.birthDate.day) {
-      months--;
-    }
-
-    if (months < 0) return -1;
+    final months = _selectedChildAgeMonths();
+    if (months == null) return -1;
     if (months <= 5) return 0;
     if (months <= 8) return 1;
     if (months <= 11) return 2;
@@ -200,6 +245,12 @@ class _NutricionPageState extends State<NutricionPage> {
   }
 
   bool _recipeVisible(EcuadorRecipe recipe) {
+    // Si se eligió un niño, mostrar únicamente recetas para su edad exacta.
+    // El filtro manual permite explorar intervalos completos de edad.
+    final months = _selectedChildAgeMonths();
+    if (!_manualAgeSelection && months != null && months >= 6 && months <= 60) {
+      return recipe.fitsMonths(months);
+    }
     switch (_ageGroup) {
       case 0:
         return false;
@@ -264,6 +315,7 @@ class _NutricionPageState extends State<NutricionPage> {
       MaterialPageRoute<void>(
         builder: (_) => _RecipeDetailPage(
           recipe: recipe,
+          photoAgeMonths: _photoAgeMonths(recipe),
           regionLabel: _regionLabel(recipe.region),
           regionColor: _regionColor(recipe.region),
         ),
@@ -321,6 +373,7 @@ class _NutricionPageState extends State<NutricionPage> {
                                     selected: _ageGroup == group,
                                     onTap: () => setState(() {
                                       _ageGroup = group;
+                                      _manualAgeSelection = true;
                                     }),
                                   ),
                                   const SizedBox(width: 8),
@@ -350,6 +403,7 @@ class _NutricionPageState extends State<NutricionPage> {
                           else if (recipes.isNotEmpty) ...[
                             _RecipeSpotlight(
                               recipe: recipes.first,
+                              photoAgeMonths: _photoAgeMonths(recipes.first),
                               regionLabel:
                                   _regionLabel(recipes.first.region),
                               color: _regionColor(recipes.first.region),
@@ -383,6 +437,7 @@ class _NutricionPageState extends State<NutricionPage> {
                                       width: 225,
                                       child: _RecipeQuickPick(
                                         recipe: recipe,
+                                        photoAgeMonths: _photoAgeMonths(recipe),
                                         regionLabel:
                                             _regionLabel(recipe.region),
                                         color:
@@ -799,32 +854,82 @@ class _NutritionBulletList extends StatelessWidget {
   }
 }
 
-// Fotografía de referencia, con alternativa visual cuando no hay conexión.
+// La foto representa la textura de la receta para la edad seleccionada.
 class _RecipePhoto extends StatelessWidget {
-  const _RecipePhoto({required this.recipe, required this.color,
-    this.height = 150, this.radius = 18});
+  const _RecipePhoto({
+    required this.recipe,
+    required this.color,
+    required this.ageMonths,
+    this.height = 150,
+    this.radius = 18,
+  });
 
   final EcuadorRecipe recipe;
   final Color color;
+  final int ageMonths;
   final double height;
   final double radius;
 
+  String _ageLabel(int months) {
+    if (months < 9) return T.txt('nutritionAge6to8');
+    if (months < 12) return T.txt('nutritionAge9to11');
+    if (months < 24) return T.txt('nutritionAge1to2');
+    if (months < 36) return T.txt('nutritionAge2to3');
+    return T.txt('nutritionAge3to5');
+  }
+
   @override
-  Widget build(BuildContext context) => ClipRRect(
-    borderRadius: BorderRadius.circular(radius),
-    child: SizedBox(
-      width: double.infinity,
-      height: height,
-      child: Image.network(
-        recipe.imageUrl,
-        fit: BoxFit.cover,
-        filterQuality: FilterQuality.medium,
-        errorBuilder: (_, __, ___) => _placeholder(),
-        loadingBuilder: (_, child, progress) =>
-            progress == null ? child : _placeholder(),
+  Widget build(BuildContext context) {
+    final photo = recipe.photoForAgeMonths(ageMonths);
+    final age = ageMonths < recipe.minAgeMonths
+        ? recipe.minAgeMonths
+        : (ageMonths > recipe.maxAgeMonths ? recipe.maxAgeMonths : ageMonths);
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(radius),
+      child: SizedBox(
+        width: double.infinity,
+        height: height,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.network(
+              photo.url,
+              fit: BoxFit.cover,
+              filterQuality: FilterQuality.medium,
+              errorBuilder: (_, __, ___) => _placeholder(),
+              loadingBuilder: (_, child, progress) =>
+                  progress == null ? child : _placeholder(),
+            ),
+            if (height >= 140)
+              Positioned(
+                left: 9,
+                bottom: 9,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.66),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    _ageLabel(age),
+                    style: const TextStyle(
+                      fontFamily: 'Baloo2',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 
   Widget _placeholder() => ColoredBox(
     color: color.withValues(alpha: 0.12),
@@ -835,6 +940,7 @@ class _RecipePhoto extends StatelessWidget {
 class _RecipeSpotlight extends StatelessWidget {
   const _RecipeSpotlight({
     required this.recipe,
+    required this.photoAgeMonths,
     required this.regionLabel,
     required this.color,
     required this.dark,
@@ -842,6 +948,7 @@ class _RecipeSpotlight extends StatelessWidget {
   });
 
   final EcuadorRecipe recipe;
+  final int photoAgeMonths;
   final String regionLabel;
   final Color color;
   final bool dark;
@@ -929,7 +1036,7 @@ class _RecipeSpotlight extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 14),
-                    _RecipePhoto(recipe: recipe, color: color, height: 168, radius: 19),
+                    _RecipePhoto(recipe: recipe, color: color, ageMonths: photoAgeMonths, height: 168, radius: 19),
                     const SizedBox(height: 16),
                     Padding(
                       padding: const EdgeInsets.only(right: 76),
@@ -1007,6 +1114,7 @@ class _RecipeSpotlight extends StatelessWidget {
 class _RecipeQuickPick extends StatelessWidget {
   const _RecipeQuickPick({
     required this.recipe,
+    required this.photoAgeMonths,
     required this.regionLabel,
     required this.color,
     required this.dark,
@@ -1014,6 +1122,7 @@ class _RecipeQuickPick extends StatelessWidget {
   });
 
   final EcuadorRecipe recipe;
+  final int photoAgeMonths;
   final String regionLabel;
   final Color color;
   final bool dark;
@@ -1063,7 +1172,7 @@ class _RecipeQuickPick extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8),
-              _RecipePhoto(recipe: recipe, color: color, height: 64, radius: 10),
+              _RecipePhoto(recipe: recipe, color: color, ageMonths: photoAgeMonths, height: 64, radius: 10),
               const SizedBox(height: 7),
               Text(
                 copy.title,
@@ -1221,11 +1330,13 @@ class _RecipeBadge extends StatelessWidget {
 class _RecipeDetailPage extends StatelessWidget {
   const _RecipeDetailPage({
     required this.recipe,
+    required this.photoAgeMonths,
     required this.regionLabel,
     required this.regionColor,
   });
 
   final EcuadorRecipe recipe;
+  final int photoAgeMonths;
   final String regionLabel;
   final Color regionColor;
 
@@ -1258,6 +1369,7 @@ class _RecipeDetailPage extends StatelessWidget {
                   _RecipePhoto(
                     recipe: recipe,
                     color: regionColor,
+                    ageMonths: photoAgeMonths,
                     height: 250,
                     radius: 24,
                   ),
