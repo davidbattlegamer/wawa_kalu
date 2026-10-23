@@ -34,6 +34,18 @@ class T {
   static Set<String> get kichwaKeys => Set<String>.unmodifiable(_kichwa.keys);
 
   static final Map<String, String> _spanish = <String, String>{
+    'guideFirstChildWelcomeTitle': '¡{name} ya tiene su espacio!',
+    'guideFirstChildWelcomeBody': 'Ahora te mostraremos dónde consultar sus vacunas, sus gráficas de crecimiento y las recetas según su edad.',
+    'guideFirstChildHealthTitle': 'Todo comienza en Salud',
+    'guideFirstChildHealthBody': 'Este corazón te lleva al espacio de salud de tu pequeño. Aquí encontrarás las tres secciones que te vamos a enseñar.',
+    'guideFirstChildVaccineTitle': 'Vacunas y recordatorios',
+    'guideFirstChildVaccineBody': 'Abre Vacunas para revisar las fechas previstas, registrar una dosis y configurar cuándo recibir los avisos.',
+    'guideFirstChildGrowthTitle': 'Sus gráficas de crecimiento',
+    'guideFirstChildGrowthBody': 'Entra a Crecimiento, registra peso y talla y pulsa «Ver gráficas» para consultar las curvas de crecimiento.',
+    'guideFirstChildRecipesTitle': 'Recetas adecuadas a su edad',
+    'guideFirstChildRecipesBody': 'Abre Nutrición, selecciona la etapa del niño y toca una receta para consultar ingredientes y preparación.',
+    'guideFirstChildReplayTitle': 'Guía de vacunas, gráficas y recetas',
+    'guideFirstChildReplaySubtitle': 'Repite el recorrido para aprender dónde consultar cada sección.',
     'tourWelcomeTitle': '¡Descubre Wawa Kalú!',
     'tourWelcomeDescription': 'Un recorrido cortito para conocer lo que puedes hacer. Tú decides cuándo comenzar.',
     'tourChildrenTitle': 'Cada pequeño tiene su espacio',
@@ -1151,6 +1163,18 @@ class T {
   };
 
   static final Map<String, String> _english = <String, String>{
+    'guideFirstChildWelcomeTitle': '{name} has a space of their own!',
+    'guideFirstChildWelcomeBody': 'Let\'s find out where to check vaccines, growth charts and recipes suited to your child\'s age.',
+    'guideFirstChildHealthTitle': 'Start with Health',
+    'guideFirstChildHealthBody': 'Tap the heart to open your child\'s health hub. All three sections are available from here.',
+    'guideFirstChildVaccineTitle': 'Vaccines and reminders',
+    'guideFirstChildVaccineBody': 'Open Vaccines to check scheduled dates, record a dose and choose when to receive reminders.',
+    'guideFirstChildGrowthTitle': 'Growth charts',
+    'guideFirstChildGrowthBody': 'Open Growth, record weight and length or height, then tap View charts to explore the growth curves.',
+    'guideFirstChildRecipesTitle': 'Age-appropriate recipes',
+    'guideFirstChildRecipesBody': 'Open Nutrition, choose your child\'s age stage, and tap a recipe to see ingredients and instructions.',
+    'guideFirstChildReplayTitle': 'Vaccines, charts and recipes guide',
+    'guideFirstChildReplaySubtitle': 'Replay the guided tour to find these sections.',
     'tourWelcomeTitle': 'Welcome to Wawa Kalú!',
     'tourWelcomeDescription': 'A quick tour to discover what you can do. Take it at your own pace.',
     'tourChildrenTitle': 'A space for every child',
@@ -2263,6 +2287,18 @@ class T {
   // MSP, debe ser revisada por un/a hablante o traductor/a de Kichwa ecuatoriano,
   // especialmente los textos de vacunas, crecimiento, nutrición y alertas.
   static final Map<String, String> _kichwa = <String, String>{
+    'guideFirstChildWelcomeTitle': '¡{name} wawapa kikin kuska tiyan!',
+    'guideFirstChildWelcomeBody': 'Kunan vacunakunata, wiñaypa grafikakunata, watayukman hina mikuy ruraykunata maypi rikunata yachakushun.',
+    'guideFirstChildHealthTitle': 'Alli kawsaypi kallarishun',
+    'guideFirstChildHealthBody': 'Shunku unanchata ñitishpa wawapa alli kawsay kuskaman yaykuy. Kaypi kimsa rakikuna tiyan.',
+    'guideFirstChildVaccineTitle': 'Vacunakuna, yuyachikuna',
+    'guideFirstChildVaccineBody': 'Vacunakuna rakiman yaykushpa punchakunata rikuy, vacunata killkachiy, yuyachina pachata akllay.',
+    'guideFirstChildGrowthTitle': 'Wiñaypa grafikakuna',
+    'guideFirstChildGrowthBody': 'Wiñay rakiman yaykuy, llashata, suniyayta killkachiy; chaymanta grafikakunata rikuy.',
+    'guideFirstChildRecipesTitle': 'Watayukman hina mikuykuna',
+    'guideFirstChildRecipesBody': 'Mikuy rakiman yaykuy, wawapa watayukta akllay, mikuy rurayta ñitishpa imakunawan rurashkata rikuy.',
+    'guideFirstChildReplayTitle': 'Vacuna, grafika, mikuykunapa yachachiy',
+    'guideFirstChildReplaySubtitle': 'Kay puriyta kutin rikushpa rakikunata riksiy.',
     'tourWelcomeTitle': 'Wawa Kalúman alli shamushka!',
     'tourWelcomeDescription': 'Kay uchilla puriywan app imapak kashkata riksinki.',
     'tourChildrenTitle': 'Sapa wawapak kikin kuska',
