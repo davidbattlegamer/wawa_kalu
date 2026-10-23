@@ -5,6 +5,8 @@ on:
     paths:
       - '.github/workflows/check-app-tour.yml'
       - 'lib/app/app_shell.dart'
+      - 'lib/features/children/pages/child_form_page.dart'
+      - 'lib/features/health/pages/health_page.dart'
       - 'lib/app/widgets/app_tour_overlay.dart'
       - 'lib/app/widgets/tour_targets.dart'
       - 'lib/app/widgets/liquid_glass_bottom_bar.dart'
@@ -35,6 +37,8 @@ jobs:
         run: |
           flutter analyze --no-pub \
             lib/app/app_shell.dart \
+            lib/features/children/pages/child_form_page.dart \
+            lib/features/health/pages/health_page.dart \
             lib/app/widgets/app_tour_overlay.dart \
             lib/app/widgets/tour_targets.dart \
             lib/app/widgets/liquid_glass_bottom_bar.dart \
