@@ -18,6 +18,12 @@ class AppConfig {
   static final ValueNotifier<bool> recorridoVisto = ValueNotifier<bool>(false);
   static final ValueNotifier<int> recorridoSolicitud = ValueNotifier<int>(0);
 
+  // Guía específica para familias justo después de registrar el primer niño.
+  static final ValueNotifier<bool> guiaPrimerNinoVista =
+      ValueNotifier<bool>(false);
+  static final ValueNotifier<int> guiaPrimerNinoSolicitud =
+      ValueNotifier<int>(0);
+
   static final ValueNotifier<ThemeMode> temaApp = ValueNotifier<ThemeMode>(
     ThemeMode.system,
   );
@@ -35,6 +41,7 @@ class AppConfig {
 
     bienvenidaVista.value = prefs.getBool('bienvenidaVista') ?? false;
     recorridoVisto.value = prefs.getBool('recorridoGuiadoVisto') ?? false;
+    guiaPrimerNinoVista.value = prefs.getBool('guiaPrimerNinoVista') ?? false;
 
     // ------------------------------------------------------------------------
     // IDIOMA
@@ -218,6 +225,17 @@ class AppConfig {
   /// Permite repetirlo desde Configuración, sin alterar perfiles ni fechas.
   static void solicitarRecorrido() {
     recorridoSolicitud.value++;
+  }
+
+  /// Iniciar después del primer registro; también permite repetir la guía.
+  static void solicitarGuiaPrimerNino() {
+    guiaPrimerNinoSolicitud.value++;
+  }
+
+  static Future<void> marcarGuiaPrimerNinoVista() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('guiaPrimerNinoVista', true);
+    guiaPrimerNinoVista.value = true;
   }
 
   // ==========================================================================
