@@ -781,6 +781,36 @@ void showConfigSheet(BuildContext context) {
                                       const SizedBox(height: 14),
 
                                       // ======================================================
+                                      // REPETIR RECORRIDO GUIADO
+                                      // ======================================================
+                                      if (AppConfig.bienvenidaVista.value) ...[
+                                        SettingCard(
+                                          color: const Color(0xFF8B5CF6),
+                                          icon: Icons.auto_awesome_rounded,
+                                          title: T.txt('tourReplayTitle'),
+                                          subtitle: T.txt('tourReplaySubtitle'),
+                                          modoOscuro: modoOscuro,
+                                          trailing: IconButton(
+                                            tooltip: T.txt('tourReplayTitle'),
+                                            icon: const Icon(
+                                              Icons.play_arrow_rounded,
+                                            ),
+                                            color: const Color(0xFF8B5CF6),
+                                            style: IconButton.styleFrom(
+                                              backgroundColor:
+                                                  const Color(0xFF8B5CF6)
+                                                      .withValues(alpha: 0.12),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(sheetContext).pop();
+                                              AppConfig.solicitarRecorrido();
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(height: 14),
+                                      ],
+
+                                      // ======================================================
                                       // PRIVACIDAD
                                       // ======================================================
                                       SettingCard(
