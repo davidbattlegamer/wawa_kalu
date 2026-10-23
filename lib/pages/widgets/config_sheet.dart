@@ -587,7 +587,9 @@ void showConfigSheet(BuildContext context) {
     context: context,
     isScrollControlled: true,
     enableDrag: true,
-    showDragHandle: true,
+    // La barra degradada personalizada ya está en _SettingsGlassHero.
+    // Evitar un segundo tirador gris del sistema.
+    showDragHandle: false,
     useSafeArea: true,
     backgroundColor: Colors.transparent,
     barrierColor: Colors.black.withValues(alpha: 0.34),
