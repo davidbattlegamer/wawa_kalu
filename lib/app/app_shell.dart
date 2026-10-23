@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../pages/app_config.dart';
 import '../pages/app_texts.dart';
 import '../pages/home_page.dart';
+import '../features/children/data/child_repository.dart';
 import '../features/learning/pages/guia_familias_page.dart';
 import '../features/children/pages/children_page.dart';
 import '../features/health/pages/health_page.dart';
@@ -22,6 +23,7 @@ class AppShell extends StatefulWidget {
 class _AppShellState extends State<AppShell> {
   int _paginaActual = 0;
   int? _tourStep;
+  int? _childGuideStep;
   late final List<Widget> _paginas;
 
   // Las claves permiten resaltar el botón auténtico de cada pestaña
@@ -43,6 +45,7 @@ class _AppShellState extends State<AppShell> {
     ];
 
     AppConfig.recorridoSolicitud.addListener(_repeatTour);
+    AppConfig.guiaPrimerNinoSolicitud.addListener(_startFirstChildGuide);
 
     // Solo se abre tras entrar por primera vez a la aplicación desde
     // la bienvenida existente; nunca se marca visto hasta finalizar u omitir.
@@ -56,6 +59,7 @@ class _AppShellState extends State<AppShell> {
   @override
   void dispose() {
     AppConfig.recorridoSolicitud.removeListener(_repeatTour);
+    AppConfig.guiaPrimerNinoSolicitud.removeListener(_startFirstChildGuide);
     super.dispose();
   }
 
@@ -63,8 +67,63 @@ class _AppShellState extends State<AppShell> {
     if (!mounted) return;
     setState(() {
       _paginaActual = 0;
+      _childGuideStep = null;
       _tourStep = 0;
     });
+  }
+
+  void _startFirstChildGuide() {
+    if (!mounted || ChildRepository.instance.children.value.isEmpty) return;
+
+    setState(() {
+      _tourStep = null;
+      _childGuideStep = 0;
+      _paginaActual = 2;
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _childGuideStep == 0) setState(() {});
+    });
+  }
+
+  void _childGuideGoTo(int step) {
+    if (step < 0) return;
+    if (step >= AppTourOverlay.stepCount) {
+      _finishFirstChildGuide();
+      return;
+    }
+
+    HapticFeedback.selectionClick();
+    setState(() {
+      _childGuideStep = step;
+      _paginaActual = 2;
+    });
+    _showChildGuideTarget(step);
+  }
+
+  void _showChildGuideTarget(int step) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted || _childGuideStep != step) return;
+
+      final contextForCard = TourTargets.healthCardForStep(step)?.currentContext;
+      if (contextForCard != null) {
+        await Scrollable.ensureVisible(
+          contextForCard,
+          alignment: 0.76,
+          duration: const Duration(milliseconds: 280),
+          curve: Curves.easeOutCubic,
+        );
+      }
+      if (mounted && _childGuideStep == step) setState(() {});
+    });
+  }
+
+  Future<void> _finishFirstChildGuide() async {
+    if (_childGuideStep == null) return;
+    setState(() {
+      _childGuideStep = null;
+      _paginaActual = 0;
+    });
+    await AppConfig.marcarGuiaPrimerNinoVista();
   }
 
   void _repeatTour() {
@@ -101,6 +160,14 @@ class _AppShellState extends State<AppShell> {
     await AppConfig.marcarRecorridoVisto();
   }
 
+  Rect? _childGuideFocusRect(int step) {
+    if (step == 0) return null;
+    final GlobalKey target = step == 1
+        ? _tabKeys[2]
+        : TourTargets.healthCardForStep(step) ?? _tabKeys[2];
+    return _boundsForTarget(target);
+  }
+
   Rect? _focusRect(int step) {
     if (step == 0) return null;
 
@@ -112,6 +179,10 @@ class _AppShellState extends State<AppShell> {
       _ => _tabKeys[0],
     };
 
+    return _boundsForTarget(target);
+  }
+
+  Rect? _boundsForTarget(GlobalKey target) {
     final root = _tourRootKey.currentContext?.findRenderObject();
     final object = target.currentContext?.findRenderObject();
 
@@ -196,6 +267,18 @@ class _AppShellState extends State<AppShell> {
               onBack: () => _tourGoTo(step - 1),
               onNext: () => _tourGoTo(step + 1),
               onSkip: _closeTour,
+            ),
+          ),
+        if (_childGuideStep case final int step)
+          Positioned.fill(
+            child: AppTourOverlay(
+              variant: AppTourVariant.firstChild,
+              childName: ChildRepository.instance.selectedChild?.name,
+              step: step,
+              focusRect: _childGuideFocusRect(step),
+              onBack: () => _childGuideGoTo(step - 1),
+              onNext: () => _childGuideGoTo(step + 1),
+              onSkip: _finishFirstChildGuide,
             ),
           ),
       ],
