@@ -29,6 +29,8 @@ class LiquidGlassBottomBar extends StatelessWidget {
   final ValueChanged<int> onSelected;
   final List<LiquidGlassNavItem> items;
   final bool darkMode;
+  // Referencias opcionales para resaltar las pestañas durante el tour.
+  final List<GlobalKey>? itemKeys;
 
   const LiquidGlassBottomBar({
     super.key,
@@ -36,6 +38,7 @@ class LiquidGlassBottomBar extends StatelessWidget {
     required this.onSelected,
     required this.items,
     required this.darkMode,
+    this.itemKeys,
   });
 
   @override
@@ -309,6 +312,9 @@ class LiquidGlassBottomBar extends StatelessWidget {
                                 return Expanded(
                                   child:
                                       _NavItem(
+                                    key: itemKeys == null
+                                        ? null
+                                        : itemKeys![index],
                                     item:
                                         items[index],
                                     selected:
@@ -524,6 +530,7 @@ class _NavItem extends StatelessWidget {
   final VoidCallback onTap;
 
   const _NavItem({
+    super.key,
     required this.item,
     required this.selected,
     required this.dark,
