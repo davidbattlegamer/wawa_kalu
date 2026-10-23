@@ -89,6 +89,9 @@ void main() {
     await AppConfig.cargarConfiguracion();
     expect(AppConfig.guiaPrimerNinoVista.value, isFalse);
 
+    await AppConfig.prepararGuiaPrimerNino();
+    expect(AppConfig.guiaPrimerNinoPendiente.value, isTrue);
+
     final originalRequest = AppConfig.guiaPrimerNinoSolicitud.value;
     AppConfig.solicitarGuiaPrimerNino();
     expect(AppConfig.guiaPrimerNinoSolicitud.value, originalRequest + 1);
@@ -97,6 +100,8 @@ void main() {
     expect(AppConfig.guiaPrimerNinoVista.value, isTrue);
     final prefs = await SharedPreferences.getInstance();
     expect(prefs.getBool('guiaPrimerNinoVista'), isTrue);
+    expect(prefs.getBool('guiaPrimerNinoPendiente'), isFalse);
+    expect(AppConfig.guiaPrimerNinoPendiente.value, isFalse);
 
     await AppConfig.cargarConfiguracion();
     expect(AppConfig.guiaPrimerNinoVista.value, isTrue);
