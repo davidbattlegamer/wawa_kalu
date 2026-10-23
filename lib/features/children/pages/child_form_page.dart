@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../../../pages/app_texts.dart';
+import '../../../pages/app_config.dart';
 
 import '../../vaccines/services/vaccine_notification_service.dart';
 
@@ -299,6 +300,9 @@ class _ChildFormPageState
                 DateTime.now(),
       );
 
+      final bool isFirstChild = !_editing &&
+          ChildRepository.instance.children.value.isEmpty;
+
       if (_editing) {
         await ChildRepository
             .instance
@@ -345,6 +349,12 @@ class _ChildFormPageState
         context,
         child,
       );
+
+      // Solo el primer registro exitoso inicia esta guía.
+      // Nunca se activa al editar un perfil o agregar un segundo niño.
+      if (isFirstChild && !AppConfig.guiaPrimerNinoVista.value) {
+        AppConfig.solicitarGuiaPrimerNino();
+      }
     } catch (e) {
       // Si copiamos una foto nueva pero el perfil
       // no pudo guardarse, eliminamos la copia.
