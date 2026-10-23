@@ -21,6 +21,8 @@ class AppConfig {
   // Guía específica para familias justo después de registrar el primer niño.
   static final ValueNotifier<bool> guiaPrimerNinoVista =
       ValueNotifier<bool>(false);
+  static final ValueNotifier<bool> guiaPrimerNinoPendiente =
+      ValueNotifier<bool>(false);
   static final ValueNotifier<int> guiaPrimerNinoSolicitud =
       ValueNotifier<int>(0);
 
@@ -42,6 +44,8 @@ class AppConfig {
     bienvenidaVista.value = prefs.getBool('bienvenidaVista') ?? false;
     recorridoVisto.value = prefs.getBool('recorridoGuiadoVisto') ?? false;
     guiaPrimerNinoVista.value = prefs.getBool('guiaPrimerNinoVista') ?? false;
+    guiaPrimerNinoPendiente.value =
+        prefs.getBool('guiaPrimerNinoPendiente') ?? false;
 
     // ------------------------------------------------------------------------
     // IDIOMA
@@ -232,9 +236,17 @@ class AppConfig {
     guiaPrimerNinoSolicitud.value++;
   }
 
+  static Future<void> prepararGuiaPrimerNino() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('guiaPrimerNinoPendiente', true);
+    guiaPrimerNinoPendiente.value = true;
+  }
+
   static Future<void> marcarGuiaPrimerNinoVista() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('guiaPrimerNinoVista', true);
+    await prefs.setBool('guiaPrimerNinoPendiente', false);
+    guiaPrimerNinoPendiente.value = false;
     guiaPrimerNinoVista.value = true;
   }
 
