@@ -97,8 +97,8 @@ class AppTourOverlay extends StatelessWidget {
           math.max(
             media.padding.top + 8,
             height - media.padding.bottom - estimate - 8,
-          ).toDouble(),
-        );
+          ),
+        ).toDouble();
 
         return Stack(
           children: [
