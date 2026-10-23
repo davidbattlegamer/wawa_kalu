@@ -1,0 +1,46 @@
+name: Verificar recorrido de bienvenida
+
+on:
+  push:
+    paths:
+      - '.github/workflows/check-app-tour.yml'
+      - 'lib/app/app_shell.dart'
+      - 'lib/app/widgets/app_tour_overlay.dart'
+      - 'lib/app/widgets/tour_targets.dart'
+      - 'lib/app/widgets/liquid_glass_bottom_bar.dart'
+      - 'lib/pages/app_config.dart'
+      - 'lib/pages/app_texts.dart'
+      - 'lib/pages/home_page.dart'
+      - 'lib/pages/widgets/config_sheet.dart'
+      - 'test/app_tour_test.dart'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  flutter-tour:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preparar Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Instalar dependencias
+        run: flutter pub get
+      - name: Analizar archivos modificados
+        run: |
+          flutter analyze --no-pub \
+            lib/app/app_shell.dart \
+            lib/app/widgets/app_tour_overlay.dart \
+            lib/app/widgets/tour_targets.dart \
+            lib/app/widgets/liquid_glass_bottom_bar.dart \
+            lib/pages/app_config.dart \
+            lib/pages/home_page.dart \
+            lib/pages/widgets/config_sheet.dart \
+            test/app_tour_test.dart
+      - name: Probar recorrido y persistencia
+        run: flutter test test/app_tour_test.dart
