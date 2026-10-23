@@ -18,6 +18,7 @@ import '../features/growth/pages/growth_page.dart';
 import '../features/vaccines/pages/vaccines_page.dart';
 import '../features/vaccines/services/vaccine_service.dart';
 import '../app/widgets/family_content_ui.dart';
+import '../app/widgets/tour_targets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -363,6 +364,7 @@ class _HomePageState extends State<HomePage> {
             ),
             actions: [
               IconButton(
+                key: TourTargets.settingsButton,
                 tooltip: T.txt('settingsTitle'),
                 onPressed: () {
                   showConfigSheet(context);
