@@ -345,6 +345,16 @@ class _ChildFormPageState
         return;
       }
 
+      // Persistir una guía pendiente ANTES de cerrar el formulario.
+      // Si la app se cierra durante el tour, podrá mostrarse después.
+      if (isFirstChild && !AppConfig.guiaPrimerNinoVista.value) {
+        try {
+          await AppConfig.prepararGuiaPrimerNino();
+        } catch (e) {
+          debugPrint('No se pudo guardar el tour pendiente: $e');
+        }
+      }
+      if (!mounted) return;
       final navigator = Navigator.of(context);
       navigator.pop(child);
 
