@@ -50,8 +50,15 @@ class _AppShellState extends State<AppShell> {
     // Solo se abre tras entrar por primera vez a la aplicación desde
     // la bienvenida existente; nunca se marca visto hasta finalizar u omitir.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted && !AppConfig.recorridoVisto.value) {
+      if (!mounted) return;
+      if (!AppConfig.recorridoVisto.value) {
         _startTour();
+      } else if (AppConfig.guiaPrimerNinoPendiente.value &&
+          !AppConfig.guiaPrimerNinoVista.value &&
+          ChildRepository.instance.children.value.isNotEmpty) {
+        // Recuperar la guía solo si realmente se inició al registrar
+        // un primer niño, no para familias que ya usaban versiones previas.
+        _startFirstChildGuide();
       }
     });
   }
