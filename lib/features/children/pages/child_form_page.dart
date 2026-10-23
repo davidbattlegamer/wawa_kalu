@@ -345,15 +345,17 @@ class _ChildFormPageState
         return;
       }
 
-      Navigator.pop(
-        context,
-        child,
-      );
+      final navigator = Navigator.of(context);
+      navigator.pop(child);
 
-      // Solo el primer registro exitoso inicia esta guía.
-      // Nunca se activa al editar un perfil o agregar un segundo niño.
+      // Solo el primer registro exitoso inicia esta guía. Si el
+      // formulario se abrió desde una pantalla interna, volvemos al
+      // inicio para que las tarjetas de Salud realmente sean visibles.
       if (isFirstChild && !AppConfig.guiaPrimerNinoVista.value) {
-        AppConfig.solicitarGuiaPrimerNino();
+        navigator.popUntil((route) => route.isFirst);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          AppConfig.solicitarGuiaPrimerNino();
+        });
       }
     } catch (e) {
       // Si copiamos una foto nueva pero el perfil
