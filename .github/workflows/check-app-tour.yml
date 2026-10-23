@@ -15,6 +15,7 @@ on:
       - 'lib/pages/home_page.dart'
       - 'lib/pages/widgets/config_sheet.dart'
       - 'test/app_tour_test.dart'
+      - 'test/config_sheet_drag_test.dart'
   workflow_dispatch:
 
 permissions:
@@ -45,6 +46,7 @@ jobs:
             lib/pages/app_config.dart \
             lib/pages/home_page.dart \
             lib/pages/widgets/config_sheet.dart \
-            test/app_tour_test.dart
+            test/app_tour_test.dart \
+            test/config_sheet_drag_test.dart
       - name: Probar recorrido y persistencia
-        run: flutter test test/app_tour_test.dart
+        run: flutter test test/app_tour_test.dart test/config_sheet_drag_test.dart
