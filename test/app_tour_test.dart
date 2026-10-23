@@ -84,4 +84,59 @@ void main() {
     expect(finishes, 1);
     expect(tester.takeException(), isNull);
   });
+  test('La guía del primer niño se recuerda al finalizar u omitir', () async {
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+    await AppConfig.cargarConfiguracion();
+    expect(AppConfig.guiaPrimerNinoVista.value, isFalse);
+
+    final originalRequest = AppConfig.guiaPrimerNinoSolicitud.value;
+    AppConfig.solicitarGuiaPrimerNino();
+    expect(AppConfig.guiaPrimerNinoSolicitud.value, originalRequest + 1);
+
+    await AppConfig.marcarGuiaPrimerNinoVista();
+    expect(AppConfig.guiaPrimerNinoVista.value, isTrue);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getBool('guiaPrimerNinoVista'), isTrue);
+
+    await AppConfig.cargarConfiguracion();
+    expect(AppConfig.guiaPrimerNinoVista.value, isTrue);
+  });
+
+  testWidgets('La segunda guía enseña vacunas, gráficas y recetas',
+      (tester) async {
+    AppConfig.idioma.value = 'es';
+    final cases = <int, String>{
+      0: '¡Ana ya tiene su espacio!',
+      1: 'Todo comienza en Salud',
+      2: 'Vacunas y recordatorios',
+      3: 'Sus gráficas de crecimiento',
+      4: 'Recetas adecuadas a su edad',
+    };
+
+    for (final entry in cases.entries) {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: AppTourOverlay(
+              variant: AppTourVariant.firstChild,
+              childName: 'Ana',
+              step: entry.key,
+              focusRect: entry.key == 0
+                  ? null
+                  : const Rect.fromLTWH(120, 430, 95, 65),
+              onNext: () {},
+              onBack: () {},
+              onSkip: () {},
+            ),
+          ),
+        ),
+      );
+      expect(find.text(entry.value), findsOneWidget);
+      expect(find.text('Paso ${entry.key + 1} de 5'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    }
+
+    expect(find.text('¡Entendido!'), findsOneWidget);
+  });
+
 }
