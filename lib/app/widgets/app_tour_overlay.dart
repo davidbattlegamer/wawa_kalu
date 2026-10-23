@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../../pages/app_texts.dart';
 
+enum AppTourVariant { welcome, firstChild }
+
 /// Recorrido superpuesto al contenido real, sin navegar ni alterar
 /// información personal. Todos los controles inferiores quedan protegidos
 /// durante el tour; solo funcionan Atrás, Siguiente y Omitir.
@@ -15,10 +17,14 @@ class AppTourOverlay extends StatelessWidget {
     required this.onNext,
     required this.onBack,
     required this.onSkip,
+    this.variant = AppTourVariant.welcome,
+    this.childName,
   });
 
   static const int stepCount = 5;
 
+  final AppTourVariant variant;
+  final String? childName;
   final int step;
   final Rect? focusRect;
   final VoidCallback onNext;
@@ -58,10 +64,45 @@ class AppTourOverlay extends StatelessWidget {
     ),
   ];
 
+  static const List<_TourSlide> _childSlides = [
+    _TourSlide(
+      titleKey: 'guideFirstChildWelcomeTitle',
+      descriptionKey: 'guideFirstChildWelcomeBody',
+      icon: Icons.celebration_rounded,
+      accent: Color(0xFF8B5CF6),
+    ),
+    _TourSlide(
+      titleKey: 'guideFirstChildHealthTitle',
+      descriptionKey: 'guideFirstChildHealthBody',
+      icon: Icons.favorite_rounded,
+      accent: Color(0xFFEF476F),
+    ),
+    _TourSlide(
+      titleKey: 'guideFirstChildVaccineTitle',
+      descriptionKey: 'guideFirstChildVaccineBody',
+      icon: Icons.vaccines_rounded,
+      accent: Color(0xFF06A6A6),
+    ),
+    _TourSlide(
+      titleKey: 'guideFirstChildGrowthTitle',
+      descriptionKey: 'guideFirstChildGrowthBody',
+      icon: Icons.show_chart_rounded,
+      accent: Color(0xFF00A896),
+    ),
+    _TourSlide(
+      titleKey: 'guideFirstChildRecipesTitle',
+      descriptionKey: 'guideFirstChildRecipesBody',
+      icon: Icons.restaurant_menu_rounded,
+      accent: Color(0xFFF59E55),
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final bool dark = Theme.of(context).brightness == Brightness.dark;
-    final slide = _slides[step];
+    final slide = (variant == AppTourVariant.firstChild
+        ? _childSlides
+        : _slides)[step];
     final media = MediaQuery.of(context);
 
     return LayoutBuilder(
@@ -80,7 +121,8 @@ class AppTourOverlay extends StatelessWidget {
         final double panelTop;
         if (step == 0 || focusRect == null) {
           panelTop = (height - estimate) / 2;
-        } else if (step == stepCount - 1) {
+        } else if (variant == AppTourVariant.welcome &&
+            step == stepCount - 1) {
           panelTop = math.min(
             height - media.padding.bottom - estimate - 14,
             focusRect!.bottom + 16,
@@ -130,6 +172,7 @@ class AppTourOverlay extends StatelessWidget {
                     slide: slide,
                     step: step,
                     dark: dark,
+                    childName: childName,
                     onBack: onBack,
                     onNext: onNext,
                     onSkip: onSkip,
@@ -167,11 +210,13 @@ class _TourPanel extends StatelessWidget {
     required this.onNext,
     required this.onBack,
     required this.onSkip,
+    this.childName,
   });
 
   final _TourSlide slide;
   final int step;
   final bool dark;
+  final String? childName;
   final VoidCallback onNext;
   final VoidCallback onBack;
   final VoidCallback onSkip;
@@ -259,7 +304,8 @@ class _TourPanel extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              T.txt(slide.titleKey),
+              T.txt(slide.titleKey)
+                  .replaceAll('{name}', childName ?? ''),
               style: TextStyle(
                 fontFamily: 'Fredoka',
                 fontWeight: FontWeight.w800,
@@ -270,7 +316,8 @@ class _TourPanel extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              T.txt(slide.descriptionKey),
+              T.txt(slide.descriptionKey)
+                  .replaceAll('{name}', childName ?? ''),
               style: TextStyle(
                 fontFamily: 'Baloo2',
                 height: 1.3,
