@@ -69,11 +69,11 @@ class AppTourOverlay extends StatelessWidget {
         final double height = limits.maxHeight;
         final double width = limits.maxWidth;
         final double available = math.max(
-          170,
+          170.0,
           height - media.padding.top - media.padding.bottom - 28,
         );
-        final double panelMaxHeight = math.min(290, available);
-        final double estimate = math.min(264, panelMaxHeight);
+        final double panelMaxHeight = math.min(290.0, available);
+        final double estimate = math.min(264.0, panelMaxHeight);
 
         // La tarjeta aparece encima de la barra inferior para los pasos
         // de secciones, y debajo del engranaje para el último paso.
@@ -92,12 +92,12 @@ class AppTourOverlay extends StatelessWidget {
           );
         }
 
-        final top = panelTop.clamp(
+        final double top = panelTop.clamp(
           media.padding.top + 8,
           math.max(
             media.padding.top + 8,
             height - media.padding.bottom - estimate - 8,
-          ),
+          ).toDouble(),
         );
 
         return Stack(
@@ -122,7 +122,7 @@ class AppTourOverlay extends StatelessWidget {
               child: Center(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    maxWidth: math.min(width - 32, 450),
+                    maxWidth: math.min(width - 32, 450.0),
                     maxHeight: panelMaxHeight,
                   ),
                   child: _TourPanel(
