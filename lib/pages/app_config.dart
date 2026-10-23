@@ -14,6 +14,10 @@ class AppConfig {
 
   static final ValueNotifier<bool> bienvenidaVista = ValueNotifier<bool>(false);
 
+  // Recorrido único tras entrar a la aplicación por primera vez.
+  static final ValueNotifier<bool> recorridoVisto = ValueNotifier<bool>(false);
+  static final ValueNotifier<int> recorridoSolicitud = ValueNotifier<int>(0);
+
   static final ValueNotifier<ThemeMode> temaApp = ValueNotifier<ThemeMode>(
     ThemeMode.system,
   );
@@ -30,6 +34,7 @@ class AppConfig {
     vibracionActiva.value = prefs.getBool('vibracionActiva') ?? true;
 
     bienvenidaVista.value = prefs.getBool('bienvenidaVista') ?? false;
+    recorridoVisto.value = prefs.getBool('recorridoGuiadoVisto') ?? false;
 
     // ------------------------------------------------------------------------
     // IDIOMA
@@ -198,6 +203,21 @@ class AppConfig {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     await prefs.setBool('bienvenidaVista', false);
+  }
+
+  // ==========================================================================
+  // RECORRIDO DE BIENVENIDA
+  // ==========================================================================
+
+  static Future<void> marcarRecorridoVisto() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('recorridoGuiadoVisto', true);
+    recorridoVisto.value = true;
+  }
+
+  /// Permite repetirlo desde Configuración, sin alterar perfiles ni fechas.
+  static void solicitarRecorrido() {
+    recorridoSolicitud.value++;
   }
 
   // ==========================================================================
