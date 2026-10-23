@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:vibration/vibration.dart';
 
 import '../../features/privacy/pages/privacy_page.dart';
+import '../../features/children/data/child_repository.dart';
 import '../app_config.dart';
 import '../app_texts.dart';
 
@@ -804,6 +805,32 @@ void showConfigSheet(BuildContext context) {
                                             onPressed: () {
                                               Navigator.of(sheetContext).pop();
                                               AppConfig.solicitarRecorrido();
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(height: 14),
+                                      ],
+
+                                      // Guía práctica después de crear el primer perfil.
+                                      if (AppConfig.bienvenidaVista.value &&
+                                          ChildRepository.instance.children.value.isNotEmpty) ...[
+                                        SettingCard(
+                                          color: const Color(0xFF00A896),
+                                          icon: Icons.explore_rounded,
+                                          title: T.txt('guideFirstChildReplayTitle'),
+                                          subtitle: T.txt('guideFirstChildReplaySubtitle'),
+                                          modoOscuro: modoOscuro,
+                                          trailing: IconButton(
+                                            tooltip: T.txt('guideFirstChildReplayTitle'),
+                                            icon: const Icon(Icons.play_arrow_rounded),
+                                            color: const Color(0xFF00A896),
+                                            style: IconButton.styleFrom(
+                                              backgroundColor: const Color(0xFF00A896)
+                                                  .withValues(alpha: 0.12),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(sheetContext).pop();
+                                              AppConfig.solicitarGuiaPrimerNino();
                                             },
                                           ),
                                         ),
