@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../pages/app_config.dart';
 import '../../../pages/app_texts.dart';
 import '../../../app/widgets/family_content_ui.dart';
+import '../../../app/widgets/tour_targets.dart';
 import '../../../pages/nutricion_page.dart';
 
 import '../../children/data/child_repository.dart';
@@ -86,26 +87,32 @@ class HealthPage extends StatelessWidget {
                     icon: Icons.monitor_heart_rounded,
                   ),
 
-                  HealthOptionCard(
-                    icon: Icons.vaccines_rounded,
+                  KeyedSubtree(
+                    key: TourTargets.vaccinesCard,
+                    child: HealthOptionCard(
+                      icon: Icons.vaccines_rounded,
                     title: T.txt('vaccines'),
                     subtitle: T.txt('vaccinesSubtitle'),
                     color: const Color(0xFF06A6A6),
                     onTap: () {
                       _openPage(context, const VaccinesPage());
                     },
+                    ),
                   ),
 
                   const SizedBox(height: 14),
 
-                  HealthOptionCard(
-                    icon: Icons.show_chart_rounded,
+                  KeyedSubtree(
+                    key: TourTargets.growthCard,
+                    child: HealthOptionCard(
+                      icon: Icons.show_chart_rounded,
                     title: T.txt('growth'),
                     subtitle: T.txt('growthSubtitle'),
                     color: const Color(0xFF00A896),
                     onTap: () {
                       _openPage(context, const GrowthPage());
                     },
+                    ),
                   ),
 
                   const SizedBox(height: 25),
@@ -116,14 +123,17 @@ class HealthPage extends StatelessWidget {
                     icon: Icons.spa_rounded,
                   ),
 
-                  HealthOptionCard(
-                    icon: Icons.restaurant_menu_rounded,
+                  KeyedSubtree(
+                    key: TourTargets.nutritionCard,
+                    child: HealthOptionCard(
+                      icon: Icons.restaurant_menu_rounded,
                     title: T.txt('nutrition'),
                     subtitle: T.txt('healthNutritionIntegratedSubtitle'),
                     color: const Color(0xFFF59E55),
                     onTap: () {
                       _openPage(context, const NutricionPage());
                     },
+                    ),
                   ),
 
                 ],
