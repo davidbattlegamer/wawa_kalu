@@ -586,13 +586,25 @@ void showConfigSheet(BuildContext context) {
   showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
+    enableDrag: true,
+    showDragHandle: true,
     useSafeArea: true,
     backgroundColor: Colors.transparent,
     barrierColor: Colors.black.withValues(alpha: 0.34),
     builder: (BuildContext sheetContext) {
-      final double altoPantalla = MediaQuery.of(sheetContext).size.height;
-
-      return ValueListenableBuilder<ThemeMode>(
+      // El panel se puede bajar arrastrando desde el contenido o el asa
+      // superior. Vincular el scroll al controlador del sheet es esencial:
+      // de otro modo, la lista consume los gestos y no se puede cerrar.
+      return DraggableScrollableSheet(
+        expand: false,
+        initialChildSize: 0.86,
+        minChildSize: 0.22,
+        maxChildSize: 0.94,
+        snap: true,
+        snapSizes: const <double>[0.86],
+        shouldCloseOnMinExtent: true,
+        builder: (context, sheetScrollController) {
+          return ValueListenableBuilder<ThemeMode>(
         valueListenable: AppConfig.temaApp,
         builder: (context, temaActual, _) {
           final bool modoOscuro =
@@ -649,11 +661,8 @@ void showConfigSheet(BuildContext context) {
                 ),
                 child: SafeArea(
                   top: false,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: altoPantalla * 0.92,
-                    ),
-                    child: SingleChildScrollView(
+                  child: SingleChildScrollView(
+                    controller: sheetScrollController,
                   padding: EdgeInsets.only(
                     left: 18,
                     right: 18,
@@ -992,8 +1001,9 @@ void showConfigSheet(BuildContext context) {
                 ),
               ),
             ),
-          ),
-        );
+          );
+        },
+      );
         },
       );
     },
