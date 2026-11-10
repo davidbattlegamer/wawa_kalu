@@ -36,6 +36,8 @@ jobs:
       - name: Configurar Flutter
         uses: subosito/flutter-action@v2
         with:
+          # Misma rama de Flutter que utiliza el proyecto al compilar en Windows.
+          flutter-version: '3.44.0'
           channel: stable
           cache: true
 
@@ -73,7 +75,8 @@ jobs:
           git add pubspec.lock
           if ! git diff --cached --quiet; then
             git commit -m "build(android): fijar versiones verificadas de plugins Kotlin"
-            git pull --rebase origin main
+            # No hacer rebase: Flutter puede modificar localmente archivos
+            # generados durante el build y Git lo bloquearía.
             git push origin HEAD:main
           else
             echo "El lockfile ya estaba actualizado"
