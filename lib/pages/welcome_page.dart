@@ -110,33 +110,63 @@ class _WelcomePageState extends State<WelcomePage>
               backgroundColor:
                   dark ? const Color(0xFF15131A) : const Color(0xFFFFFBF6),
               body: SafeArea(
-                child: Stack(
-                  children: [
-                    _WelcomeBackground(dark: dark),
-                    Positioned.fill(
-                      child: FadeTransition(
-                        opacity: _fade,
-                        child: SlideTransition(
-                          position: _slide,
-                          child: _WelcomeContent(
-                            dark: dark,
-                            scale: _scale,
-                            starting: _starting,
-                            pressing: _pressing,
-                            onStart: _startApp,
+                child: LayoutBuilder(
+                  builder: (context, viewport) {
+                    // Tablet (incluso vertical) o teléfono horizontal:
+                    // composición en dos columnas, como la referencia.
+                    // En teléfono vertical mantenemos el diseño original.
+                    final bool wide =
+                        viewport.maxWidth >= 700 ||
+                        (viewport.maxWidth >= 560 &&
+                            viewport.maxWidth > viewport.maxHeight);
+
+                    return Stack(
+                      children: [
+                        _WelcomeBackground(dark: dark),
+                        Positioned.fill(
+                          child: FadeTransition(
+                            opacity: _fade,
+                            child: SlideTransition(
+                              position: _slide,
+                              child: wide
+                                  ? _WelcomeWideContent(
+                                      dark: dark,
+                                      scale: _scale,
+                                      starting: _starting,
+                                      pressing: _pressing,
+                                      onStart: _startApp,
+                                    )
+                                  : _WelcomeContent(
+                                      dark: dark,
+                                      scale: _scale,
+                                      starting: _starting,
+                                      pressing: _pressing,
+                                      onStart: _startApp,
+                                    ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 8,
-                      right: 12,
-                      child: _SettingsButton(
-                        dark: dark,
-                        onTap: () => showConfigSheet(context),
-                      ),
-                    ),
-                  ],
+                        if (wide)
+                          Positioned(
+                            top: 10,
+                            left: viewport.maxWidth * 0.355,
+                            child: _SettingsButton(
+                              dark: dark,
+                              onTap: () => showConfigSheet(context),
+                            ),
+                          )
+                        else
+                          Positioned(
+                            top: 8,
+                            right: 12,
+                            child: _SettingsButton(
+                              dark: dark,
+                              onTap: () => showConfigSheet(context),
+                            ),
+                          ),
+                      ],
+                    );
+                  },
                 ),
               ),
             );
@@ -411,8 +441,120 @@ class _WelcomeContent extends StatelessWidget {
   }
 }
 
-class _OwlHero extends StatelessWidget {
-  const _OwlHero({
+// ============================================================================
+// BIENVENIDA HORIZONTAL / TABLET
+// ============================================================================
+// La maqueta vertical original (_WelcomeContent) no se modifica. Esta vista
+// compone los mismos datos y el mismo botón real de entrada en dos columnas.
+class _WelcomeWideContent extends StatelessWidget {
+  const _WelcomeWideContent({
+    required this.dark,
+    required this.scale,
+    required this.starting,
+    required this.pressing,
+    required this.onStart,
+  });
+
+  final bool dark;
+  final Animation<double> scale;
+  final bool starting;
+  final bool pressing;
+  final VoidCallback onStart;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double screenWidth = constraints.maxWidth;
+        final bool compact = screenWidth < 970;
+        final double sidePadding = compact ? 22 : 38;
+        final double usableWidth = screenWidth - sidePadding * 2;
+        final double heroSize = (usableWidth * 0.36 - 26)
+            .clamp(150.0, compact ? 275.0 : 405.0)
+            .toDouble();
+
+        return SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(
+            sidePadding,
+            compact ? 26 : 22,
+            sidePadding,
+            24,
+          ),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: (constraints.maxHeight -
+                  (compact ? 26 : 22) - 24).clamp(0.0, double.infinity),
+            ),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1480),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ScaleTransition(
+                            scale: scale,
+                            child: _OwlHero(
+                              dark: dark,
+                              compact: false,
+                              sizeOverride: heroSize,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          _WideBrandLockup(
+                            dark: dark,
+                            compact: compact,
+                          ),
+                          const SizedBox(height: 11),
+                          Text(
+                            T.txt('welcomeHeroEyebrow'),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'Fredoka',
+                              fontWeight: FontWeight.w900,
+                              color: const Color(0xFF00A896),
+                              letterSpacing: compact ? 0.3 : 0.8,
+                              fontSize: compact ? 11 : 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: compact ? 10 : 32),
+                    Container(
+                      width: compact ? 1.4 : 2,
+                      height: compact ? 330 : 415,
+                      color: const Color(0xFF8B5CF6)
+                          .withValues(alpha: dark ? 0.45 : 0.26),
+                    ),
+                    SizedBox(width: compact ? 20 : 43),
+                    Expanded(
+                      flex: 6,
+                      child: _WideWelcomeDetails(
+                        dark: dark,
+                        compact: compact,
+                        starting: starting,
+                        pressing: pressing,
+                        onStart: onStart,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _WideBrandLockup extends StatelessWidget {
+  const _WideBrandLockup({
     required this.dark,
     required this.compact,
   });
@@ -422,7 +564,259 @@ class _OwlHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double size = compact ? 172 : 210;
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Wawa',
+            style: TextStyle(
+              fontFamily: 'Fredoka',
+              fontWeight: FontWeight.w900,
+              fontSize: compact ? 48 : 68,
+              height: 1,
+              color: dark ? Colors.white : const Color(0xFF572095),
+            ),
+          ),
+          const SizedBox(width: 10),
+          SizedBox(
+            height: compact ? 48 : 68,
+            child: Image.asset(
+              'assets/images/logo_kalu.png',
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) => Text(
+                'Kalú',
+                style: TextStyle(
+                  fontFamily: 'Fredoka',
+                  fontSize: compact ? 48 : 68,
+                  fontWeight: FontWeight.w900,
+                  color: dark ? Colors.white : const Color(0xFF572095),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WideWelcomeDetails extends StatelessWidget {
+  const _WideWelcomeDetails({
+    required this.dark,
+    required this.compact,
+    required this.starting,
+    required this.pressing,
+    required this.onStart,
+  });
+
+  final bool dark;
+  final bool compact;
+  final bool starting;
+  final bool pressing;
+  final VoidCallback onStart;
+
+  @override
+  Widget build(BuildContext context) {
+    final Color heading =
+        dark ? Colors.white : const Color(0xFF281053);
+    final Color body =
+        dark ? Colors.white70 : const Color(0xFF716388);
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          T.txt('welcomeHeroTitle'),
+          textAlign: TextAlign.start,
+          style: TextStyle(
+            fontFamily: 'Fredoka',
+            fontWeight: FontWeight.w900,
+            height: 1.05,
+            fontSize: compact ? 27 : 44,
+            color: heading,
+          ),
+        ),
+        SizedBox(height: compact ? 9 : 13),
+        Text(
+          T.txt('welcomeHeroSubtitle'),
+          style: TextStyle(
+            fontFamily: 'Baloo2',
+            height: 1.24,
+            fontSize: compact ? 15.0 : 22,
+            fontWeight: FontWeight.w700,
+            color: body,
+          ),
+        ),
+        SizedBox(height: compact ? 9 : 13),
+        Align(
+          alignment: Alignment.center,
+          child: Container(
+            width: compact ? 75 : 120,
+            height: 5,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(9),
+              gradient: const LinearGradient(
+                colors: [Color(0xFF16B89A), Color(0xFF00A896)],
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: compact ? 10 : 17),
+        _WelcomeGlassPanel(
+          dark: dark,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: compact ? 0 : 10,
+              vertical: compact ? 2 : 5,
+            ),
+            child: Column(
+              children: [
+                _WideFeatureRow(
+                  dark: dark,
+                  compact: compact,
+                  color: const Color(0xFFEC5F7A),
+                  icon: Icons.health_and_safety_rounded,
+                  title: T.txt('welcomeFeatureHealthTitle'),
+                  description: T.txt('welcomeFeatureHealthSubtitle'),
+                ),
+                _WelcomeDivider(dark: dark),
+                _WideFeatureRow(
+                  dark: dark,
+                  compact: compact,
+                  color: const Color(0xFF7B61C9),
+                  icon: Icons.auto_stories_rounded,
+                  title: T.txt('welcomeFeatureLearnTitle'),
+                  description: T.txt('welcomeFeatureLearnSubtitle'),
+                ),
+                _WelcomeDivider(dark: dark),
+                _WideFeatureRow(
+                  dark: dark,
+                  compact: compact,
+                  color: const Color(0xFF16B89A),
+                  icon: Icons.family_restroom_rounded,
+                  title: T.txt('welcomeFeatureFamilyTitle'),
+                  description: T.txt('welcomeFeatureFamilySubtitle'),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: compact ? 12 : 18),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 410),
+          child: _StartButton(
+            starting: starting,
+            pressing: pressing,
+            onTap: onStart,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _WideFeatureRow extends StatelessWidget {
+  const _WideFeatureRow({
+    required this.dark,
+    required this.compact,
+    required this.color,
+    required this.icon,
+    required this.title,
+    required this.description,
+  });
+
+  final bool dark;
+  final bool compact;
+  final Color color;
+  final IconData icon;
+  final String title;
+  final String description;
+
+  @override
+  Widget build(BuildContext context) {
+    final double square = compact ? 56 : 85;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: compact ? 8 : 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            height: square,
+            width: square,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(compact ? 17 : 24),
+              color: color.withValues(alpha: dark ? 0.20 : 0.13),
+            ),
+            child: Icon(
+              icon,
+              color: color,
+              size: compact ? 31 : 43,
+            ),
+          ),
+          SizedBox(width: compact ? 10 : 18),
+          Container(
+            height: compact ? 50 : 72,
+            width: 2,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              color: const Color(0xFF8B5CF6)
+                  .withValues(alpha: dark ? 0.42 : 0.29),
+            ),
+          ),
+          SizedBox(width: compact ? 10 : 22),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontFamily: 'Fredoka',
+                    fontSize: compact ? 17 : 24,
+                    fontWeight: FontWeight.w900,
+                    color: dark ? Colors.white : const Color(0xFF281053),
+                    height: 1.10,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  description,
+                  style: TextStyle(
+                    fontFamily: 'Baloo2',
+                    fontSize: compact ? 13.5 : 18.5,
+                    height: 1.18,
+                    color: dark
+                        ? Colors.white70
+                        : const Color(0xFF574866),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _OwlHero extends StatelessWidget {
+  const _OwlHero({
+    required this.dark,
+    required this.compact,
+    this.sizeOverride,
+  });
+
+  final bool dark;
+  final bool compact;
+  final double? sizeOverride;
+
+  @override
+  Widget build(BuildContext context) {
+    final double size = sizeOverride ?? (compact ? 172 : 210);
 
     return SizedBox(
       width: size + 54,
