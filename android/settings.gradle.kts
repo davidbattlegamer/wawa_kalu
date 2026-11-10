@@ -19,8 +19,10 @@ pluginManagement {
 
 plugins {
     id("dev.flutter.flutter-plugin-loader") version "1.0.0"
-    id("com.android.application") version "8.9.1" apply false
-    id("org.jetbrains.kotlin.android") version "2.1.0" apply false
+    // AGP 8.12.1 es compatible con Gradle 8.14 y los plugins actuales.
+    id("com.android.application") version "8.12.1" apply false
+    // Kotlin 2.3.20 es compatible con AGP 8.12.1 y Gradle 8.14.
+    id("org.jetbrains.kotlin.android") version "2.3.20" apply false
 }
 
 include(":app")
