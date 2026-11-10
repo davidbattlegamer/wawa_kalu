@@ -146,24 +146,16 @@ class _WelcomePageState extends State<WelcomePage>
                             ),
                           ),
                         ),
-                        if (wide)
-                          Positioned(
-                            top: 10,
-                            left: viewport.maxWidth * 0.355,
-                            child: _SettingsButton(
-                              dark: dark,
-                              onTap: () => showConfigSheet(context),
-                            ),
-                          )
-                        else
-                          Positioned(
-                            top: 8,
-                            right: 12,
-                            child: _SettingsButton(
-                              dark: dark,
-                              onTap: () => showConfigSheet(context),
-                            ),
+                        // La tuerca permanece en la esquina superior derecha,
+                        // tanto en tablet/horizontal como en teléfono vertical.
+                        Positioned(
+                          top: 8,
+                          right: 12,
+                          child: _SettingsButton(
+                            dark: dark,
+                            onTap: () => showConfigSheet(context),
                           ),
+                        ),
                       ],
                     );
                   },
