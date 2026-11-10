@@ -50,6 +50,19 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('Configuración queda en esquina superior derecha en horizontal',
+      (tester) async {
+    const size = Size(1366, 768);
+    await buildWelcome(tester, size);
+
+    final settings = find.byIcon(Icons.settings_rounded);
+    expect(settings, findsOneWidget);
+    final rect = tester.getRect(settings);
+    expect(rect.right, greaterThan(size.width - 40));
+    expect(rect.top, lessThan(45));
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('En tablet vertical también se usa el diseño para tablet',
       (tester) async {
     await buildWelcome(tester, const Size(834, 1112));
