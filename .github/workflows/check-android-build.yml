@@ -1,16 +1,19 @@
-name: Verificar y actualizar compilación Android
+name: Verificar compilación Android con Built-in Kotlin
 
 on:
   push:
+    branches: [main]
     paths:
       - ".github/workflows/check-android-build.yml"
       - "android/settings.gradle.kts"
       - "android/gradle/wrapper/gradle-wrapper.properties"
       - "android/app/build.gradle.kts"
+      - "android/gradle.properties"
+      - "pubspec.lock"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: wawa-android-build
@@ -21,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
-      - name: Obtener main
+      - name: Obtener repositorio
         uses: actions/checkout@v4
         with:
           ref: main
@@ -36,8 +39,8 @@ jobs:
       - name: Configurar Flutter
         uses: subosito/flutter-action@v2
         with:
-          # Misma rama de Flutter que utiliza el proyecto al compilar en Windows.
-          flutter-version: '3.44.0'
+          # Flutter 3.47+ es necesario para Built-in Kotlin.
+          flutter-version: '3.47.9'
           channel: stable
           cache: true
 
@@ -46,15 +49,21 @@ jobs:
           flutter --version
           java -version
 
-      - name: Actualizar solamente los plugins con advertencias de Kotlin
-        run: |
-          flutter pub get
-          flutter pub upgrade device_info_plus shared_preferences_android
+      - name: Obtener dependencias verificadas
+        run: flutter pub get
 
       - name: Compilar APK release
         run: |
           set -o pipefail
           flutter build apk --release 2>&1 | tee android-build.log
+
+      - name: Comprobar ausencia de avisos KGP
+        run: |
+          if grep -E 'WARNING: Your app uses the following plugins that apply Kotlin Gradle Plugin|Future versions of Flutter will fail' android-build.log; then
+            echo 'Se siguen aplicando plugins Kotlin antiguos.'
+            exit 1
+          fi
+          echo 'No se encontraron avisos KGP'
 
       - name: Publicar diagnóstico del APK
         if: always()
@@ -67,17 +76,3 @@ jobs:
           if-no-files-found: ignore
           retention-days: 3
 
-      - name: Guardar dependencias comprobadas en main
-        if: success()
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add pubspec.lock
-          if ! git diff --cached --quiet; then
-            git commit -m "build(android): fijar versiones verificadas de plugins Kotlin"
-            # No hacer rebase: Flutter puede modificar localmente archivos
-            # generados durante el build y Git lo bloquearía.
-            git push origin HEAD:main
-          else
-            echo "El lockfile ya estaba actualizado"
-          fi
