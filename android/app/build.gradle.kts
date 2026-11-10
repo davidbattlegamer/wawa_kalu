@@ -1,9 +1,8 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
 
-    // El plugin de Flutter debe ir después
-    // de Android y Kotlin.
+    // El plugin de Flutter debe ir después del plugin de Android.
+    // MainActivity es Java: el módulo app no requiere Kotlin Gradle Plugin.
     id("dev.flutter.flutter-gradle-plugin")
 }
 
@@ -67,14 +66,6 @@ android {
                     "debug"
                 )
         }
-    }
-}
-
-// Kotlin 2.3+: el DSL kotlinOptions.jvmTarget (String) está obsoleto.
-// Mantener Java y Kotlin alineados en JVM 17 para AGP y los plugins.
-kotlin {
-    compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 }
 
