@@ -1,0 +1,62 @@
+name: Validar migración Built-in Kotlin (rama de prueba)
+
+on:
+  push:
+    branches:
+      - fix/android-built-in-kotlin
+    paths:
+      - '.github/workflows/test-built-in-kotlin.yml'
+      - 'android/**'
+      - 'pubspec.lock'
+      - 'pubspec.yaml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configurar Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Configurar Flutter con Built-in Kotlin
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.9'
+          channel: stable
+          cache: true
+      - name: Registrar versiones
+        run: |
+          flutter --version
+          java -version
+          grep -E 'distributionUrl=' android/gradle/wrapper/gradle-wrapper.properties
+          grep -E '(builtInKotlin|newDsl)=' android/gradle.properties
+      - name: Obtener dependencias
+        run: flutter pub get
+      - name: Compilar APK Android release
+        run: |
+          set -o pipefail
+          flutter build apk --release 2>&1 | tee built-in-kotlin-build.log
+      - name: Confirmar que no se utiliza Kotlin Gradle Plugin
+        run: |
+          if grep -E 'WARNING: Your app uses the following plugins that apply Kotlin Gradle Plugin|WARNING: Your Android app project:|Future versions of Flutter will fail' built-in-kotlin-build.log; then
+            echo 'La migración de los plugins no está completa.'
+            exit 1
+          fi
+          test -f build/app/outputs/flutter-apk/app-release.apk
+          echo 'APK generado sin avisos KGP'
+      - name: Guardar APK y registro
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wawa-built-in-kotlin-prueba
+          path: |
+            build/app/outputs/flutter-apk/app-release.apk
+            built-in-kotlin-build.log
+          if-no-files-found: ignore
+          retention-days: 3
