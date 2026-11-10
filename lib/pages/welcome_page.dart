@@ -1322,13 +1322,19 @@ class _StartButton extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 10),
-                          Text(
-                            T.txt('startingApp'),
-                            style: const TextStyle(
-                              fontFamily: 'Fredoka',
-                              fontSize: 18.5,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
+                          Flexible(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                T.txt('startingApp'),
+                                maxLines: 1,
+                                style: const TextStyle(
+                                  fontFamily: 'Fredoka',
+                                  fontSize: 18.5,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -1337,13 +1343,19 @@ class _StartButton extends StatelessWidget {
                         key: const ValueKey('start'),
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            T.txt('welcomeStartButton'),
-                            style: const TextStyle(
-                              fontFamily: 'Fredoka',
-                              fontSize: 19,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
+                          Flexible(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                T.txt('welcomeStartButton'),
+                                maxLines: 1,
+                                style: const TextStyle(
+                                  fontFamily: 'Fredoka',
+                                  fontSize: 19,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
                           const SizedBox(width: 9),
