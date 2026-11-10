@@ -24,15 +24,10 @@ android {
         isCoreLibraryDesugaringEnabled = true
 
         sourceCompatibility =
-            JavaVersion.VERSION_11
+            JavaVersion.VERSION_17
 
         targetCompatibility =
-            JavaVersion.VERSION_11
-    }
-
-    kotlinOptions {
-        jvmTarget =
-            JavaVersion.VERSION_11.toString()
+            JavaVersion.VERSION_17
     }
 
     // ---------------------------------------------------------
@@ -72,6 +67,14 @@ android {
                     "debug"
                 )
         }
+    }
+}
+
+// Kotlin 2.3+: el DSL kotlinOptions.jvmTarget (String) está obsoleto.
+// Mantener Java y Kotlin alineados en JVM 17 para AGP y los plugins.
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 }
 
