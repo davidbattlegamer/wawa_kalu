@@ -247,7 +247,7 @@ class _AppShellState extends State<AppShell> {
                     icon: Icons.auto_stories_outlined,
                     selectedIcon: Icons.auto_stories_rounded,
                     label: T.txt('navLearning'),
-                    color: const Color(0xFFFF9F1C),
+                    color: const Color(0xFFFF8700),
                   ),
                   LiquidGlassNavItem(
                     icon: Icons.favorite_border_rounded,
