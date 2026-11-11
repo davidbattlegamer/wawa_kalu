@@ -1,0 +1,101 @@
+name: Actualizar iconos Android sin borde blanco
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/update-android-icon.yml'
+      - 'tools/generate_android_icon.py'
+      - 'pubspec.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  android-icon:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Obtener Wawa Kalú
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar Pillow
+        run: python -m pip install 'Pillow>=11,<13'
+
+      - name: Crear icono sin marco blanco
+        run: python tools/generate_android_icon.py
+
+      - name: Verificar fondo y transparencia
+        run: |
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          directory = Path('assets/images')
+          bg = Image.open(directory / 'WawaKalu_android_sin_borde.png')
+          fg = Image.open(directory / 'WawaKalu_android_foreground_transparente.png')
+          assert bg.size == fg.size == (1024, 1024)
+          assert bg.mode == 'RGB', bg.mode
+          assert fg.mode == 'RGBA', fg.mode
+          assert fg.getchannel('A').getextrema() == (0, 0)
+          for xy in [(0,0), (1023,0), (0,1023), (1023,1023)]:
+              p = bg.getpixel(xy)
+              assert not all(c > 245 for c in p), (xy,p)
+          print('Icono sin borde blanco y foreground válido')
+          PY
+
+      - name: Preparar Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.9'
+          channel: stable
+          cache: true
+
+      - name: Regenerar iconos nativos
+        run: |
+          flutter pub get
+          dart run flutter_launcher_icons
+
+      - name: Confirmar iconos adaptables generados
+        run: |
+          test -f android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
+          test -f android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+          grep -q 'ic_launcher_foreground' android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
+          if grep -R -E '#FFFFFF|#ffffff' android/app/src/main/res/values/ic_launcher_background.xml; then
+            echo 'Aún se detecta un fondo blanco'
+            exit 1
+          fi
+
+      - name: Compilar APK de prueba
+        run: flutter build apk --release
+
+      - name: Guardar iconos Android y recursos en main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            assets/images/WawaKalu_android_sin_borde.png \
+            assets/images/WawaKalu_android_foreground_transparente.png \
+            android/app/src/main/res
+          if ! git diff --cached --quiet; then
+            git commit -m "fix(android-icon): generar iconos sin borde blanco para Android"
+            git push origin HEAD:main
+          else
+            echo 'Iconos Android ya actualizados'
+          fi
+
+      - name: Publicar APK para verificación
+        uses: actions/upload-artifact@v4
+        with:
+          name: wawa-kalu-icono-sin-borde-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 3
+          if-no-files-found: error
