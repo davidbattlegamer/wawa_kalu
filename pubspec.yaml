@@ -58,10 +58,14 @@ flutter_launcher_icons:
   android: true
   ios: true
 
+  # Mantener el logo original para iOS, Windows y web.
   image_path: "assets/images/WawaKalu_icono.png"
 
-  adaptive_icon_foreground: "assets/images/WawaKalu_icono.png"
-  adaptive_icon_background: "#FFFFFF"
+  # Android usa un fondo completo, sin el borde blanco externo.
+  image_path_android: "assets/images/WawaKalu_android_sin_borde.png"
+  adaptive_icon_background: "assets/images/WawaKalu_android_sin_borde.png"
+  adaptive_icon_foreground: "assets/images/WawaKalu_android_foreground_transparente.png"
+  adaptive_icon_foreground_inset: 0
 
   windows:
     generate: true
